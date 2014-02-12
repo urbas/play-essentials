@@ -1,0 +1,9 @@
+# Authentication Routes
+GET   /auth/login     com.urmest.authentication.AuthenticationController.login(email, password)
+GET   /auth/details   com.urmest.authentication.AuthenticationController.sessionDetails()
+
+# User Management Routes
+GET   /user/signup    com.urmest.users.UserController.signUp(name, email, password)
+
+# Map static resources from the /public folder to the /assets URL path
+GET   /assets/*file   controllers.Assets.at(path="/public", file)
