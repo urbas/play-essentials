@@ -2,7 +2,9 @@ package com.urmest.authentication;
 
 import com.urmest.users.PlayUserRepository;
 
-public class PlayLogin {
+public final class PlayLogin {
+
+  private PlayLogin() {}
 
   /**
    * Starts a login session on success. Otherwise it throws an exception.
@@ -34,7 +36,7 @@ public class PlayLogin {
     return getAuthenticationSession().getLoggedInUserId();
   }
 
-  private static AuthenticationSession getAuthenticationSession() {
+  public static AuthenticationSession getAuthenticationSession() {
     return PlayLoginSingletons.AUTHENTICATION_SESSION;
   }
 
@@ -49,7 +51,7 @@ public class PlayLogin {
   private static class PlayLoginSingletons {
     public static final AuthenticationSession AUTHENTICATION_SESSION = new AuthenticationSession(
       new PlayClientSessionStorage(),
-      new PlayServerSessionStorage(),
+      new CachedServerSessionStorage(),
       new SessionIdGenerator());
     private static final PasswordAuthenticator PASSWORD_AUTHENTICATOR = new PasswordAuthenticator(PlayUserRepository
       .getInstance());

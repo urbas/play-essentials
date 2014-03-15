@@ -5,11 +5,12 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import com.urmest.authentication.SignupForm;
-import com.urmest.authentication.emails.html.SignupEmailTemplate;
+import com.urmest.users.emails.html.SignupEmailTemplate;
 import com.urmest.emailing.PlayEmailingProvider;
 
-public class UserController extends Controller {
+public final class UserController extends Controller {
+  private UserController() {}
+
   @Transactional
   public static Result signUp(String name, String email, String password) {
     SignupForm newUserDetails = new SignupForm(name, email, password);

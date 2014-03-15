@@ -2,6 +2,14 @@ package com.urmest.authentication;
 
 import play.mvc.Http;
 
+/**
+ * This client session storage uses Play's session from the HTTP context.
+ * 
+ * This class is stateless. A single instance of this class may be shared
+ * across multiple requests. 
+ * 
+ * @author matej
+ */
 public class PlayClientSessionStorage implements ClientSessionStorage {
 
   @Override

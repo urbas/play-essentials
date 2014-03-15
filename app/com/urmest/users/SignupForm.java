@@ -1,4 +1,4 @@
-package com.urmest.authentication;
+package com.urmest.users;
 
 import static com.urmest.util.StringUtils.isNullOrEmpty;
 

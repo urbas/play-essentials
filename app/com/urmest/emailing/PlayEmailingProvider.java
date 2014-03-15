@@ -2,9 +2,9 @@ package com.urmest.emailing;
 
 import com.urmest.util.ConfigurationProvider;
 
-public class PlayEmailingProvider extends Emailing {
+public final class PlayEmailingProvider extends Emailing {
 
-  public PlayEmailingProvider() {
+  private PlayEmailingProvider() {
     super(new ConfigurationProvider());
   }
 

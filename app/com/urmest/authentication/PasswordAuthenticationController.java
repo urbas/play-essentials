@@ -4,7 +4,10 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-public class PasswordAuthenticationController extends Controller {
+public final class PasswordAuthenticationController extends Controller {
+
+  private PasswordAuthenticationController() {}
+
   @Transactional
   public static Result login(String email, String password) {
     try {
