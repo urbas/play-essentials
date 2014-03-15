@@ -1,6 +1,7 @@
 # Authentication Routes
-GET   /auth/login     com.urmest.authentication.AuthenticationController.login(email, password)
-GET   /auth/details   com.urmest.authentication.AuthenticationController.sessionDetails()
+GET   /auth/login     com.urmest.authentication.PasswordAuthenticationController.login(email, password)
+GET   /auth/logout    com.urmest.authentication.AuthenticationController.logout()
+GET   /auth/status    com.urmest.authentication.AuthenticationController.status()
 
 # User Management Routes
 GET   /user/signup    com.urmest.users.UserController.signUp(name, email, password)

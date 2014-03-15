@@ -11,8 +11,8 @@ import javax.persistence.TypedQuery;
 
 import org.junit.*;
 
-public class UserRepositoryTest {
-  private UserRepository userRepository;
+public class PlayUserRepositoryTest {
+  private PlayUserRepository userRepository;
   private EntityManager entityManager;
   private TypedQuery<User> query;
   private ArrayList<User> allUsers;
@@ -25,7 +25,7 @@ public class UserRepositoryTest {
     when(entityManager.createNamedQuery(User.QUERY_GET_ALL, User.class)).thenReturn(query);
     allUsers = new ArrayList<User>();
     when(query.getResultList()).thenReturn(allUsers);
-    userRepository = new UserRepository(entityManager);
+    userRepository = new TestPlayUserRepository(entityManager);
   }
   
   @Test

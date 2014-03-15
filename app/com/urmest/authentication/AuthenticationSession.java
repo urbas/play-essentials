@@ -1,44 +1,70 @@
 package com.urmest.authentication;
 
-import com.urmest.users.User;
-
-import play.mvc.Http.Session;
 
 public class AuthenticationSession {
-  static final String SESSION_KEY_LOGGED_IN_USER_ID = "com.urmest.authentication.userId";
-  private final Session session;
+  private static final int SESSION_EXPIRATION_SECONDS = 30 * 60;
+  static final String SESSION_ID_KEY = "urmest.session";
+  private final ClientSessionStorage clientSessionStorage;
+  private final ServerSessionStorage serverSessionStorage;
+  private final SessionIdGenerator sessionIdGenerator;
 
-  public AuthenticationSession(Session session) {
-    this.session = session;
+  public AuthenticationSession(ClientSessionStorage clientSessionStorage, ServerSessionStorage serverSessionStorage, SessionIdGenerator sessionIdGenerator) {
+    this.clientSessionStorage = clientSessionStorage;
+    this.serverSessionStorage = serverSessionStorage;
+    this.sessionIdGenerator = sessionIdGenerator;
   }
 
-  public void logIn(User user) {
-    if (user == null) {
+  public void logIn(AuthenticationToken authenticationToken) {
+    if (authenticationToken == null) {
       throw new IllegalArgumentException("Could not start a login session."
         + " No user was specified.");
     }
-    session.put(SESSION_KEY_LOGGED_IN_USER_ID, Long.toString(user.getId()));
+    String sessionId = createSessionId();
+    String serverSessionKey = getSessionStorageKey(sessionId);
+    serverSessionStorage.put(serverSessionKey, authenticationToken
+      .getAuthenticatedUser().getId(), getExpirationSeconds());
+    clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
 
   public boolean isLoggedIn() {
-    return getLoggedInUserIdAsString() != null;
+    return tryGetLoggedInUserId() instanceof Long;
   }
 
   public long getLoggedInUserId() {
-    String userIdAsString = getLoggedInUserIdAsString();
-    if (userIdAsString == null) {
-      throw new IllegalStateException("Could not find the ID of the logged in"
-        + " user. No user is currently logged in.");
+    Object loggedInUserId = tryGetLoggedInUserId();
+    if (loggedInUserId instanceof Long) {
+      return (Long) loggedInUserId;
     }
-    return Long.parseLong(userIdAsString);
+    throw new IllegalStateException("Could not find the ID of the logged in"
+      + " user. No user is currently logged in.");
   }
 
-  public void logOut() throws Exception {
-    session.remove(SESSION_KEY_LOGGED_IN_USER_ID);
+  public void logOut() {
+    String sessionId = getSessionIdStorageKeyFromClient();
+    serverSessionStorage.remove(sessionId);
+    clientSessionStorage.remove(SESSION_ID_KEY);
   }
 
-  private String getLoggedInUserIdAsString() {
-    return session.get(SESSION_KEY_LOGGED_IN_USER_ID);
+  public int getExpirationSeconds() {
+    return SESSION_EXPIRATION_SECONDS;
+  }
+
+  static String getSessionStorageKey(String sessionId) {
+    return SESSION_ID_KEY + sessionId;
+  }
+
+  private String createSessionId() {
+    return sessionIdGenerator.createSessionId();
+  }
+
+  private Object tryGetLoggedInUserId() {
+    String sessionIdStorageKey = getSessionIdStorageKeyFromClient();
+    return serverSessionStorage.get(sessionIdStorageKey);
+  }
+
+  private String getSessionIdStorageKeyFromClient() {
+    String sessionId = clientSessionStorage.get(SESSION_ID_KEY);
+    return getSessionStorageKey(sessionId);
   }
 
 }

@@ -1,7 +1,6 @@
 package com.urmest.users;
 
 import play.api.templates.Html;
-import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -25,11 +24,11 @@ public class UserController extends Controller {
 
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
-      new UserRepository(JPA.em())
-      .persistUser(
-        createUserForm.name,
-        createUserForm.email,
-        createUserForm.password);
+      PlayUserRepository.getInstance()
+        .persistUser(
+          createUserForm.name,
+          createUserForm.email,
+          createUserForm.password);
     } else {
       throw new IllegalArgumentException("Could not create a new user. Some mandatory user info was missing.");
     }
@@ -39,6 +38,7 @@ public class UserController extends Controller {
     Html signupEmailHtmlBody = SignupEmailTemplate.apply(newUserDetails);
     String recepient = newUserDetails.email;
     String emailSubject = "Pless Signup";
-    PlayEmailingProvider.getInstance().sendEmail(recepient, emailSubject, signupEmailHtmlBody);
+    PlayEmailingProvider.getInstance()
+      .sendEmail(recepient, emailSubject, signupEmailHtmlBody);
   }
 }

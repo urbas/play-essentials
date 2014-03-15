@@ -70,7 +70,7 @@ public class UserControllerTest extends UrmestTest {
     try {
       callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     } catch (Exception e) {}
-    new UserRepository(getEm()).findUserByEmail(JOHN_SMITH_EMAIL);
+    new TestPlayUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
 
   @Test
@@ -89,8 +89,7 @@ public class UserControllerTest extends UrmestTest {
   }
 
   private void assertJohnSmithIsInDb() {
-    User createdUser = new UserRepository(getEm())
-      .findUserByEmail(JOHN_SMITH_EMAIL);
+    User createdUser = new TestPlayUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
     long idOfNewUser = 1L;
     User expectedUser = createJohnSmithUser(idOfNewUser, createdUser.getSalt());
     assertEquals(expectedUser, createdUser);
