@@ -19,7 +19,7 @@ public class AuthenticationControllerTest extends UrmestTest {
   private static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
 
   @Test
-  public void status_MUST_return_true_WHEN_the_user_has_logged_in() throws Exception {
+  public void status_MUST_return_the_userId_WHEN_the_user_has_logged_in() throws Exception {
     Result loginResult = createUserAndLogin();
     Result result = callstatus(loginResult);
     assertEquals(1L, Json.parse(contentAsString(result)).asLong());

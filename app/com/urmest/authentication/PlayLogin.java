@@ -49,9 +49,11 @@ public final class PlayLogin {
   }
 
   private static class PlayLoginSingletons {
+    private PlayLoginSingletons() {}
+
     public static final AuthenticationSession AUTHENTICATION_SESSION = new AuthenticationSession(
       new PlayClientSessionStorage(),
-      new CachedServerSessionStorage(),
+      new JpaServerSessionStorage(),
       new SessionIdGenerator());
     private static final PasswordAuthenticator PASSWORD_AUTHENTICATOR = new PasswordAuthenticator(PlayUserRepository
       .getInstance());

@@ -1,8 +1,7 @@
 package com.urmest.authentication;
 
-
 public class AuthenticationSession {
-  private static final int SESSION_EXPIRATION_SECONDS = 30 * 60;
+  private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
   static final String SESSION_ID_KEY = "urmest.session";
   private final ClientSessionStorage clientSessionStorage;
   private final ServerSessionStorage serverSessionStorage;
@@ -21,50 +20,54 @@ public class AuthenticationSession {
     }
     String sessionId = createSessionId();
     String serverSessionKey = getSessionStorageKey(sessionId);
-    serverSessionStorage.put(serverSessionKey, authenticationToken
-      .getAuthenticatedUser().getId(), getExpirationSeconds());
+    serverSessionStorage.put(
+      serverSessionKey,
+      Long.toString(authenticationToken.getAuthenticatedUser().getId()),
+      getExpirationMillis());
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
 
   public boolean isLoggedIn() {
-    return tryGetLoggedInUserId() instanceof Long;
+    return getLoggedInUserId() != null;
   }
 
-  public long getLoggedInUserId() {
-    Object loggedInUserId = tryGetLoggedInUserId();
-    if (loggedInUserId instanceof Long) {
-      return (Long) loggedInUserId;
+  public Long getLoggedInUserId() {
+    final String sessionIdFromClient = getSessionIdFromClient();
+    if (sessionIdFromClient == null) {
+      return null;
     }
-    throw new IllegalStateException("Could not find the ID of the logged in"
-      + " user. No user is currently logged in.");
+    String loggedInUserId = serverSessionStorage.get(sessionIdFromClient);
+    if (loggedInUserId == null) {
+      return null;
+    } else {
+      try {
+        return Long.parseLong(loggedInUserId);
+      } catch (Exception ex) {
+        throw new IllegalStateException("The session storage returned a non-numeric user id: " + loggedInUserId);
+      }
+    }
   }
 
   public void logOut() {
-    String sessionId = getSessionIdStorageKeyFromClient();
+    String sessionId = getSessionIdFromClient();
     serverSessionStorage.remove(sessionId);
     clientSessionStorage.remove(SESSION_ID_KEY);
   }
 
-  public int getExpirationSeconds() {
-    return SESSION_EXPIRATION_SECONDS;
+  public int getExpirationMillis() {
+    return SESSION_EXPIRATION_MILLIS;
   }
 
   static String getSessionStorageKey(String sessionId) {
-    return SESSION_ID_KEY + sessionId;
+    return sessionId;
   }
 
   private String createSessionId() {
     return sessionIdGenerator.createSessionId();
   }
 
-  private Object tryGetLoggedInUserId() {
-    String sessionIdStorageKey = getSessionIdStorageKeyFromClient();
-    return serverSessionStorage.get(sessionIdStorageKey);
-  }
-
-  private String getSessionIdStorageKeyFromClient() {
-    String sessionId = clientSessionStorage.get(SESSION_ID_KEY);
-    return getSessionStorageKey(sessionId);
+  private String getSessionIdFromClient() {
+    return clientSessionStorage.get(SESSION_ID_KEY);
   }
 
 }

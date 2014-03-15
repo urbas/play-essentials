@@ -3,7 +3,7 @@ package com.urmest.authentication;
 import java.util.HashMap;
 
 public class TestServerSessionStorage implements ServerSessionStorage {
-  private final HashMap<String, ValueWithExpiration<Object>> hashMap = new HashMap<>();
+  private final HashMap<String, ValueWithExpiration<String>> hashMap = new HashMap<>();
 
   @Override
   public void remove(String key) {
@@ -11,13 +11,13 @@ public class TestServerSessionStorage implements ServerSessionStorage {
   }
 
   @Override
-  public void put(String key, Object value, int expirationSeconds) {
-    hashMap.put(key, new ValueWithExpiration<>(value, expirationSeconds));
+  public void put(String key, String value, int expirationMillis) {
+    hashMap.put(key, new ValueWithExpiration<>(value, expirationMillis));
   }
 
   @Override
-  public Object get(String key) {
-    ValueWithExpiration<Object> valueWithExpiration = hashMap.get(key);
+  public String get(String key) {
+    ValueWithExpiration<String> valueWithExpiration = hashMap.get(key);
     if (valueWithExpiration == null) {
       return null;
     } else {

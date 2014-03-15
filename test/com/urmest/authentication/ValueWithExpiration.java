@@ -5,17 +5,17 @@ import java.util.Date;
 public class ValueWithExpiration<T> {
 
   public T value;
-  private final int expirationSeconds;
+  private final int expirationMillis;
   private final Date creationTimestamp;
 
-  public ValueWithExpiration(T value, int expirationSeconds) {
+  public ValueWithExpiration(T value, int expirationMillis) {
     this.value = value;
-    this.expirationSeconds = expirationSeconds;
+    this.expirationMillis = expirationMillis;
     this.creationTimestamp = new Date();
   }
 
   public boolean isExpired() {
-    return new Date().getTime() > creationTimestamp.getTime() + expirationSeconds;
+    return new Date().getTime() > creationTimestamp.getTime() + expirationMillis;
   }
 
 }

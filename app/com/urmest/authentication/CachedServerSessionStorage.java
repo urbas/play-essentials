@@ -13,13 +13,14 @@ import play.cache.Cache;
 public class CachedServerSessionStorage implements ServerSessionStorage {
 
   @Override
-  public void put(String key, Object value, int expirationSeconds) {
-    Cache.set(key, value, expirationSeconds);
+  public void put(String key, String value, int expirationMillis) {
+    Cache.set(key, value, expirationMillis / 1000);
   }
 
   @Override
-  public Object get(String key) {
-    return Cache.get(key);
+  public String get(String key) {
+    Object value = Cache.get(key);
+    return value == null ? null : value.toString();
   }
 
   @Override
