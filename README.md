@@ -1,4 +1,4 @@
-This is your new Play application
-=====================================
+Play Essentials
+===============
 
-This file will be packaged with your application, when using `play dist`.
+[![Build Status](https://drone.io/bitbucket.org/urbas/play-essentials/status.png)](https://drone.io/bitbucket.org/urbas/play-essentials/latest)
