@@ -80,6 +80,26 @@ To log the user out:
 
 ## Emailing
 
+Here's how you send an email:
+
+    PlayEmailing.sendEmail(recepient, emailSubject, htmlBody);
+
+Note that `htmlBody` is a Play HTML view template. Say you have a
+Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
+email like this:
+
+    Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
+    PlayEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
+
+### Advanced usage
+
+    Email email = PlayEmailing.createEmail();
+    email.setSubject(subject);
+    email.setRecipient(recipient);
+    email.setFrom(sender);
+    email.setBody(body);
+    email.send();
+
 ### Configuration
 
 You can put these configuration settings into `conf/application.conf`:
@@ -100,25 +120,3 @@ own email provider:
     smtp.emailProvider=com.pless.emailing.ApacheCommonsEmailProvider
     dev.smtp.emailProvider=com.pless.emailing.LoggingNoOpEmailProvider
     test.smtp.emailProvider=com.pless.emailing.MockEmailProvider
-
-### Usage
-
-Here's how you send an email:
-
-    PlayEmailing.sendEmail(recepient, emailSubject, htmlBody);
-
-Note that `htmlBody` is a Play HTML view template. Say you have a
-Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
-email like this:
-
-    Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
-    PlayEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
-
-#### Advanced usage
-
-    Email email = PlayEmailing.createEmail();
-    email.setSubject(subject);
-    email.setRecipient(recipient);
-    email.setFrom(sender);
-    email.setBody(body);
-    email.send();
