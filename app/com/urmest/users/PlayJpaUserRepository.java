@@ -2,45 +2,47 @@ package com.urmest.users;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import play.db.jpa.JPA;
 
 import com.urmest.authentication.SaltedHashedPassword;
 
-public class PlayUserRepository {
-  
-  protected PlayUserRepository() {
-  }
+public class PlayJpaUserRepository implements UserRepository {
 
+  protected PlayJpaUserRepository() {}
+
+  @Override
   public User findUserByEmail(String email) {
-    TypedQuery<User> usersByEmailQuery = getEntityManager().createNamedQuery(
-      User.QUERY_GET_BY_EMAIL, User.class);
+    TypedQuery<JpaUser> usersByEmailQuery = getEntityManager().createNamedQuery(
+      JpaUser.QUERY_GET_BY_EMAIL, JpaUser.class);
     usersByEmailQuery.setParameter("email", email);
     return usersByEmailQuery.getSingleResult();
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
   public List<User> getAllUsers() {
     return getEntityManager()
-      .createNamedQuery(User.QUERY_GET_ALL, User.class)
+      .createNamedQuery(JpaUser.QUERY_GET_ALL)
       .getResultList();
   }
 
+  @Override
   public void persistUser(String name, String email, String password) {
-    User user = new User(name, email, new SaltedHashedPassword(password));
+    User user = new JpaUser(name, email, new SaltedHashedPassword(password));
     getEntityManager().persist(user);
   }
 
   public EntityManager getEntityManager() {
     return JPA.em();
   }
-  
-  public static PlayUserRepository getInstance() {
+
+  public static UserRepository getInstance() {
     return Singletons.PLAY_USER_REPOSITORY;
   }
-  
+
   private static class Singletons {
-    private static final PlayUserRepository PLAY_USER_REPOSITORY = new PlayUserRepository();
+    private static final UserRepository PLAY_USER_REPOSITORY = new PlayJpaUserRepository();
   }
 }

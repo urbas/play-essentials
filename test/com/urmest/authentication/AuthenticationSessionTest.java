@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import org.junit.*;
 import org.mockito.Mockito;
 
+import com.urmest.users.JpaUser;
 import com.urmest.users.User;
 
 public class AuthenticationSessionTest {
@@ -78,7 +79,7 @@ public class AuthenticationSessionTest {
 
   private User createJohnSmithUser() {
     SaltedHashedPassword password = new SaltedHashedPassword(JOHN_SMITH_PASSWORD);
-    return new User(JOHN_SMITH, JOHN_SMITH_EMAIL, password)
+    return new JpaUser(JOHN_SMITH, JOHN_SMITH_EMAIL, password)
       .withId(JOHN_SMITH_USER_ID);
   }
 }

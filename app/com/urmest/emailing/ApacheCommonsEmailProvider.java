@@ -1,9 +1,10 @@
 package com.urmest.emailing;
 
 import com.urmest.util.ConfigurationSource;
+import com.urmest.util.Factory;
 
 
-public class ApacheCommonsMailer implements EmailFactory {
+public class ApacheCommonsEmailProvider implements EmailProvider, Factory<EmailProvider> {
   
   public static final String APP_CONFIG_SMTP_PASSWORD = "smtp.password";
   public static final String APP_CONFIG_SMTP_USER = "smtp.user";
@@ -45,5 +46,10 @@ public class ApacheCommonsMailer implements EmailFactory {
 
   public static String getSmtpPassword(ConfigurationSource configurationProvider) {
     return configurationProvider.getString(APP_CONFIG_SMTP_PASSWORD);
+  }
+
+  @Override
+  public EmailProvider createInstance(ConfigurationSource instance) {
+    return new ApacheCommonsEmailProvider();
   }
 }

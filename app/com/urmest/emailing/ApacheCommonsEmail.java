@@ -7,25 +7,30 @@ import org.apache.commons.mail.*;
 import play.api.templates.Html;
 
 public class ApacheCommonsEmail implements Email {
-  private final HtmlEmail htmlEmail = new HtmlEmail();
+  private final HtmlEmail wrappedEmail;
 
   public ApacheCommonsEmail(String hostname, int smtpPort, boolean useSsl, boolean useTls, String user, String password) {
-    htmlEmail.setHostName(hostname);
-    htmlEmail.setSmtpPort(smtpPort);
-    htmlEmail.setSSLOnConnect(useSsl);
-    htmlEmail.setStartTLSEnabled(useTls);
+    this(hostname, smtpPort, useSsl, useTls, user, password, new HtmlEmail());
+  }
+
+  ApacheCommonsEmail(String hostname, int smtpPort, boolean useSsl, boolean useTls, String user, String password, HtmlEmail wrappedEmail) {
+    this.wrappedEmail = wrappedEmail;
+    this.wrappedEmail.setHostName(hostname);
+    this.wrappedEmail.setSmtpPort(smtpPort);
+    this.wrappedEmail.setSSLOnConnect(useSsl);
+    this.wrappedEmail.setStartTLSEnabled(useTls);
     if (!isNullOrEmpty(user) && !isNullOrEmpty(password)) {
-      htmlEmail.setAuthenticator(new DefaultAuthenticator(user, password));
+      this.wrappedEmail.setAuthentication(user, password);
     }
-    htmlEmail.setDebug(false);
+    this.wrappedEmail.setDebug(false);
   }
 
   @Override
   public Email setFrom(String sender) {
     try {
-      htmlEmail.setFrom(sender);
+      wrappedEmail.setFrom(sender);
     } catch (EmailException e) {
-      throw new IllegalStateException("Could not set the sender of the email.", e);
+      throw new IllegalArgumentException("Could not set the sender of the email.", e);
     }
     return this;
   }
@@ -33,25 +38,25 @@ public class ApacheCommonsEmail implements Email {
   @Override
   public Email setRecipient(String recipient) {
     try {
-      htmlEmail.addTo(recipient);
+      wrappedEmail.addTo(recipient);
     } catch (EmailException e) {
-      throw new IllegalStateException("Could not set the recepient of the email.", e);
+      throw new IllegalArgumentException("Could not set the recepient of the email.", e);
     }
     return this;
   }
 
   @Override
   public Email setSubject(String subject) {
-    htmlEmail.setSubject(subject);
+    wrappedEmail.setSubject(subject);
     return this;
   }
 
   @Override
   public Email setBody(Html body) {
     try {
-      htmlEmail.setHtmlMsg(body.toString());
+      wrappedEmail.setHtmlMsg(body.toString());
     } catch (EmailException e) {
-      throw new IllegalStateException("Could not set the sender of the email.", e);
+      throw new IllegalArgumentException("Could not set the sender of the email.", e);
     }
     return this;
   }
@@ -59,7 +64,7 @@ public class ApacheCommonsEmail implements Email {
   @Override
   public void send() {
     try {
-      htmlEmail.send();
+      wrappedEmail.send();
     } catch (EmailException e) {
       throw new IllegalStateException("Could not send the email.", e);
     }

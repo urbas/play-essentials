@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
         http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
 	
-	<entity class="com.urmest.users.User"/>
+	<entity class="com.urmest.users.JpaUser"/>
 	<entity class="com.urmest.authentication.JpaServerSessionKeyValue"/>
 	
 </entity-mappings>

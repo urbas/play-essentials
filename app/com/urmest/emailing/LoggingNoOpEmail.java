@@ -8,6 +8,15 @@ public final class LoggingNoOpEmail implements Email {
   private String recepient;
   private String sender;
   private Html body;
+  private org.slf4j.Logger logger;
+  
+  public LoggingNoOpEmail() {
+    this(null);
+  }
+
+  public LoggingNoOpEmail(org.slf4j.Logger logger) {
+    this.logger = logger;
+  }
 
   @Override
   public Email setFrom(String sender) {
@@ -35,6 +44,11 @@ public final class LoggingNoOpEmail implements Email {
 
   @Override
   public void send() {
-    Logger.debug("Sent email: TO: " + recepient + " FROM: " + sender + " SUBJECT: " + subject + " BODY: " + body);
+    final String message = "Sent email: TO: " + recepient + " FROM: " + sender + " SUBJECT: " + subject + " BODY: " + body;
+    if (logger == null) {
+      Logger.debug(message);
+    } else {
+      logger.debug(message);
+    }
   }
 }

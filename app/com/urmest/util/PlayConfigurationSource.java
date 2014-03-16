@@ -39,4 +39,14 @@ public class PlayConfigurationSource implements ConfigurationSource {
     return Play.application().configuration()
       .getBoolean(configKey, defaultValue);
   }
+
+  public static PlayConfigurationSource getInstance() {
+    return Singleton.INSTANCE;
+  }
+
+  private static final class Singleton {
+
+    public static final PlayConfigurationSource INSTANCE = new PlayConfigurationSource();
+
+  }
 }

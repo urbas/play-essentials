@@ -17,7 +17,7 @@ import play.mvc.Result;
 
 import com.urmest.authentication.SaltedHashedPassword;
 import com.urmest.emailing.ExceptionThrowingMailer;
-import com.urmest.emailing.MockMailer;
+import com.urmest.emailing.MockEmailProvider;
 import com.urmest.test.UrmestTest;
 
 public class UserControllerTest extends UrmestTest {
@@ -55,18 +55,18 @@ public class UserControllerTest extends UrmestTest {
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
     callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    Mockito.verify(MockMailer.lastSentEmail).send();
+    Mockito.verify(MockEmailProvider.lastSentEmail).send();
   }
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_user_was_not_created() throws Exception {
     callSignUpAction(null, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    assertNull(MockMailer.lastSentEmail);
+    assertNull(MockEmailProvider.lastSentEmail);
   }
 
   @Test(expected = NoResultException.class)
   public void signUp_MUST_not_persist_the_user_WHEN_sending_of_the_email_fails() throws Exception {
-    MockMailer.nestedMailer = new ExceptionThrowingMailer();
+    MockEmailProvider.nestedMailer = new ExceptionThrowingMailer();
     try {
       callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     } catch (Exception e) {}
@@ -99,7 +99,7 @@ public class UserControllerTest extends UrmestTest {
     SaltedHashedPassword password = new SaltedHashedPassword(
       JOHN_SMITH_PASSWORD,
       passwordSalt);
-    User user = new User(JOHN_SMITH, JOHN_SMITH_EMAIL, password);
+    JpaUser user = new JpaUser(JOHN_SMITH, JOHN_SMITH_EMAIL, password);
     return user.withId(userId);
   }
 

@@ -1,13 +1,12 @@
 package com.urmest.authentication;
 
-import com.urmest.users.User;
-import com.urmest.users.PlayUserRepository;
+import com.urmest.users.*;
 
 public class PasswordAuthenticator {
 
-  private PlayUserRepository userRepository;
+  private UserRepository userRepository;
 
-  public PasswordAuthenticator(PlayUserRepository userRepository) {
+  public PasswordAuthenticator(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 

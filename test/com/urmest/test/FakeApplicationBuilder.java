@@ -8,7 +8,7 @@ import play.test.FakeApplication;
 import play.test.Helpers;
 
 import com.urmest.emailing.EmailingService;
-import com.urmest.emailing.EmailFactory;
+import com.urmest.emailing.EmailProvider;
 
 public class FakeApplicationBuilder implements AutoCloseable {
   private static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";
@@ -47,7 +47,7 @@ public class FakeApplicationBuilder implements AutoCloseable {
     applicationOptions.put(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
 
-  public void setMockMailer(Class<? extends EmailFactory> mockMailerClass) {
+  public void setMockMailer(Class<? extends EmailProvider> mockMailerClass) {
     if (mockMailerClass != null) {
       applicationOptions.put(EmailingService.APP_CONFIG_TEST_SMTP_MAILER_CLASS, mockMailerClass.getCanonicalName());
     }

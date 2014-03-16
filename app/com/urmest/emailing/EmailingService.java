@@ -1,17 +1,16 @@
 package com.urmest.emailing;
 
 import static com.urmest.util.StringUtils.isNullOrEmpty;
-
-import java.lang.reflect.Constructor;
-
 import play.api.templates.Html;
 
 import com.urmest.util.ConfigurationSource;
+import com.urmest.util.Factories;
 
 public class EmailingService {
-  public static final String APP_CONFIG_SMTP_MAILER_CLASS = "smtp.mailer.class";
-  public static final String APP_CONFIG_DEV_SMTP_MAILER_CLASS = "dev.smtp.mailer.class";
-  public static final String APP_CONFIG_TEST_SMTP_MAILER_CLASS = "test.smtp.mailer.class";
+
+  public static final String APP_CONFIG_SMTP_MAILER_CLASS = "smtp.emailProvider";
+  public static final String APP_CONFIG_DEV_SMTP_MAILER_CLASS = "dev.smtp.emailProvider";
+  public static final String APP_CONFIG_TEST_SMTP_MAILER_CLASS = "test.smtp.emailProvider";
   /**
    * The Application Configuration entry that specifies the 'from' address.
    * 
@@ -19,33 +18,33 @@ public class EmailingService {
    */
   public static final String APP_CONFIG_SMTP_FROM = "smtp.from";
   private final ConfigurationSource configurationSource;
+  private Factories factories;
+  private DefaultEmailProviderCreator defaultEmailProviderCreator;
 
-  public EmailingService(ConfigurationSource configurationProvider) {
+  public EmailingService(ConfigurationSource configurationProvider, Factories factories) {
+    this(configurationProvider, factories, new DefaultEmailProviderCreator());
+  }
+
+  public EmailingService(ConfigurationSource configurationProvider, Factories factories, DefaultEmailProviderCreator defaultEmailProviderCreator) {
     this.configurationSource = configurationProvider;
+    this.factories = factories;
+    this.defaultEmailProviderCreator = defaultEmailProviderCreator;
   }
 
   public void sendEmail(String recepient, String subject, Html body) {
-    sendEmail(
-      configurationSource.getString(APP_CONFIG_SMTP_FROM),
-      recepient,
-      subject,
-      body,
-      getEmailFactory());
-  }
-
-  public Email createEmail() {
-    return getEmailFactory().createEmail(configurationSource);
-  }
-
-  void sendEmail(String sender, String recepient, String subject,
-                 Html body, EmailFactory mailer) {
-    assertParametersAreValid(sender, recepient, subject);
-    Email email = mailer.createEmail(configurationSource);
-    email.setFrom(sender);
+    String configuredSender = configurationSource
+      .getString(APP_CONFIG_SMTP_FROM);
+    assertParametersAreValid(configuredSender, recepient, subject);
+    Email email = getEmailProvider().createEmail(configurationSource);
+    email.setFrom(configuredSender);
     email.setRecipient(recepient);
     email.setSubject(subject);
     email.setBody(body);
     email.send();
+  }
+
+  public Email createEmail() {
+    return getEmailProvider().createEmail(configurationSource);
   }
 
   private static void assertParametersAreValid(String sender, String recepient,
@@ -61,45 +60,8 @@ public class EmailingService {
     }
   }
 
-  private EmailFactory getEmailFactory() {
-    if (configurationSource.isProduction())
-      return getProductionEmailFactory();
-    if (configurationSource.isDevelopment())
-      return createEmailFactoryByClassName(getDevelopmentEmailFactoryClassName());
-    return createEmailFactoryByClassName(getTestEmailFactoryClassName());
-  }
-
-  private EmailFactory getProductionEmailFactory() {
-    String mailerClassName = getProductionMailerClassName();
-    return isNullOrEmpty(mailerClassName) ? new ApacheCommonsMailer()
-      : createMailerFromName(mailerClassName);
-  }
-
-  private EmailFactory createEmailFactoryByClassName(String mailerClassName) {
-    return isNullOrEmpty(mailerClassName) ? new LoggingNoOpMailer()
-      : createMailerFromName(mailerClassName);
-  }
-
-  private EmailFactory createMailerFromName(String mailerClass) {
-    try {
-      @SuppressWarnings("unchecked")
-      Constructor<EmailFactory> mailerConstructor = (Constructor<EmailFactory>) Class
-        .forName(mailerClass).getConstructor();
-      return mailerConstructor.newInstance();
-    } catch (Exception e) {
-      throw new IllegalStateException("Could not create an instance of the mailer.", e);
-    }
-  }
-
-  private String getProductionMailerClassName() {
-    return configurationSource.getString(APP_CONFIG_SMTP_MAILER_CLASS);
-  }
-
-  private String getDevelopmentEmailFactoryClassName() {
-    return configurationSource.getString(APP_CONFIG_DEV_SMTP_MAILER_CLASS);
-  }
-
-  private String getTestEmailFactoryClassName() {
-    return configurationSource.getString(APP_CONFIG_TEST_SMTP_MAILER_CLASS);
+  public EmailProvider getEmailProvider() {
+    return factories
+            .createInstanceViaFactory(APP_CONFIG_SMTP_MAILER_CLASS, defaultEmailProviderCreator);
   }
 }

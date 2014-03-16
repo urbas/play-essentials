@@ -44,6 +44,26 @@ them, just add this dependency:
 
 # Usage
 
+## Authentication
+
+You can use any of the below examples from within your controller.
+
+To start an authentication session with a password login:
+
+    PlayAuthentication.logIn(new PasswordLoginForm(email, password));
+
+Check that a user is logged in:
+
+    PlayAuthentication.isLoggedIn()
+
+To get the ID of the currently logged-in user:
+
+    PlayAuthentication.getLoggedInUserId()
+
+To log the user out:
+
+    PlayAuthentication.logOut()
+
 ## Emailing
 
 ### Configuration
@@ -63,9 +83,9 @@ You can put these configuration settings into `conf/application.conf`:
 The following configuration is useful for mocking in tests or to plug in your
 own email provider:
 
-    smtp.mailer.class=com.urmest.emailing.ApacheCommonsMailer
-    dev.smtp.mailer.class=com.urmest.emailing.LoggingNoOpMailer
-    test.smtp.mailer.class=com.urmest.emailing.LoggingNoOpMailer
+    smtp.emailProvider=com.urmest.emailing.ApacheCommonsEmailProvider
+    dev.smtp.emailProvider=com.urmest.emailing.LoggingNoOpEmailProvider
+    test.smtp.emailProvider=com.urmest.emailing.MockEmailProvider
 
 ### Usage
 

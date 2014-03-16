@@ -2,17 +2,17 @@ package com.urmest.test;
 
 import org.junit.After;
 
-import com.urmest.emailing.MockMailer;
+import com.urmest.emailing.MockEmailProvider;
 
 public class TestWithMockedMailer extends TestWithFakeApplication {
   public TestWithMockedMailer() {
-    applicationBuilder.setMockMailer(MockMailer.class);
+    applicationBuilder.setMockMailer(MockEmailProvider.class);
   }
 
   @Override
   @After
   public void tearDown() {
     super.tearDown();
-    MockMailer.reset();
+    MockEmailProvider.reset();
   }
 }

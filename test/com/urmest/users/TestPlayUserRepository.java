@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 
 import play.db.jpa.JPA;
 
-public class TestPlayUserRepository extends PlayUserRepository {
+public class TestPlayUserRepository extends PlayJpaUserRepository {
   private EntityManager entityManager;
 
   public TestPlayUserRepository(EntityManager entityManager) {
