@@ -2,11 +2,12 @@
 
 [![Build Status](https://drone.io/bitbucket.org/urbas/play-essentials/status.png)](https://drone.io/bitbucket.org/urbas/play-essentials/latest)
 
-Play Essentials (Pless) is a Play Framework seedling app, but it can also be
-used as a library. Just clone it and start building your custom Play app on it.
+Play Essentials (Pless) is a Play Framework seedling on steroids. Just clone and
+start building your custom Play app on Pless. You can also use Pless as a
+library.
 
-Pless provides a Java 8-friendly APIs and focuses on testability, ease of use
-for casual users, and configurability for power-users.
+Why Pless? Because it provides a Java 8-friendly APIs and focuses on
+testability, ease of use for casual users, and configurability for power-users.
 
 Some provided features (not exhaustive):
 
