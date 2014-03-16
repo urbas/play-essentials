@@ -1,3 +1,6 @@
+# Home page
+GET   /               com.pless.WelcomeController.welcome()
+
 # Authentication Routes
 GET   /auth/login     com.pless.authentication.PasswordAuthenticationController.login(email, password)
 GET   /auth/logout    com.pless.authentication.AuthenticationController.logout()

@@ -23,12 +23,22 @@ reusability from Java, testability from JUnit, and general configurability.
 
 # Quickstart
 
-## Clone
+1.  Install [Play Framework](http://www.playframework.com/download).
 
-You can just clone this repository and start adding your sources to it. Play
-Essentials is, after all, just a Play Framework app.
+2.  Clone Pless:
 
-## As a dependency
+        git clone git@bitbucket.org:urbas/play-essentials.git
+
+3.  Run:
+
+        cd play-essentials
+        play run
+
+4.  Open [http://localhost:9000/](http://localhost:9000/) in your browser.
+
+5.  Edit the sources and create something wonderful.
+
+## Using Pless as a dependency
 
 You can also add Pless to your Play app just like this (in your `build.sbt`):
 
