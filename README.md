@@ -1,6 +1,7 @@
 # Play Essentials 
 
 [![Build Status](https://drone.io/bitbucket.org/urbas/play-essentials/status.png)](https://drone.io/bitbucket.org/urbas/play-essentials/latest)
+[![Build Status](https://travis-ci.org/urbas/play-essentials.png?branch=master)](https://travis-ci.org/urbas/play-essentials)
 
 Play Essentials (Pless) is a Play Framework seedling on steroids. Just clone and
 start building your custom Play app on Pless. You can also use Pless as a
