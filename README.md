@@ -6,8 +6,9 @@ Play Essentials (Pless) is a Play Framework seedling on steroids. Just clone and
 start building your custom Play app on Pless. You can also use Pless as a
 library.
 
-Why Pless? Because it provides a Java 8-friendly APIs and focuses on
-testability, ease of use for casual users, and configurability for power-users.
+Why Pless? Because it provides a Java 8-friendly API and focuses on
+testability, ease of use (for casual users), and configurability (for
+power-users).
 
 Some provided features (not exhaustive):
 
