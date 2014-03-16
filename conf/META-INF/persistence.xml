@@ -11,7 +11,7 @@
 		<mapping-file>com/pless/entities.xml</mapping-file>
 		
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.format_sql" value="true" />
