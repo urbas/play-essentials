@@ -5,34 +5,31 @@ import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Configuration;
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;
 
-import com.urmest.util.ConfigurationProvider;
+import com.urmest.util.ConfigurationSource;
+import com.urmest.util.PlayConfigurationSource;
 
-public class EmailingTest {
+public class EmailingServiceTest {
 
   private static final String EMAIL_SENDER = "John Doe <john.doe@example.com>";
   private static final String EMAIL_RECEPIENT = "Jane Doe <jane.doe@example.com>";
   private static final String EMAIL_SUBJECT = "An email subject";
   private static final Html EMAIL_HTML_BODY = new Html(new StringBuilder("Some html content..."));
-  private Mailer mailer;
+  private EmailFactory mailer;
   private Email email;
-  private Emailing emailing;
-  private ConfigurationProvider configurationProvider;
-  private Configuration configuration;
+  private EmailingService emailing;
+  private ConfigurationSource configurationSource;
 
   @Before
   public void setUp() {
-    mailer = mock(Mailer.class);
+    mailer = mock(EmailFactory.class);
     email = mock(Email.class);
-    configurationProvider = mock(ConfigurationProvider.class);
-    emailing = new Emailing(configurationProvider);
-    when(mailer.createEmail(configurationProvider)).thenReturn(email);
-    configuration = mock(Configuration.class);
-    when(configurationProvider.getConfiguration()).thenReturn(configuration);
-    when(configuration.getString(Emailing.APP_CONFIG_SMTP_FROM))
+    configurationSource = mock(PlayConfigurationSource.class);
+    emailing = new EmailingService(configurationSource);
+    when(mailer.createEmail(configurationSource)).thenReturn(email);
+    when(configurationSource.getString(EmailingService.APP_CONFIG_SMTP_FROM))
       .thenReturn(EMAIL_SENDER);
   }
 
@@ -67,23 +64,23 @@ public class EmailingTest {
 
   @Test
   public void sendEmail_MUST_use_the_dev_mailer_WHEN_in_dev_mode() throws Exception {
-    when(configurationProvider.isDev()).thenReturn(true);
+    when(configurationSource.isDevelopment()).thenReturn(true);
     emailing.sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
-    verify(configuration).getString(Emailing.APP_CONFIG_DEV_SMTP_MAILER_CLASS);
+    verify(configurationSource).getString(EmailingService.APP_CONFIG_DEV_SMTP_MAILER_CLASS);
   }
 
   @Test
   public void sendEmail_MUST_use_the_prod_mailer_WHEN_in_prod_mode() throws Exception {
-    when(configurationProvider.isProd()).thenReturn(true);
-    when(configuration.getString(Emailing.APP_CONFIG_SMTP_MAILER_CLASS))
+    when(configurationSource.isProduction()).thenReturn(true);
+    when(configurationSource.getString(EmailingService.APP_CONFIG_SMTP_MAILER_CLASS))
       .thenReturn(MockMailer.class.getCanonicalName());
     emailing.sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
-    verify(configuration).getString(Emailing.APP_CONFIG_SMTP_MAILER_CLASS);
+    verify(configurationSource).getString(EmailingService.APP_CONFIG_SMTP_MAILER_CLASS);
   }
 
   @Test(expected = IllegalStateException.class)
   public void sendEmail_MUST_throw_an_exception_WHEN_mailer_class_is_invalid() throws Exception {
-    when(configuration.getString(Emailing.APP_CONFIG_TEST_SMTP_MAILER_CLASS))
+    when(configurationSource.getString(EmailingService.APP_CONFIG_TEST_SMTP_MAILER_CLASS))
       .thenReturn("Nonsense");
     emailing.sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
   }

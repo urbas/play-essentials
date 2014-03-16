@@ -1,9 +1,9 @@
 package com.urmest.emailing;
 
-import com.urmest.util.ConfigurationProvider;
+import com.urmest.util.ConfigurationSource;
 
 
-public class ApacheCommonsMailer implements Mailer {
+public class ApacheCommonsMailer implements EmailFactory {
   
   public static final String APP_CONFIG_SMTP_PASSWORD = "smtp.password";
   public static final String APP_CONFIG_SMTP_USER = "smtp.user";
@@ -13,7 +13,7 @@ public class ApacheCommonsMailer implements Mailer {
   public static final String APP_CONFIG_SMTP_TLS = "smtp.tls";
   
   @Override
-  public Email createEmail(ConfigurationProvider configurationProvider) {
+  public Email createEmail(ConfigurationSource configurationProvider) {
     return new ApacheCommonsEmail(
       getHostname(configurationProvider),
       getSmtpPort(configurationProvider),
@@ -23,27 +23,27 @@ public class ApacheCommonsMailer implements Mailer {
       getSmtpPassword(configurationProvider));
   }
 
-  public static String getHostname(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getString(APP_CONFIG_SMTP_HOST);
+  public static String getHostname(ConfigurationSource configurationSource) {
+    return configurationSource.getString(APP_CONFIG_SMTP_HOST);
   }
 
-  public static int getSmtpPort(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getInt(APP_CONFIG_SMTP_PORT, 25);
+  public static int getSmtpPort(ConfigurationSource configurationProvider) {
+    return configurationProvider.getInt(APP_CONFIG_SMTP_PORT, 25);
   }
 
-  public static boolean isSmtpSsl(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getBoolean(APP_CONFIG_SMTP_SSL, false);
+  public static boolean isSmtpSsl(ConfigurationSource configurationProvider) {
+    return configurationProvider.getBoolean(APP_CONFIG_SMTP_SSL, false);
   }
 
-  public static boolean isSmtpTls(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getBoolean(APP_CONFIG_SMTP_TLS, false);
+  public static boolean isSmtpTls(ConfigurationSource configurationProvider) {
+    return configurationProvider.getBoolean(APP_CONFIG_SMTP_TLS, false);
   }
 
-  public static String getSmtpUser(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getString(APP_CONFIG_SMTP_USER);
+  public static String getSmtpUser(ConfigurationSource configurationProvider) {
+    return configurationProvider.getString(APP_CONFIG_SMTP_USER);
   }
 
-  public static String getSmtpPassword(ConfigurationProvider configurationProvider) {
-    return configurationProvider.getConfiguration().getString(APP_CONFIG_SMTP_PASSWORD);
+  public static String getSmtpPassword(ConfigurationSource configurationProvider) {
+    return configurationProvider.getString(APP_CONFIG_SMTP_PASSWORD);
   }
 }

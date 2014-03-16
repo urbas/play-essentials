@@ -1,10 +1,10 @@
 package com.urmest.emailing;
 
-import com.urmest.util.ConfigurationProvider;
+import com.urmest.util.ConfigurationSource;
 
-public class LoggingNoOpMailer implements Mailer {
+public class LoggingNoOpMailer implements EmailFactory {
   @Override
-  public Email createEmail(ConfigurationProvider configurationProvider) {
+  public Email createEmail(ConfigurationSource configurationProvider) {
     return new LoggingNoOpEmail();
   }
 }

@@ -3,10 +3,10 @@ package com.urmest.users;
 import play.api.templates.Html;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
-import play.mvc.Result;
+import play.mvc.import;
 
+import com.urmest.emailing.PlayEmailing;
 import com.urmest.users.emails.html.SignupEmailTemplate;
-import com.urmest.emailing.PlayEmailingProvider;
 
 public final class UserController extends Controller {
   private UserController() {}
@@ -39,7 +39,7 @@ public final class UserController extends Controller {
     Html signupEmailHtmlBody = SignupEmailTemplate.apply(newUserDetails);
     String recepient = newUserDetails.email;
     String emailSubject = "Pless Signup";
-    PlayEmailingProvider.getInstance()
+    PlayEmailing.getEmailingService()
       .sendEmail(recepient, emailSubject, signupEmailHtmlBody);
   }
 }

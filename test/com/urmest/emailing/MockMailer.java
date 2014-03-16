@@ -3,15 +3,15 @@ package com.urmest.emailing;
 import static org.mockito.Mockito.mock;
 
 import com.urmest.emailing.Email;
-import com.urmest.emailing.Mailer;
-import com.urmest.util.ConfigurationProvider;
+import com.urmest.emailing.EmailFactory;
+import com.urmest.util.ConfigurationSource;
 
-public final class MockMailer implements Mailer {
+public final class MockMailer implements EmailFactory {
   public static Email lastSentEmail;
-  public static Mailer nestedMailer;
+  public static EmailFactory nestedMailer;
 
   @Override
-  public Email createEmail(ConfigurationProvider configurationProvider) {
+  public Email createEmail(ConfigurationSource configurationProvider) {
     lastSentEmail = nestedMailer == null ? mock(Email.class) : nestedMailer.createEmail(configurationProvider);
     return lastSentEmail;
   }
