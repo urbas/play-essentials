@@ -3,7 +3,7 @@ import JacocoPlugin._
 
 name := "play-essentials"
 
-organization := "com.urmest"
+organization := "com.pless"
 
 version := "0.0.1-SNAPSHOT"
 

@@ -2,10 +2,11 @@
 
 [![Build Status](https://drone.io/bitbucket.org/urbas/play-essentials/status.png)](https://drone.io/bitbucket.org/urbas/play-essentials/latest)
 
-Play Essentials is a Play Framework seedling app, but it can also be used as a
-library. Just clone it and start developing your Play app. It provides a Java
-8-friendly APIs and focuses on testability, ease of use for casual users, and
-configurability for power-users.
+Play Essentials (Pless) is a Play Framework seedling app, but it can also be
+used as a library. Just clone it and start building your custom Play app on it.
+
+Pless provides a Java 8-friendly APIs and focuses on testability, ease of use
+for casual users, and configurability for power-users.
 
 Some provided features (not exhaustive):
 
@@ -15,8 +16,8 @@ Some provided features (not exhaustive):
 -   JUnit test support for fake applications with an in-memory JPA database.
 
 NOTE: all of the above features are otherwise available
-through [Play Modules](http://www.playframework.com/modules). Play Essentials
-packages these modules where appropriate. However, Play Essentials also
+through [Play Modules](http://www.playframework.com/modules). Pless
+packages these modules where appropriate. However, Pless also
 implements its own Java APIs wherever the Scala API of Play modules impedes
 reusability from Java, testability from JUnit, and general configurability.
 
@@ -29,17 +30,17 @@ Essentials is, after all, just a Play Framework app.
 
 ## As a dependency
 
-You can also add Play Essentials to your Play app just like this (in your `build.sbt`):
+You can also add Pless to your Play app just like this (in your `build.sbt`):
 
     libraryDependencies ++= Seq(
-        "com.urmest" %% "play-essentials" % "0.0.1-SNAPSHOT"
+        "com.pless" %% "play-essentials" % "0.0.1-SNAPSHOT"
     )
 
-Play Essentials also comes with classes that make tests in JUnit easier. To use
+Pless also comes with classes that make tests in JUnit easier. To use
 them, just add this dependency:
 
     libraryDependencies ++= Seq(
-        "com.urmest" %% "play-essentials" % "0.0.1-SNAPSHOT" % "test" classifier "tests"
+        "com.pless" %% "play-essentials" % "0.0.1-SNAPSHOT" % "test" classifier "tests"
     )
 
 # Usage
@@ -83,9 +84,9 @@ You can put these configuration settings into `conf/application.conf`:
 The following configuration is useful for mocking in tests or to plug in your
 own email provider:
 
-    smtp.emailProvider=com.urmest.emailing.ApacheCommonsEmailProvider
-    dev.smtp.emailProvider=com.urmest.emailing.LoggingNoOpEmailProvider
-    test.smtp.emailProvider=com.urmest.emailing.MockEmailProvider
+    smtp.emailProvider=com.pless.emailing.ApacheCommonsEmailProvider
+    dev.smtp.emailProvider=com.pless.emailing.LoggingNoOpEmailProvider
+    test.smtp.emailProvider=com.pless.emailing.MockEmailProvider
 
 ### Usage
 
