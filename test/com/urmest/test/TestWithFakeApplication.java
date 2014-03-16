@@ -29,10 +29,13 @@ public abstract class TestWithFakeApplication {
       transactionBody.invoke(em);
       transaction.commit();
     } catch (Exception ex) {
-      transaction.rollback();
+      try {
+        transaction.rollback();
+      } catch (Exception rollbackException) {}
+      throw ex;
     }
   }
-  
+
   protected <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     EntityManager em = getEm();
     EntityTransaction transaction = em.getTransaction();
@@ -42,7 +45,9 @@ public abstract class TestWithFakeApplication {
       transaction.commit();
       return value;
     } catch (Exception ex) {
-      transaction.rollback();
+      try {
+        transaction.rollback();
+      } catch (Exception rollbackException) {}
       throw ex;
     }
   }

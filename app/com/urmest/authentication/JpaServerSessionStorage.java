@@ -8,10 +8,18 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
 
   private EntityManager entityManager;
 
+  /**
+   * Creates a session storage that uses Play's entity manager from the context. Such
+   * a session storage can be shared across multiple requests.
+   */
   public JpaServerSessionStorage() {
     this(null);
   }
 
+  /**
+   * Creates a session storage that uses the provided entity manager for all
+   * its operations.
+   */
   public JpaServerSessionStorage(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
@@ -19,7 +27,12 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
   @Override
   public void put(String key, String value, int expirationMillis) {
     JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
-    getEntityManager().persist(jpaServerSessionKeyValue);
+    try {
+      getEntityManager().persist(jpaServerSessionKeyValue);
+      getEntityManager().flush();
+    } catch (Exception ex) {
+      throw new IllegalStateException("Could not store the session key '" + key + "' into the session storage.", ex);
+    }
   }
 
   @Override

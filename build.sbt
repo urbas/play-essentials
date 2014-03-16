@@ -1,7 +1,7 @@
 import de.johoop.jacoco4sbt._
 import JacocoPlugin._
 
-name := "Play Essentials"
+name := "play-essentials"
 
 organization := "com.urmest"
 
@@ -29,6 +29,15 @@ jacoco.settings
 
 parallelExecution in jacoco.Config := false
 
+// Disable Scaladoc compilation and publication
+sources in doc in Compile := Nil
+
+publishArtifact in (Compile, packageDoc) := false
+
+// Disable publishing the sources
+publishArtifact in (Compile, packageSrc) := false
+
+// Publish the test binary
 publishArtifact in (Test, packageBin) := true
 
 play.Project.playJavaSettings

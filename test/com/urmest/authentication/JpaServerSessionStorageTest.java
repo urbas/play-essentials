@@ -44,6 +44,12 @@ public class JpaServerSessionStorageTest extends UrmestTest {
     Thread.sleep(FIFTY_MILLISECONDS);
     assertNull(fetchSessionValue());
   }
+  
+  @Test(expected = IllegalStateException.class)
+  public void put_MUST_throw_an_exception_WHEN_called_twice() throws Exception {
+    storeSessionValue(ONE_HOUR);
+    storeSessionValue(ONE_HOUR);
+  }
 
   private Object fetchSessionValue() {
     Object value = withTransaction(new TransactionFunction<Object>() {
