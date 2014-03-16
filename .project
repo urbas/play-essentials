@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>Play Essentials</name>
+  <name>play-essentials</name>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

@@ -71,18 +71,18 @@ own email provider:
 
 Here's how you send an email:
 
-    PlayEmailing.getEmailingService().sendEmail(recepient, emailSubject, htmlBody);
+    PlayEmailing.sendEmail(recepient, emailSubject, htmlBody);
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
 Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
 email like this:
 
     Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
-    PlayEmailing.getEmailingService().sendEmail(recepient, emailSubject, offerUpdateHtml);
+    PlayEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
 
 #### Advanced usage
 
-    Email email = PlayEmailing.getEmailingService().createEmail();
+    Email email = PlayEmailing.createEmail();
     email.setSubject(subject);
     email.setRecipient(recipient);
     email.setFrom(sender);

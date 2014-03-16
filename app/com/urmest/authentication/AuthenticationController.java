@@ -11,14 +11,14 @@ public final class AuthenticationController extends Controller {
 
   @Transactional
   public static Result logout() {
-    PlayLogin.logOut();
+    PlayAuthentication.logOut();
     return ok();
   }
 
   @Transactional
   public static Result status() {
-    if (PlayLogin.isLoggedIn()) {
-      return ok(Json.toJson(PlayLogin.getLoggedInUserId()));
+    if (PlayAuthentication.isLoggedIn()) {
+      return ok(Json.toJson(PlayAuthentication.getLoggedInUserId()));
     }
     return ok(Json.toJson(false));
   }

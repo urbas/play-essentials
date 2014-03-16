@@ -11,7 +11,7 @@ public final class PasswordAuthenticationController extends Controller {
   @Transactional
   public static Result login(String email, String password) {
     try {
-      PlayLogin.logIn(new PasswordLoginForm(email, password));
+      PlayAuthentication.logIn(new PasswordLoginForm(email, password));
       return ok();
     } catch (Exception e) {
       return badRequest();
