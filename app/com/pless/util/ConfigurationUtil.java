@@ -6,13 +6,21 @@ public final class ConfigurationUtil {
 
   public ConfigurationUtil() {}
 
-  public static String getConfigKeyBasedOnRunMode(ConfigurationSource configurationSource, String configKey) {
+  public static String getRunModeConfigKey(ConfigurationSource configurationSource, String configKey) {
     if (configurationSource.isProduction()) {
       return configKey;
     } else if (configurationSource.isDevelopment()) {
-      return CONFIG_KEY_DEVELOPMENT_PREFIX + configKey;
+      return getDevelopmentConfigKey(configKey);
     } else {
-      return CONFIG_KEY_TEST_PREFIX + configKey;
+      return getTestConfigKey(configKey);
     }
+  }
+
+  public static String getDevelopmentConfigKey(String configKey) {
+    return CONFIG_KEY_DEVELOPMENT_PREFIX + configKey;
+  }
+
+  public static String getTestConfigKey(String configKey) {
+    return CONFIG_KEY_TEST_PREFIX + configKey;
   }
 }

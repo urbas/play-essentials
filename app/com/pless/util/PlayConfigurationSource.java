@@ -14,6 +14,8 @@ import play.Play;
  */
 public class PlayConfigurationSource implements ConfigurationSource {
 
+  private static ConfigurationSource configurationSource;
+
   @Override
   public boolean isProduction() {
     return Play.isProd();
@@ -40,13 +42,17 @@ public class PlayConfigurationSource implements ConfigurationSource {
       .getBoolean(configKey, defaultValue);
   }
 
-  public static PlayConfigurationSource getInstance() {
-    return Singleton.INSTANCE;
+  public static ConfigurationSource getInstance() {
+    return configurationSource == null ? Singleton.INSTANCE : configurationSource;
   }
 
   private static final class Singleton {
 
     public static final PlayConfigurationSource INSTANCE = new PlayConfigurationSource();
 
+  }
+
+  static void setPlayConfigurationSource(ConfigurationSource newConfigurationSource) {
+    configurationSource = newConfigurationSource;
   }
 }

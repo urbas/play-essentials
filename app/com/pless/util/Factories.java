@@ -43,9 +43,10 @@ public class Factories {
   }
 
   private <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey) {
+    String factoryNameConfigKeyBasedOnRunMode = ConfigurationUtil
+      .getRunModeConfigKey(configurationSource, factoryNameConfigKey);
     String factoryClassName = configurationSource
-      .getString(ConfigurationUtil
-        .getConfigKeyBasedOnRunMode(configurationSource, factoryNameConfigKey));
+      .getString(factoryNameConfigKeyBasedOnRunMode);
     if (!StringUtils.isNullOrEmpty(factoryClassName)) {
       return createFactoryFromClassName(factoryClassName);
     }

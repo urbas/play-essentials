@@ -2,6 +2,6 @@ package com.pless.util;
 
 public interface Factory<T> {
 
-  T createInstance(ConfigurationSource instance);
+  T createInstance(ConfigurationSource configurationSource);
 
 }

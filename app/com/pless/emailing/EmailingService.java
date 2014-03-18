@@ -75,5 +75,4 @@ public class EmailingService {
       throw new IllegalArgumentException("Could not send the email. No subject provided.");
     }
   }
-
 }

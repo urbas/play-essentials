@@ -59,7 +59,7 @@ public final class PlayAuthentication {
   private static ServerSessionStorage getServerSessionStorage() {
     return PlayFactories.getFactories().createInstance(
       PlayAuthentication.CONFIG_SERVER_SESSION_STORAGE_FACTORY,
-      new DefaultSessionStorageCreator());
+      new DefaultSessionStorageFactory());
   }
 
   public static UserRepository getUserRepository() {
@@ -68,7 +68,7 @@ public final class PlayAuthentication {
       new PlayUserRepository.DefaultUserRepositoryCreator());
   }
 
-  private static final class DefaultSessionStorageCreator implements
+  private static final class DefaultSessionStorageFactory implements
     Factory<ServerSessionStorage> {
     @Override
     public ServerSessionStorage createInstance(ConfigurationSource configurationSource) {
