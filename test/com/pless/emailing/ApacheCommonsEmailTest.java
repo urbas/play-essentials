@@ -6,7 +6,6 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;

@@ -1,12 +1,11 @@
 package com.pless.emailing;
 
 import com.pless.util.ConfigurationSource;
-import com.pless.util.Factories.DefaultInstanceCallback;
+import com.pless.util.Factory;
 
-public class DefaultEmailProviderCreator implements
-  DefaultInstanceCallback {
+public class DefaultEmailProviderFactory implements Factory<EmailProvider> {
   @Override
-  public EmailProvider create(ConfigurationSource configurationSource) {
+  public EmailProvider createInstance(ConfigurationSource configurationSource) {
     if (configurationSource.isProduction()) {
       return new ApacheCommonsEmailProvider();
     } else {

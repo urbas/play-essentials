@@ -70,7 +70,7 @@ public class UserControllerTest extends PlessTest {
     try {
       callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     } catch (Exception e) {}
-    new TestPlayUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
+    new JpaUserRepository(getEm()).findUserByEmail(JOHN_SMITH_EMAIL);
   }
 
   @Test
@@ -89,7 +89,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   private void assertJohnSmithIsInDb() {
-    User createdUser = new TestPlayUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
+    User createdUser = new JpaUserRepository(getEm()).findUserByEmail(JOHN_SMITH_EMAIL);
     long idOfNewUser = 1L;
     User expectedUser = createJohnSmithUser(idOfNewUser, createdUser.getSalt());
     assertEquals(expectedUser, createdUser);

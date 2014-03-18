@@ -2,15 +2,18 @@ package com.pless.users;
 
 import java.util.List;
 
-import javax.persistence.*;
-
-import play.db.jpa.JPA;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import com.pless.authentication.SaltedHashedPassword;
 
-public class PlayJpaUserRepository implements UserRepository {
+public class JpaUserRepository implements UserRepository {
 
-  protected PlayJpaUserRepository() {}
+  private final EntityManager entityManager;
+  
+  public JpaUserRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
 
   @Override
   public User findUserByEmail(String email) {
@@ -35,14 +38,7 @@ public class PlayJpaUserRepository implements UserRepository {
   }
 
   public EntityManager getEntityManager() {
-    return JPA.em();
+    return entityManager;
   }
 
-  public static UserRepository getInstance() {
-    return Singletons.PLAY_USER_REPOSITORY;
-  }
-
-  private static class Singletons {
-    private static final UserRepository PLAY_USER_REPOSITORY = new PlayJpaUserRepository();
-  }
 }

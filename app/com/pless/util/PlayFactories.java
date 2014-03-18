@@ -4,7 +4,7 @@ public final class PlayFactories {
 
   public PlayFactories() {}
 
-  public static Factories getInstance() {
+  public static Factories getFactories() {
     return Singleton.INSTANCE;
   }
 

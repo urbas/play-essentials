@@ -1,5 +1,10 @@
 package com.pless.util;
 
+/**
+ * Guideline: implementations of this interface should be immutable.
+ * 
+ * @author matej
+ */
 public interface ConfigurationSource {
 
   boolean isDevelopment();

@@ -3,8 +3,7 @@ package com.pless.emailing;
 import static com.pless.util.StringUtils.isNullOrEmpty;
 import play.api.templates.Html;
 
-import com.pless.util.ConfigurationSource;
-import com.pless.util.Factories;
+import com.pless.util.*;
 
 public class EmailingService {
 
@@ -17,21 +16,31 @@ public class EmailingService {
    * This address will appear in the email of the addressees.
    */
   public static final String APP_CONFIG_SMTP_FROM = "smtp.from";
-  private final ConfigurationSource configurationSource;
-  private Factories factories;
-  private DefaultEmailProviderCreator defaultEmailProviderCreator;
+  protected final ConfigurationSource configurationSource;
+  protected final Factories factories;
+  protected final Factory<EmailProvider> defaultEmailProviderFactory;
 
-  public EmailingService(ConfigurationSource configurationProvider, Factories factories) {
-    this(configurationProvider, factories, new DefaultEmailProviderCreator());
+  public EmailingService(ConfigurationSource configurationProvider,
+                         Factories factories)
+  {
+    this(configurationProvider,
+      factories,
+      new DefaultEmailProviderFactory());
   }
 
-  public EmailingService(ConfigurationSource configurationProvider, Factories factories, DefaultEmailProviderCreator defaultEmailProviderCreator) {
+  public EmailingService(ConfigurationSource configurationProvider,
+                         Factories factories,
+                         Factory<EmailProvider> defaultEmailProviderFactory)
+  {
     this.configurationSource = configurationProvider;
     this.factories = factories;
-    this.defaultEmailProviderCreator = defaultEmailProviderCreator;
+    this.defaultEmailProviderFactory = defaultEmailProviderFactory;
   }
 
-  public void sendEmail(String recepient, String subject, Html body) {
+  public void sendEmail(String recepient,
+                        String subject,
+                        Html body)
+  {
     String configuredSender = configurationSource
       .getString(APP_CONFIG_SMTP_FROM);
     assertParametersAreValid(configuredSender, recepient, subject);
@@ -47,8 +56,15 @@ public class EmailingService {
     return getEmailProvider().createEmail(configurationSource);
   }
 
-  private static void assertParametersAreValid(String sender, String recepient,
-                                               String subject) {
+  public EmailProvider getEmailProvider() {
+    return factories
+      .createInstance(APP_CONFIG_SMTP_MAILER_CLASS, defaultEmailProviderFactory);
+  }
+
+  private static void assertParametersAreValid(String sender,
+                                               String recepient,
+                                               String subject)
+  {
     if (isNullOrEmpty(sender)) {
       throw new IllegalArgumentException("Could not send the email. No sender provided.");
     }
@@ -60,8 +76,4 @@ public class EmailingService {
     }
   }
 
-  public EmailProvider getEmailProvider() {
-    return factories
-            .createInstanceViaFactory(APP_CONFIG_SMTP_MAILER_CLASS, defaultEmailProviderCreator);
-  }
 }

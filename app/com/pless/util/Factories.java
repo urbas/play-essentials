@@ -10,40 +10,57 @@ public class Factories {
     this.configurationSource = configurationSource;
   }
 
-  public <T> T createInstanceViaFactory(String factoryNameConfigKey,
-                                        DefaultInstanceCallback defaultInstanceCallback) {
-    String factoryClassName = configurationSource
-      .getString(ConfigurationUtil.getConfigKeyBasedOnRunMode(configurationSource, factoryNameConfigKey));
-    if (StringUtils.isNullOrEmpty(factoryClassName)) {
-      return createDefaultInstance(defaultInstanceCallback);
+  /**
+   * @param factoryNameConfigKey
+   *          a configuration key name. This configuration setting gives the
+   *          class name of the factory with which to create an instance.
+   * @param defaultFactory
+   *          in case the factory is not configured (not specified by the
+   *          configuration key), then this factory is used to construct the
+   *          instance.
+   * @return the instance (constructed either via the configured factory or the
+   *         default factory, if no factory is configured).
+   */
+  public <T> T createInstance(String factoryNameConfigKey,
+                              Factory<T> defaultFactory)
+  {
+    return createFactory(factoryNameConfigKey, defaultFactory)
+      .createInstance(configurationSource);
+  }
+
+  /**
+   * @return either a factory
+   */
+  public <T> Factory<T> createFactory(String factoryNameConfigKey,
+                                      Factory<T> defaultFactory)
+  {
+    Factory<T> factoryFromConfiguration = tryCreateFactoryFromConfiguration(factoryNameConfigKey);
+    if (factoryFromConfiguration == null) {
+      return defaultFactory;
     } else {
-      return createViaFactory(factoryClassName);
+      return factoryFromConfiguration;
     }
   }
 
-  private <T> T createDefaultInstance(DefaultInstanceCallback defaultInstanceCallback) {
-    @SuppressWarnings("unchecked")
-    final T defaultInstance = (T) defaultInstanceCallback
-      .create(configurationSource);
-    return defaultInstance;
+  private <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey) {
+    String factoryClassName = configurationSource
+      .getString(ConfigurationUtil
+        .getConfigKeyBasedOnRunMode(configurationSource, factoryNameConfigKey));
+    if (!StringUtils.isNullOrEmpty(factoryClassName)) {
+      return createFactoryFromClassName(factoryClassName);
+    }
+    return null;
   }
 
-  private <T> T createViaFactory(String factoryClassName) {
+  @SuppressWarnings("unchecked")
+  private <T> Factory<T> createFactoryFromClassName(String factoryClassName) {
     try {
-      @SuppressWarnings("unchecked")
-      Factory<T> storageFactoryFactory = (Factory<T>) Class
+      return (Factory<T>) Class
         .forName(factoryClassName).getConstructor()
         .newInstance();
-      return storageFactoryFactory.createInstance(configurationSource);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
         + factoryClassName + "'.", ex);
     }
-  }
-
-  public interface DefaultInstanceCallback {
-
-    Object create(ConfigurationSource configurationSource);
-
   }
 }

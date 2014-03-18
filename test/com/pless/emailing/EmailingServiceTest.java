@@ -21,7 +21,7 @@ public class EmailingServiceTest {
   private Email email;
   private EmailingService emailing;
   private ConfigurationSource configurationSource;
-  private DefaultEmailProviderCreator defaultEmailProviderCreator;
+  private DefaultEmailProviderFactory defaultEmailProviderFactory;
   private EmailProvider emailProvider;
 
   @Before
@@ -30,15 +30,15 @@ public class EmailingServiceTest {
     mailer = emailProvider;
     email = mock(Email.class);
     configurationSource = mock(ConfigurationSource.class);
-    defaultEmailProviderCreator = mock(DefaultEmailProviderCreator.class);
+    defaultEmailProviderFactory = mock(DefaultEmailProviderFactory.class);
     
     when(mailer.createEmail(configurationSource)).thenReturn(email);
     when(configurationSource.getString(EmailingService.APP_CONFIG_SMTP_FROM))
       .thenReturn(EMAIL_SENDER);
-    when(defaultEmailProviderCreator.create(configurationSource)).thenReturn(emailProvider);
+    when(defaultEmailProviderFactory.createInstance(configurationSource)).thenReturn(emailProvider);
     when(emailProvider.createEmail(configurationSource)).thenReturn(email);
     
-    emailing = new EmailingService(configurationSource, new Factories(configurationSource), defaultEmailProviderCreator);
+    emailing = new EmailingService(configurationSource, new Factories(configurationSource), defaultEmailProviderFactory);
   }
 
   @Test(expected = IllegalArgumentException.class)

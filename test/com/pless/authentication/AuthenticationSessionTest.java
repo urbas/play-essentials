@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.*;
-import org.mockito.Mockito;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.pless.users.JpaUser;
 import com.pless.users.User;

@@ -11,22 +11,22 @@ import org.junit.Test;
 import com.pless.util.ConfigurationSource;
 
 
-public class DefaultEmailProviderCreatorTest {
+public class DefaultEmailProviderFactoryTest {
 
   private ConfigurationSource configurationSource;
-  private DefaultEmailProviderCreator defaultEmailProviderCreator;
+  private DefaultEmailProviderFactory defaultEmailProviderCreator;
   
   @Before
   public void setUp() {
     configurationSource = mock(ConfigurationSource.class);
-    defaultEmailProviderCreator = new DefaultEmailProviderCreator();
+    defaultEmailProviderCreator = new DefaultEmailProviderFactory();
   }
 
   @Test
   public void create_MUST_return_ApacheEmailProvider_WHEN_in_production_mode() throws Exception {
     when(configurationSource.isProduction()).thenReturn(true);
     assertThat(
-      defaultEmailProviderCreator.create(configurationSource),
+      defaultEmailProviderCreator.createInstance(configurationSource),
       is(ApacheCommonsEmailProvider.class));
   }
   
@@ -34,14 +34,14 @@ public class DefaultEmailProviderCreatorTest {
   public void create_MUST_return_a_logging_mailer_WHEN_in_development_mode() throws Exception {
     when(configurationSource.isDevelopment()).thenReturn(true);
     assertThat(
-      defaultEmailProviderCreator.create(configurationSource),
+      defaultEmailProviderCreator.createInstance(configurationSource),
       is(LoggingNoOpEmailProvider.class));
   }
   
   @Test
   public void create_MUST_return_a_logging_mailer_WHEN_in_test_mode() throws Exception {
     assertThat(
-      defaultEmailProviderCreator.create(configurationSource),
+      defaultEmailProviderCreator.createInstance(configurationSource),
       is(LoggingNoOpEmailProvider.class));
   }
 

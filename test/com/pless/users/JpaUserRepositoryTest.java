@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.junit.*;
 
-public class PlayJpaUserRepositoryTest {
+public class JpaUserRepositoryTest {
   private UserRepository userRepository;
   private EntityManager entityManager;
   private TypedQuery<JpaUser> query;
@@ -22,10 +22,12 @@ public class PlayJpaUserRepositoryTest {
   public void setUp() {
     entityManager = mock(EntityManager.class);
     query = mock(TypedQuery.class);
-    when(entityManager.createNamedQuery(JpaUser.QUERY_GET_ALL)).thenReturn(query);
     allUsers = new ArrayList<JpaUser>();
+    
+    when(entityManager.createNamedQuery(JpaUser.QUERY_GET_ALL)).thenReturn(query);
     when(query.getResultList()).thenReturn(allUsers);
-    userRepository = new TestPlayUserRepository(entityManager);
+    
+    userRepository = new JpaUserRepository(entityManager);
   }
   
   @Test

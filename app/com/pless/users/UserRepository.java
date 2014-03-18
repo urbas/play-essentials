@@ -9,5 +9,4 @@ public interface UserRepository {
   public abstract List<User> getAllUsers();
 
   public abstract void persistUser(String name, String email, String password);
-
 }

@@ -25,7 +25,7 @@ public final class UserController extends Controller {
 
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
-      PlayJpaUserRepository.getInstance()
+      PlayUserRepository.getUserRepository()
         .persistUser(
           createUserForm.name,
           createUserForm.email,

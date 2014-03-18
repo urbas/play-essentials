@@ -1,14 +1,13 @@
 package com.pless.authentication;
 
-import com.pless.users.PlayJpaUserRepository;
+import com.pless.users.PlayUserRepository;
 import com.pless.users.UserRepository;
 import com.pless.util.*;
-import com.pless.util.Factories.DefaultInstanceCallback;
 
 public final class PlayAuthentication {
 
-  private static final String CONFIG_USER_REPOSITORY_FACTORY = "play.essentials.userRepositoryFactory";
-  public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "play.essentials.serverSessionStorageFactory";
+  public static final String CONFIG_USER_REPOSITORY_FACTORY = "pless.userRepositoryFactory";
+  public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorageFactory";
 
   private PlayAuthentication() {}
 
@@ -58,32 +57,23 @@ public final class PlayAuthentication {
   }
 
   private static ServerSessionStorage getServerSessionStorage() {
-    return PlayFactories.getInstance().createInstanceViaFactory(
+    return PlayFactories.getFactories().createInstance(
       PlayAuthentication.CONFIG_SERVER_SESSION_STORAGE_FACTORY,
       new DefaultSessionStorageCreator());
   }
 
-  private static UserRepository getUserRepository() {
-    return PlayFactories.getInstance().createInstanceViaFactory(
+  public static UserRepository getUserRepository() {
+    return PlayFactories.getFactories().createInstance(
       PlayAuthentication.CONFIG_USER_REPOSITORY_FACTORY,
-      new DefaultUserRepositoryCreator());
+      new PlayUserRepository.DefaultUserRepositoryCreator());
   }
 
   private static final class DefaultSessionStorageCreator implements
-    DefaultInstanceCallback {
+    Factory<ServerSessionStorage> {
     @Override
-    public Object create(ConfigurationSource configurationSource) {
+    public ServerSessionStorage createInstance(ConfigurationSource configurationSource) {
       return new CachedServerSessionStorage();
     }
-  }
-
-  private static class DefaultUserRepositoryCreator implements DefaultInstanceCallback {
-
-    @Override
-    public Object create(ConfigurationSource configurationSource) {
-      return PlayJpaUserRepository.getInstance();
-    }
-
   }
 
   private static class PlayLoginSingletons {
