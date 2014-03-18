@@ -1,4 +1,4 @@
-package com.pless;
+package com.pless.test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,15 +16,10 @@ public class PlessLightweightTest {
   private Factory<UserRepository> globalUserRepositoryFactory;
   private UserRepository globalUserRepository;
 
-  @SuppressWarnings("unchecked")
   @Before
   public void setUp() {
-    globalConfigurationSource = mock(ConfigurationSource.class);
-    globalUserRepositoryFactory = mock(Factory.class);
-    scopedConfiguration = new ScopedTestConfiguration(globalConfigurationSource);
-
+    setUpGlobalConfiguration();
     setUpUserRepository();
-
   }
 
   public Factory<UserRepository> getGlobalUserRepositoryFactory() {
@@ -37,6 +32,15 @@ public class PlessLightweightTest {
 
   @After
   public void tearDown() {
+    tearDownUserRepository();
+    tearDownGlobalConfiguration();
+  }
+
+  private void tearDownUserRepository() {
+    TestUserRepositoryFactory.setCurrentFactory(null);
+  }
+
+  private void tearDownGlobalConfiguration() {
     try {
       scopedConfiguration.close();
     } catch (Exception ex) {
@@ -44,14 +48,23 @@ public class PlessLightweightTest {
     }
   }
 
+  private void setUpGlobalConfiguration() {
+    globalConfigurationSource = mock(ConfigurationSource.class);
+    scopedConfiguration = new ScopedTestConfiguration(globalConfigurationSource);
+  }
+
+  @SuppressWarnings("unchecked")
   private void setUpUserRepository() {
+    globalUserRepositoryFactory = mock(Factory.class);
     globalUserRepository = mock(UserRepository.class);
+
     when(globalConfigurationSource
       .getString(ConfigurationUtil
         .getTestConfigKey(PlayUserRepository.CONFIG_KEY_USER_REPOSITORY)))
       .thenReturn(TestUserRepositoryFactory.class.getCanonicalName());
     when(globalUserRepositoryFactory.createInstance(globalConfigurationSource))
       .thenReturn(globalUserRepository);
+
     TestUserRepositoryFactory.setCurrentFactory(globalUserRepositoryFactory);
   }
 

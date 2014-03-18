@@ -12,7 +12,7 @@ public class ScopedTestConfiguration implements AutoCloseable {
   
   public ScopedTestConfiguration(ConfigurationSource configuration) {
     singletonLock.lock();
-    oldPlayConfigurationSource = PlayConfigurationSource.getInstance();
+    oldPlayConfigurationSource = PlayConfigurationSource.getConfigurationSource();
     PlayConfigurationSource.setPlayConfigurationSource(configuration);
   }
   

@@ -1,13 +1,9 @@
 package com.pless.authentication;
 
-import com.pless.users.PlayUserRepository;
-import com.pless.users.UserRepository;
-import com.pless.util.*;
+import static com.pless.authentication.PlayServerSessionStorage.getServerSessionStorage;
+import static com.pless.users.PlayUserRepository.getUserRepository;
 
 public final class PlayAuthentication {
-
-  public static final String CONFIG_USER_REPOSITORY_FACTORY = "pless.userRepositoryFactory";
-  public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorageFactory";
 
   private PlayAuthentication() {}
 
@@ -54,26 +50,6 @@ public final class PlayAuthentication {
 
   private static PasswordAuthenticator getPasswordAuthenticator() {
     return PlayLoginSingletons.PASSWORD_AUTHENTICATOR;
-  }
-
-  private static ServerSessionStorage getServerSessionStorage() {
-    return PlayFactories.getFactories().createInstance(
-      PlayAuthentication.CONFIG_SERVER_SESSION_STORAGE_FACTORY,
-      new DefaultSessionStorageFactory());
-  }
-
-  public static UserRepository getUserRepository() {
-    return PlayFactories.getFactories().createInstance(
-      PlayAuthentication.CONFIG_USER_REPOSITORY_FACTORY,
-      new PlayUserRepository.DefaultUserRepositoryCreator());
-  }
-
-  private static final class DefaultSessionStorageFactory implements
-    Factory<ServerSessionStorage> {
-    @Override
-    public ServerSessionStorage createInstance(ConfigurationSource configurationSource) {
-      return new CachedServerSessionStorage();
-    }
   }
 
   private static class PlayLoginSingletons {

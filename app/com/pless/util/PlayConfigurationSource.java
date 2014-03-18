@@ -42,7 +42,7 @@ public class PlayConfigurationSource implements ConfigurationSource {
       .getBoolean(configKey, defaultValue);
   }
 
-  public static ConfigurationSource getInstance() {
+  public static ConfigurationSource getConfigurationSource() {
     return configurationSource == null ? Singleton.INSTANCE : configurationSource;
   }
 

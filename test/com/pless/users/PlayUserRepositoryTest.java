@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.pless.PlessLightweightTest;
+import com.pless.test.PlessLightweightTest;
 
 public class PlayUserRepositoryTest extends PlessLightweightTest {
 

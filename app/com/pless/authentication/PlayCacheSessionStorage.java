@@ -5,12 +5,12 @@ import play.cache.Cache;
 /**
  * This server session storage uses Play's cache.
  * 
- * This class is stateless. Therefore, one instance of this
- * class may be shared across multiple requests.
+ * This class is stateless. Therefore, one instance of this class may be shared
+ * across multiple requests.
  * 
  * @author matej
  */
-public class CachedServerSessionStorage implements ServerSessionStorage {
+public class PlayCacheSessionStorage implements ServerSessionStorage {
 
   @Override
   public void put(String key, String value, int expirationMillis) {
@@ -27,5 +27,4 @@ public class CachedServerSessionStorage implements ServerSessionStorage {
   public void remove(String key) {
     Cache.remove(key);
   }
-
 }

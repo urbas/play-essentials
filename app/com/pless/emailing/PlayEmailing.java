@@ -1,9 +1,8 @@
 package com.pless.emailing;
 
+import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlayFactories.getFactories;
 import play.api.templates.Html;
-
-import com.pless.util.PlayConfigurationSource;
-import com.pless.util.PlayFactories;
 
 public final class PlayEmailing {
 
@@ -14,13 +13,13 @@ public final class PlayEmailing {
     Singleton.EMAILING_SERVICE.sendEmail(recepient, subject, body);
   }
 
-  public Email createEmail() {
+  public static Email createEmail() {
     return Singleton.EMAILING_SERVICE.createEmail();
   }
 
-  public static class Singleton {
+  private static class Singleton {
     public static final EmailingService EMAILING_SERVICE = new EmailingService(
-      PlayConfigurationSource.getInstance(),
-      PlayFactories.getFactories());
+      getConfigurationSource(),
+      getFactories());
   }
 }

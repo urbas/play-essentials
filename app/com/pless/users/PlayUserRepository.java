@@ -1,5 +1,7 @@
 package com.pless.users;
 
+import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+
 import javax.persistence.EntityManager;
 
 import play.db.jpa.JPA;
@@ -8,7 +10,7 @@ import com.pless.util.*;
 
 public class PlayUserRepository extends JpaUserRepository {
 
-  public static final String CONFIG_KEY_USER_REPOSITORY = "pless.userRepository";
+  public static final String CONFIG_KEY_USER_REPOSITORY = "pless.userRepositoryFactory";
 
   protected PlayUserRepository() {
     super(JPA.em());
@@ -20,7 +22,7 @@ public class PlayUserRepository extends JpaUserRepository {
   }
 
   public static UserRepository getUserRepository() {
-    return Singletons.PLAY_USER_REPOSITORY_FACTORY.createInstance(PlayConfigurationSource.getInstance());
+    return Singletons.PLAY_USER_REPOSITORY_FACTORY.createInstance(getConfigurationSource());
   }
 
   private static class Singletons {

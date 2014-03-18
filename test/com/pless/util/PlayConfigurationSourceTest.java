@@ -15,7 +15,7 @@ public class PlayConfigurationSourceTest {
   public void setUp() {
     configurationSource = mock(ConfigurationSource.class);
     defaultPlayConfigurationSource = PlayConfigurationSource
-      .getInstance();
+      .getConfigurationSource();
   }
 
   @Test
@@ -23,7 +23,7 @@ public class PlayConfigurationSourceTest {
     try (ScopedTestConfiguration scopedConfiguration = new ScopedTestConfiguration(configurationSource)) {
       assertEquals(
         configurationSource,
-        PlayConfigurationSource.getInstance());
+        PlayConfigurationSource.getConfigurationSource());
     }
   }
 
@@ -31,7 +31,7 @@ public class PlayConfigurationSourceTest {
   public void getInstance_MUST_return_the_default_configuration_source() throws Exception {
     assertEquals(
       defaultPlayConfigurationSource,
-      PlayConfigurationSource.getInstance());
+      PlayConfigurationSource.getConfigurationSource());
   }
 
 }
