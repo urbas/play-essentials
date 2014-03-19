@@ -14,8 +14,4 @@ public class AuthenticationToken {
     return authenticatedUser;
   }
 
-  public long getId() {
-    return authenticatedUser.getId();
-  }
-
 }

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.pless.test.*;
 
-public class JpaServerSessionStorageTest extends PlessTest {
+public class JpaServerSessionStorageTest extends PlessControllerTest {
   private static final int ONE_HOUR = 3600000;
   private static final String FOO_SESSION_VALUE = "foo session value";
   private static final String FOO_SESSION_KEY = "foo session key";

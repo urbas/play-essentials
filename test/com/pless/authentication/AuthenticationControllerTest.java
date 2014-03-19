@@ -12,9 +12,9 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.test.FakeRequest;
 
-import com.pless.test.PlessTest;
+import com.pless.test.PlessControllerTest;
 
-public class AuthenticationControllerTest extends PlessTest {
+public class AuthenticationControllerTest extends PlessControllerTest {
 
   private static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
 

@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.pless.test.PlessLightweightTest;
+import com.pless.test.PlessTest;
 
-public class PlayUserRepositoryTest extends PlessLightweightTest {
+public class PlayUserRepositoryTest extends PlessTest {
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
-    assertEquals(getGlobalUserRepository(), PlayUserRepository.getUserRepository());
+    assertEquals(getUserRepository(), PlayUserRepository.getUserRepository());
   }
 }

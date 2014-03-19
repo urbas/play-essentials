@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.pless.test.PlessTest;
+import com.pless.test.PlessControllerTest;
 
 
-public class PlayCacheSessionStorageTest extends PlessTest {
+public class PlayCacheSessionStorageTest extends PlessControllerTest {
   private static final String FOO = "foo";
   private static final String BAR = "bar";
   private static final int ONE_HOUR_IN_MILLIS = 60 * 60 * 1000;

@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.test.PlessTest;
+import com.pless.test.PlessControllerTest;
 
-public class PasswordAuthenticationControllerTest extends PlessTest {
+public class PasswordAuthenticationControllerTest extends PlessControllerTest {
 
   @Test
   public void login_MUST_result_in_badRequest_WHEN_no_credentials_are_given() throws Exception {

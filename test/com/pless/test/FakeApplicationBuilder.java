@@ -1,5 +1,6 @@
 package com.pless.test;
 
+import static com.pless.util.ConfigurationUtil.getTestConfigKey;
 import static play.test.Helpers.*;
 
 import java.util.*;
@@ -7,8 +8,8 @@ import java.util.*;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
-import com.pless.emailing.EmailingService;
 import com.pless.emailing.EmailProvider;
+import com.pless.emailing.PlayEmailing;
 
 public class FakeApplicationBuilder implements AutoCloseable {
   private static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";
@@ -49,7 +50,9 @@ public class FakeApplicationBuilder implements AutoCloseable {
 
   public void setMockMailer(Class<? extends EmailProvider> mockMailerClass) {
     if (mockMailerClass != null) {
-      applicationOptions.put(EmailingService.APP_CONFIG_TEST_SMTP_MAILER_CLASS, mockMailerClass.getCanonicalName());
+      applicationOptions
+        .put(getTestConfigKey(PlayEmailing.CONFIG_EMAIL_PROVIDER), mockMailerClass
+          .getCanonicalName());
     }
   }
 

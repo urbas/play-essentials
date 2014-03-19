@@ -10,7 +10,7 @@ import com.pless.util.*;
 
 public class PlayUserRepository extends JpaUserRepository {
 
-  public static final String CONFIG_KEY_USER_REPOSITORY = "pless.userRepositoryFactory";
+  public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
 
   protected PlayUserRepository() {
     super(JPA.em());
@@ -26,7 +26,7 @@ public class PlayUserRepository extends JpaUserRepository {
   }
 
   private static class Singletons {
-    private static final SingletonFactory<UserRepository> PLAY_USER_REPOSITORY_FACTORY = new SingletonFactory<>(CONFIG_KEY_USER_REPOSITORY, new DefaultUserRepositoryCreator());
+    private static final SingletonFactory<UserRepository> PLAY_USER_REPOSITORY_FACTORY = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
   }
 
   public static class DefaultUserRepositoryCreator implements Factory<UserRepository> {

@@ -1,11 +1,12 @@
 package com.pless.users;
 
+import static com.pless.emailing.PlayEmailing.sendEmail;
+import static com.pless.users.PlayUserRepository.getUserRepository;
 import play.api.templates.Html;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import com.pless.emailing.PlayEmailing;
 import com.pless.users.emails.html.SignupEmailTemplate;
 
 public final class UserController extends Controller {
@@ -25,7 +26,7 @@ public final class UserController extends Controller {
 
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
-      PlayUserRepository.getUserRepository()
+      getUserRepository()
         .persistUser(
           createUserForm.name,
           createUserForm.email,
@@ -39,6 +40,6 @@ public final class UserController extends Controller {
     Html signupEmailHtmlBody = SignupEmailTemplate.apply(newUserDetails);
     String recepient = newUserDetails.email;
     String emailSubject = "Pless Signup";
-    PlayEmailing.sendEmail(recepient, emailSubject, signupEmailHtmlBody);
+    sendEmail(recepient, emailSubject, signupEmailHtmlBody);
   }
 }
