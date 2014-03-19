@@ -10,11 +10,10 @@ import play.mvc.Result;
 import com.pless.users.emails.html.SignupEmailTemplate;
 
 public final class UserController extends Controller {
-  private UserController() {}
 
   @Transactional
-  public static Result signUp(String name, String email, String password) {
-    SignupForm newUserDetails = new SignupForm(name, email, password);
+  public static Result signUp(String email, String password) {
+    SignupForm newUserDetails = new SignupForm(email, password);
     try {
       createUser(newUserDetails);
     } catch (Exception ex) {
@@ -28,7 +27,6 @@ public final class UserController extends Controller {
     if (createUserForm.isValid()) {
       getUserRepository()
         .persistUser(
-          createUserForm.name,
           createUserForm.email,
           createUserForm.password);
     } else {

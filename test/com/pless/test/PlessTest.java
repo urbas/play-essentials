@@ -20,7 +20,7 @@ import com.pless.util.*;
 
 public class PlessTest {
 
-  private static ReentrantLock globalConfigurationLock = new ReentrantLock();
+  private static ReentrantLock globalTestConfigurationLock = new ReentrantLock();
   public static final String SENDER_EXAMPLE_COM = "sender@example.com";
   private ScopedTestConfiguration scopedConfiguration;
   private Factory<UserRepository> globalUserRepositoryFactory;
@@ -30,7 +30,7 @@ public class PlessTest {
 
   @Before
   public void setUp() {
-    globalConfigurationLock.lock();
+    globalTestConfigurationLock.lock();
     setUpConfigurationSource();
     setUpUserRepository();
     setUpEmailProvider();
@@ -53,7 +53,7 @@ public class PlessTest {
     tearDownEmailProvider();
     tearDownUserRepository();
     tearDownConfigurationSource();
-    globalConfigurationLock.unlock();
+    globalTestConfigurationLock.unlock();
   }
 
   private void tearDownEmailProvider() {

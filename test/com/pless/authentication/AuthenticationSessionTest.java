@@ -79,7 +79,7 @@ public class AuthenticationSessionTest {
 
   private User createJohnSmithUser() {
     SaltedHashedPassword password = new SaltedHashedPassword(JOHN_SMITH_PASSWORD);
-    return new JpaUser(JOHN_SMITH, JOHN_SMITH_EMAIL, password)
+    return new JpaUser(JOHN_SMITH_EMAIL, password)
       .withId(JOHN_SMITH_USER_ID);
   }
 }

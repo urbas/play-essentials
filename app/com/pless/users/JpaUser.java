@@ -18,8 +18,6 @@ public final class JpaUser implements User {
   @GeneratedValue
   private long id;
   @Column(nullable = false, unique = true)
-  private String name;
-  @Column(nullable = false, unique = true)
   private String email;
   @Column(nullable = false)
   private byte[] hashedPassword;
@@ -29,12 +27,11 @@ public final class JpaUser implements User {
   @Deprecated
   public JpaUser() {}
 
-  public JpaUser(String name, String email, SaltedHashedPassword password) {
-    this(name, email, password.getHashedPassword(), password.getSalt());
+  public JpaUser(String email, SaltedHashedPassword password) {
+    this(email, password.getHashedPassword(), password.getSalt());
   }
 
-  public JpaUser(String name, String email, byte[] hashedPassword, byte[] salt) {
-    this.name = name;
+  public JpaUser(String email, byte[] hashedPassword, byte[] salt) {
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.salt = salt;
@@ -42,14 +39,6 @@ public final class JpaUser implements User {
 
   public JpaUser(long id) {
     this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   @Override
@@ -83,7 +72,6 @@ public final class JpaUser implements User {
     result = prime * result + ((email == null) ? 0 : email.hashCode());
     result = prime * result + Arrays.hashCode(hashedPassword);
     result = prime * result + (int) (id ^ (id >>> 32));
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + Arrays.hashCode(salt);
     return result;
   }
@@ -113,23 +101,16 @@ public final class JpaUser implements User {
     if (id != other.id) {
       return false;
     }
-    if (name == null) {
-      if (other.name != null) {
-        return false;
-      }
-    } else if (!name.equals(other.name)) {
-      return false;
-    }
     return Arrays.equals(salt, other.salt);
   }
 
   @Override
   public String toString() {
-    return "User [id=" + id + ", name=" + name + ", email=" + email + "]";
+    return "User [id=" + id + ", email=" + email + "]";
   }
 
   public User withId(long idOfNewUser) {
-    JpaUser user = new JpaUser(name, email, hashedPassword, salt);
+    JpaUser user = new JpaUser(email, hashedPassword, salt);
     user.id = idOfNewUser;
     return user;
   }

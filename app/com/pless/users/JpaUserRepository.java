@@ -32,8 +32,8 @@ public class JpaUserRepository implements UserRepository {
   }
 
   @Override
-  public void persistUser(String name, String email, String password) {
-    User user = new JpaUser(name, email, new SaltedHashedPassword(password));
+  public void persistUser(String email, String password) {
+    User user = new JpaUser(email, new SaltedHashedPassword(password));
     getEntityManager().persist(user);
   }
 

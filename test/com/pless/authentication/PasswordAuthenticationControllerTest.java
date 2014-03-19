@@ -35,7 +35,7 @@ public class PasswordAuthenticationControllerTest extends PlessControllerTest {
 
   @Test
   public void login_MUST_result_in_badRequest_WHEN_the_wrong_credentials_are_given() throws Exception {
-    callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    callSignUpAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     Result result = callLoginAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD + "a");
     assertEquals(BAD_REQUEST, status(result));
   }
@@ -45,7 +45,7 @@ public class PasswordAuthenticationControllerTest extends PlessControllerTest {
   }
 
   static Result createUserAndLogin() {
-    callSignUpAction(JOHN_SMITH, JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    callSignUpAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     return callLoginAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }
 }
