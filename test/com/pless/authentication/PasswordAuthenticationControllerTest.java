@@ -5,7 +5,8 @@ import static com.pless.users.UserControllerTest.*;
 import static org.junit.Assert.assertEquals;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.status;
 
 import org.junit.Test;
 

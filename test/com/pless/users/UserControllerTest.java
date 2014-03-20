@@ -1,57 +1,73 @@
 package com.pless.users;
 
+import static com.pless.emailing.MockEmailProvider.lastSentEmail;
+import static com.pless.users.UserController.createUser;
+import static com.pless.users.UserController.signUp;
 import static com.pless.users.routes.ref.UserController;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.status;
-
-import javax.persistence.NoResultException;
 
 import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.authentication.SaltedHashedPassword;
-import com.pless.emailing.ExceptionThrowingMailer;
-import com.pless.emailing.MockEmailProvider;
-import com.pless.test.PlessControllerTest;
+import com.pless.test.PlessTest;
 
-public class UserControllerTest extends PlessControllerTest {
-  private static final String JANE_DOE_EMAIL = "JaneDoe@email.com";
-  public static final String JOHN_SMITH = "John Smith";
+public class UserControllerTest extends PlessTest {
+
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
-  public static final String JOHN_SMITH_PASSWORD = "johns password";
+  public static final String JOHN_SMITH_PASSWORD = "john's password";
 
-  @Test(expected = NoResultException.class)
-  public void signUp_MUST_not_persist_the_user_WHEN_sending_of_the_email_fails() throws Exception {
-    MockEmailProvider.nestedMailer = new ExceptionThrowingMailer();
-    try {
-      callSignUpAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    } catch (Exception e) {}
-    new JpaUserRepository(getEm()).findUserByEmail(JOHN_SMITH_EMAIL);
+  @Test
+  public void signUp_MUST_result_in_bad_request_WHEN_the_parameters_are_empty() throws Exception {
+    Result result = signUp("", "");
+    assertEquals(BAD_REQUEST, status(result));
   }
 
-  private void assertJohnSmithIsInDb() {
-    User createdUser = new JpaUserRepository(getEm()).findUserByEmail(JOHN_SMITH_EMAIL);
-    long idOfNewUser = 1L;
-    User expectedUser = createJohnSmithUser(idOfNewUser, createdUser.getSalt());
-    assertEquals(expectedUser, createdUser);
+  @Test
+  public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
+    Result result = signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    assertEquals(OK, status(result));
   }
 
-  private static User createJohnSmithUser(long userId, byte[] passwordSalt) {
-    SaltedHashedPassword password = new SaltedHashedPassword(
-      JOHN_SMITH_PASSWORD,
-      passwordSalt);
-    JpaUser user = new JpaUser(JOHN_SMITH_EMAIL, password);
-    return user.withId(userId);
+  @Test
+  public void createUser_MUST_persist_the_user_in_the_user_repository() throws Exception {
+    createUser(new SignupForm(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
+    verify(getUserRepository()).persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void createUser_MUST_throw_an_exception_WHEN_email_is_empty() throws Exception {
+    createUser(new SignupForm("", JOHN_SMITH_PASSWORD));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void createUser_MUST_throw_an_exception_WHEN_password_is_empty() throws Exception {
+    createUser(new SignupForm(JOHN_SMITH_EMAIL, ""));
+  }
+
+  @Test
+  public void signUp_MUST_send_an_email() throws Exception {
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    verify(lastSentEmail).send();
+  }
+
+  @Test
+  public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Exception {
+    doThrow(new RuntimeException())
+      .when(getUserRepository())
+      .persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    assertNull(lastSentEmail);
   }
 
   public static Result callSignUpAction(String email, String password) {
     return callAction(UserController.signUp(email, password));
-  }
-
-  public static void createTestUser() {
-    callSignUpAction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }
 }

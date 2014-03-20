@@ -8,8 +8,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pless.users.JpaUser;
-import com.pless.users.User;
+import com.pless.users.*;
 
 public class AuthenticationSessionTest {
 
@@ -78,8 +77,8 @@ public class AuthenticationSessionTest {
   }
 
   private User createJohnSmithUser() {
-    SaltedHashedPassword password = new SaltedHashedPassword(JOHN_SMITH_PASSWORD);
-    return new JpaUser(JOHN_SMITH_EMAIL, password)
+    SaltedHashedPassword password = new SaltedHashedPassword(UserControllerTest.JOHN_SMITH_PASSWORD);
+    return new JpaUser(UserControllerTest.JOHN_SMITH_EMAIL, password)
       .withId(JOHN_SMITH_USER_ID);
   }
 }
