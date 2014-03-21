@@ -3,6 +3,8 @@ package com.pless.authentication;
 import static com.pless.authentication.PlayServerSessionStorage.getServerSessionStorage;
 import static com.pless.users.PlayUserRepository.getUserRepository;
 
+import com.pless.users.User;
+
 public final class PlayAuthentication {
 
   private PlayAuthentication() {}
@@ -17,8 +19,8 @@ public final class PlayAuthentication {
    */
   public static AuthenticationSession logIn(PasswordLoginForm passwordLoginForm) {
     if (passwordLoginForm.isValid()) {
-      AuthenticationToken authenticationToken = authenticate(passwordLoginForm);
-      getSession().logIn(authenticationToken);
+      User authenticatedUser = authenticate(passwordLoginForm);
+      getSession().logIn(authenticatedUser);
       return getSession();
     } else {
       throw new IllegalArgumentException("Cannot log in. The credentials form is incomplete.");
@@ -44,8 +46,8 @@ public final class PlayAuthentication {
     return PlayLoginSingletons.AUTHENTICATION_SESSION;
   }
 
-  private static AuthenticationToken authenticate(PasswordLoginForm passwordLoginForm) {
-    return getPasswordAuthenticator().getAuthenticationToken(passwordLoginForm);
+  private static User authenticate(PasswordLoginForm passwordLoginForm) {
+    return getPasswordAuthenticator().authenticateUser(passwordLoginForm);
   }
 
   private static PasswordAuthenticator getPasswordAuthenticator() {

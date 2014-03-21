@@ -10,7 +10,7 @@ public final class AuthenticationController extends Controller {
   private AuthenticationController() {}
 
   @Transactional
-  public static Result logout() {
+  public static Result logOut() {
     PlayAuthentication.logOut();
     return ok();
   }

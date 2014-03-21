@@ -1,5 +1,7 @@
 package com.pless.authentication;
 
+import com.pless.users.User;
+
 public class AuthenticationSession {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
   static final String SESSION_ID_KEY = "pless.session";
@@ -13,16 +15,15 @@ public class AuthenticationSession {
     this.sessionIdGenerator = sessionIdGenerator;
   }
 
-  public void logIn(AuthenticationToken authenticationToken) {
-    if (authenticationToken == null) {
-      throw new IllegalArgumentException("Could not start a login session."
-        + " No user was specified.");
+  public void logIn(User user) {
+    if (user == null) {
+      throw new IllegalArgumentException("No user specified.");
     }
     String sessionId = createSessionId();
     String serverSessionKey = getSessionStorageKey(sessionId);
     serverSessionStorage.put(
       serverSessionKey,
-      Long.toString(authenticationToken.getAuthenticatedUser().getId()),
+      Long.toString(user.getId()),
       getExpirationMillis());
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }

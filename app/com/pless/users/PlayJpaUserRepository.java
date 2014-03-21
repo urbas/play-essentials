@@ -5,13 +5,15 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import play.db.jpa.JPA;
+
 import com.pless.authentication.SaltedHashedPassword;
 
-public class JpaUserRepository implements UserRepository {
+public class PlayJpaUserRepository implements UserRepository {
 
   private final EntityManager entityManager;
   
-  public JpaUserRepository(EntityManager entityManager) {
+  public PlayJpaUserRepository(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
@@ -38,7 +40,7 @@ public class JpaUserRepository implements UserRepository {
   }
 
   public EntityManager getEntityManager() {
-    return entityManager;
+    return entityManager == null ? JPA.em() : entityManager;
   }
 
 }

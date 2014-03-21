@@ -1,12 +1,10 @@
 package com.pless.authentication;
 
-import static com.pless.users.UserControllerTest.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import com.pless.users.*;
 
@@ -15,14 +13,17 @@ public class AuthenticationSessionTest {
   private static final String CRAFTED_SESSION_ID = "session id";
   private static final String NON_NUMERIC_VALUE = "non numeric value";
   private static final long JOHN_SMITH_USER_ID = 123L;
-  private final AuthenticationToken authenticationToken = new AuthenticationToken(createJohnSmithUser());
+  private final User user = createJohnSmithUser();
   private AuthenticationSession authenticationSession;
   private TestServerSessionStorage serverSessionStorage;
 
   @Before
   public void setUp() {
     serverSessionStorage = new TestServerSessionStorage();
-    authenticationSession = new AuthenticationSession(new TestClientSessionStorage(), serverSessionStorage, new SessionIdGenerator());
+    authenticationSession = new AuthenticationSession(
+      new TestClientSessionStorage(),
+      serverSessionStorage,
+      new SessionIdGenerator());
   }
 
   @Test
@@ -42,27 +43,27 @@ public class AuthenticationSessionTest {
 
   @Test
   public void isLoggedIn_MUST_return_true_AFTER_a_successful_logIn() throws Exception {
-    authenticationSession.logIn(authenticationToken);
+    authenticationSession.logIn(user);
     assertTrue(authenticationSession.isLoggedIn());
   }
 
   @Test
   public void isLoggedIn_MUST_return_false_AFTER_session_expiration() throws Exception {
-    authenticationSession.logIn(authenticationToken);
+    authenticationSession.logIn(user);
     serverSessionStorage.expireAllEntries();
     assertFalse(authenticationSession.isLoggedIn());
   }
 
   @Test
   public void getLoggedInUserId_MUST_return_the_id_with_which_the_session_was_started() throws Exception {
-    authenticationSession.logIn(authenticationToken);
+    authenticationSession.logIn(user);
     assertEquals(JOHN_SMITH_USER_ID, (long) authenticationSession.getLoggedInUserId());
   }
 
   @Test(expected = IllegalStateException.class)
   public void getLoggedInUserId_MUST_throw_an_exception_WHEN_the_server_session_storage_returns_a_non_numeric_userId() throws Exception {
     final AuthenticationSession authenticationSession = prepareIllegalSessionIdScenario();
-    authenticationSession.logIn(authenticationToken);
+    authenticationSession.logIn(user);
     authenticationSession.getLoggedInUserId();
   }
 

@@ -2,8 +2,8 @@
 GET   /               com.pless.WelcomeController.welcome()
 
 # Authentication Routes
-GET   /auth/login     com.pless.authentication.PasswordAuthenticationController.login(email, password)
-GET   /auth/logout    com.pless.authentication.AuthenticationController.logout()
+GET   /auth/login     com.pless.authentication.PasswordAuthenticationController.logIn(email, password)
+GET   /auth/logout    com.pless.authentication.AuthenticationController.logOut()
 GET   /auth/status    com.pless.authentication.AuthenticationController.status()
 
 # User Management Routes

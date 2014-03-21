@@ -10,6 +10,8 @@ public class PlayUserRepositoryTest extends PlessTest {
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
-    assertEquals(getUserRepository(), PlayUserRepository.getUserRepository());
+    UserRepository actualUserRepository = PlayUserRepository.getUserRepository();
+    UserRepository expectedUserRepository = getUserRepository();
+    assertEquals(expectedUserRepository, actualUserRepository);
   }
 }

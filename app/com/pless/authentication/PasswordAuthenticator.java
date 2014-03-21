@@ -10,12 +10,12 @@ public class PasswordAuthenticator {
     this.userRepository = userRepository;
   }
 
-  public AuthenticationToken getAuthenticationToken(PasswordLoginForm passwordLoginForm) {
+  public User authenticateUser(PasswordLoginForm passwordLoginForm) {
     User user = userRepository.findUserByEmail(passwordLoginForm.email);
-    if (!isPasswordCorrect(passwordLoginForm.password, user)) {
-      throw new IllegalArgumentException("The password is not correct.");
+    if (user == null || !isPasswordCorrect(passwordLoginForm.password, user)) {
+      throw new IllegalArgumentException("The credentials are not correct.");
     }
-    return new AuthenticationToken(user);
+    return user;
   }
 
   private boolean isPasswordCorrect(String password, User user) {

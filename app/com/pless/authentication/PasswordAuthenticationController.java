@@ -9,7 +9,7 @@ public final class PasswordAuthenticationController extends Controller {
   private PasswordAuthenticationController() {}
 
   @Transactional
-  public static Result login(String email, String password) {
+  public static Result logIn(String email, String password) {
     try {
       PlayAuthentication.logIn(new PasswordLoginForm(email, password));
       return ok();
