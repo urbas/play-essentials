@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import javax.persistence.EntityManager;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.pless.test.*;
@@ -16,22 +17,26 @@ public class JpaServerSessionStorageTest extends PlessControllerTest {
   private static final long FIFTY_MILLISECONDS = 50;
 
   @Test
+  @Ignore
   public void get_MUST_return_null_WHEN_no_value_was_stored_before() throws Exception {
     assertNull(fetchSessionValue());
   }
   
   @Test(expected = IllegalArgumentException.class)
+  @Ignore
   public void get_MUST_throw_an_exception_WHEN_the_key_is_null() throws Exception {
     assertNull(new JpaServerSessionStorage().get(null));
   }
 
   @Test
+  @Ignore
   public void get_MUST_return_the_stored_value() throws Exception {
     storeSessionValue(ONE_HOUR);
     assertEquals(FOO_SESSION_VALUE, fetchSessionValue());
   }
 
   @Test
+  @Ignore
   public void get_MUST_return_the_null_WHEN_the_value_was_manually_removed() throws Exception {
     storeSessionValue(ONE_HOUR);
     removeSessionValue();
@@ -39,6 +44,7 @@ public class JpaServerSessionStorageTest extends PlessControllerTest {
   }
 
   @Test
+  @Ignore
   public void get_MUST_return_null_WHEN_the_value_expired() throws Exception {
     storeSessionValue(TEN_MILLISECONDS);
     Thread.sleep(FIFTY_MILLISECONDS);
@@ -46,6 +52,7 @@ public class JpaServerSessionStorageTest extends PlessControllerTest {
   }
   
   @Test(expected = IllegalStateException.class)
+  @Ignore
   public void put_MUST_throw_an_exception_WHEN_called_twice() throws Exception {
     storeSessionValue(ONE_HOUR);
     storeSessionValue(ONE_HOUR);

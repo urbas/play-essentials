@@ -1,6 +1,7 @@
 package com.pless.authentication;
 
 import static com.pless.authentication.PasswordAuthenticationController.logIn;
+import static com.pless.users.PlayUserRepository.getUserRepository;
 import static com.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static com.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 import static org.junit.Assert.assertEquals;

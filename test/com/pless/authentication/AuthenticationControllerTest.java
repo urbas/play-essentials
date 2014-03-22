@@ -28,6 +28,7 @@ public class AuthenticationControllerTest extends PlessControllerTest {
   }
 
   @Test
+  @Ignore
   public void status_MUST_return_false_WHEN_the_user_is_not_logged_in() throws Exception {
     Result result = callAction(AuthenticationController.status());
     assertFalse(Json.parse(contentAsString(result)).asBoolean());

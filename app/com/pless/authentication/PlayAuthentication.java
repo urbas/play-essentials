@@ -1,7 +1,6 @@
 package com.pless.authentication;
 
 import static com.pless.authentication.PlayServerSessionStorage.getServerSessionStorage;
-import static com.pless.users.PlayUserRepository.getUserRepository;
 
 import com.pless.users.User;
 
@@ -43,25 +42,14 @@ public final class PlayAuthentication {
    * @return the authentication session for the current request.
    */
   public static AuthenticationSession getSession() {
-    return PlayLoginSingletons.AUTHENTICATION_SESSION;
-  }
-
-  private static User authenticate(PasswordLoginForm passwordLoginForm) {
-    return getPasswordAuthenticator().authenticateUser(passwordLoginForm);
-  }
-
-  private static PasswordAuthenticator getPasswordAuthenticator() {
-    return PlayLoginSingletons.PASSWORD_AUTHENTICATOR;
-  }
-
-  private static class PlayLoginSingletons {
-    private PlayLoginSingletons() {}
-
-    public static final AuthenticationSession AUTHENTICATION_SESSION = new AuthenticationSession(
+    return new AuthenticationSession(
       new PlayClientSessionStorage(),
       getServerSessionStorage(),
       new SessionIdGenerator());
-    private static final PasswordAuthenticator PASSWORD_AUTHENTICATOR = new PasswordAuthenticator(getUserRepository());
+  }
+
+  private static User authenticate(PasswordLoginForm passwordLoginForm) {
+    return new PasswordAuthenticator().authenticateUser(passwordLoginForm);
   }
 
 }

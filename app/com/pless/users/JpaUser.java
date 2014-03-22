@@ -1,7 +1,5 @@
 package com.pless.users;
 
-import java.util.Arrays;
-
 import javax.persistence.*;
 
 import com.pless.authentication.SaltedHashedPassword;
@@ -39,6 +37,10 @@ public final class JpaUser implements User {
 
   public JpaUser(long id) {
     this.id = id;
+  }
+
+  public JpaUser(String email, String password) {
+    this(email, new SaltedHashedPassword(password));
   }
 
   @Override

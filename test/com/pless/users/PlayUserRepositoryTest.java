@@ -1,6 +1,10 @@
 package com.pless.users;
 
-import static org.junit.Assert.assertEquals;
+import static com.pless.test.TestUserRepository.currentUserRepository;
+import static com.pless.users.PlayUserRepository.getUserRepository;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -10,8 +14,8 @@ public class PlayUserRepositoryTest extends PlessTest {
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
-    UserRepository actualUserRepository = PlayUserRepository.getUserRepository();
-    UserRepository expectedUserRepository = getUserRepository();
-    assertEquals(expectedUserRepository, actualUserRepository);
+    assertThat(
+      getUserRepository(),
+      is(sameInstance(currentUserRepository)));
   }
 }
