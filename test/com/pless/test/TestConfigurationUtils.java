@@ -2,9 +2,9 @@ package com.pless.test;
 
 import static com.pless.util.ConfigurationUtil.getRunModeConfigKey;
 import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
-public class PlessTestConfigurationUtils {
+public class TestConfigurationUtils {
 
   public static void setConfigurationClass(String configKey,
                                            Class<?> clazz)
@@ -14,8 +14,9 @@ public class PlessTestConfigurationUtils {
 
   public static void setConfigurationString(String configKey, String configValue) {
     String testConfigKey = getRunModeConfigKey(getConfigurationSource(), configKey);
-    when(getConfigurationSource().getString(testConfigKey))
-      .thenReturn(configValue);
+    doReturn(configValue)
+      .when(getConfigurationSource())
+      .getString(testConfigKey);
   }
 
 }

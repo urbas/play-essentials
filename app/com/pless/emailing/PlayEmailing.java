@@ -13,7 +13,7 @@ public final class PlayEmailing {
    * This address will appear in the email of the addressees.
    */
   public static final String CONFIG_SMTP_FROM = "smtp.from";
-  public static final String CONFIG_EMAIL_PROVIDER = "smtp.emailProvider";
+  public static final String CONFIG_EMAIL_PROVIDER = "pless.emailProviderFactory";
 
   public static void sendEmail(String recepient,
                                String subject,

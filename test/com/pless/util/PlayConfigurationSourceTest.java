@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.pless.test.TemporaryGlobalConfiguration;
+
 public class PlayConfigurationSourceTest {
 
   private ConfigurationSource defaultPlayConfigurationSource;
@@ -25,7 +27,7 @@ public class PlayConfigurationSourceTest {
   }
 
   @Test
-  public void getInstance_MUST_always_return_the_same_instanec_of_the_default_configuration_source() throws Exception {
+  public void getInstance_MUST_always_return_the_same_instance_of_the_default_configuration_source() throws Exception {
     assertEquals(
       defaultPlayConfigurationSource,
       PlayConfigurationSource.getConfigurationSource());

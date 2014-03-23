@@ -18,7 +18,7 @@
 		</properties>
 	</persistence-unit>
 
-	<persistence-unit name="com.pless.testPersistenceUnit"
+	<persistence-unit name="testPersistenceUnit"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<non-jta-data-source>DefaultDS</non-jta-data-source>

@@ -1,5 +1,7 @@
 package com.pless.test;
 
+import static org.junit.Assert.*;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -8,17 +10,23 @@ import org.junit.Before;
 
 import play.db.jpa.JPA;
 
-public abstract class TestWithFakeApplication {
-  protected FakeApplicationBuilder applicationBuilder = new FakeApplicationBuilder();
+/**
+ * Starts up a fake Play application with an in-memory JPA database and a mocked mailer.
+ * 
+ * @author matej
+ */
+public class PlessFunctionalJpaTest {
 
+  protected PlessTestApplication plessTestApplication;
+  
   @Before
   public void setUp() {
-    applicationBuilder.start();
+    plessTestApplication = new PlessFunctionalJpaApplication();
   }
-
+  
   @After
   public void tearDown() {
-    applicationBuilder.close();
+    plessTestApplication.close();
   }
 
   protected void withTransaction(TransactionBody transactionBody) {

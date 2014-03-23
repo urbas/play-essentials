@@ -6,21 +6,22 @@ import static org.mockito.Mockito.when;
 
 import org.junit.*;
 
+import com.pless.test.TestServerSessionStorage;
 import com.pless.users.*;
 
-public class AuthenticationSessionTest {
+public class AuthenticationServiceTest {
 
   private static final String CRAFTED_SESSION_ID = "session id";
   private static final String NON_NUMERIC_VALUE = "non numeric value";
   private static final long JOHN_SMITH_USER_ID = 123L;
   private final User user = createJohnSmithUser();
-  private AuthenticationSession authenticationSession;
-  private TestServerSessionStorage serverSessionStorage;
+  private AuthenticationService authenticationSession;
+  private HashMapServerSessionStorage serverSessionStorage;
 
   @Before
   public void setUp() {
-    serverSessionStorage = new TestServerSessionStorage();
-    authenticationSession = new AuthenticationSession(
+    serverSessionStorage = new HashMapServerSessionStorage();
+    authenticationSession = new AuthenticationService(
       new TestClientSessionStorage(),
       serverSessionStorage,
       new SessionIdGenerator());
@@ -62,18 +63,18 @@ public class AuthenticationSessionTest {
 
   @Test(expected = IllegalStateException.class)
   public void getLoggedInUserId_MUST_throw_an_exception_WHEN_the_server_session_storage_returns_a_non_numeric_userId() throws Exception {
-    final AuthenticationSession authenticationSession = prepareIllegalSessionIdScenario();
+    final AuthenticationService authenticationSession = prepareIllegalSessionIdScenario();
     authenticationSession.logIn(user);
     authenticationSession.getLoggedInUserId();
   }
 
-  private AuthenticationSession prepareIllegalSessionIdScenario() {
+  private AuthenticationService prepareIllegalSessionIdScenario() {
     ServerSessionStorage serverSessionStorage = mock(ServerSessionStorage.class);
     SessionIdGenerator sessionIdGenerator = mock(SessionIdGenerator.class);
     when(serverSessionStorage.get(CRAFTED_SESSION_ID))
       .thenReturn(NON_NUMERIC_VALUE);
     when(sessionIdGenerator.createSessionId()).thenReturn(CRAFTED_SESSION_ID);
-    final AuthenticationSession authenticationSession = new AuthenticationSession(new TestClientSessionStorage(), serverSessionStorage, sessionIdGenerator);
+    final AuthenticationService authenticationSession = new AuthenticationService(new TestClientSessionStorage(), serverSessionStorage, sessionIdGenerator);
     return authenticationSession;
   }
 

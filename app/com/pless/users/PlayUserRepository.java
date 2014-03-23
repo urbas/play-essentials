@@ -19,7 +19,7 @@ public class PlayUserRepository {
   public static class DefaultUserRepositoryCreator implements Factory<UserRepository> {
     @Override
     public UserRepository createInstance(ConfigurationSource configurationSource) {
-      return new PlayJpaUserRepository(null);
+      return new PlayJpaUserRepository();
     }
   }
 }

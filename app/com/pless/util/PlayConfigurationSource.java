@@ -52,7 +52,7 @@ public class PlayConfigurationSource implements ConfigurationSource {
 
   }
 
-  static void setPlayConfigurationSource(ConfigurationSource newConfigurationSource) {
+  public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
     configurationSource = newConfigurationSource;
   }
 }

@@ -117,6 +117,6 @@ You can put these configuration settings into `conf/application.conf`:
 The following configuration is useful for mocking in tests or to plug in your
 own email provider:
 
-    smtp.emailProvider=com.pless.emailing.ApacheCommonsEmailProvider
-    dev.smtp.emailProvider=com.pless.emailing.LoggingNoOpEmailProvider
-    test.smtp.emailProvider=com.pless.emailing.MockEmailProvider
+    pless.emailProviderFactory=com.pless.emailing.ApacheCommonsEmailProvider
+    dev.pless.emailProviderFactory=com.pless.emailing.LoggingNoOpEmailProvider
+    test.pless.emailProviderFactory=com.pless.emailing.MockEmailProvider

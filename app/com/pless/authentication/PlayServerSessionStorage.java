@@ -17,7 +17,7 @@ public class PlayServerSessionStorage {
   {
     @Override
     public ServerSessionStorage createInstance(ConfigurationSource configurationSource) {
-      return new PlayCacheSessionStorage();
+      return new PlayCacheServerSessionStorage();
     }
   }
 }

@@ -2,14 +2,17 @@ package com.pless.authentication;
 
 import com.pless.users.User;
 
-public class AuthenticationSession {
+public class AuthenticationService {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
   static final String SESSION_ID_KEY = "pless.session";
   private final ClientSessionStorage clientSessionStorage;
   private final ServerSessionStorage serverSessionStorage;
   private final SessionIdGenerator sessionIdGenerator;
 
-  public AuthenticationSession(ClientSessionStorage clientSessionStorage, ServerSessionStorage serverSessionStorage, SessionIdGenerator sessionIdGenerator) {
+  public AuthenticationService(ClientSessionStorage clientSessionStorage,
+                               ServerSessionStorage serverSessionStorage,
+                               SessionIdGenerator sessionIdGenerator)
+  {
     this.clientSessionStorage = clientSessionStorage;
     this.serverSessionStorage = serverSessionStorage;
     this.sessionIdGenerator = sessionIdGenerator;
@@ -17,7 +20,7 @@ public class AuthenticationSession {
 
   public void logIn(User user) {
     if (user == null) {
-      throw new IllegalArgumentException("No user specified.");
+      throw new IllegalArgumentException("Cannot log in. Log in credentials are invalid.");
     }
     String sessionId = createSessionId();
     String serverSessionKey = getSessionStorageKey(sessionId);
@@ -44,7 +47,8 @@ public class AuthenticationSession {
       try {
         return Long.parseLong(loggedInUserId);
       } catch (Exception ex) {
-        throw new IllegalStateException("The session storage returned a non-numeric user id: " + loggedInUserId);
+        throw new IllegalStateException("The session storage returned a non-numeric user id: "
+          + loggedInUserId);
       }
     }
   }

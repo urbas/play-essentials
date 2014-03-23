@@ -5,15 +5,11 @@ import org.junit.Before;
 
 public class PlessTest {
 
-  private PlessTestApplication plessTestApplication;
-
-  public PlessTestApplication getPlessTestApplication() {
-    return plessTestApplication;
-  }
+  protected PlessTestApplication plessTestApplication;
 
   @Before
   public void setUp() {
-    plessTestApplication = new PlessTestApplication();
+    plessTestApplication = new PlessMockedApplication();
   }
 
   @After

@@ -2,8 +2,13 @@ package com.pless.authentication;
 
 import java.util.HashMap;
 
-public class TestServerSessionStorage implements ServerSessionStorage {
-  private final HashMap<String, ValueWithExpiration<String>> hashMap = new HashMap<>();
+/**
+ * This class is not thread-safe.
+ * 
+ * @author matej
+ */
+public class HashMapServerSessionStorage implements ServerSessionStorage {
+  public HashMap<String, ValueWithExpiration<String>> hashMap = new HashMap<>();
 
   @Override
   public void remove(String key) {
