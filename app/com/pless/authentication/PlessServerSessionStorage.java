@@ -2,12 +2,12 @@ package com.pless.authentication;
 
 import com.pless.util.*;
 
-public class PlayServerSessionStorage {
+public class PlessServerSessionStorage {
 
   public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorageFactory";
 
   public static ServerSessionStorage getServerSessionStorage() {
-    return PlayFactories.getFactories().createInstance(
+    return PlessFactories.getFactories().createInstance(
       CONFIG_SERVER_SESSION_STORAGE_FACTORY,
       new DefaultSessionStorageFactory());
   }

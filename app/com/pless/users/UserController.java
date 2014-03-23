@@ -1,7 +1,7 @@
 package com.pless.users;
 
-import static com.pless.emailing.PlayEmailing.sendEmail;
-import static com.pless.users.PlayUserRepository.getUserRepository;
+import static com.pless.emailing.PlessEmailing.sendEmail;
+import static com.pless.users.PlessUserRepository.getUserRepository;
 import play.api.templates.Html;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;

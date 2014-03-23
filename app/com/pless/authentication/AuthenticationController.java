@@ -1,6 +1,6 @@
 package com.pless.authentication;
 
-import static com.pless.authentication.PlayAuthentication.getAuthenticationService;
+import static com.pless.authentication.PlessAuthentication.getAuthenticationService;
 import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;

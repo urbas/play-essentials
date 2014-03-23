@@ -1,10 +1,10 @@
 package com.pless.users;
 
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 import com.pless.util.*;
 
-public class PlayUserRepository {
+public class PlessUserRepository {
 
   public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
 
@@ -19,7 +19,7 @@ public class PlayUserRepository {
   public static class DefaultUserRepositoryCreator implements Factory<UserRepository> {
     @Override
     public UserRepository createInstance(ConfigurationSource configurationSource) {
-      return new PlayJpaUserRepository();
+      return new PlessJpaUserRepository();
     }
   }
 }

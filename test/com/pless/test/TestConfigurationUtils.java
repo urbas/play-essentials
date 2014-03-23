@@ -1,7 +1,7 @@
 package com.pless.test;
 
 import static com.pless.util.ConfigurationUtil.getRunModeConfigKey;
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import static org.mockito.Mockito.doReturn;
 
 public class TestConfigurationUtils {

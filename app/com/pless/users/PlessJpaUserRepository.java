@@ -7,15 +7,15 @@ import javax.persistence.TypedQuery;
 
 import com.pless.authentication.SaltedHashedPassword;
 
-public class PlayJpaUserRepository implements UserRepository {
+public class PlessJpaUserRepository implements UserRepository {
 
   private final EntityManager entityManager;
   
-  public PlayJpaUserRepository() {
+  public PlessJpaUserRepository() {
     this(null);
   }
 
-  public PlayJpaUserRepository(EntityManager em) {
+  public PlessJpaUserRepository(EntityManager em) {
     this.entityManager = em;
   }
 
@@ -42,7 +42,7 @@ public class PlayJpaUserRepository implements UserRepository {
   }
 
   private EntityManager getEntityManager() {
-    return entityManager == null ? PlayEntityManager.getEntityManager() : entityManager;
+    return entityManager == null ? PlessEntityManager.getEntityManager() : entityManager;
   }
 
 }

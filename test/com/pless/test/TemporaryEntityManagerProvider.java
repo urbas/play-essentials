@@ -2,7 +2,7 @@ package com.pless.test;
 
 import static com.pless.test.TestConfigurationUtils.setConfigurationClass;
 import static com.pless.test.TestEntityManager.currentEntityManagerFactory;
-import static com.pless.users.PlayEntityManager.CONFIG_ENTITY_MANAGER_FACTORY;
+import static com.pless.users.PlessEntityManager.CONFIG_ENTITY_MANAGER_FACTORY;
 
 import javax.persistence.EntityManager;
 

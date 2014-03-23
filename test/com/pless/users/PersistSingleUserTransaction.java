@@ -16,7 +16,7 @@ public class PersistSingleUserTransaction implements TransactionBody {
 
   @Override
   public void invoke(EntityManager em) {
-    PlayJpaUserRepository userRepository = new PlayJpaUserRepository(em);
+    PlessJpaUserRepository userRepository = new PlessJpaUserRepository(em);
     userRepository.persistUser(userEmail, userPassword);
   }
 }

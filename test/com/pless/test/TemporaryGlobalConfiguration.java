@@ -1,7 +1,7 @@
 package com.pless.test;
 
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
-import static com.pless.util.PlayConfigurationSource.setConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.setConfigurationSource;
 import static org.mockito.Mockito.mock;
 
 import com.pless.util.ConfigurationSource;

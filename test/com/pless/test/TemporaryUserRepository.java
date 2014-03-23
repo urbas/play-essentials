@@ -2,7 +2,7 @@ package com.pless.test;
 
 import static com.pless.test.TestConfigurationUtils.setConfigurationClass;
 import static com.pless.test.TestUserRepository.currentUserRepository;
-import static com.pless.users.PlayUserRepository.CONFIG_USER_REPOSITORY;
+import static com.pless.users.PlessUserRepository.CONFIG_USER_REPOSITORY;
 import static org.mockito.Mockito.mock;
 
 import com.pless.users.UserRepository;

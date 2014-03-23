@@ -1,18 +1,15 @@
 package com.pless.users;
 
-import static com.pless.users.PlayUserRepository.getUserRepository;
+import static com.pless.users.PlessUserRepository.getUserRepository;
 import static com.pless.users.UserMatcher.userWith;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-import javax.persistence.EntityManager;
-
 import org.junit.Test;
 
 import com.pless.test.PlessFunctionalJpaTest;
-import com.pless.test.TransactionBody;
 
-public class PlayJpaUserRepositoryTest extends PlessFunctionalJpaTest {
+public class PlessJpaUserRepositoryTest extends PlessFunctionalJpaTest {
   private static final String USER_EMAIL = "user email";
   private static final String USER_PASSWORD = "user password";
 

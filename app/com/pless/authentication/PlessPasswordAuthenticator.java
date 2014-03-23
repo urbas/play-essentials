@@ -1,10 +1,10 @@
 package com.pless.authentication;
 
-import static com.pless.users.PlayUserRepository.getUserRepository;
+import static com.pless.users.PlessUserRepository.getUserRepository;
 
 import com.pless.users.User;
 
-public class PlayPasswordAuthenticator {
+public class PlessPasswordAuthenticator {
 
   public User authenticateUser(PasswordLoginForm passwordLoginForm) {
     if (!passwordLoginForm.isValid()) {
@@ -23,11 +23,11 @@ public class PlayPasswordAuthenticator {
     return saltedHashedPassword.matches(user.getHashedPassword());
   }
   
-  public static PlayPasswordAuthenticator getPasswordAuthenticator() {
+  public static PlessPasswordAuthenticator getPasswordAuthenticator() {
       return Singletons.PASSWORD_AUTHENTICATOR;
   }
 
   private static final class Singletons {
-    public static final PlayPasswordAuthenticator PASSWORD_AUTHENTICATOR = new PlayPasswordAuthenticator();
+    public static final PlessPasswordAuthenticator PASSWORD_AUTHENTICATOR = new PlessPasswordAuthenticator();
   }
 }

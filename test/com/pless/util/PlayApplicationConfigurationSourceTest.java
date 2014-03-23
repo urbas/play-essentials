@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import com.pless.test.TemporaryGlobalConfiguration;
 
-public class PlayConfigurationSourceTest {
+public class PlayApplicationConfigurationSourceTest {
 
   private ConfigurationSource defaultPlayConfigurationSource;
 
   @Before
   public void setUp() {
-    defaultPlayConfigurationSource = PlayConfigurationSource
+    defaultPlayConfigurationSource = PlessConfigurationSource
       .getConfigurationSource();
   }
 
@@ -22,7 +22,7 @@ public class PlayConfigurationSourceTest {
     try (TemporaryGlobalConfiguration scopedConfiguration = new TemporaryGlobalConfiguration()) {
       assertEquals(
         scopedConfiguration.curentConfigurationSource,
-        PlayConfigurationSource.getConfigurationSource());
+        PlessConfigurationSource.getConfigurationSource());
     }
   }
 
@@ -30,7 +30,7 @@ public class PlayConfigurationSourceTest {
   public void getInstance_MUST_always_return_the_same_instance_of_the_default_configuration_source() throws Exception {
     assertEquals(
       defaultPlayConfigurationSource,
-      PlayConfigurationSource.getConfigurationSource());
+      PlessConfigurationSource.getConfigurationSource());
   }
 
 }

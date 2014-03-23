@@ -1,10 +1,10 @@
 package com.pless.authentication;
 
-import static com.pless.authentication.PlayClientSessionStorage.getClientSessionStorage;
-import static com.pless.authentication.PlayServerSessionStorage.getServerSessionStorage;
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.authentication.PlessClientSessionStorage.getClientSessionStorage;
+import static com.pless.authentication.PlessServerSessionStorage.getServerSessionStorage;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public final class PlayAuthentication {
+public final class PlessAuthentication {
 
   public static AuthenticationService getAuthenticationService() {
     if (getConfigurationSource().isProduction()) {

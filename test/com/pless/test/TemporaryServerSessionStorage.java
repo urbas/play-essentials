@@ -1,6 +1,6 @@
 package com.pless.test;
 
-import static com.pless.authentication.PlayServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
+import static com.pless.authentication.PlessServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
 import static com.pless.test.TestConfigurationUtils.setConfigurationClass;
 import static com.pless.test.TestServerSessionStorage.currentServerSessionStorage;
 import static org.mockito.Mockito.mock;

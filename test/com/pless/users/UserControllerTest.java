@@ -1,11 +1,11 @@
 package com.pless.users;
 
-import static com.pless.emailing.PlayEmailing.getEmailProvider;
-import static com.pless.users.PlayUserRepository.getUserRepository;
+import static com.pless.emailing.PlessEmailing.getEmailProvider;
+import static com.pless.users.PlessUserRepository.getUserRepository;
 import static com.pless.users.UserController.createUser;
 import static com.pless.users.UserController.signUp;
 import static com.pless.users.routes.ref.UserController;
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
@@ -18,6 +18,7 @@ import org.junit.Test;
 import play.mvc.Result;
 
 import com.pless.test.PlessTest;
+import com.pless.util.PlessConfigurationSource;
 
 public class UserControllerTest extends PlessTest {
 

@@ -1,10 +1,11 @@
 package com.pless.util;
 
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public final class PlayFactories {
 
-  public PlayFactories() {}
+public final class PlessFactories {
+
+  public PlessFactories() {}
 
   public static Factories getFactories() {
     return Singleton.INSTANCE;

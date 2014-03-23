@@ -1,7 +1,7 @@
 package com.pless.emailing;
 
-import static com.pless.emailing.PlayEmailing.*;
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.emailing.PlessEmailing.*;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
@@ -12,7 +12,7 @@ import scala.collection.mutable.StringBuilder;
 import com.pless.test.PlessTest;
 import com.pless.test.TemporaryEmailProvider;
 
-public class PlayEmailingTest extends PlessTest {
+public class PlessEmailingTest extends PlessTest {
   private static final String EMAIL_RECEPIENT = "Jane Doe <jane.doe@example.com>";
   private static final String EMAIL_SUBJECT = "An email subject";
   private static final Html EMAIL_HTML_BODY = new Html(new StringBuilder("Some html content..."));

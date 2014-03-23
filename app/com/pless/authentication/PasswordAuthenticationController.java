@@ -1,7 +1,7 @@
 package com.pless.authentication;
 
-import static com.pless.authentication.PlayAuthentication.getAuthenticationService;
-import static com.pless.authentication.PlayPasswordAuthenticator.getPasswordAuthenticator;
+import static com.pless.authentication.PlessAuthentication.getAuthenticationService;
+import static com.pless.authentication.PlessPasswordAuthenticator.getPasswordAuthenticator;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;

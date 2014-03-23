@@ -1,6 +1,6 @@
 package com.pless.users;
 
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 import javax.persistence.EntityManager;
 
@@ -8,7 +8,7 @@ import play.db.jpa.JPA;
 
 import com.pless.util.*;
 
-public class PlayEntityManager {
+public class PlessEntityManager {
 
   public static final String CONFIG_ENTITY_MANAGER_FACTORY = "pless.entityManagerFactory";
 

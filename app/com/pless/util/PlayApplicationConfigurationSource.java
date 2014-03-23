@@ -12,9 +12,7 @@ import play.Play;
  * @author matej
  * 
  */
-public class PlayConfigurationSource implements ConfigurationSource {
-
-  private static ConfigurationSource configurationSource;
+public class PlayApplicationConfigurationSource implements ConfigurationSource {
 
   @Override
   public boolean isProduction() {
@@ -40,19 +38,5 @@ public class PlayConfigurationSource implements ConfigurationSource {
   public boolean getBoolean(String configKey, boolean defaultValue) {
     return Play.application().configuration()
       .getBoolean(configKey, defaultValue);
-  }
-
-  public static ConfigurationSource getConfigurationSource() {
-    return configurationSource == null ? Singleton.INSTANCE : configurationSource;
-  }
-
-  private static final class Singleton {
-
-    public static final PlayConfigurationSource INSTANCE = new PlayConfigurationSource();
-
-  }
-
-  public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
-    configurationSource = newConfigurationSource;
   }
 }

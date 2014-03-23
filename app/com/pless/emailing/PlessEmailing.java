@@ -1,11 +1,11 @@
 package com.pless.emailing;
 
-import static com.pless.util.PlayConfigurationSource.getConfigurationSource;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import play.api.templates.Html;
 
 import com.pless.util.SingletonFactory;
 
-public final class PlayEmailing {
+public final class PlessEmailing {
 
   /**
    * The Application Configuration entry that specifies the 'from' address.
