@@ -1,7 +1,5 @@
 package com.pless.test;
 
-import static org.junit.Assert.*;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -13,7 +11,7 @@ import play.db.jpa.JPA;
 /**
  * Starts up a fake Play application with an in-memory JPA database and a mocked mailer.
  * 
- * @author matej
+ * Use this to test your controllers.
  */
 public class PlessFunctionalJpaTest {
 

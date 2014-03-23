@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.pless.test.TestServerSessionStorage;
 import com.pless.users.*;
 
 public class AuthenticationServiceTest {
@@ -73,7 +73,8 @@ public class AuthenticationServiceTest {
     SessionIdGenerator sessionIdGenerator = mock(SessionIdGenerator.class);
     when(serverSessionStorage.get(CRAFTED_SESSION_ID))
       .thenReturn(NON_NUMERIC_VALUE);
-    when(sessionIdGenerator.createSessionId()).thenReturn(CRAFTED_SESSION_ID);
+    when(sessionIdGenerator.createSessionId())
+      .thenReturn(CRAFTED_SESSION_ID);
     final AuthenticationService authenticationSession = new AuthenticationService(new TestClientSessionStorage(), serverSessionStorage, sessionIdGenerator);
     return authenticationSession;
   }

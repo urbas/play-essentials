@@ -12,8 +12,6 @@ import play.mvc.Http;
  */
 public class PlayHttpContextClientSessionStorage implements ClientSessionStorage {
   
-  public static final String CONFIG_CLIENT_SESSION_STORAGE_FACTORY = "pless.clientSessionStorageFactory";
-
   @Override
   public void put(String key, String value) {
     Http.Context.current().session().put(key, value);

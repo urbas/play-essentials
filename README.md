@@ -58,25 +58,29 @@ them, just add this dependency:
 
 # Usage
 
-## Authentication
-
 You can use any of the below examples from within your controller.
 
-To start an authentication session with a password login:
+## Authentication
 
-    PlayAuthentication.logIn(new PasswordLoginForm(email, password));
+Get the authentication service:
 
-Check that a user is logged in:
+    authService = PlessAuthentication.getAuthenticationService()
 
-    PlayAuthentication.isLoggedIn()
+To login a user with their email and password:
+
+    authService.logIn(new PasswordLoginForm(email, password));
+
+Check that a user is currently logged in:
+
+    authService.isLoggedIn()
 
 To get the ID of the currently logged-in user:
 
-    PlayAuthentication.getLoggedInUserId()
+    authService.getLoggedInUserId()
 
 To log the user out:
 
-    PlayAuthentication.logOut()
+    authService.logOut()
 
 ## Emailing
 
@@ -89,11 +93,11 @@ Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
 email like this:
 
     Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
-    PlayEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
+    PlessEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
 
 ### Advanced usage
 
-    Email email = PlayEmailing.createEmail();
+    Email email = PlessEmailing.createEmail();
     email.setSubject(subject);
     email.setRecipient(recipient);
     email.setFrom(sender);
@@ -119,4 +123,3 @@ own email provider:
 
     pless.emailProviderFactory=com.pless.emailing.ApacheCommonsEmailProvider
     dev.pless.emailProviderFactory=com.pless.emailing.LoggingNoOpEmailProvider
-    test.pless.emailProviderFactory=com.pless.emailing.MockEmailProvider

@@ -1,18 +1,23 @@
 package com.pless.authentication;
 
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
+
 import com.pless.util.*;
 
 public class PlessClientSessionStorage {
 
+  public static final String CONFIG_CLIENT_SESSION_STORAGE_FACTORY = "pless.clientSessionStorageFactory";
+
   public static ClientSessionStorage getClientSessionStorage() {
-    return PlessFactories
-      .getFactories()
-      .createInstance(
-        PlayHttpContextClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY,
-        new PlessClientSessionStorage.DefaultClientSessionStorageFactory());
+    return Singletons.CLIENT_SESSION_STORAGE_FACTORY
+      .createInstance(getConfigurationSource());
   }
 
-  static final class DefaultClientSessionStorageFactory implements Factory<ClientSessionStorage>
+  private static final class Singletons {
+    public static final Factory<ClientSessionStorage> CLIENT_SESSION_STORAGE_FACTORY = new SingletonFactory<>(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, new DefaultClientSessionStorageFactory());
+  }
+
+  private static final class DefaultClientSessionStorageFactory implements Factory<ClientSessionStorage>
   {
     @Override
     public ClientSessionStorage createInstance(ConfigurationSource configurationSource) {

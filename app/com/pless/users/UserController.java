@@ -25,10 +25,9 @@ public final class UserController extends Controller {
 
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
-      getUserRepository()
-        .persistUser(
-          createUserForm.email,
-          createUserForm.password);
+      getUserRepository().persistUser(
+        createUserForm.email,
+        createUserForm.password);
     } else {
       throw new IllegalArgumentException("Could not create a new user. Some mandatory user info was missing.");
     }
