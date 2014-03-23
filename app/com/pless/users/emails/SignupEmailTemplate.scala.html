@@ -1,4 +1,4 @@
-@(loginDetails: com.pless.users.SignupForm)
+@(loginDetails: com.pless.users.User)
 
 <!DOCTYPE html>
 <html>
@@ -12,8 +12,8 @@
 
     <p>
       Here are your login details:
-      <div style="margin-left: 25px;">Email: @loginDetails.email</div>
-      <div style="margin-left: 25px;">Password: @loginDetails.password</div>
+      <div style="margin-left: 25px;">Email: @loginDetails.getEmail</div>
+      <div style="margin-left: 25px;">Activation code: @loginDetails.getActivationCode</div>
     </p>
 
     <p>

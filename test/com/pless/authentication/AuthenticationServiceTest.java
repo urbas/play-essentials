@@ -80,8 +80,7 @@ public class AuthenticationServiceTest {
   }
 
   private User createJohnSmithUser() {
-    SaltedHashedPassword password = new SaltedHashedPassword(UserControllerTest.JOHN_SMITH_PASSWORD);
-    return new JpaUser(UserControllerTest.JOHN_SMITH_EMAIL, password)
+    return new JpaUser(UserControllerTest.JOHN_SMITH_EMAIL, UserControllerTest.JOHN_SMITH_PASSWORD)
       .withId(JOHN_SMITH_USER_ID);
   }
 }

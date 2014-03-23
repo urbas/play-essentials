@@ -1,17 +1,22 @@
 package com.pless.users;
 
+import java.util.Date;
+
 import javax.persistence.*;
 
 import com.pless.authentication.SaltedHashedPassword;
+import com.pless.authentication.SessionIdGenerator;
 
 @Entity
 @NamedQueries({
   @NamedQuery(name = JpaUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM JpaUser u WHERE u.email = :email"),
+  @NamedQuery(name = JpaUser.QUERY_ACTIVATE_USER, query = "UPDATE JpaUser u SET u.activated = TRUE WHERE u.email = :email"),
   @NamedQuery(name = JpaUser.QUERY_GET_ALL, query = "SELECT u FROM JpaUser u")
 })
 public final class JpaUser implements User {
   public static final String QUERY_GET_BY_EMAIL = "JpaUser.getByEmail";
   public static final String QUERY_GET_ALL = "JpaUser.getAll";
+  public static final String QUERY_ACTIVATE_USER = "JpaUser.activate";
   @Id
   @GeneratedValue
   private long id;
@@ -21,6 +26,13 @@ public final class JpaUser implements User {
   private byte[] hashedPassword;
   @Column(nullable = false)
   private byte[] salt;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "creationTimestamp", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
+  private Date creationDate;
+  @Column(nullable = false)
+  private boolean activated;
+  @Column(nullable = false)
+  private String activationCode;
 
   @Deprecated
   public JpaUser() {}
@@ -33,6 +45,7 @@ public final class JpaUser implements User {
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.salt = salt;
+    this.activationCode = new SessionIdGenerator().createSessionId();
   }
 
   public JpaUser(long id) {
@@ -46,10 +59,6 @@ public final class JpaUser implements User {
   @Override
   public String getEmail() {
     return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   @Override
@@ -76,5 +85,20 @@ public final class JpaUser implements User {
     JpaUser user = new JpaUser(email, hashedPassword, salt);
     user.id = idOfNewUser;
     return user;
+  }
+
+  @Override
+  public Date getCreationDate() {
+    return creationDate;
+  }
+
+  @Override
+  public boolean isActivated() {
+    return activated;
+  }
+
+  @Override
+  public String getActivationCode() {
+    return activationCode;
   }
 }

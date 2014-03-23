@@ -4,9 +4,11 @@ import java.util.List;
 
 public interface UserRepository {
 
-  public abstract User findUserByEmail(String email);
+  User findUserByEmail(String email);
 
-  public abstract List<User> getAllUsers();
+  List<User> getAllUsers();
 
-  public abstract void persistUser(String email, String password);
+  void persistUser(String email, String password);
+
+  void activateUser(String userEmail);
 }

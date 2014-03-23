@@ -2,6 +2,7 @@ package com.pless.emailing;
 
 import static com.pless.emailing.PlessEmailing.*;
 import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
@@ -25,11 +26,12 @@ public class PlessEmailingTest extends PlessTest {
 
   @Test
   public void sendEmail_MUST_set_the_email_parameters_through_the_mailerApi() throws Exception {
-    try (TemporaryEmailProvider emailProvider = new TemporaryEmailProvider()) {
+    Email email = mock(Email.class);
+    try (TemporaryEmailProvider emailProvider = new TemporaryEmailProvider(email)) {
       sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
-      verify(emailProvider.email).setRecipient(EMAIL_RECEPIENT);
-      verify(emailProvider.email).setSubject(EMAIL_SUBJECT);
-      verify(emailProvider.email).setBody(EMAIL_HTML_BODY);
+      verify(email).setRecipient(EMAIL_RECEPIENT);
+      verify(email).setSubject(EMAIL_SUBJECT);
+      verify(email).setBody(EMAIL_HTML_BODY);
     }
   }
 }

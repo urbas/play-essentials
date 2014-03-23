@@ -1,13 +1,21 @@
 package com.pless.users;
 
+import java.util.Date;
+
 public interface User {
 
-  public abstract String getEmail();
+  String getEmail();
 
-  public abstract long getId();
+  long getId();
 
-  public abstract byte[] getSalt();
+  byte[] getSalt();
 
-  public abstract byte[] getHashedPassword();
+  byte[] getHashedPassword();
+  
+  Date getCreationDate();
+  
+  boolean isActivated();
+  
+  String getActivationCode();
 
 }

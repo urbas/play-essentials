@@ -12,12 +12,24 @@ import com.pless.emailing.EmailProvider;
 
 public class TemporaryEmailProvider implements AutoCloseable {
   private final EmailProvider oldEmailProvider = currentEmailProvider;
-  public final Email email = mock(Email.class);
 
   public TemporaryEmailProvider() {
-    currentEmailProvider = mock(EmailProvider.class);
-    when(currentEmailProvider.createEmail(getConfigurationSource()))
+    this(mock(Email.class));
+  }
+
+  public TemporaryEmailProvider(Email email) {
+    EmailProvider emailProvider = mock(EmailProvider.class);
+    when(emailProvider.createEmail(getConfigurationSource()))
       .thenReturn(email);
+    setup(emailProvider);
+  }
+
+  public TemporaryEmailProvider(EmailProvider emailProvider) {
+    setup(emailProvider);
+  }
+
+  private void setup(EmailProvider emailProvider) {
+    currentEmailProvider = emailProvider;
     setConfigurationClass(CONFIG_EMAIL_PROVIDER, TestEmailProvider.class);
   }
 

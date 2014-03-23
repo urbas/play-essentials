@@ -1,15 +1,16 @@
 package com.pless.users;
 
-import static com.pless.emailing.PlessEmailing.sendEmail;
 import static com.pless.users.PlessUserRepository.getUserRepository;
-import play.api.templates.Html;
+import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import com.pless.users.emails.html.SignupEmailTemplate;
+import com.pless.util.*;
 
 public final class UserController extends Controller {
+
+  private static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailFactory";
 
   @Transactional
   public static Result signUp(String email, String password) {
@@ -34,9 +35,20 @@ public final class UserController extends Controller {
   }
 
   private static void sendSignUpEmail(SignupForm newUserDetails) {
-    Html signupEmailHtmlBody = SignupEmailTemplate.apply(newUserDetails);
-    String recepient = newUserDetails.email;
-    String emailSubject = "Pless Signup";
-    sendEmail(recepient, emailSubject, signupEmailHtmlBody);
+    SignupEmailSender signupEmailFactory = SignupEmailSenderSingleton.INSTANCE
+      .createInstance(getConfigurationSource());
+    User newUser = getUserRepository().findUserByEmail(newUserDetails.email);
+    signupEmailFactory.sendSignupEmail(newUser);
+  }
+
+  private static final class SignupEmailSenderSingleton {
+    private static final Factory<SignupEmailSender> INSTANCE = new SingletonFactory<>(CONFIG_SIGNUP_EMAIL_FACTORY, new DefaultSignupEmailSender());
+  }
+
+  private final static class DefaultSignupEmailSender implements Factory<SignupEmailSender> {
+    @Override
+    public SignupEmailSender createInstance(ConfigurationSource configurationSource) {
+      return new SignupEmailSender();
+    }
   }
 }
