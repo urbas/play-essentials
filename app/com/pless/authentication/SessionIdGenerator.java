@@ -11,7 +11,7 @@ public class SessionIdGenerator {
     // https://www.owasp.org/index.php/Session_Management_Cheat_Sheet#Session_ID_Length
     byte[] randomBytes = new byte[18];
     new SecureRandom().nextBytes(randomBytes);
-    return Base64.encodeBase64String(randomBytes);
+    return Base64.encodeBase64URLSafeString(randomBytes);
   }
 
 }

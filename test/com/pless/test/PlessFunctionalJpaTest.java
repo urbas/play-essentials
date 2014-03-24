@@ -1,12 +1,12 @@
 package com.pless.test;
 
+import static com.pless.users.PlessEntityManager.getEntityManager;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import org.junit.After;
 import org.junit.Before;
-
-import play.db.jpa.JPA;
 
 /**
  * Starts up a fake Play application with an in-memory JPA database and a mocked mailer.
@@ -27,8 +27,8 @@ public class PlessFunctionalJpaTest {
     plessTestApplication.close();
   }
 
-  protected void withTransaction(TransactionBody transactionBody) {
-    EntityManager em = getEm();
+  public static void withTransaction(TransactionBody transactionBody) {
+    EntityManager em = getEntityManager();
     EntityTransaction transaction = em.getTransaction();
     transaction.begin();
     try {
@@ -42,8 +42,8 @@ public class PlessFunctionalJpaTest {
     }
   }
 
-  protected <T> T withTransaction(TransactionFunction<T> transactionFunction) {
-    EntityManager em = getEm();
+  public static <T> T withTransaction(TransactionFunction<T> transactionFunction) {
+    EntityManager em = getEntityManager();
     EntityTransaction transaction = em.getTransaction();
     transaction.begin();
     try {
@@ -56,9 +56,5 @@ public class PlessFunctionalJpaTest {
       } catch (Exception rollbackException) {}
       throw ex;
     }
-  }
-
-  public static EntityManager getEm() {
-    return JPA.em("default");
   }
 }

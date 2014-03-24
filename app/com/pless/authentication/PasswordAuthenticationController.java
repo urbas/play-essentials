@@ -18,9 +18,9 @@ public final class PasswordAuthenticationController extends Controller {
       PasswordLoginForm passwordLoginForm = new PasswordLoginForm(email, password);
       User authenticatedUser = getPasswordAuthenticator().authenticateUser(passwordLoginForm);
       getAuthenticationService().logIn(authenticatedUser);
-      return ok();
+      return ok("Authorized.");
     } catch (Exception e) {
-      return badRequest();
+      return badRequest("Access denied.");
     }
   }
 }

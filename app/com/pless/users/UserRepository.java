@@ -10,5 +10,5 @@ public interface UserRepository {
 
   void persistUser(String email, String password);
 
-  void activateUser(String userEmail);
+  boolean activateUser(String userEmail, String activationCode);
 }

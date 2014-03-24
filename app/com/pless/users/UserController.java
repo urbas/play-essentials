@@ -24,6 +24,16 @@ public final class UserController extends Controller {
     return ok();
   }
 
+  @Transactional
+  public static Result activate(String email, String activationCode) {
+    final boolean wasActivated = getUserRepository().activateUser(email, activationCode);
+    if (wasActivated) {
+      return ok();
+    } else {
+      return badRequest();
+    }
+  }
+
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
       getUserRepository().persistUser(

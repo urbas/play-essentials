@@ -48,11 +48,12 @@ public class PlessJpaUserRepository implements UserRepository {
   }
 
   @Override
-  public void activateUser(String userEmail) {
+  public boolean activateUser(String userEmail, String activationCode) {
     Query usersByEmailQuery = getEntityManager()
       .createNamedQuery(QUERY_ACTIVATE_USER);
     usersByEmailQuery.setParameter("email", userEmail);
-    usersByEmailQuery.executeUpdate();
+    usersByEmailQuery.setParameter("activationCode", activationCode);
+    return usersByEmailQuery.executeUpdate() > 0;
   }
 
 }

@@ -22,6 +22,9 @@ public class AuthenticationService {
     if (user == null) {
       throw new IllegalArgumentException("Cannot log in. Log in credentials are invalid.");
     }
+    if (!user.isActivated()) {
+      throw new IllegalStateException("Could not log in. The user is not activated.");
+    }
     String sessionId = createSessionId();
     String serverSessionKey = getSessionStorageKey(sessionId);
     serverSessionStorage.put(

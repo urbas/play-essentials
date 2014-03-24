@@ -1,13 +1,14 @@
 # Home page
-GET   /               com.pless.WelcomeController.welcome()
+GET   /                com.pless.WelcomeController.welcome()
 
 # Authentication Routes
-GET   /auth/login     com.pless.authentication.PasswordAuthenticationController.logIn(email, password)
-GET   /auth/logout    com.pless.authentication.AuthenticationController.logOut()
-GET   /auth/status    com.pless.authentication.AuthenticationController.status()
+GET   /auth/login      com.pless.authentication.PasswordAuthenticationController.logIn(email, password)
+GET   /auth/logout     com.pless.authentication.AuthenticationController.logOut()
+GET   /auth/status     com.pless.authentication.AuthenticationController.status()
 
 # User Management Routes
-GET   /user/signup    com.pless.users.UserController.signUp(email, password)
+GET   /user/signup     com.pless.users.UserController.signUp(email, password)
+GET   /user/activate   com.pless.users.UserController.activate(email, activationCode)
 
 # Map static resources from the /public folder to the /assets URL path
-GET   /assets/*file   controllers.Assets.at(path="/public", file)
+GET   /assets/*file    controllers.Assets.at(path="/public", file)

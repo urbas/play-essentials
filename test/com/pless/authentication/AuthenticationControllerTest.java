@@ -1,6 +1,9 @@
 package com.pless.authentication;
 
 import static com.pless.authentication.routes.ref.AuthenticationController;
+import static com.pless.authentication.routes.ref.PasswordAuthenticationController;
+import static com.pless.users.PlessJpaUserRepositoryTest.activateUser;
+import static com.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static com.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static com.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 import static org.junit.Assert.assertEquals;
@@ -13,9 +16,8 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.test.FakeRequest;
 
-import com.pless.authentication.routes.ref;
 import com.pless.test.PlessFunctionalJpaTest;
-import com.pless.users.PersistSingleUserTransaction;
+import com.pless.users.User;
 
 public class AuthenticationControllerTest extends PlessFunctionalJpaTest {
 
@@ -53,7 +55,8 @@ public class AuthenticationControllerTest extends PlessFunctionalJpaTest {
   }
 
   private Result createUserAndLogin() {
-    withTransaction(new PersistSingleUserTransaction(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
-    return callAction(ref.PasswordAuthenticationController.logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
+    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    activateUser(user);
+    return callAction(PasswordAuthenticationController.logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
   }
 }

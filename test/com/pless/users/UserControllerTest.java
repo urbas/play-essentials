@@ -1,10 +1,13 @@
 package com.pless.users;
 
 import static com.pless.emailing.PlessEmailing.getEmailProvider;
+import static com.pless.users.PlessJpaUserRepositoryTest.fetchUser;
+import static com.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static com.pless.users.PlessUserRepository.getUserRepository;
 import static com.pless.users.UserController.createUser;
 import static com.pless.users.UserController.signUp;
 import static com.pless.users.UserMatchers.userWith;
+import static com.pless.users.routes.ref.UserController;
 import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -69,6 +72,30 @@ public class UserControllerTest extends PlessFunctionalJpaTest {
   @Test(expected = IllegalArgumentException.class)
   public void createUser_MUST_throw_an_exception_WHEN_password_is_empty() throws Exception {
     createUser(new SignupForm(JOHN_SMITH_EMAIL, ""));
+  }
+  
+  @Test
+  public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
+    assertThat(
+      status(callAction(UserController.activate(JOHN_SMITH_EMAIL, null))),
+      is(BAD_REQUEST));
+  }
+  
+  @Test
+  public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
+    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    assertThat(
+      status(callAction(UserController.activate(user.getEmail(), user.getActivationCode()))),
+      is(OK));
+  }
+  
+  @Test
+  public void activate_MUST_activate_the_user() throws Exception {
+    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    callAction(UserController.activate(user.getEmail(), user.getActivationCode()));
+    assertThat(
+      fetchUser(user.getEmail()).isActivated(),
+      is(true));
   }
 
   @Test

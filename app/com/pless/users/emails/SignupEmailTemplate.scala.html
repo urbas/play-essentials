@@ -15,6 +15,15 @@
       <div style="margin-left: 25px;">Email: @loginDetails.getEmail</div>
       <div style="margin-left: 25px;">Activation code: @loginDetails.getActivationCode</div>
     </p>
+    
+    <p>
+      Please visit the following link to activate your account:
+      <div>
+        <a href="@{com.pless.users.routes.UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode)}">
+        @{com.pless.users.routes.UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode)}
+        </a>
+      </div>
+    </p>
 
     <p>
       To complete your registration, please visit this link:

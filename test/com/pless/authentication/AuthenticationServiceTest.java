@@ -1,8 +1,7 @@
 package com.pless.authentication;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +16,12 @@ public class AuthenticationServiceTest {
   private final User user = createJohnSmithUser();
   private AuthenticationService authenticationSession;
   private HashMapServerSessionStorage serverSessionStorage;
+  private User activatedUser;
 
   @Before
   public void setUp() {
+    activatedUser = spy(user);
+    doReturn(true).when(activatedUser).isActivated();
     serverSessionStorage = new HashMapServerSessionStorage();
     authenticationSession = new AuthenticationService(
       new TestClientSessionStorage(),
@@ -41,23 +43,28 @@ public class AuthenticationServiceTest {
   public void logIn_MUST_throw_an_exception_WHEN_no_authentication_token_is_present() throws Exception {
     authenticationSession.logIn(null);
   }
+  
+  @Test(expected = IllegalStateException.class)
+  public void logIn_MUST_throw_an_exception_WHEN_an_inactive_user_tries_to_log_in() throws Exception {
+    authenticationSession.logIn(user);
+  }
 
   @Test
   public void isLoggedIn_MUST_return_true_AFTER_a_successful_logIn() throws Exception {
-    authenticationSession.logIn(user);
+    authenticationSession.logIn(activatedUser);
     assertTrue(authenticationSession.isLoggedIn());
   }
 
   @Test
   public void isLoggedIn_MUST_return_false_AFTER_session_expiration() throws Exception {
-    authenticationSession.logIn(user);
+    authenticationSession.logIn(activatedUser);
     serverSessionStorage.expireAllEntries();
     assertFalse(authenticationSession.isLoggedIn());
   }
 
   @Test
   public void getLoggedInUserId_MUST_return_the_id_with_which_the_session_was_started() throws Exception {
-    authenticationSession.logIn(user);
+    authenticationSession.logIn(activatedUser);
     assertEquals(JOHN_SMITH_USER_ID, (long) authenticationSession.getLoggedInUserId());
   }
 

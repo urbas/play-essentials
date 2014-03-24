@@ -10,10 +10,10 @@ import com.pless.authentication.SessionIdGenerator;
 @Entity
 @NamedQueries({
   @NamedQuery(name = JpaUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM JpaUser u WHERE u.email = :email"),
-  @NamedQuery(name = JpaUser.QUERY_ACTIVATE_USER, query = "UPDATE JpaUser u SET u.activated = TRUE WHERE u.email = :email"),
+  @NamedQuery(name = JpaUser.QUERY_ACTIVATE_USER, query = "UPDATE JpaUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
   @NamedQuery(name = JpaUser.QUERY_GET_ALL, query = "SELECT u FROM JpaUser u")
 })
-public final class JpaUser implements User {
+public class JpaUser implements User {
   public static final String QUERY_GET_BY_EMAIL = "JpaUser.getByEmail";
   public static final String QUERY_GET_ALL = "JpaUser.getAll";
   public static final String QUERY_ACTIVATE_USER = "JpaUser.activate";
