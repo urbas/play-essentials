@@ -24,8 +24,8 @@ import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.emailing.LoggingNoOpEmailProvider;
-import com.pless.test.*;
+import com.pless.test.PlessFunctionalJpaTest;
+import com.pless.test.TemporaryUserRepository;
 import com.pless.users.routes.ref;
 
 public class UserControllerTest extends PlessFunctionalJpaTest {
@@ -59,8 +59,7 @@ public class UserControllerTest extends PlessFunctionalJpaTest {
       .thenThrow(new RuntimeException());
     try {
       callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    } catch (Exception ex) {
-    }
+    } catch (Exception ex) {}
     getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
 
@@ -73,26 +72,28 @@ public class UserControllerTest extends PlessFunctionalJpaTest {
   public void createUser_MUST_throw_an_exception_WHEN_password_is_empty() throws Exception {
     createUser(new SignupForm(JOHN_SMITH_EMAIL, ""));
   }
-  
+
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
       status(callAction(UserController.activate(JOHN_SMITH_EMAIL, null))),
       is(BAD_REQUEST));
   }
-  
+
   @Test
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
-      status(callAction(UserController.activate(user.getEmail(), user.getActivationCode()))),
+      status(callAction(UserController.activate(user.getEmail(), user
+        .getActivationCode()))),
       is(OK));
   }
-  
+
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    callAction(UserController.activate(user.getEmail(), user.getActivationCode()));
+    callAction(UserController.activate(user.getEmail(), user
+      .getActivationCode()));
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
       is(true));
@@ -100,10 +101,8 @@ public class UserControllerTest extends PlessFunctionalJpaTest {
 
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
-    try (TemporaryEmailProvider emailProvider = new TemporaryEmailProvider(spy(new LoggingNoOpEmailProvider()))) {
-      callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-      verify(getEmailProvider()).createEmail(getConfigurationSource());
-    }
+    callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
 
   @Test

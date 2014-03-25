@@ -88,10 +88,7 @@ public class SingletonFactoryTest {
   }
 
   public void useScopedTestFactory() {
-    when(configurationSource.getString(FACTORY_CONFIG_KEY)).
-      thenReturn(ScopedTestFactory.class.getCanonicalName());
-    when(configurationSource.getString(ConfigurationUtil
-      .getTestConfigKey(FACTORY_CONFIG_KEY)))
+    when(configurationSource.getString(FACTORY_CONFIG_KEY))
       .thenReturn(ScopedTestFactory.class.getCanonicalName());
   }
 }
