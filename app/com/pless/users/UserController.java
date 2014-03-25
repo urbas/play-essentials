@@ -10,7 +10,7 @@ import com.pless.util.*;
 
 public final class UserController extends Controller {
 
-  private static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailFactory";
+  public static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailFactory";
 
   @Transactional
   public static Result signUp(String email, String password) {

@@ -1,5 +1,6 @@
 package com.pless.util;
 
+import static com.pless.util.ConfigurationUtil.getRunModeConfigKey;
 import play.Play;
 
 /**
@@ -26,17 +27,20 @@ public class PlayApplicationConfigurationSource implements ConfigurationSource {
 
   @Override
   public String getString(String configKey) {
-    return Play.application().configuration().getString(configKey);
+    return Play.application().configuration()
+      .getString(getRunModeConfigKey(this, configKey));
   }
 
   @Override
   public int getInt(String configKey, int defaultValue) {
-    return Play.application().configuration().getInt(configKey, defaultValue);
+    return Play.application().configuration()
+      .getInt(getRunModeConfigKey(this, configKey), defaultValue);
   }
 
   @Override
   public boolean getBoolean(String configKey, boolean defaultValue) {
     return Play.application().configuration()
-      .getBoolean(configKey, defaultValue);
+      .getBoolean(getRunModeConfigKey(this, configKey), defaultValue);
   }
+  
 }

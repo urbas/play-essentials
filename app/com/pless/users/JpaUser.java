@@ -78,7 +78,7 @@ public class JpaUser implements User {
 
   @Override
   public String toString() {
-    return "User [id=" + id + ", email=" + email + "]";
+    return "User [id=" + id + ", email=" + email + ", activated=" + activated + "]";
   }
 
   public User withId(long idOfNewUser) {

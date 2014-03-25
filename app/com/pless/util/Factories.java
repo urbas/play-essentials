@@ -1,7 +1,5 @@
 package com.pless.util;
 
-import static com.pless.util.ConfigurationUtil.getRunModeConfigKey;
-
 import com.pless.ConfigurationException;
 
 public class Factories {
@@ -45,8 +43,7 @@ public class Factories {
   }
 
   private <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey) {
-    String runModeFactoryName = getRunModeConfigKey(configurationSource, factoryNameConfigKey);
-    String factoryClassName = configurationSource.getString(runModeFactoryName);
+    String factoryClassName = configurationSource.getString(factoryNameConfigKey);
     if (!StringUtils.isNullOrEmpty(factoryClassName)) {
       return createFactoryFromClassName(factoryClassName);
     }

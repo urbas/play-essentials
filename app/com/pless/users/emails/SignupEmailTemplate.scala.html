@@ -1,5 +1,7 @@
 @(loginDetails: com.pless.users.User)
 
+@import com.pless.users.routes.UserController
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,19 +17,15 @@
       <div style="margin-left: 25px;">Email: @loginDetails.getEmail</div>
       <div style="margin-left: 25px;">Activation code: @loginDetails.getActivationCode</div>
     </p>
-    
-    <p>
-      Please visit the following link to activate your account:
-      <div>
-        <a href="@{com.pless.users.routes.UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode)}">
-        @{com.pless.users.routes.UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode)}
-        </a>
-      </div>
-    </p>
 
     <p>
-      To complete your registration, please visit this link:
-      <div style="margin-left: 25px;"><a href="http://www.google.com">http://www.google.com</a></div>
+      To complete your registration please visit the following link:
+      <div>
+        <a href="@{UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}">
+        @{UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}
+        </a>
+      </div>
+      Visiting this link will activate your account.
     </p>
   </body>
 </html>
