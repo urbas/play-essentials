@@ -1,5 +1,6 @@
 package com.pless.util;
 
+import static com.pless.util.Factories.createInstance;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -13,7 +14,6 @@ public class FactoriesTest {
   private static final String CONFIG_KEY_WRONG_CLASSNAME = "wrong classname configuration";
   private static final String CONFIG_KEY_UNCONFIGURED_FACTORY = "empty factory name configuration";
   private static final String CONFIG_KEY_VALID_FACTORY = "valid factory";
-  private Factories factories;
   private ConfigurationSource configurationSource;
   private Factory<String> defaultInstanceCallback;
 
@@ -22,7 +22,6 @@ public class FactoriesTest {
   public void setUp() {
     defaultInstanceCallback = mock(Factory.class);
     configurationSource = mock(ConfigurationSource.class);
-    factories = new Factories(configurationSource);
     when(configurationSource.getString(CONFIG_KEY_WRONG_CLASSNAME))
       .thenReturn(INVALID_CLASSNAME);
     when(configurationSource.getString(CONFIG_KEY_VALID_FACTORY))
@@ -31,16 +30,13 @@ public class FactoriesTest {
 
   @Test
   public void createInstance_MUST_create_the_default_instance_WHEN_no_factory_was_specified() throws Exception {
-    factories.createInstance(
-      CONFIG_KEY_UNCONFIGURED_FACTORY,
-      defaultInstanceCallback);
+    createInstance(CONFIG_KEY_UNCONFIGURED_FACTORY, defaultInstanceCallback, configurationSource);
     verify(defaultInstanceCallback).createInstance(configurationSource);
   }
 
   @Test
   public void createInstance_MUST_not_use_the_default_instance_creator_WHEN_the_factory_is_provided_in_the_configuration() throws Exception {
-    factories
-      .createInstance(CONFIG_KEY_VALID_FACTORY, defaultInstanceCallback);
+    createInstance(CONFIG_KEY_VALID_FACTORY, defaultInstanceCallback, configurationSource);
     verify(defaultInstanceCallback, never())
       .createInstance(configurationSource);
   }
@@ -48,15 +44,13 @@ public class FactoriesTest {
   @Test
   public void createInstance_MUST_use_configured_factory() throws Exception {
     when(configurationSource.isProduction()).thenReturn(true);
-    String createdInstance = factories
-      .createInstance(CONFIG_KEY_VALID_FACTORY, defaultInstanceCallback);
+    String createdInstance = createInstance(CONFIG_KEY_VALID_FACTORY, defaultInstanceCallback, configurationSource);
     assertEquals(ProductionFactory.OBJECT_CREATED_VIA_FACTORY, createdInstance);
   }
 
   @Test(expected = ConfigurationException.class)
   public void createInstance_MUST_throw_an_exception_WHEN_the_factory_could_not_be_constructed() throws Exception {
     when(configurationSource.isProduction()).thenReturn(true);
-    factories
-      .createInstance(CONFIG_KEY_WRONG_CLASSNAME, defaultInstanceCallback);
+    createInstance(CONFIG_KEY_WRONG_CLASSNAME, defaultInstanceCallback, configurationSource);
   }
 }

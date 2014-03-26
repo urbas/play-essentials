@@ -14,8 +14,8 @@ public class SingletonFactory<T> implements Factory<T> {
   @Override
   public T createInstance(ConfigurationSource configurationSource) {
     if (createdInstance == null || !configurationSource.isProduction()) {
-      createdInstance = new Factories(configurationSource)
-        .createInstance(factoryConfigKey, defaultFactory);
+      createdInstance = Factories
+        .createInstance(factoryConfigKey, defaultFactory, configurationSource);
     }
     return createdInstance;
   }

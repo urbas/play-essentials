@@ -18,7 +18,7 @@ public class PlessEntityManager {
   }
 
   private static final class Singletons {
-    public static final Factory<EntityManager> ENTITY_MANAGER_FACTORY = new SingletonFactory<>(CONFIG_ENTITY_MANAGER_FACTORY, new PlayDefaultEntityManagerFactory());
+    public static final Factory<EntityManager> ENTITY_MANAGER_FACTORY = new CachingFactory<>(CONFIG_ENTITY_MANAGER_FACTORY, new PlayDefaultEntityManagerFactory());
   }
 
   private static final class PlayDefaultEntityManagerFactory implements Factory<EntityManager> {

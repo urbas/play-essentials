@@ -3,13 +3,6 @@ package com.pless.util;
 import com.pless.ConfigurationException;
 
 public class Factories {
-
-  private ConfigurationSource configurationSource;
-
-  public Factories(ConfigurationSource configurationSource) {
-    this.configurationSource = configurationSource;
-  }
-
   /**
    * @param factoryNameConfigKey
    *          a configuration key name. This configuration setting gives the
@@ -18,23 +11,25 @@ public class Factories {
    *          in case the factory is not configured (not specified by the
    *          configuration key), then this factory is used to construct the
    *          instance.
+   * @param configurationSource
+   *          the source of configuration from where the configured factory
+   *          class is retrieved
    * @return the instance (constructed either via the configured factory or the
    *         default factory, if no factory is configured).
    */
-  public <T> T createInstance(String factoryNameConfigKey,
-                              Factory<T> defaultFactory)
+  public static <T> T createInstance(String factoryNameConfigKey,
+                                     Factory<T> defaultFactory,
+                                     ConfigurationSource configurationSource)
   {
-    return createFactory(factoryNameConfigKey, defaultFactory)
+    return createFactory(factoryNameConfigKey, defaultFactory, configurationSource)
       .createInstance(configurationSource);
   }
 
-  /**
-   * @return either a factory
-   */
-  public <T> Factory<T> createFactory(String factoryNameConfigKey,
-                                      Factory<T> defaultFactory)
+  public static <T> Factory<T> createFactory(String factoryNameConfigKey,
+                                             Factory<T> defaultFactory,
+                                             ConfigurationSource configurationSource)
   {
-    Factory<T> factoryFromConfiguration = tryCreateFactoryFromConfiguration(factoryNameConfigKey);
+    Factory<T> factoryFromConfiguration = tryCreateFactoryFromConfiguration(factoryNameConfigKey, configurationSource);
     if (factoryFromConfiguration == null) {
       return defaultFactory;
     } else {
@@ -42,8 +37,11 @@ public class Factories {
     }
   }
 
-  private <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey) {
-    String factoryClassName = configurationSource.getString(factoryNameConfigKey);
+  private static <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey,
+                                                                  ConfigurationSource configurationSource)
+  {
+    String factoryClassName = configurationSource
+      .getString(factoryNameConfigKey);
     if (!StringUtils.isNullOrEmpty(factoryClassName)) {
       return createFactoryFromClassName(factoryClassName);
     }
@@ -51,7 +49,7 @@ public class Factories {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> Factory<T> createFactoryFromClassName(String factoryClassName) {
+  private static <T> Factory<T> createFactoryFromClassName(String factoryClassName) {
     try {
       return (Factory<T>) Class
         .forName(factoryClassName).getConstructor()

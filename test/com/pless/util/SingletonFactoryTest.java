@@ -47,9 +47,8 @@ public class SingletonFactoryTest {
 
   @Test
   public void createInstance_MUST_call_the_configured_factory() throws Exception {
-    useScopedTestFactory();
-
     try (ScopedTestFactory scopedFactory = new ScopedTestFactory(configuredFactory)) {
+      useScopedTestFactory();
       String createdInstance = singletonFactory
         .createInstance(configurationSource);
       assertEquals(CONFIGURED_INSTANCE, createdInstance);
