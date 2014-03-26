@@ -2,7 +2,7 @@ package com.pless.authentication;
 
 import javax.persistence.EntityManager;
 
-import play.db.jpa.JPA;
+import com.pless.users.PlessEntityManager;
 
 public class JpaServerSessionStorage implements ServerSessionStorage {
 
@@ -67,6 +67,6 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
   }
 
   private EntityManager getEntityManager() {
-    return entityManager == null ? JPA.em() : entityManager;
+    return entityManager == null ? PlessEntityManager.getEntityManager() : entityManager;
   }
 }
