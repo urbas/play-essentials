@@ -74,7 +74,7 @@ public class CachingFactoryTest {
       verify(configuredFactory, times(2)).createInstance(configurationSource);
     }
   }
-  
+
   @Test
   public void createInstance_MUST_construct_multiple_factories_WHEN_in_test_mode() throws Exception {
     try (ScopedTestFactory scopedFactory = new ScopedTestFactory(configuredFactory)) {
@@ -90,14 +90,14 @@ public class CachingFactoryTest {
   @Test
   public void createInstance_MUST_construct_only_one_factory_WHEN_in_production() throws Exception {
     doReturn(true).when(configurationSource).isProduction();
-      try (ScopedTestFactory scopedFactory = new ScopedTestFactory(configuredFactory)) {
-        useScopedFactory();
-        cachingFactory.createInstance(configurationSource);
-        cachingFactory.createInstance(configurationSource);
-        assertThat(
-          ScopedTestFactory.getConstructorInvokations(),
-          is(equalTo(1)));
-      }
+    try (ScopedTestFactory scopedFactory = new ScopedTestFactory(configuredFactory)) {
+      useScopedFactory();
+      cachingFactory.createInstance(configurationSource);
+      cachingFactory.createInstance(configurationSource);
+      assertThat(
+        ScopedTestFactory.getConstructorInvokations(),
+        is(equalTo(1)));
+    }
   }
 
   private void useScopedFactory() {

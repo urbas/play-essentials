@@ -1,5 +1,8 @@
 package com.pless.test;
 
+import static com.pless.test.TestConfigurationUtils.setConfigurationString;
+import static com.pless.test.TestEntityManager.APP_CONFIG_JPA_DEFAULT;
+import static com.pless.test.TestEntityManager.TEST_PERSISTENCE_UNIT;
 import static org.mockito.Mockito.*;
 
 import com.pless.authentication.JpaServerSessionStorage;
@@ -10,7 +13,7 @@ import com.pless.util.ConfigurationSource;
 public class TestJpaApplication extends TestApplication {
 
   public TestJpaApplication() {
-    setupJpaApplication();
+    setupJpaConfiguration();
     temporaryServices.add(new TemporaryEmailProvider());
     temporaryServices
       .add(new TemporaryServerSessionStorage(spy(new JpaServerSessionStorage())));
@@ -20,10 +23,8 @@ public class TestJpaApplication extends TestApplication {
       .add(new TemporaryEntityManagerProvider(spy(new RawEntityManagerProvider())));
   }
 
-  private void setupJpaApplication() {
-    final ConfigurationSource configurationSource = mock(ConfigurationSource.class);
-    when(configurationSource.getString(TestEntityManager.APP_CONFIG_JPA_DEFAULT))
-      .thenReturn(TestEntityManager.TEST_PERSISTENCE_UNIT);
-    temporaryServices.add(new TemporaryConfiguration(configurationSource));
+  private void setupJpaConfiguration() {
+    temporaryServices.add(new TemporaryConfiguration(mock(ConfigurationSource.class)));
+    setConfigurationString(APP_CONFIG_JPA_DEFAULT, TEST_PERSISTENCE_UNIT);
   }
 }
