@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.pless.db.PlessEntityManager;
+
 public class PlessJpaUserRepository implements UserRepository {
 
   private final EntityManager entityManager;

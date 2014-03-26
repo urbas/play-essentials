@@ -16,10 +16,10 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.test.FakeRequest;
 
-import com.pless.test.PlessFunctionalJpaTest;
+import com.pless.test.PlessContollerWithJpaTest;
 import com.pless.users.User;
 
-public class AuthenticationControllerTest extends PlessFunctionalJpaTest {
+public class AuthenticationControllerTest extends PlessContollerWithJpaTest {
 
   private static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
 

@@ -2,7 +2,7 @@ package com.pless.authentication;
 
 import javax.persistence.EntityManager;
 
-import com.pless.users.PlessEntityManager;
+import com.pless.db.PlessEntityManager;
 
 public class JpaServerSessionStorage implements ServerSessionStorage {
 

@@ -7,12 +7,17 @@ import static org.mockito.Mockito.mock;
 import com.pless.util.ConfigurationSource;
 
 
-public class TemporaryGlobalConfiguration implements AutoCloseable {
+public class TemporaryConfiguration implements AutoCloseable {
 
   private final ConfigurationSource oldConfiguration = getConfigurationSource();
-  public final ConfigurationSource curentConfigurationSource = mock(ConfigurationSource.class);
+  public final ConfigurationSource curentConfigurationSource;
 
-  public TemporaryGlobalConfiguration() {
+  public TemporaryConfiguration() {
+    this(mock(ConfigurationSource.class));
+  }
+  
+  public TemporaryConfiguration(ConfigurationSource newConfigurationSource) {
+    curentConfigurationSource = newConfigurationSource;
     setConfigurationSource(curentConfigurationSource);
   }
 

@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.pless.test.PlessFunctionalJpaTest;
+import com.pless.test.PlessContollerWithJpaTest;
 
 
-public class PlayCacheServerSessionStorageTest extends PlessFunctionalJpaTest {
+public class PlayCacheServerSessionStorageTest extends PlessContollerWithJpaTest {
   private static final String FOO = "foo";
   private static final String BAR = "bar";
   private static final int ONE_HOUR_IN_MILLIS = 60 * 60 * 1000;

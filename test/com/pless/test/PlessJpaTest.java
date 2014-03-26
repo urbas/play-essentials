@@ -1,6 +1,6 @@
 package com.pless.test;
 
-import static com.pless.users.PlessEntityManager.getEntityManager;
+import static com.pless.db.PlessEntityManager.getEntityManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -8,18 +8,13 @@ import javax.persistence.EntityTransaction;
 import org.junit.After;
 import org.junit.Before;
 
-/**
- * Starts up a fake Play application with an in-memory JPA database and a mocked mailer.
- * 
- * Use this to test your controllers.
- */
-public class PlessFunctionalJpaTest {
+public class PlessJpaTest {
 
-  protected PlessTestApplication plessTestApplication;
+  protected TestApplication plessTestApplication;
   
   @Before
   public void setUp() {
-    plessTestApplication = new PlessFunctionalJpaApplication();
+    plessTestApplication = new TestJpaApplication();
   }
   
   @After
@@ -57,4 +52,5 @@ public class PlessFunctionalJpaTest {
       throw ex;
     }
   }
+
 }

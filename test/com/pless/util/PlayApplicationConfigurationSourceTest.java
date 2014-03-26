@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.pless.test.TemporaryGlobalConfiguration;
+import com.pless.test.TemporaryConfiguration;
 
 public class PlayApplicationConfigurationSourceTest {
 
@@ -19,7 +19,7 @@ public class PlayApplicationConfigurationSourceTest {
 
   @Test
   public void getInstance_MUST_return_the_scoped_configuration() throws Exception {
-    try (TemporaryGlobalConfiguration scopedConfiguration = new TemporaryGlobalConfiguration()) {
+    try (TemporaryConfiguration scopedConfiguration = new TemporaryConfiguration()) {
       assertEquals(
         scopedConfiguration.curentConfigurationSource,
         PlessConfigurationSource.getConfigurationSource());

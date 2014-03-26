@@ -5,11 +5,11 @@ import org.junit.Before;
 
 public class PlessTest {
 
-  protected PlessTestApplication plessTestApplication;
+  protected TestApplication plessTestApplication;
 
   @Before
   public void setUp() {
-    plessTestApplication = new PlessMockedApplication();
+    plessTestApplication = new MockedApplication();
   }
 
   @After

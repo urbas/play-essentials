@@ -9,9 +9,13 @@ import com.pless.users.UserRepository;
 
 public class TemporaryUserRepository implements AutoCloseable {
   private final UserRepository oldUserRepository = currentUserRepository;
-
+  
   public TemporaryUserRepository() {
-    currentUserRepository = mock(UserRepository.class);
+    this(mock(UserRepository.class));
+  }
+
+  public TemporaryUserRepository(UserRepository newUserRepository) {
+    currentUserRepository = newUserRepository;
     setConfigurationClass(CONFIG_USER_REPOSITORY, TestUserRepository.class);
   }
 

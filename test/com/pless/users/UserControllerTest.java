@@ -24,11 +24,11 @@ import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.test.PlessFunctionalJpaTest;
+import com.pless.test.PlessContollerWithJpaTest;
 import com.pless.test.TemporaryUserRepository;
 import com.pless.users.routes.ref;
 
-public class UserControllerTest extends PlessFunctionalJpaTest {
+public class UserControllerTest extends PlessContollerWithJpaTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";

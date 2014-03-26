@@ -16,10 +16,10 @@ import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.test.PlessFunctionalJpaTest;
+import com.pless.test.PlessContollerWithJpaTest;
 import com.pless.users.*;
 
-public class PasswordAuthenticationControllerTest extends PlessFunctionalJpaTest {
+public class PasswordAuthenticationControllerTest extends PlessContollerWithJpaTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_no_credentials_are_given() throws Exception {

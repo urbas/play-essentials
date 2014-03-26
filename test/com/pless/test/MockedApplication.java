@@ -1,10 +1,10 @@
 package com.pless.test;
 
 
-public class PlessMockedApplication extends PlessTestApplication {
+public class MockedApplication extends TestApplication {
 
-  public PlessMockedApplication() {
-    temporaryServices.add(new TemporaryGlobalConfiguration());
+  public MockedApplication() {
+    temporaryServices.add(new TemporaryConfiguration());
     temporaryServices.add(new TemporaryEmailProvider());
     temporaryServices.add(new TemporaryUserRepository());
     temporaryServices.add(new TemporaryServerSessionStorage());

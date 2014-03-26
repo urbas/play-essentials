@@ -12,7 +12,11 @@ public class TemporaryServerSessionStorage implements AutoCloseable {
   private final ServerSessionStorage oldServerSessionStorage = currentServerSessionStorage;
   
   public TemporaryServerSessionStorage() {
-    currentServerSessionStorage = mock(ServerSessionStorage.class);
+    this(mock(ServerSessionStorage.class));
+  }
+  
+  public TemporaryServerSessionStorage(ServerSessionStorage newServerSessionStorage) {
+    currentServerSessionStorage = newServerSessionStorage;
     setConfigurationClass(CONFIG_SERVER_SESSION_STORAGE_FACTORY, TestServerSessionStorage.class);
   }
 

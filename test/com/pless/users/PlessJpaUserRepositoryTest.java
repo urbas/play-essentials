@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.pless.test.*;
 
-public class PlessJpaUserRepositoryTest extends PlessFunctionalJpaTest {
+public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
 
   private static final String USER_EMAIL = "user email";
   private static final String USER_PASSWORD = "user password";

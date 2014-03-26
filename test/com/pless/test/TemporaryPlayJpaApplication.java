@@ -1,5 +1,7 @@
 package com.pless.test;
 
+import static com.pless.test.TestEntityManager.APP_CONFIG_JPA_DEFAULT;
+import static com.pless.test.TestEntityManager.TEST_PERSISTENCE_UNIT;
 import static play.test.Helpers.*;
 
 import java.util.HashMap;
@@ -8,8 +10,6 @@ import play.test.FakeApplication;
 import play.test.Helpers;
 
 public class TemporaryPlayJpaApplication implements AutoCloseable {
-  private static final String TEST_PERSISTENCE_UNIT = "testPersistenceUnit";
-  private static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";
   private final HashMap<String, String> applicationOptions = new HashMap<>();
   private final FakeApplication fakeApplication;
 

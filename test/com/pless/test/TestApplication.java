@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class PlessTestApplication implements AutoCloseable {
+public class TestApplication implements AutoCloseable {
 
   protected static ReentrantLock globalTestApplicationLock = new ReentrantLock();
   protected List<AutoCloseable> temporaryServices = new ArrayList<>();
 
-  public PlessTestApplication() {
+  public TestApplication() {
     globalTestApplicationLock.lock();
   }
 
