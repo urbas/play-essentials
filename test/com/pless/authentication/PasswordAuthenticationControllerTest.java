@@ -54,7 +54,7 @@ public class PasswordAuthenticationControllerTest extends PlessContollerWithJpaT
     assertEquals(BAD_REQUEST, status(result));
   }
   
-  private Result callLogIn(String userEmail, String userPassword) {
+  public static Result callLogIn(String userEmail, String userPassword) {
     return callAction(PasswordAuthenticationController.logIn(userEmail, userPassword));
   }
 }

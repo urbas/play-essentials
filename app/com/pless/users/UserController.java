@@ -1,11 +1,13 @@
 package com.pless.users;
 
+import static com.pless.authentication.PlessAuthentication.getAuthenticationService;
 import static com.pless.users.PlessUserRepository.getUserRepository;
 import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import com.pless.authentication.AuthenticationService;
 import com.pless.util.*;
 
 public final class UserController extends Controller {
@@ -26,8 +28,22 @@ public final class UserController extends Controller {
 
   @Transactional
   public static Result activate(String email, String activationCode) {
-    final boolean wasActivated = getUserRepository().activateUser(email, activationCode);
+    final boolean wasActivated = getUserRepository()
+      .activateUser(email, activationCode);
     if (wasActivated) {
+      return ok();
+    } else {
+      return badRequest();
+    }
+  }
+
+  @Transactional
+  public static Result delete() {
+    final AuthenticationService auth = getAuthenticationService();
+    if (auth.isLoggedIn()) {
+      final User loggedInUser = getUserRepository().findUserById(auth.getLoggedInUserId());
+      getUserRepository().delete(loggedInUser.getEmail());
+      auth.logOut();
       return ok();
     } else {
       return badRequest();

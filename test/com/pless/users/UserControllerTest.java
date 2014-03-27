@@ -1,5 +1,8 @@
 package com.pless.users;
 
+import static com.pless.authentication.AuthenticationControllerTest.callstatus;
+import static com.pless.authentication.AuthenticationControllerTest.parseContentAsBoolean;
+import static com.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
 import static com.pless.emailing.PlessEmailing.getEmailProvider;
 import static com.pless.users.PlessJpaUserRepositoryTest.fetchUser;
 import static com.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
@@ -9,9 +12,9 @@ import static com.pless.users.UserController.signUp;
 import static com.pless.users.UserMatchers.userWith;
 import static com.pless.users.routes.ref.UserController;
 import static com.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
@@ -20,13 +23,14 @@ import static play.test.Helpers.status;
 
 import javax.persistence.NoResultException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import play.mvc.Result;
 
+import com.pless.authentication.AuthenticationControllerTest;
 import com.pless.test.PlessContollerWithJpaTest;
 import com.pless.test.TemporaryUserRepository;
-import com.pless.users.routes.ref;
 
 public class UserControllerTest extends PlessContollerWithJpaTest {
 
@@ -84,16 +88,14 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
-      status(callAction(UserController.activate(user.getEmail(), user
-        .getActivationCode()))),
+      status(callActivate(user)),
       is(OK));
   }
 
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    callAction(UserController.activate(user.getEmail(), user
-      .getActivationCode()));
+    callActivate(user);
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
       is(true));
@@ -117,7 +119,57 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
     }
   }
 
-  private Result callSignUp(String email, String password) {
-    return callAction(ref.UserController.signUp(email, password));
+  @Test
+  public void delete_MUST_return_badRequest_WHEN_not_logged_in() throws Exception {
+    assertThat(
+      status(callDelete()),
+      is(equalTo(BAD_REQUEST)));
   }
+
+  @Test
+  public void delete_MUST_return_ok_WHEN_user_is_logged_in() throws Exception {
+    Result loginResult = signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    assertThat(
+      status(callDelete(loginResult)),
+      is(equalTo(OK)));
+  }
+
+  @Test(expected = NoResultException.class)
+  public void delete_MUST_remove_the_persisted_user() throws Exception {
+    Result loginResult = signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    callDelete(loginResult);
+    getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
+  }
+
+  @Test
+  public void delete_MUST_log_the_user_out() throws Exception {
+    assertFalse(parseContentAsBoolean(callstatus(callDelete(signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD)))));
+  }
+
+  private Result signupAndLogin(final String userEmail,
+                                final String userPassword)
+  {
+    callSignUp(userEmail, userPassword);
+    final User user = getUserRepository().findUserByEmail(userEmail);
+    callActivate(user);
+    return callLogIn(userEmail, userPassword);
+  }
+
+  private Result callActivate(final User user) {
+    return callAction(UserController.activate(user.getEmail(), user
+      .getActivationCode()));
+  }
+
+  private Result callSignUp(String email, String password) {
+    return callAction(UserController.signUp(email, password));
+  }
+
+  private Result callDelete() {
+    return callAction(UserController.delete());
+  }
+
+  private Result callDelete(Result previousCall) {
+    return callAction(UserController.delete(), withSession(previousCall));
+  }
+
 }

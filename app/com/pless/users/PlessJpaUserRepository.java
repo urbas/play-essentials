@@ -70,4 +70,13 @@ public class PlessJpaUserRepository implements UserRepository {
       : entityManager;
   }
 
+  @Override
+  public User findUserById(long userId) {
+    final JpaUser foundUser = getEntityManager().find(JpaUser.class, userId);
+    if (foundUser == null) {
+      throw new NoResultException("Could not find the user with the id " + userId);
+    }
+    return foundUser;
+  }
+
 }

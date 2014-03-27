@@ -129,6 +129,28 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
     delete(user.getEmail());
     fetchUser(user.getEmail());
   }
+  
+  @Test(expected = NoResultException.class)
+  public void getUserById_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
+    getUserById(1L);
+  }
+  
+  @Test
+  public void getUserById_MUST_return_the_persisted_user() throws Exception {
+    final User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
+    assertThat(
+      getUserById(user.getId()),
+      is(userWith(USER_EMAIL, USER_PASSWORD)));
+  }
+
+  private User getUserById(final long userId) {
+    return withTransaction(new TransactionFunction<User>() {
+      @Override
+      public User invoke(EntityManager em) {
+        return new PlessJpaUserRepository(em).findUserById(userId);
+      }
+    });
+  }
 
   private void delete(final String userEmail) {
     withTransaction(new TransactionBody() {
