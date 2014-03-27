@@ -9,7 +9,7 @@
 		<non-jta-data-source>DefaultDS</non-jta-data-source>
 
 		<mapping-file>com/pless/entities.xml</mapping-file>
-		
+
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
 			<property name="hibernate.show_sql" value="true" />
@@ -21,14 +21,18 @@
 	<persistence-unit name="testPersistenceUnit"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<non-jta-data-source>DefaultDS</non-jta-data-source>
 
 		<mapping-file>com/pless/entities.xml</mapping-file>
-		
+
 		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:pless-sample-db" />
+			<property name="javax.persistence.jdbc.user" value="playessentials" />
+			<property name="javax.persistence.jdbc.password" value="playessentials" />
+
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.hbm2ddl.auto" value="create" />
 			<property name="hibernate.format_sql" value="false" />
 		</properties>
 	</persistence-unit>

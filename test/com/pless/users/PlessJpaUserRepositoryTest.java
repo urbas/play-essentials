@@ -7,12 +7,13 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.junit.Test;
 
 import com.pless.test.*;
 
-public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
+public class PlessJpaUserRepositoryTest extends PlessJpaTest {
 
   private static final String USER_EMAIL = "user email";
   private static final String USER_PASSWORD = "user password";
@@ -64,6 +65,7 @@ public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
       fetchUser(USER_EMAIL),
       is(activeUser()));
   }
+
   @Test
   public void activate_MUST_not_activate_user_WHEN_activationCode_is_mismatched() throws Exception
   {
@@ -73,17 +75,18 @@ public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
       fetchUser(USER_EMAIL),
       is(not(activeUser())));
   }
-  
+
   @Test
   public void activate_MUST_return_false_WHEN_activationCode_is_mismatched() throws Exception
   {
     final User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    boolean wasActivated = activateUser(user.getEmail(), user.getActivationCode() + "bla");
+    boolean wasActivated = activateUser(user.getEmail(), user.getActivationCode()
+      + "bla");
     assertThat(
       wasActivated,
       is(false));
   }
-  
+
   @Test
   public void activate_MUST_return_true_WHEN_user_was_activated() throws Exception
   {
@@ -92,7 +95,7 @@ public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
       wasActivated,
       is(true));
   }
-  
+
   @Test
   public void activate_MUST_not_change_the_creation_date() throws Exception
   {
@@ -113,6 +116,27 @@ public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
     assertThat(
       persistAndFetchUser(USER_EMAIL, USER_PASSWORD),
       is(userWith(USER_EMAIL, USER_PASSWORD)));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void delete_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
+    delete(USER_EMAIL);
+  }
+
+  @Test(expected = NoResultException.class)
+  public void delete_MUST_remove_the_persisted_user() throws Exception {
+    final User user = persistAndFetchUser();
+    delete(user.getEmail());
+    fetchUser(user.getEmail());
+  }
+
+  private void delete(final String userEmail) {
+    withTransaction(new TransactionBody() {
+      @Override
+      public void invoke(EntityManager em) {
+        new PlessJpaUserRepository(em).delete(userEmail);
+      }
+    });
   }
 
   public static User persistAndFetchUser() {
@@ -136,11 +160,13 @@ public class PlessJpaUserRepositoryTest extends PlessContollerWithJpaTest {
     return activateUser(user.getEmail(), user.getActivationCode());
   }
 
-  public static boolean activateUser(final String email, final String activationCode) {
+  public static boolean activateUser(final String email,
+                                     final String activationCode) {
     return withTransaction(new TransactionFunction<Boolean>() {
       @Override
       public Boolean invoke(EntityManager em) {
-        return new PlessJpaUserRepository(em).activateUser(email, activationCode);
+        return new PlessJpaUserRepository(em)
+          .activateUser(email, activationCode);
       }
     });
   }

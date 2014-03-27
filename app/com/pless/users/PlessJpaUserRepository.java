@@ -43,12 +43,6 @@ public class PlessJpaUserRepository implements UserRepository {
     getEntityManager().flush();
   }
 
-  private EntityManager getEntityManager() {
-    return entityManager == null
-      ? PlessEntityManager.getEntityManager()
-      : entityManager;
-  }
-
   @Override
   public boolean activateUser(String userEmail, String activationCode) {
     Query usersByEmailQuery = getEntityManager()
@@ -56,6 +50,24 @@ public class PlessJpaUserRepository implements UserRepository {
     usersByEmailQuery.setParameter("email", userEmail);
     usersByEmailQuery.setParameter("activationCode", activationCode);
     return usersByEmailQuery.executeUpdate() > 0;
+  }
+
+  @Override
+  public void delete(String userEmail) {
+    Query deleteUserQuery = getEntityManager()
+      .createNamedQuery(JpaUser.QUERY_DELETE_USER);
+    deleteUserQuery.setParameter("email", userEmail);
+    int deletedRows = deleteUserQuery.executeUpdate();
+    if (deletedRows < 1) {
+      throw new IllegalStateException("The user with email '" + userEmail
+        + "' does not exist.");
+    }
+  }
+
+  private EntityManager getEntityManager() {
+    return entityManager == null
+      ? PlessEntityManager.getEntityManager()
+      : entityManager;
   }
 
 }

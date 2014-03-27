@@ -5,7 +5,7 @@ import static org.mockito.Mockito.spy;
 
 import com.pless.db.PlayHttpContextOrThreadBoundEntityManager;
 import com.pless.util.ConfigurationSource;
-import com.pless.util.PlessConfigurationSource;
+import com.pless.util.PlayApplicationConfigurationSource;
 
 
 public class PlayFunctionalJpaApplication extends TestApplication {
@@ -18,7 +18,7 @@ public class PlayFunctionalJpaApplication extends TestApplication {
   }
 
   private void setupPlayConfiguration() {
-    ConfigurationSource currentConfiguration = spy(PlessConfigurationSource.getConfigurationSource());
+    ConfigurationSource currentConfiguration = spy(new PlayApplicationConfigurationSource());
     doReturn(false).when(currentConfiguration).isProduction();
     doReturn(false).when(currentConfiguration).isDevelopment();
     temporaryServices.add(new TemporaryConfiguration(currentConfiguration));

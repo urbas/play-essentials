@@ -11,12 +11,14 @@ import com.pless.authentication.SessionIdGenerator;
 @NamedQueries({
   @NamedQuery(name = JpaUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM JpaUser u WHERE u.email = :email"),
   @NamedQuery(name = JpaUser.QUERY_ACTIVATE_USER, query = "UPDATE JpaUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
+  @NamedQuery(name = JpaUser.QUERY_DELETE_USER, query = "DELETE FROM JpaUser u WHERE u.email = :email"),
   @NamedQuery(name = JpaUser.QUERY_GET_ALL, query = "SELECT u FROM JpaUser u")
 })
 public class JpaUser implements User {
   public static final String QUERY_GET_BY_EMAIL = "JpaUser.getByEmail";
   public static final String QUERY_GET_ALL = "JpaUser.getAll";
   public static final String QUERY_ACTIVATE_USER = "JpaUser.activate";
+  public static final String QUERY_DELETE_USER = "JpaUser.delete";
   @Id
   @GeneratedValue
   private long id;
