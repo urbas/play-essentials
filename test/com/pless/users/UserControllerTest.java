@@ -23,12 +23,10 @@ import static play.test.Helpers.status;
 
 import javax.persistence.NoResultException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import play.mvc.Result;
 
-import com.pless.authentication.AuthenticationControllerTest;
 import com.pless.test.PlessContollerWithJpaTest;
 import com.pless.test.TemporaryUserRepository;
 
