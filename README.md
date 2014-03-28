@@ -45,15 +45,19 @@ reusability from Java, testability from JUnit, and general configurability.
 
 You can also add Pless to your Play app just like this (in your `build.sbt`):
 
+    resolvers += {
+        "Urbas Nexus Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
+    }
+
     libraryDependencies ++= Seq(
-        "com.pless" %% "play-essentials" % "0.0.1-SNAPSHOT"
+        "si.urbas" %% "pless" % "0.0.2-SNAPSHOT"
     )
 
 Pless also comes with classes that make tests in JUnit easier. To use
 them, just add this dependency:
 
     libraryDependencies ++= Seq(
-        "com.pless" %% "play-essentials" % "0.0.1-SNAPSHOT" % "test" classifier "tests"
+        "si.urbas" %% "pless" % "0.0.2-SNAPSHOT" % "test" classifier "tests"
     )
 
 # Usage
@@ -122,4 +126,3 @@ The following configuration is useful for mocking in tests or to plug in your
 own email provider:
 
     pless.emailProviderFactory=com.pless.emailing.ApacheCommonsEmailProvider
-    dev.pless.emailProviderFactory=com.pless.emailing.LoggingNoOpEmailProvider

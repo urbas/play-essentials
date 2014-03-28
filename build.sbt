@@ -1,9 +1,9 @@
 import de.johoop.jacoco4sbt._
 import JacocoPlugin._
 
-name := "play-essentials"
+name := "pless"
 
-organization := "com.pless"
+organization := "si.urbas"
 
 version := "0.0.2-SNAPSHOT"
 
