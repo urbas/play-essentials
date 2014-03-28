@@ -5,7 +5,20 @@ name := "play-essentials"
 
 organization := "com.pless"
 
-version := "0.0.1-SNAPSHOT"
+version := "0.0.2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT"
+
+publishTo := {
+  val nexus = "http://urbas.si:8081/nexus/content/repositories"
+  if (version.value.trim.endsWith("SNAPSHOT")) {
+    Some("Snapshots" at s"$nexus/snapshots/")
+  } else {
+    Some("Releases" at s"$nexus/releases/")
+  }
+}
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
+publishMavenStyle := true
 
 libraryDependencies ++= Seq(
   javaJdbc,
