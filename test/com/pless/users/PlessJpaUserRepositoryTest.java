@@ -120,13 +120,13 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
 
   @Test(expected = IllegalStateException.class)
   public void delete_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
-    delete(USER_EMAIL);
+    delete(1L);
   }
 
   @Test(expected = NoResultException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     final User user = persistAndFetchUser();
-    delete(user.getEmail());
+    delete(user.getId());
     fetchUser(user.getEmail());
   }
   
@@ -152,11 +152,11 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
     });
   }
 
-  private void delete(final String userEmail) {
+  private void delete(final long userId) {
     withTransaction(new TransactionBody() {
       @Override
       public void invoke(EntityManager em) {
-        new PlessJpaUserRepository(em).delete(userEmail);
+        new PlessJpaUserRepository(em).delete(userId);
       }
     });
   }

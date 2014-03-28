@@ -12,7 +12,7 @@ public interface UserRepository {
 
   boolean activateUser(String userEmail, String activationCode);
 
-  void delete(String userEmail);
+  void delete(long userId);
 
   User findUserById(long userId);
 }

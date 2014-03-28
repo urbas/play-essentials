@@ -41,8 +41,7 @@ public final class UserController extends Controller {
   public static Result delete() {
     final AuthenticationService auth = getAuthenticationService();
     if (auth.isLoggedIn()) {
-      final User loggedInUser = getUserRepository().findUserById(auth.getLoggedInUserId());
-      getUserRepository().delete(loggedInUser.getEmail());
+      getUserRepository().delete(auth.getLoggedInUserId());
       auth.logOut();
       return ok();
     } else {
