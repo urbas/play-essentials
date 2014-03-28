@@ -5,7 +5,7 @@ name := "play-essentials"
 
 organization := "com.pless"
 
-version := "0.0.2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT2-SNAPSHOT"
+version := "0.0.2-SNAPSHOT"
 
 publishTo := {
   val nexus = "http://urbas.si:8081/nexus/content/repositories"
@@ -42,15 +42,14 @@ jacoco.settings
 
 parallelExecution in jacoco.Config := false
 
-// Disable Scaladoc compilation and publication
 sources in doc in Compile := Nil
 
 publishArtifact in (Compile, packageDoc) := false
 
-// Disable publishing the sources
-publishArtifact in (Compile, packageSrc) := false
+publishArtifact in (Compile, packageSrc) := true
 
-// Publish the test binary
 publishArtifact in (Test, packageBin) := true
+
+publishArtifact in (Test, packageSrc) := true
 
 play.Project.playJavaSettings
