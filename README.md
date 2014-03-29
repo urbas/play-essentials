@@ -62,46 +62,48 @@ them, just add this dependency:
 
 # Usage
 
-You can use any of the below examples from within your controller.
+Make sure your controller extends `PlessController`:
+
+  public class MyController extends PlessController {
+
+  }
+
+Now you can use any of the below examples from within this controller.
 
 ## Authentication
 
-Get the authentication service:
-
-    authService = PlessAuthentication.getAuthenticationService()
-
 To login a user with their email and password:
 
-    authService.logIn(new PasswordLoginForm(email, password));
+    auth().logIn(new PasswordLoginForm(email, password));
 
 Check that a user is currently logged in:
 
-    authService.isLoggedIn()
+    auth().isLoggedIn()
 
 To get the ID of the currently logged-in user:
 
-    authService.getLoggedInUserId()
+    auth().getLoggedInUserId()
 
 To log the user out:
 
-    authService.logOut()
+    auth().logOut()
 
 ## Emailing
 
 Here's how you send an email:
 
-    PlayEmailing.sendEmail(recepient, emailSubject, htmlBody);
+    emailing().sendEmail(recepient, emailSubject, htmlBody);
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
 Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
 email like this:
 
     Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
-    PlessEmailing.sendEmail(recepient, emailSubject, offerUpdateHtml);
+    emailing().sendEmail(recepient, emailSubject, offerUpdateHtml);
 
 ### Advanced usage
 
-    Email email = PlessEmailing.createEmail();
+    Email email = emailing().createEmail();
     email.setSubject(subject);
     email.setRecipient(recipient);
     email.setFrom(sender);

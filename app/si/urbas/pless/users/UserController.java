@@ -1,16 +1,13 @@
 package si.urbas.pless.users;
 
-import static si.urbas.pless.authentication.PlessAuthentication.getAuthenticationService;
-import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 import play.db.jpa.Transactional;
-import play.mvc.Controller;
 import play.mvc.Result;
+import si.urbas.pless.PlessController;
+import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.Factory;
+import si.urbas.pless.util.SingletonFactory;
 
-import si.urbas.pless.authentication.AuthenticationService;
-import si.urbas.pless.util.*;
-
-public final class UserController extends Controller {
+public final class UserController extends PlessController {
 
   public static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailFactory";
 
@@ -28,8 +25,7 @@ public final class UserController extends Controller {
 
   @Transactional
   public static Result activate(String email, String activationCode) {
-    final boolean wasActivated = getUserRepository()
-      .activateUser(email, activationCode);
+    boolean wasActivated = users().activateUser(email, activationCode);
     if (wasActivated) {
       return ok();
     } else {
@@ -39,10 +35,9 @@ public final class UserController extends Controller {
 
   @Transactional
   public static Result delete() {
-    final AuthenticationService auth = getAuthenticationService();
-    if (auth.isLoggedIn()) {
-      getUserRepository().delete(auth.getLoggedInUserId());
-      auth.logOut();
+    if (auth().isLoggedIn()) {
+      users().delete(auth().getLoggedInUserId());
+      auth().logOut();
       return ok();
     } else {
       return badRequest();
@@ -51,9 +46,10 @@ public final class UserController extends Controller {
 
   public static void createUser(SignupForm createUserForm) {
     if (createUserForm.isValid()) {
-      getUserRepository().persistUser(
+      users().persistUser(
         createUserForm.email,
-        createUserForm.password);
+        createUserForm.password
+      );
     } else {
       throw new IllegalArgumentException("Could not create a new user. Some mandatory user info was missing.");
     }
@@ -61,8 +57,8 @@ public final class UserController extends Controller {
 
   private static void sendSignUpEmail(SignupForm newUserDetails) {
     SignupEmailSender signupEmailFactory = SignupEmailSenderSingleton.INSTANCE
-      .createInstance(getConfigurationSource());
-    User newUser = getUserRepository().findUserByEmail(newUserDetails.email);
+      .createInstance(config());
+    User newUser = users().findUserByEmail(newUserDetails.email);
     signupEmailFactory.sendSignupEmail(newUser);
   }
 

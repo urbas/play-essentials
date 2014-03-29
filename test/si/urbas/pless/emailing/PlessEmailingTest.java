@@ -20,15 +20,15 @@ public class PlessEmailingTest extends PlessTest {
 
   @Test
   public void createEmail_MUST_use_the_email_provider() throws Exception {
-    createEmail();
+    PlessEmailing.getEmailingService().createEmail();
     verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
 
   @Test
   public void sendEmail_MUST_set_the_email_parameters_through_the_mailerApi() throws Exception {
     Email email = mock(Email.class);
-    try (TemporaryEmailProvider emailProvider = new TemporaryEmailProvider(email)) {
-      sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
+    try (TemporaryEmailProvider ignored = new TemporaryEmailProvider(email)) {
+      PlessEmailing.getEmailingService().sendEmail(EMAIL_RECEPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
       verify(email).setRecipient(EMAIL_RECEPIENT);
       verify(email).setSubject(EMAIL_SUBJECT);
       verify(email).setBody(EMAIL_HTML_BODY);
