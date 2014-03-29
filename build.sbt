@@ -5,8 +5,6 @@ name := "pless"
 
 organization := "si.urbas"
 
-version := "0.0.2-SNAPSHOT"
-
 publishTo := {
   val nexus = "http://urbas.si:8081/nexus/content/repositories"
   if (version.value.trim.endsWith("SNAPSHOT")) {
