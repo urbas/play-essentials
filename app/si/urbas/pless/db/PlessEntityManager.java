@@ -28,11 +28,15 @@ public class PlessEntityManager {
       try {
         return JPA.em();
       } catch (Exception e) {
-        throw new ConfigurationException("Could not create an entity manager." +
-          " Have you configured the JPA persistence? Create a 'persistence.xml' file and put it into the " +
-          "'cont/META-INF' folder.", e);
+        return throwJpaDescriptiveMisConfigurationException(e);
       }
     }
+  }
+
+  public static <T> T throwJpaDescriptiveMisConfigurationException(Throwable e) {
+    throw new ConfigurationException("Could not create an entity manager." +
+      " Have you configured the JPA persistence? Create a 'persistence.xml' file and put it into the " +
+      "'cont/META-INF' folder.", e);
   }
 
 }
