@@ -52,4 +52,6 @@ publishArtifact in (Test, packageBin) := true
 
 publishArtifact in (Test, packageSrc) := true
 
+releaseSettings
+
 play.Project.playJavaSettings
