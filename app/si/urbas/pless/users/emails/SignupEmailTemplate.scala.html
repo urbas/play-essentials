@@ -1,0 +1,31 @@
+@(loginDetails: si.urbas.pless.users.User)
+
+@import si.urbas.pless.users.routes.UserController
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thank you for signing up to Pless!</title>
+  </head>
+  <body>
+    <p>Hello!</p>
+
+    <p>Thanks for signing up to Pless.</p>
+
+    <p>
+      Here are your login details:
+      <div style="margin-left: 25px;">Email: @loginDetails.getEmail</div>
+      <div style="margin-left: 25px;">Activation code: @loginDetails.getActivationCode</div>
+    </p>
+
+    <p>
+      To complete your registration please visit the following link:
+      <div>
+        <a href="@{UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}">
+        @{UserController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}
+        </a>
+      </div>
+      Visiting this link will activate your account.
+    </p>
+  </body>
+</html>

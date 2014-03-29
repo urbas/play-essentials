@@ -125,4 +125,4 @@ You can put these configuration settings into `conf/application.conf`:
 The following configuration is useful for mocking in tests or to plug in your
 own email provider:
 
-    pless.emailProviderFactory=com.pless.emailing.ApacheCommonsEmailProvider
+    pless.emailProviderFactory=si.urbas.pless.emailing.ApacheCommonsEmailProvider
