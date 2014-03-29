@@ -3,7 +3,7 @@ package si.urbas.pless.users;
 import play.api.templates.Html;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
 
-import static si.urbas.pless.emailing.PlessEmailing.getEmailingService;
+import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
 
 public class SignupEmailSender {
 
@@ -11,7 +11,7 @@ public class SignupEmailSender {
     Html emailContent = SignupEmailTemplate.apply(userDetails);
     String recepient = userDetails.getEmail();
     String emailSubject = "Pless Signup";
-    getEmailingService().sendEmail(recepient, emailSubject, emailContent);
+    getEmailing().sendEmail(recepient, emailSubject, emailContent);
   }
 
 }

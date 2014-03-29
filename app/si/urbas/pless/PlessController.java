@@ -24,6 +24,6 @@ public class PlessController extends Controller {
   }
 
   protected static PlessEmailing emailing() {
-    return PlessEmailing.getEmailingService();
+    return PlessEmailing.getEmailing();
   }
 }

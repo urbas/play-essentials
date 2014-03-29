@@ -37,7 +37,7 @@ public final class PlessEmailing {
       .createInstance(getConfigurationSource());
   }
 
-  public static PlessEmailing getEmailingService() {
+  public static PlessEmailing getEmailing() {
     return Singleton.PLESS_EMAILING;
   }
 
