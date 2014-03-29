@@ -11,7 +11,7 @@ dist
 /.idea/tasks.xml
 /.idea/libraries
 /.idea/sbt.xml
-/*.iml
+*.iml
 /out
 /.idea_modules
 /.classpath
@@ -20,3 +20,4 @@ dist
 /bin
 /.target
 README.md.html
+*.swp

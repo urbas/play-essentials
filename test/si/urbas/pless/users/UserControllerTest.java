@@ -1,5 +1,20 @@
 package si.urbas.pless.users;
 
+import org.junit.Test;
+import play.mvc.Result;
+import si.urbas.pless.test.PlessContollerWithJpaTest;
+import si.urbas.pless.test.TemporaryUserRepository;
+
+import javax.persistence.NoResultException;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.OK;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationControllerTest.callstatus;
 import static si.urbas.pless.authentication.AuthenticationControllerTest.parseContentAsBoolean;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
@@ -12,23 +27,6 @@ import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserMatchers.userWith;
 import static si.urbas.pless.users.routes.ref.UserController;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static play.mvc.Http.Status.BAD_REQUEST;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.callAction;
-import static play.test.Helpers.status;
-
-import javax.persistence.NoResultException;
-
-import org.junit.Test;
-
-import play.mvc.Result;
-
-import si.urbas.pless.test.PlessContollerWithJpaTest;
-import si.urbas.pless.test.TemporaryUserRepository;
 
 public class UserControllerTest extends PlessContollerWithJpaTest {
 
@@ -61,7 +59,7 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
       .thenThrow(new RuntimeException());
     try {
       callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    } catch (Exception ex) {}
+    } catch (Exception ignored) {}
     getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
 
@@ -79,7 +77,8 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
       status(callAction(UserController.activate(JOHN_SMITH_EMAIL, null))),
-      is(BAD_REQUEST));
+      is(BAD_REQUEST)
+    );
   }
 
   @Test
@@ -87,7 +86,8 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
       status(callActivate(user)),
-      is(OK));
+      is(OK)
+    );
   }
 
   @Test
@@ -96,7 +96,8 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
     callActivate(user);
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
-      is(true));
+      is(true)
+    );
   }
 
   @Test
@@ -107,7 +108,7 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Exception {
-    try (TemporaryUserRepository userRepository = new TemporaryUserRepository()) {
+    try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
       UserRepository scopedUserRepository = getUserRepository();
       doThrow(new RuntimeException())
         .when(scopedUserRepository)
@@ -121,7 +122,8 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
   public void delete_MUST_return_badRequest_WHEN_not_logged_in() throws Exception {
     assertThat(
       status(callDelete()),
-      is(equalTo(BAD_REQUEST)));
+      is(equalTo(BAD_REQUEST))
+    );
   }
 
   @Test
@@ -129,7 +131,8 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
     Result loginResult = signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
       status(callDelete(loginResult)),
-      is(equalTo(OK)));
+      is(equalTo(OK))
+    );
   }
 
   @Test(expected = NoResultException.class)
@@ -145,8 +148,7 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
   }
 
   private Result signupAndLogin(final String userEmail,
-                                final String userPassword)
-  {
+                                final String userPassword) {
     callSignUp(userEmail, userPassword);
     final User user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
