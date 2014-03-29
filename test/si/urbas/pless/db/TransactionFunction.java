@@ -1,4 +1,4 @@
-package si.urbas.pless.test;
+package si.urbas.pless.db;
 
 import javax.persistence.EntityManager;
 

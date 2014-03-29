@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 
 import play.db.jpa.JPA;
 
+import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.util.*;
 
 public class PlessEntityManager {
@@ -24,7 +25,13 @@ public class PlessEntityManager {
   private static final class PlayDefaultEntityManagerFactory implements Factory<EntityManager> {
     @Override
     public EntityManager createInstance(ConfigurationSource configurationSource) {
-      return JPA.em();
+      try {
+        return JPA.em();
+      } catch (Exception e) {
+        throw new ConfigurationException("Could not create an entity manager." +
+          " Have you configured the JPA persistence? Create a 'persistence.xml' file and put it into the " +
+          "'cont/META-INF' folder.", e);
+      }
     }
   }
 

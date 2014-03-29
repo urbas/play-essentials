@@ -22,7 +22,7 @@ import si.urbas.pless.users.*;
 public class PasswordAuthenticationControllerTest extends PlessContollerWithJpaTest {
 
   @Test
-  public void login_MUST_return_badRequest_WHEN_no_credentials_are_given() throws Exception {
+  public void login_MUST_return_badRequest_WHEN_no_credentials_are_given() throws Throwable {
     Result result = logIn(null, null);
     assertEquals(BAD_REQUEST, status(result));
   }

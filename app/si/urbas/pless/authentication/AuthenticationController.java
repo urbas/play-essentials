@@ -1,25 +1,21 @@
 package si.urbas.pless.authentication;
 
-import static si.urbas.pless.authentication.PlessAuthentication.getAuthenticationService;
-import play.db.jpa.Transactional;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
+import si.urbas.pless.PlessController;
 
-public final class AuthenticationController extends Controller {
+public final class AuthenticationController extends PlessController {
 
   private AuthenticationController() {}
 
-  @Transactional
   public static Result logOut() {
-    getAuthenticationService().logOut();
+    auth().logOut();
     return ok();
   }
 
-  @Transactional
   public static Result status() {
-    if (getAuthenticationService().isLoggedIn()) {
-      return ok(Json.toJson(getAuthenticationService().getLoggedInUserId()));
+    if (auth().isLoggedIn()) {
+      return ok(Json.toJson(auth().getLoggedInUserId()));
     }
     return ok(Json.toJson(false));
   }

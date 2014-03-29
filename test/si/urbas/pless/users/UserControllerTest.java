@@ -107,7 +107,7 @@ public class UserControllerTest extends PlessContollerWithJpaTest {
   }
 
   @Test
-  public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Exception {
+  public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
     try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
       UserRepository scopedUserRepository = getUserRepository();
       doThrow(new RuntimeException())

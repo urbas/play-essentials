@@ -7,6 +7,8 @@ import javax.persistence.EntityTransaction;
 
 import org.junit.After;
 import org.junit.Before;
+import si.urbas.pless.db.TransactionBody;
+import si.urbas.pless.db.TransactionFunction;
 
 public class PlessJpaTest {
 
@@ -32,7 +34,7 @@ public class PlessJpaTest {
     } catch (Exception ex) {
       try {
         transaction.rollback();
-      } catch (Exception rollbackException) {}
+      } catch (Exception ignored) {}
       throw ex;
     }
   }
@@ -48,7 +50,7 @@ public class PlessJpaTest {
     } catch (Exception ex) {
       try {
         transaction.rollback();
-      } catch (Exception rollbackException) {}
+      } catch (Exception ignored) {}
       throw ex;
     }
   }

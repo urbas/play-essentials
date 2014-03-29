@@ -2,7 +2,7 @@ package si.urbas.pless.users;
 
 import javax.persistence.EntityManager;
 
-import si.urbas.pless.test.TransactionBody;
+import si.urbas.pless.db.TransactionBody;
 
 public class PersistSingleUserTransaction implements TransactionBody {
 

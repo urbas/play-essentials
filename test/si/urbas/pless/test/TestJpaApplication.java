@@ -20,7 +20,7 @@ public class TestJpaApplication extends TestApplication {
     temporaryServices
       .add(new TemporaryUserRepository(spy(new PlessJpaUserRepository())));
     temporaryServices
-      .add(new TemporaryEntityManagerProvider(spy(new RawEntityManagerProvider())));
+      .add(new TemporaryEntityManager(spy(new RawEntityManagerProvider())));
   }
 
   private void setupJpaConfiguration() {

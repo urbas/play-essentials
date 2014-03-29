@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 
 import org.junit.Test;
 
+import si.urbas.pless.db.TransactionBody;
+import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.test.*;
 
 public class JpaServerSessionStorageTest extends PlessJpaTest {
