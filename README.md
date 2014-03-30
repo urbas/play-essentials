@@ -66,9 +66,9 @@ them, just add this dependency:
 
 Make sure your controller extends `PlessController`:
 
-  public class MyController extends PlessController {
+    public class MyController extends PlessController {
 
-  }
+    }
 
 Now you can use any of the below examples from within this controller.
 
