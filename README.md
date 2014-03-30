@@ -3,13 +3,15 @@
 [![Build Status](https://drone.io/bitbucket.org/urbas/play-essentials/status.png)](https://drone.io/bitbucket.org/urbas/play-essentials/latest)
 [![Build Status](https://travis-ci.org/urbas/play-essentials.png?branch=master)](https://travis-ci.org/urbas/play-essentials)
 
-Play Essentials (Pless) is a Play Framework seedling on steroids. Just clone and
-start building your custom Play app on Pless. You can also use Pless as a
-library.
+Play Essentials (Pless) is a library that helps you develop Play Framework applications super quickly. Just follow the
+Quickstart instructions below, and you'll get a working application with authentication, user management, emailing
+support and all that other jazz.
 
-Why Pless? Because it provides a Java 8-friendly API and focuses on
-testability, ease of use (for casual users), and configurability (for
-power-users).
+Pless takes away the worry of having to develop all the silly login, email-sending, and user-managy boilerplate and
+lets you focus on what matters to your business.
+
+Why Pless? Because it provides a Java 8-friendly API and focuses on testability, ease of use (for casual users), and
+super configurability (for power-users).
 
 Some provided features (not exhaustive):
 
@@ -54,12 +56,7 @@ You can run your application the usual Play way:
 
 and open it in your browser via the following link: [http://localhost:9000/](http://localhost:9000/)
 
-# Testing
-
-Pless comes with classes that make tests in JUnit easier. To use
-them, just add this dependency:
-
-    libraryDependencies += "si.urbas" %% "pless" % "0.0.3" % "test->test" classifier "tests"
+>   TODO: make Quickstart simpler by providing a seedling.
 
 # Usage
 
@@ -69,7 +66,7 @@ Make sure your controllers extend `PlessController`:
 
     }
 
-Now you can use any of the below examples from within this controller.
+Now you can use any of the below examples from within your controllers.
 
 ## Authentication
 
@@ -122,3 +119,9 @@ You can put these configuration settings into `conf/application.conf`:
     smtp.tls=yes
     smtp.user="username@example.com"
     smtp.password=test1234
+
+## Testing
+
+Pless comes with classes that make tests in JUnit easier. To use them, just add this dependency:
+
+    libraryDependencies += "si.urbas" %% "pless" % "0.0.3" % "test->test" classifier "tests"
