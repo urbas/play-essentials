@@ -28,43 +28,40 @@ reusability from Java, testability from JUnit, and general configurability.
 
 1.  Install [Play Framework](http://www.playframework.com/download).
 
-2.  Clone Pless:
+2.  Create a new Play application:
 
-        git clone git@bitbucket.org:urbas/play-essentials.git
+        play new myplessapp
 
-3.  Run:
+3.  Add Pless as a dependency. Add these lines into `build.sbt`:
 
-        cd play-essentials
-        play run
+        resolvers += "Pless Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
 
-4.  Open [http://localhost:9000/](http://localhost:9000/) in your browser.
+        libraryDependencies += "si.urbas" %% "pless" % "0.0.3"
 
-5.  Edit the sources and create something wonderful.
+4.  Put the following route into `conf/routes` (just after `GET /`)
 
-## Using Pless as a dependency
+        ->      /                           si.urbas.pless.Route
 
-You can also add Pless to your Play app just like this (in your `build.sbt`):
+That's it, now you can start developing.
 
-    resolvers += {
-        "Urbas Nexus Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
-    }
+You can run your application the usual Play way:
 
-    val pless = "si.urbas" %% "pless" % "0.0.3"
+    play run
 
-    libraryDependencies ++= Seq(
-        pless
-    )
+and open it in your browser via the following link:
 
-Pless also comes with classes that make tests in JUnit easier. To use
+>   [http://localhost:9000/](http://localhost:9000/)
+
+# Testing
+
+Pless comes with classes that make tests in JUnit easier. To use
 them, just add this dependency:
 
-    libraryDependencies ++= Seq(
-        pless % "test->test" classifier "tests"
-    )
+    libraryDependencies += "si.urbas" %% "pless" % "0.0.3" % "test->test" classifier "tests"
 
 # Usage
 
-Make sure your controller extends `PlessController`:
+Make sure your controllers extend `PlessController`:
 
     public class MyController extends PlessController {
 
@@ -123,10 +120,3 @@ You can put these configuration settings into `conf/application.conf`:
     smtp.tls=yes
     smtp.user="username@example.com"
     smtp.password=test1234
-
-#### Advanced configuration
-
-The following configuration is useful for mocking in tests or to plug in your
-own email provider:
-
-    pless.emailProviderFactory=si.urbas.pless.emailing.ApacheCommonsEmailProvider

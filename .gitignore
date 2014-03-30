@@ -19,5 +19,5 @@ dist
 /.cache
 /bin
 /.target
-README.md.html
+README.html
 *.swp
