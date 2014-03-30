@@ -1,5 +1,5 @@
-import ReadmePostReleaseStep.processReadmeFile
-import ReleaseProcessTransformers.insertReleaseStep
+import PlessReleaseSteps._
+import PlessReleaseTransformers._
 import de.johoop.jacoco4sbt._
 import JacocoPlugin._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
@@ -57,6 +57,8 @@ publishArtifact in (Test, packageSrc) := true
 
 releaseSettings
 
-releaseProcess := insertReleaseStep(processReadmeFile) into releaseProcess.value before setReleaseVersion
+releaseProcess := insertReleaseSteps(bumpVersionInReadmeFile, addReadmeFileToVcs)
+  .into(releaseProcess.value)
+  .before(setReleaseVersion)
 
 play.Project.playJavaSettings
