@@ -11,8 +11,7 @@ public class AuthenticationService {
 
   public AuthenticationService(ClientSessionStorage clientSessionStorage,
                                ServerSessionStorage serverSessionStorage,
-                               SessionIdGenerator sessionIdGenerator)
-  {
+                               SessionIdGenerator sessionIdGenerator) {
     this.clientSessionStorage = clientSessionStorage;
     this.serverSessionStorage = serverSessionStorage;
     this.sessionIdGenerator = sessionIdGenerator;
@@ -26,34 +25,21 @@ public class AuthenticationService {
       throw new IllegalStateException("Could not log in. The user is not activated.");
     }
     String sessionId = createSessionId();
-    String serverSessionKey = getSessionStorageKey(sessionId);
-    serverSessionStorage.put(
-      serverSessionKey,
-      Long.toString(user.getId()),
-      getExpirationMillis());
+    storeServerSessionValue(getUserIdServerSessionKey(sessionId), Long.toString(user.getId()));
+    storeServerSessionValue(getEmailServerSessionKey(sessionId), user.getEmail());
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
 
   public boolean isLoggedIn() {
-    return getLoggedInUserId() != null;
+    return getLoggedInUserEmail() != null;
   }
 
-  public Long getLoggedInUserId() {
+  public String getLoggedInUserEmail() {
     final String sessionIdFromClient = getSessionIdFromClient();
     if (sessionIdFromClient == null) {
       return null;
     }
-    String loggedInUserId = serverSessionStorage.get(sessionIdFromClient);
-    if (loggedInUserId == null) {
-      return null;
-    } else {
-      try {
-        return Long.parseLong(loggedInUserId);
-      } catch (Exception ex) {
-        throw new IllegalStateException("The session storage returned a non-numeric user id: "
-          + loggedInUserId);
-      }
-    }
+    return serverSessionStorage.get(getEmailServerSessionKey(sessionIdFromClient));
   }
 
   public void logOut() {
@@ -66,10 +52,6 @@ public class AuthenticationService {
     return SESSION_EXPIRATION_MILLIS;
   }
 
-  static String getSessionStorageKey(String sessionId) {
-    return sessionId;
-  }
-
   private String createSessionId() {
     return sessionIdGenerator.createSessionId();
   }
@@ -78,4 +60,19 @@ public class AuthenticationService {
     return clientSessionStorage.get(SESSION_ID_KEY);
   }
 
+  private void storeServerSessionValue(String key, String value) {
+    serverSessionStorage.put(
+      key,
+      value,
+      getExpirationMillis()
+    );
+  }
+
+  private String getUserIdServerSessionKey(String sessionId) {
+    return sessionId;
+  }
+
+  private String getEmailServerSessionKey(String sessionId) {
+    return "auth:email:" + sessionId;
+  }
 }

@@ -25,7 +25,7 @@ public class AuthenticationControllerTest extends PlessContollerWithJpaTest {
   public void status_MUST_return_the_userId_WHEN_the_user_has_logged_in() throws Exception {
     Result loginResult = createUserAndLogin();
     Result result = callstatus(loginResult);
-    assertEquals(1L, Json.parse(contentAsString(result)).asLong());
+    assertEquals(JOHN_SMITH_EMAIL, Json.parse(contentAsString(result)).asText());
   }
 
   @Test

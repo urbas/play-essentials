@@ -46,7 +46,7 @@ public final class UserController extends PlessController {
       @Override
       public Result apply() {
         if (auth().isLoggedIn()) {
-          users().delete(auth().getLoggedInUserId());
+          users().delete(auth().getLoggedInUserEmail());
           auth().logOut();
           return ok();
         } else {

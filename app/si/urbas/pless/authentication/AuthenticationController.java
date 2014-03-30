@@ -15,7 +15,7 @@ public final class AuthenticationController extends PlessController {
 
   public static Result status() {
     if (auth().isLoggedIn()) {
-      return ok(Json.toJson(auth().getLoggedInUserId()));
+      return ok(Json.toJson(auth().getLoggedInUserEmail()));
     }
     return ok(Json.toJson(false));
   }

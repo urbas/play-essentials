@@ -36,7 +36,7 @@ public class AuthenticationServiceTest {
 
   @Test
   public void getLoggedInUserId_MUST_return_null_WHEN_session_is_not_started() throws Exception {
-    assertNull(authenticationSession.getLoggedInUserId());
+    assertNull(authenticationSession.getLoggedInUserEmail());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -65,14 +65,7 @@ public class AuthenticationServiceTest {
   @Test
   public void getLoggedInUserId_MUST_return_the_id_with_which_the_session_was_started() throws Exception {
     authenticationSession.logIn(activatedUser);
-    assertEquals(JOHN_SMITH_USER_ID, (long) authenticationSession.getLoggedInUserId());
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void getLoggedInUserId_MUST_throw_an_exception_WHEN_the_server_session_storage_returns_a_non_numeric_userId() throws Exception {
-    final AuthenticationService authenticationSession = prepareIllegalSessionIdScenario();
-    authenticationSession.logIn(user);
-    authenticationSession.getLoggedInUserId();
+    assertEquals(activatedUser.getEmail(), authenticationSession.getLoggedInUserEmail());
   }
 
   private AuthenticationService prepareIllegalSessionIdScenario() {
