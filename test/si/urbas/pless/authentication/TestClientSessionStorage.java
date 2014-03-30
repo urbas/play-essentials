@@ -19,4 +19,8 @@ public final class TestClientSessionStorage implements ClientSessionStorage {
   public String get(String key) {
     return hashMap.get(key);
   }
+
+  public boolean isEmpty() {
+    return hashMap.isEmpty();
+  }
 }

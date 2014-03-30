@@ -82,9 +82,9 @@ Check that a user is currently logged in:
 
     auth().isLoggedIn()
 
-To get the ID of the currently logged-in user:
+To get the email of the currently logged-in user:
 
-    auth().getLoggedInUserId()
+    auth().getLoggedInUserEmail()
 
 To log the user out:
 

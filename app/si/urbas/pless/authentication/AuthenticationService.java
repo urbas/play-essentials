@@ -25,7 +25,6 @@ public class AuthenticationService {
       throw new IllegalStateException("Could not log in. The user is not activated.");
     }
     String sessionId = createSessionId();
-    storeServerSessionValue(getUserIdServerSessionKey(sessionId), Long.toString(user.getId()));
     storeServerSessionValue(getEmailServerSessionKey(sessionId), user.getEmail());
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
@@ -44,7 +43,7 @@ public class AuthenticationService {
 
   public void logOut() {
     String sessionId = getSessionIdFromClient();
-    serverSessionStorage.remove(sessionId);
+    serverSessionStorage.remove(getEmailServerSessionKey(sessionId));
     clientSessionStorage.remove(SESSION_ID_KEY);
   }
 
@@ -68,11 +67,7 @@ public class AuthenticationService {
     );
   }
 
-  private String getUserIdServerSessionKey(String sessionId) {
-    return sessionId;
-  }
-
   private String getEmailServerSessionKey(String sessionId) {
-    return "auth:email:" + sessionId;
+    return sessionId;
   }
 }

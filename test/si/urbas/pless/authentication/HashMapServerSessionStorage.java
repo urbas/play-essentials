@@ -37,4 +37,8 @@ public class HashMapServerSessionStorage implements ServerSessionStorage {
   public void expireAllEntries() {
     hashMap.clear();
   }
+
+  public boolean isEmpty() {
+    return hashMap.isEmpty();
+  }
 }
