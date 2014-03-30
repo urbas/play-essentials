@@ -32,7 +32,7 @@ reusability from Java, testability from JUnit, and general configurability.
 
         play new myplessapp
 
-3.  Add Pless as a dependency. Add these lines into `build.sbt`:
+3.  Add these lines into `build.sbt`:
 
         resolvers += "Pless Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
 
@@ -52,9 +52,7 @@ You can run your application the usual Play way:
 
     play run
 
-and open it in your browser via the following link:
-
->   [http://localhost:9000/](http://localhost:9000/)
+and open it in your browser via the following link: [http://localhost:9000/](http://localhost:9000/)
 
 # Testing
 
