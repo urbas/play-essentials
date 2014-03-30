@@ -42,6 +42,10 @@ reusability from Java, testability from JUnit, and general configurability.
 
         ->      /                           si.urbas.pless.Route
 
+5.  Copy [persistence.xml](./samples/jpa/h2/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
+
+        jpa.default=si.urbas.pless.defaultPersistenceUnit
+
 That's it, now you can start developing.
 
 You can run your application the usual Play way:
