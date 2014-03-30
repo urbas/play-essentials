@@ -49,15 +49,17 @@ You can also add Pless to your Play app just like this (in your `build.sbt`):
         "Urbas Nexus Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
     }
 
+    val pless = "si.urbas" %% "pless" % "0.0.2-SNAPSHOT"
+
     libraryDependencies ++= Seq(
-        "si.urbas" %% "pless" % "0.0.2-SNAPSHOT"
+        pless
     )
 
 Pless also comes with classes that make tests in JUnit easier. To use
 them, just add this dependency:
 
     libraryDependencies ++= Seq(
-        "si.urbas" %% "pless" % "0.0.2-SNAPSHOT" % "test" classifier "tests"
+        pless % "test->test" classifier "tests"
     )
 
 # Usage

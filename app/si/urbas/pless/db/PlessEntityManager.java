@@ -1,13 +1,14 @@
 package si.urbas.pless.db;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import play.db.jpa.JPA;
+import si.urbas.pless.ConfigurationException;
+import si.urbas.pless.util.CachingFactory;
+import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.Factory;
 
 import javax.persistence.EntityManager;
 
-import play.db.jpa.JPA;
-
-import si.urbas.pless.ConfigurationException;
-import si.urbas.pless.util.*;
+import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class PlessEntityManager {
 
@@ -33,10 +34,15 @@ public class PlessEntityManager {
     }
   }
 
-  public static <T> T throwJpaDescriptiveMisConfigurationException(Throwable e) {
-    throw new ConfigurationException("Could not create an entity manager." +
-      " Have you configured the JPA persistence? Create a 'persistence.xml' file and put it into the " +
-      "'cont/META-INF' folder.", e);
+  public static <T> T throwJpaDescriptiveMisConfigurationException(Throwable innerException) {
+    throw new ConfigurationException(
+      "Could not create an entity manager. " +
+        "Have you configured JPA persistence? " +
+        "Create a 'persistence.xml' file and put it into the 'cont/META-INF' folder. " +
+        "See 'https://github.com/urbas/play-essentials/blob/master/conf/META-INF/persistence.xml' for an example. " +
+        "You'll also have to add 'jpa.default=si.urbas.pless.defaultPersistenceUnit' into 'conf/application.conf'.'",
+      innerException
+    );
   }
 
 }
