@@ -10,7 +10,7 @@ import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlessConfigurationSource;
 
-import static si.urbas.pless.db.PlessJpaTransactions.getTransactionProvider;
+import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
 
 public class PlessController extends Controller {
 

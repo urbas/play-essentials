@@ -9,8 +9,6 @@ import static si.urbas.pless.authentication.PlessPasswordAuthenticator.getPasswo
 
 public final class PasswordAuthenticationController extends PlessController {
 
-  private PasswordAuthenticationController() {}
-
   public static Result logIn(final String email, final String password) throws Throwable {
     return withTransaction(
       new F.Function0<Result>() {

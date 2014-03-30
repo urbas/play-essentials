@@ -4,7 +4,7 @@ import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
 
-public class ApacheCommonsEmailProvider implements EmailProvider, Factory<EmailProvider> {
+public class ApacheCommonsEmailProvider implements EmailProvider {
   
   public static final String APP_CONFIG_SMTP_PASSWORD = "smtp.password";
   public static final String APP_CONFIG_SMTP_USER = "smtp.user";
@@ -46,10 +46,5 @@ public class ApacheCommonsEmailProvider implements EmailProvider, Factory<EmailP
 
   public static String getSmtpPassword(ConfigurationSource configurationProvider) {
     return configurationProvider.getString(APP_CONFIG_SMTP_PASSWORD);
-  }
-
-  @Override
-  public EmailProvider createInstance(ConfigurationSource instance) {
-    return new ApacheCommonsEmailProvider();
   }
 }

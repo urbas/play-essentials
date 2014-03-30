@@ -16,10 +16,13 @@ import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
 
-import si.urbas.pless.test.PlessContollerWithJpaTest;
+import si.urbas.pless.test.PlessControllerWithJpaTest;
 import si.urbas.pless.users.User;
 
-public class AuthenticationControllerTest extends PlessContollerWithJpaTest {
+public class AuthenticationControllerTest extends PlessControllerWithJpaTest {
+
+  @SuppressWarnings("UnusedDeclaration")
+  private static final AuthenticationController authController = new AuthenticationController();
 
   @Test
   public void status_MUST_return_the_userId_WHEN_the_user_has_logged_in() throws Exception {

@@ -3,14 +3,14 @@ package si.urbas.pless.db;
 import org.junit.Before;
 import org.junit.Test;
 import play.libs.F;
-import si.urbas.pless.test.PlessContollerWithJpaTest;
+import si.urbas.pless.test.PlessControllerWithJpaTest;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-public class PlessJpaTransactionProviderTest extends PlessContollerWithJpaTest {
+public class PlessJpaTransactionProviderTest extends PlessControllerWithJpaTest {
 
   private final String TRANSACTION_RESULT = "some result";
   private PlessJpaTransactionProvider plessJpaTransactionProvider;

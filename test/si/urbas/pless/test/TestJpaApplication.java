@@ -1,8 +1,8 @@
 package si.urbas.pless.test;
 
 import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
-import static si.urbas.pless.test.TestEntityManager.APP_CONFIG_JPA_DEFAULT;
-import static si.urbas.pless.test.TestEntityManager.TEST_PERSISTENCE_UNIT;
+import static si.urbas.pless.test.TestEntityManagerFactory.APP_CONFIG_JPA_DEFAULT;
+import static si.urbas.pless.test.TestEntityManagerFactory.TEST_PERSISTENCE_UNIT;
 import static org.mockito.Mockito.*;
 
 import si.urbas.pless.authentication.JpaServerSessionStorage;
@@ -20,7 +20,7 @@ public class TestJpaApplication extends TestApplication {
     temporaryServices
       .add(new TemporaryUserRepository(spy(new PlessJpaUserRepository())));
     temporaryServices
-      .add(new TemporaryEntityManager(spy(new RawEntityManagerProvider())));
+      .add(new TemporaryEntityManagerFactory(spy(new RawEntityManagerProvider())));
   }
 
   private void setupJpaConfiguration() {

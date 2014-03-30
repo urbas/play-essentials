@@ -1,12 +1,12 @@
 package si.urbas.pless.util;
 
-import static si.urbas.pless.util.Factories.createInstance;
+import org.junit.Before;
+import org.junit.Test;
+import si.urbas.pless.ConfigurationException;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-
-import org.junit.*;
-
-import si.urbas.pless.ConfigurationException;
+import static si.urbas.pless.util.Factories.createInstance;
 
 public class FactoriesTest {
 
@@ -16,6 +16,8 @@ public class FactoriesTest {
   private static final String CONFIG_KEY_VALID_FACTORY = "valid factory";
   private ConfigurationSource configurationSource;
   private Factory<String> defaultInstanceCallback;
+  @SuppressWarnings("UnusedDeclaration")
+  private final Factories factories = new Factories();
 
   @SuppressWarnings("unchecked")
   @Before

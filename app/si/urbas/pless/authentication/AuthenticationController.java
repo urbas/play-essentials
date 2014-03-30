@@ -6,8 +6,6 @@ import si.urbas.pless.PlessController;
 
 public final class AuthenticationController extends PlessController {
 
-  private AuthenticationController() {}
-
   public static Result logOut() {
     auth().logOut();
     return ok();

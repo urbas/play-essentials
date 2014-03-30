@@ -23,4 +23,9 @@ public class CachingFactory<T> implements Factory<T> {
     return cachedFactory.createInstance(configurationSource);
   }
 
+  public void clearCache() {
+    hasCached = false;
+    cachedFactory = null;
+  }
+
 }

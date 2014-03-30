@@ -20,7 +20,7 @@ public class PlessEntityManager {
   }
 
   private static final class Singletons {
-    public static final Factory<EntityManager> ENTITY_MANAGER_FACTORY = new CachingFactory<>(CONFIG_ENTITY_MANAGER_PROVIDER, new PlayDefaultEntityManagerFactory());
+    public static final CachingFactory<EntityManager> ENTITY_MANAGER_FACTORY = new CachingFactory<>(CONFIG_ENTITY_MANAGER_PROVIDER, new PlayDefaultEntityManagerFactory());
   }
 
   private static final class PlayDefaultEntityManagerFactory implements Factory<EntityManager> {
@@ -43,6 +43,10 @@ public class PlessEntityManager {
         "You'll also have to add 'jpa.default=si.urbas.pless.defaultPersistenceUnit' into 'conf/application.conf'.'",
       innerException
     );
+  }
+
+  static void clearCachedEntityManagerFactory() {
+    Singletons.ENTITY_MANAGER_FACTORY.clearCache();
   }
 
 }

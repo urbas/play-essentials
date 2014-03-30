@@ -1,7 +1,7 @@
 package si.urbas.pless.test;
 
-import static si.urbas.pless.test.TestEntityManager.APP_CONFIG_JPA_DEFAULT;
-import static si.urbas.pless.test.TestEntityManager.TEST_PERSISTENCE_UNIT;
+import static si.urbas.pless.test.TestEntityManagerFactory.APP_CONFIG_JPA_DEFAULT;
+import static si.urbas.pless.test.TestEntityManagerFactory.TEST_PERSISTENCE_UNIT;
 import static play.test.Helpers.*;
 
 import java.util.HashMap;

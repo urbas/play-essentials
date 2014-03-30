@@ -14,7 +14,7 @@ public class PlayFunctionalJpaApplication extends TestApplication {
     setupPlayConfiguration();
     temporaryServices.add(new TemporaryEmailProvider());
     temporaryServices.add(new TemporaryPlayJpaApplication());
-    temporaryServices.add(new TemporaryEntityManager(new PlayHttpContextOrThreadBoundEntityManager()));
+    temporaryServices.add(new TemporaryEntityManagerFactory(new PlayHttpContextOrThreadBoundEntityManager()));
   }
 
   private void setupPlayConfiguration() {

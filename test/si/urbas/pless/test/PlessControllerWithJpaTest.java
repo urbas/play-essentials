@@ -13,7 +13,7 @@ import play.test.FakeRequest;
  * 
  * Use this to test your controllers.
  */
-public class PlessContollerWithJpaTest extends PlessJpaTest {
+public class PlessControllerWithJpaTest extends PlessJpaTest {
   public static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
 
   @Before

@@ -16,10 +16,13 @@ import org.junit.Test;
 
 import play.mvc.Result;
 
-import si.urbas.pless.test.PlessContollerWithJpaTest;
+import si.urbas.pless.test.PlessControllerWithJpaTest;
 import si.urbas.pless.users.*;
 
-public class PasswordAuthenticationControllerTest extends PlessContollerWithJpaTest {
+public class PasswordAuthenticationControllerTest extends PlessControllerWithJpaTest {
+
+  @SuppressWarnings("UnusedDeclaration")
+  private static final PasswordAuthenticationController passwordAuthController = new PasswordAuthenticationController();
 
   @Test
   public void login_MUST_return_badRequest_WHEN_no_credentials_are_given() throws Throwable {

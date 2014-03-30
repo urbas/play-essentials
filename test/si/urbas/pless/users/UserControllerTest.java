@@ -2,7 +2,7 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 import play.mvc.Result;
-import si.urbas.pless.test.PlessContollerWithJpaTest;
+import si.urbas.pless.test.PlessControllerWithJpaTest;
 import si.urbas.pless.test.TemporaryUserRepository;
 
 import javax.persistence.NoResultException;
@@ -28,10 +28,12 @@ import static si.urbas.pless.users.UserMatchers.userWith;
 import static si.urbas.pless.users.routes.ref.UserController;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class UserControllerTest extends PlessContollerWithJpaTest {
+public class UserControllerTest extends PlessControllerWithJpaTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
+  @SuppressWarnings("UnusedDeclaration")
+  public static final UserController userController = new UserController();
 
   @Test
   public void signUp_MUST_result_in_bad_request_WHEN_the_parameters_are_empty() throws Exception {

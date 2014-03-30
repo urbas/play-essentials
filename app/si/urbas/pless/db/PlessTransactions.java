@@ -6,7 +6,7 @@ import si.urbas.pless.util.SingletonFactory;
 
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class PlessJpaTransactions {
+public class PlessTransactions {
 
   public static final String CONFIG_TRANSACTION_PROVIDER = "pless.transactionProvider";
 
