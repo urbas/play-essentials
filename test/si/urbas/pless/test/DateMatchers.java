@@ -1,15 +1,38 @@
 package si.urbas.pless.test;
 
-import static org.hamcrest.Matchers.lessThan;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 import java.util.Date;
 
-import org.hamcrest.Matcher;
-
 public class DateMatchers {
 
-  public static Matcher<Long> olderThan(int milliseconds) {
-    return lessThan(new Date().getTime() - milliseconds);
+  public static Matcher<Date> dateWithin(long rangeRadius) {
+    return new DateWithin(now().getTime() - rangeRadius, now().getTime() + rangeRadius);
   }
 
+  public static Date now() {return new Date();}
+
+  private static class DateWithin extends BaseMatcher<Date> {
+
+    private final long lowerBound;
+    private final long upperBound;
+
+    public DateWithin(long lowerBound, long upperBound) {
+      this.lowerBound = lowerBound;
+      this.upperBound = upperBound;
+    }
+
+    @Override
+    public boolean matches(Object o) {
+      long timeToCompare = ((Date) o).getTime();
+      return timeToCompare > lowerBound && timeToCompare < upperBound;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("a time between " + lowerBound + " and " + upperBound);
+    }
+  }
 }

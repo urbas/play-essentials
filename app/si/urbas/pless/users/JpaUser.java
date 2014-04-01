@@ -83,7 +83,7 @@ public class JpaUser implements User {
     return "User [id=" + id + ", email=" + email + ", activated=" + activated + "]";
   }
 
-  public User withId(long idOfNewUser) {
+  public JpaUser withId(long idOfNewUser) {
     JpaUser user = new JpaUser(email, hashedPassword, salt);
     user.id = idOfNewUser;
     return user;
@@ -107,5 +107,9 @@ public class JpaUser implements User {
   @Override
   public void setActivated(boolean activated) {
     this.activated = activated;
+  }
+
+  public void setCreationDate(Date creationDate) {
+    this.creationDate = creationDate;
   }
 }

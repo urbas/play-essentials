@@ -2,6 +2,7 @@ package si.urbas.pless.users;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class HashMapUserRepository implements UserRepository {
 
   @Override
   public synchronized void persistUser(String email, String password) {
-    User newUser = new JpaUser(email, password).withId(++maxId);
+    JpaUser newUser = new JpaUser(email, password).withId(++maxId);
+    newUser.setCreationDate(new Date());
     emailToUserMap.put(email, newUser);
     idToUserMap.put(newUser.getId(), newUser);
   }
@@ -53,7 +55,11 @@ public class HashMapUserRepository implements UserRepository {
 
   @Override
   public synchronized User findUserById(long userId) {
-    // TODO: Throw an exception similar to find by email.
-    return idToUserMap.get(userId);
+
+    User user = idToUserMap.get(userId);
+    if (user == null) {
+      throw new NoResultException("Could not the user.");
+    }
+    return user;
   }
 }
