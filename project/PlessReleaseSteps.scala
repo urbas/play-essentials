@@ -20,21 +20,9 @@ object PlessReleaseSteps {
     file("README.md")
   }
 
-  lazy val publishSigned = ReleaseStep(
-    action = state => {
-      val project = Project.extract(state)
-      val ref = project.get(thisProjectRef)
-      project.runAggregated(PgpKeys.publishSigned in Global in ref, state)
-    }
-  )
+  lazy val publishSigned = sbtrelease.releaseTask(PgpKeys.publishSigned)
 
-  lazy val sonatypeRelease = ReleaseStep(
-    action = state => {
-      val project = Project.extract(state)
-      val ref = project.get(thisProjectRef)
-      project.runAggregated(SonatypeKeys.sonatypeReleaseAll in Global in ref, state)
-    }
-  )
+  lazy val sonatypeRelease = sbtrelease.releaseTask(SonatypeKeys.sonatypeReleaseAll)
 
   def replaceTextInFile(file: sbt.File, regexPattern: String, replacementPattern: State => String): ReleaseStep = {
     ReleaseStep(
