@@ -1,7 +1,6 @@
 package si.urbas.pless.users;
 
 import org.junit.Test;
-import si.urbas.pless.db.TransactionBody;
 import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.test.PlessJpaTest;
 
@@ -9,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static si.urbas.pless.test.DateMatchers.olderThan;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.UserMatchers.*;
@@ -130,17 +129,21 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
     );
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void delete_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
-    delete(USER_EMAIL);
+  @Test
+  public void delete_MUST_return_false_WHEN_the_user_does_not_exist() throws Exception {
+    assertFalse(delete(USER_EMAIL));
   }
 
   @Test(expected = NoResultException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     final User user = persistAndFetchUser();
     delete(user.getEmail());
-    fetchUser(user.getEmail()
-    );
+    fetchUser(user.getEmail());
+  }
+
+  @Test
+  public void delete_MUST_return_true_WHEN_the_user_does_not_exist() throws Exception {
+    assertTrue(delete(persistAndFetchUser().getEmail()));
   }
 
   @Test(expected = NoResultException.class)
@@ -166,11 +169,11 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
     });
   }
 
-  private void delete(final String userEmail) {
-    withTransaction(new TransactionBody() {
+  private boolean delete(final String userEmail) {
+    return withTransaction(new TransactionFunction<Boolean>() {
       @Override
-      public void invoke(EntityManager em) {
-        new PlessJpaUserRepository(em).delete(userEmail);
+      public Boolean invoke(EntityManager em) {
+        return new PlessJpaUserRepository(em).delete(userEmail);
       }
     });
   }
@@ -182,10 +185,6 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
   public static User persistAndFetchUser(String userEmail, String userPassword) {
     persistUser(userEmail, userPassword);
     return fetchUser(userEmail);
-  }
-
-  public static void persistUser() {
-    persistUser(USER_EMAIL, USER_PASSWORD);
   }
 
   public static void persistUser(String userEmail, String userPassword) {

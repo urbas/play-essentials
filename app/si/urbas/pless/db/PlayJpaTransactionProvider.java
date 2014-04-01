@@ -5,7 +5,7 @@ import play.libs.F;
 
 import static si.urbas.pless.db.PlessEntityManager.throwJpaDescriptiveMisConfigurationException;
 
-public class PlessJpaTransactionProvider implements TransactionProvider {
+public class PlayJpaTransactionProvider implements TransactionProvider {
   @Override
   public void withTransaction(F.Callback0 callback) {
     try {

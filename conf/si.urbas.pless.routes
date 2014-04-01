@@ -1,5 +1,5 @@
 # Home page
-GET   /                si.urbas.pless.WelcomeController.welcome()
+GET   /                    si.urbas.pless.WelcomeController.welcome()
 
 # Authentication Routes
 POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn(email, password)

@@ -10,16 +10,17 @@ import si.urbas.pless.util.*;
 public class RawEntityManagerProvider implements Factory<EntityManager> {
 
   public static final String PERSISTENCE_UNIT = "jpa.default";
-  private final EntityManagerFactory entityManagerFactory;
-
-  public RawEntityManagerProvider() {
-    entityManagerFactory = createEntityManagerFactory(getConfigurationSource()
-      .getString(PERSISTENCE_UNIT));
-  }
+  private EntityManagerFactory entityManagerFactory;
 
   @Override
   public EntityManager createInstance(ConfigurationSource configurationSource) {
-    return entityManagerFactory.createEntityManager();
+    return getEntityManagerFactory().createEntityManager();
   }
 
+  private EntityManagerFactory getEntityManagerFactory() {
+    if (entityManagerFactory == null) {
+      entityManagerFactory = createEntityManagerFactory(getConfigurationSource().getString(PERSISTENCE_UNIT));
+    }
+    return entityManagerFactory;
+  }
 }

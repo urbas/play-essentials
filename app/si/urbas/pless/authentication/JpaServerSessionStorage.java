@@ -1,8 +1,11 @@
 package si.urbas.pless.authentication;
 
-import javax.persistence.EntityManager;
-
+import play.libs.F;
 import si.urbas.pless.db.PlessEntityManager;
+import si.urbas.pless.db.PlessTransactions;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 public class JpaServerSessionStorage implements ServerSessionStorage {
 
@@ -45,16 +48,18 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
     if (sessionValue == null) {
       return null;
     }
+
     if (sessionValue.isExpired()) {
-      removeSessionValue(sessionValue);
+      removeSessionValue(key);
       return null;
     }
+
     return sessionValue.getValue();
   }
 
   @Override
-  public void remove(String key) {
-    removeSessionValue(fetchSessionValue(key));
+  public boolean remove(String key) {
+    return removeSessionValue(key);
   }
 
   private JpaServerSessionKeyValue fetchSessionValue(String key) {
@@ -62,8 +67,21 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
       .find(JpaServerSessionKeyValue.class, key);
   }
 
-  private void removeSessionValue(JpaServerSessionKeyValue sessionValue) {
-    getEntityManager().remove(sessionValue);
+  private boolean removeSessionValue(final String key) {
+    try {
+      return PlessTransactions.getTransactionProvider().withTransaction(new F.Function0<Boolean>() {
+        @Override
+        public Boolean apply() throws Throwable {
+          Query deleteSessionKeyQuery = getEntityManager()
+            .createNamedQuery(JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY);
+          deleteSessionKeyQuery.setParameter("key", key);
+          int deletedRows = deleteSessionKeyQuery.executeUpdate();
+          return deletedRows > 0;
+        }
+      });
+    } catch (Throwable throwable) {
+      throw new RuntimeException("Could not delete a session key.", throwable);
+    }
   }
 
   private EntityManager getEntityManager() {

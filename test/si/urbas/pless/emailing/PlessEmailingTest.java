@@ -1,17 +1,15 @@
 package si.urbas.pless.emailing;
 
-import static si.urbas.pless.emailing.PlessEmailing.*;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import org.junit.Test;
-
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;
-
 import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.test.TemporaryEmailProvider;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
+import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class PlessEmailingTest extends PlessTest {
   private static final String EMAIL_RECEPIENT = "Jane Doe <jane.doe@example.com>";

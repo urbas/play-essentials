@@ -21,7 +21,7 @@ public class PlessTransactions {
   private static class DefaultTransactionProviderFactory implements Factory<TransactionProvider> {
     @Override
     public TransactionProvider createInstance(ConfigurationSource configurationSource) {
-      return new PlessJpaTransactionProvider();
+      return new PlayJpaTransactionProvider();
     }
   }
 }

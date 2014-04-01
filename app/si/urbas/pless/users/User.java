@@ -18,4 +18,5 @@ public interface User {
   
   String getActivationCode();
 
+  void setActivated(boolean activated);
 }

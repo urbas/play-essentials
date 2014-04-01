@@ -5,7 +5,12 @@ import java.util.Calendar;
 import javax.persistence.*;
 
 @Entity(name = "Session")
+@NamedQueries({
+  @NamedQuery(name = JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY, query = "DELETE FROM Session s WHERE s.key = :key")
+})
+
 public class JpaServerSessionKeyValue {
+  public static final String QUERY_DELETE_BY_KEY = "JpaServerSessionKeyValue.deleteByKey";
   @Id
   private String key;
   private String value;

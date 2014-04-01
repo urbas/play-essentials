@@ -6,6 +6,6 @@ public interface ServerSessionStorage {
 
   public abstract String get(String key);
 
-  public abstract void remove(String key);
+  public abstract boolean remove(String key);
 
 }

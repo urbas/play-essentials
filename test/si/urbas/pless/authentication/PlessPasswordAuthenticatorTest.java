@@ -2,22 +2,21 @@ package si.urbas.pless.authentication;
 
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.users.JpaUser;
 
-import static org.mockito.Mockito.when;
+import javax.persistence.NoResultException;
+
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 
 public class PlessPasswordAuthenticatorTest extends PlessTest {
 
-  private final JpaUser johnSmithUser = new JpaUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   private final PasswordLoginForm passwordLoginForm = new PasswordLoginForm(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   private final PasswordLoginForm emptyPasswordLoginForm = new PasswordLoginForm();
   private final PasswordLoginForm incorrectPasswordLoginForm = new PasswordLoginForm(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD + "a");
   private final PlessPasswordAuthenticator plessPasswordAuthenticator = new PlessPasswordAuthenticator();
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NoResultException.class)
   public void authenticateUser_MUST_throw_WHEN_the_user_does_not_exist() throws Exception {
     plessPasswordAuthenticator.authenticateUser(passwordLoginForm);
   }
@@ -34,7 +33,6 @@ public class PlessPasswordAuthenticatorTest extends PlessTest {
     plessPasswordAuthenticator.authenticateUser(passwordLoginForm);
   }
 
-
   @Test(expected = IllegalArgumentException.class)
   public void authenticateUser_MUST_throw_an_exception_WHEN_password_is_incorrect() throws Exception {
     addJohnSmithToRepository();
@@ -42,7 +40,6 @@ public class PlessPasswordAuthenticatorTest extends PlessTest {
   }
 
   private void addJohnSmithToRepository() {
-    when(getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL))
-      .thenReturn(johnSmithUser);
+    getUserRepository().persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }
 }

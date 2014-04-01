@@ -55,12 +55,11 @@ public class JpaServerSessionStorageTest extends PlessJpaTest {
   }
 
   private Object fetchSessionValue() {
-    Object value = withTransaction(new TransactionFunction<Object>() {
+    return withTransaction(new TransactionFunction<Object>() {
       public Object invoke(EntityManager em) {
         return new JpaServerSessionStorage(em).get(FOO_SESSION_KEY);
       }
     });
-    return value;
   }
 
   private void removeSessionValue() {

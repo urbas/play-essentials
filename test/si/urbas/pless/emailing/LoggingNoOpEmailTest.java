@@ -1,14 +1,13 @@
 package si.urbas.pless.emailing;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import play.api.templates.Html;
+import scala.collection.mutable.StringBuilder;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import org.junit.Test;
-import org.slf4j.Logger;
-
-import play.api.templates.Html;
-import scala.collection.mutable.StringBuilder;
 
 
 public class LoggingNoOpEmailTest {

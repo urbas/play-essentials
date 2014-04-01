@@ -53,14 +53,12 @@ public class PlessJpaUserRepository implements UserRepository {
   }
 
   @Override
-  public void delete(String userEmail) {
+  public boolean delete(String userEmail) {
     Query deleteUserQuery = getEntityManager()
       .createNamedQuery(JpaUser.QUERY_DELETE_USER);
     deleteUserQuery.setParameter("email", userEmail);
     int deletedRows = deleteUserQuery.executeUpdate();
-    if (deletedRows < 1) {
-      throw new IllegalStateException("The user does not exist.");
-    }
+    return deletedRows > 0;
   }
 
   private EntityManager getEntityManager() {

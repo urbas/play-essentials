@@ -1,27 +1,32 @@
 package si.urbas.pless.test;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-
+import si.urbas.pless.authentication.PlayHttpContextClientSessionStorage;
 import si.urbas.pless.db.PlayHttpContextOrThreadBoundEntityManager;
+import si.urbas.pless.db.PlayJpaTransactionProvider;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
-public class PlayFunctionalJpaApplication extends TestApplication {
+
+public class PlayFunctionalJpaApplication extends TestJpaApplication {
 
   public PlayFunctionalJpaApplication() {
-    setupPlayConfiguration();
-    temporaryServices.add(new TemporaryEmailProvider());
+    super(
+      createTestModePlayConfiguration(),
+      spy(new PlayHttpContextOrThreadBoundEntityManager()),
+      spy(new PlayHttpContextClientSessionStorage()),
+      spy(new PlayJpaTransactionProvider())
+    );
     temporaryServices.add(new TemporaryPlayJpaApplication());
-    temporaryServices.add(new TemporaryEntityManagerFactory(new PlayHttpContextOrThreadBoundEntityManager()));
   }
 
-  private void setupPlayConfiguration() {
+  private static ConfigurationSource createTestModePlayConfiguration() {
     ConfigurationSource currentConfiguration = spy(new PlayApplicationConfigurationSource());
     doReturn(false).when(currentConfiguration).isProduction();
     doReturn(false).when(currentConfiguration).isDevelopment();
-    temporaryServices.add(new TemporaryConfiguration(currentConfiguration));
+    return currentConfiguration;
   }
-  
+
 }

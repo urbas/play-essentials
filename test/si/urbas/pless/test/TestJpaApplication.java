@@ -1,30 +1,48 @@
 package si.urbas.pless.test;
 
+import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.authentication.JpaServerSessionStorage;
+import si.urbas.pless.db.RawEntityManagerProvider;
+import si.urbas.pless.db.SimpleTestTransactionProvider;
+import si.urbas.pless.db.TransactionProvider;
+import si.urbas.pless.users.PlessJpaUserRepository;
+import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.Factory;
+
+import javax.persistence.EntityManager;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
 import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
 import static si.urbas.pless.test.TestEntityManagerFactory.APP_CONFIG_JPA_DEFAULT;
 import static si.urbas.pless.test.TestEntityManagerFactory.TEST_PERSISTENCE_UNIT;
-import static org.mockito.Mockito.*;
 
-import si.urbas.pless.authentication.JpaServerSessionStorage;
-import si.urbas.pless.db.RawEntityManagerProvider;
-import si.urbas.pless.users.PlessJpaUserRepository;
-import si.urbas.pless.util.ConfigurationSource;
-
-public class TestJpaApplication extends TestApplication {
+public class TestJpaApplication extends MockedApplication {
 
   public TestJpaApplication() {
-    setupJpaConfiguration();
-    temporaryServices.add(new TemporaryEmailProvider());
-    temporaryServices
-      .add(new TemporaryServerSessionStorage(spy(new JpaServerSessionStorage())));
-    temporaryServices
-      .add(new TemporaryUserRepository(spy(new PlessJpaUserRepository())));
-    temporaryServices
-      .add(new TemporaryEntityManagerFactory(spy(new RawEntityManagerProvider())));
+    this(
+      mock(ConfigurationSource.class),
+      spy(new RawEntityManagerProvider()),
+      createMockedClientSessionStorage(),
+      spy(new SimpleTestTransactionProvider())
+    );
   }
 
-  private void setupJpaConfiguration() {
-    temporaryServices.add(new TemporaryConfiguration(mock(ConfigurationSource.class)));
+  public TestJpaApplication(ConfigurationSource configurationSource,
+                            Factory<EntityManager> entityManagerFactory,
+                            ClientSessionStorage clientSessionStorage,
+                            TransactionProvider transactionProvider) {
+    super(
+      configurationSource,
+      createMockedEmailProvider(),
+      clientSessionStorage,
+      transactionProvider,
+      spy(new JpaServerSessionStorage()),
+      spy(new PlessJpaUserRepository()),
+      entityManagerFactory
+    );
     setConfigurationString(APP_CONFIG_JPA_DEFAULT, TEST_PERSISTENCE_UNIT);
   }
+
 }

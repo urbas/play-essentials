@@ -103,4 +103,9 @@ public class JpaUser implements User {
   public String getActivationCode() {
     return activationCode;
   }
+
+  @Override
+  public void setActivated(boolean activated) {
+    this.activated = activated;
+  }
 }

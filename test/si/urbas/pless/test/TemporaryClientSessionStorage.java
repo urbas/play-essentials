@@ -10,9 +10,13 @@ import si.urbas.pless.authentication.ClientSessionStorage;
 public class TemporaryClientSessionStorage implements AutoCloseable {
 
   private final ClientSessionStorage oldClientSessionStorage = currentClientSessionStorage;
-  
+
   public TemporaryClientSessionStorage() {
-    currentClientSessionStorage = mock(ClientSessionStorage.class);
+    this(mock(ClientSessionStorage.class));
+  }
+
+  public TemporaryClientSessionStorage(ClientSessionStorage clientSessionStorage) {
+    currentClientSessionStorage = clientSessionStorage;
     setConfigurationClass(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, TestClientSessionStorage.class);
   }
 
