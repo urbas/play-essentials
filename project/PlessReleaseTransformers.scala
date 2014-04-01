@@ -4,6 +4,27 @@ object PlessReleaseTransformers {
   def insertReleaseSteps(steps: ReleaseStep*): ReleaseStepInsertion = {
     ReleaseStepInsertion(steps:_*)
   }
+
+  def replaceReleaseStep(stepToReplace: ReleaseStep): ReleaseStepReplacement = {
+    ReleaseStepReplacement(stepToReplace)
+  }
+}
+
+case class ReleaseStepReplacement(stepToReplace: ReleaseStep) {
+  def withReleaseSteps(steps: ReleaseStep*): ReleaseStepReplacementWithNewStep = {
+    ReleaseStepReplacementWithNewStep(stepToReplace, steps:_*)
+  }
+}
+
+case class ReleaseStepReplacementWithNewStep(stepToReplace: ReleaseStep, withSteps: ReleaseStep*) {
+  def in(releaseProcess: Seq[ReleaseStep]): Seq[ReleaseStep] = {
+    releaseProcess.flatMap {
+      case x if x == stepToReplace =>
+        withSteps
+      case x =>
+        Seq(x)
+    }
+  }
 }
 
 case class ReleaseStepInsertion(steps: ReleaseStep*) {

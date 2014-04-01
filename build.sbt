@@ -4,24 +4,21 @@ import de.johoop.jacoco4sbt._
 import JacocoPlugin._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleasePlugin._
-import sbtrelease.ReleaseStateTransformations.setReleaseVersion
+import sbtrelease.ReleaseStateTransformations._
+import xerial.sbt.Sonatype
+import xerial.sbt.Sonatype.SonatypeKeys
 
 name := "pless"
 
 organization := "si.urbas"
 
-publishTo := {
-  val nexus = "http://urbas.si:8081/nexus/content/repositories"
-  if (version.value.trim.endsWith("SNAPSHOT")) {
-    Some("Snapshots" at s"$nexus/snapshots/")
-  } else {
-    Some("Releases" at s"$nexus/releases/")
-  }
-}
+Sonatype.sonatypeSettings
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 publishMavenStyle := true
+
+SonatypeKeys.profileName := "org.xerial"
 
 libraryDependencies ++= Seq(
   javaJdbc,
@@ -43,24 +40,50 @@ libraryDependencies ++= Seq(
   "com.googlecode.catch-exception" % "catch-exception" % "1.2.0" % "test"
 )
 
+pomExtra := {
+  <url>https://github.com/urbas/play-essentials</url>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:github.com/urbas/play-essentials</connection>
+    <developerConnection>scm:git:git@github.com:urbas/play-essentials</developerConnection>
+    <url>github.com/urbas/play-essentials</url>
+  </scm>
+  <developers>
+    <developer>
+      <id>urbas</id>
+      <name>urbas</name>
+      <url>https://github.com/urbas</url>
+    </developer>
+  </developers>
+}
+
 jacoco.settings
 
 parallelExecution in jacoco.Config := false
 
 sources in doc in Compile := Nil
 
-publishArtifact in (Compile, packageDoc) := false
+publishArtifact in(Compile, packageDoc) := true
 
-publishArtifact in (Compile, packageSrc) := true
+publishArtifact in(Compile, packageSrc) := true
 
-publishArtifact in (Test, packageBin) := true
+publishArtifact in(Test, packageBin) := true
 
-publishArtifact in (Test, packageSrc) := true
+publishArtifact in(Test, packageSrc) := true
 
 releaseSettings
 
 releaseProcess := insertReleaseSteps(bumpVersionInReadmeFile, addReadmeFileToVcs)
   .into(releaseProcess.value)
   .before(setReleaseVersion)
+
+releaseProcess := replaceReleaseStep(publishArtifacts)
+  .withReleaseSteps(publishSigned, sonatypeRelease)
+  .in(releaseProcess.value)
 
 play.Project.playJavaSettings

@@ -1,7 +1,10 @@
+import com.typesafe.sbt.pgp.PgpKeys
+import sbt.Keys._
 import sbtrelease.ReleasePlugin.ReleaseKeys
 import sbtrelease.ReleasePlugin.ReleaseKeys.versions
 import sbtrelease.ReleaseStep
 import sbt._
+import xerial.sbt.Sonatype.SonatypeKeys
 
 object PlessReleaseSteps {
 
@@ -16,6 +19,22 @@ object PlessReleaseSteps {
   lazy val readmeMdFile: sbt.File = {
     file("README.md")
   }
+
+  lazy val publishSigned = ReleaseStep(
+    action = state => {
+      val project = Project.extract(state)
+      val ref = project.get(thisProjectRef)
+      project.runAggregated(PgpKeys.publishSigned in Global in ref, state)
+    }
+  )
+
+  lazy val sonatypeRelease = ReleaseStep(
+    action = state => {
+      val project = Project.extract(state)
+      val ref = project.get(thisProjectRef)
+      project.runAggregated(SonatypeKeys.sonatypeReleaseAll in Global in ref, state)
+    }
+  )
 
   def replaceTextInFile(file: sbt.File, regexPattern: String, replacementPattern: State => String): ReleaseStep = {
     ReleaseStep(
