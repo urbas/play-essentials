@@ -58,8 +58,8 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
   }
 
   @Override
-  public boolean remove(String key) {
-    return removeSessionValue(key);
+  public void remove(String key) {
+    removeSessionValue(key);
   }
 
   private JpaServerSessionKeyValue fetchSessionValue(String key) {

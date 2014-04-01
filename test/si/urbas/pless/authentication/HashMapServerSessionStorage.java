@@ -11,9 +11,8 @@ public class HashMapServerSessionStorage implements ServerSessionStorage {
   public HashMap<String, ValueWithExpiration<String>> hashMap = new HashMap<>();
 
   @Override
-  public boolean remove(String key) {
+  public void remove(String key) {
     hashMap.remove(key);
-    return false;
   }
 
   @Override

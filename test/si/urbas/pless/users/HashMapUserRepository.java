@@ -53,6 +53,7 @@ public class HashMapUserRepository implements UserRepository {
 
   @Override
   public synchronized User findUserById(long userId) {
+    // TODO: Throw an exception similar to find by email.
     return idToUserMap.get(userId);
   }
 }

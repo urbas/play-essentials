@@ -24,8 +24,7 @@ public class PlayCacheServerSessionStorage implements ServerSessionStorage {
   }
 
   @Override
-  public boolean remove(String key) {
+  public void remove(String key) {
     Cache.remove(key);
-    return true;
   }
 }

@@ -6,7 +6,7 @@ import si.urbas.pless.authentication.SaltedHashedPassword;
 
 public class UserMatchers {
 
-  public static Matcher<User> userWith(String userEmail, String password) {
+  public static Matcher<? super User> userWith(String userEmail, String password) {
     return new UserWithEmailAndPasswordMatcher(userEmail, password);
   }
 
@@ -65,8 +65,7 @@ public class UserMatchers {
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("User with email: '" + userEmail
-        + "' and password: '" + password + "'.");
+      description.appendText("User [email=" + userEmail + ", password=" + password + "]");
     }
 
     @Override
