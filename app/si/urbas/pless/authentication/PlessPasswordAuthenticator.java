@@ -6,6 +6,11 @@ import si.urbas.pless.users.User;
 
 public class PlessPasswordAuthenticator {
 
+  /**
+   * @param passwordLoginForm contains the email (with which to find the user) and the password (with which to
+   *                          authenticate them).
+   * @return a user when the credentials match, otherwise this method throws an exception.
+   */
   public User authenticateUser(PasswordLoginForm passwordLoginForm) {
     if (!passwordLoginForm.isValid()) {
       throw new IllegalArgumentException("Log in credentials form is incomplete.");

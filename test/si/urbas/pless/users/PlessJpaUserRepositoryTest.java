@@ -1,182 +1,28 @@
 package si.urbas.pless.users;
 
-import org.junit.Test;
-import si.urbas.pless.db.TransactionFunction;
+import org.junit.After;
+import org.junit.Before;
 import si.urbas.pless.test.PlessJpaTest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static si.urbas.pless.test.DateMatchers.dateWithin;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
-import static si.urbas.pless.users.UserMatchers.*;
 
-public class PlessJpaUserRepositoryTest extends PlessJpaTest {
+public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
 
-  private static final String USER_EMAIL = "user email";
-  private static final String USER_PASSWORD = "user password";
+  @SuppressWarnings("UnusedDeclaration")
   private static final JpaUser FIRST_USER = new JpaUser(1L);
-  public static final int HUNDRED_MILLISECONDS = 100;
+  private PlessJpaTest jpaSetup;
 
-  @Test(expected = Exception.class)
-  public void findUserWithEmail_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
-    fetchUser(USER_EMAIL);
+
+  @Before
+  public void setUp() throws Exception {
+    jpaSetup = new PlessJpaTest();
+    jpaSetup.setUp();
+    userRepository = PlessUserRepository.getUserRepository();
   }
 
-  @Test
-  public void findUserWithEmail_MUST_return_the_persisted_user() throws Exception {
-    assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_PASSWORD),
-      is(userWith(USER_EMAIL, USER_PASSWORD))
-    );
-  }
-
-  @Test
-  public void getAllUsers_MUST_return_an_empty_list_WHEN_no_users_were_persisted() throws Exception {
-    assertThat(getUserRepository().getAllUsers(), is(empty()));
-  }
-
-  @Test
-  public void getAllUsers_MUST_return_the_persisted_users() throws Exception {
-    persistUser(USER_EMAIL, USER_PASSWORD);
-    assertThat(
-      getUserRepository().getAllUsers(),
-      contains(userWith(USER_EMAIL, USER_PASSWORD))
-    );
-  }
-
-  @Test
-  public void persist_MUST_store_an_inactive_user() throws Exception {
-    assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_PASSWORD),
-      not(activeUser())
-    );
-  }
-
-  @Test
-  public void persist_MUST_store_a_non_empty_activationCode() throws Exception {
-    assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_PASSWORD),
-      userWithLongActivationCode()
-    );
-  }
-
-  @Test
-  public void persist_MUST_initialize_the_creation_date_to_a_recent_date() throws Exception {
-    User persistedUser = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    assertThat(
-      persistedUser.getCreationDate(),
-      is(dateWithin(HUNDRED_MILLISECONDS))
-    );
-  }
-
-  @Test
-  public void persist_MUST_add_the_first_user_with_the_right_id() throws Exception {
-    User persistedUser = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    assertThat(
-      persistedUser.getId(),
-      is(equalTo(FIRST_USER.getId()))
-    );
-  }
-
-  @Test
-  public void activate_MUST_mark_the_user_as_activated() throws Exception {
-    activateUser(persistAndFetchUser(USER_EMAIL, USER_PASSWORD));
-    assertThat(
-      fetchUser(USER_EMAIL),
-      is(activeUser())
-    );
-  }
-
-  @Test
-  public void activate_MUST_not_activate_user_WHEN_activationCode_is_mismatched() throws Exception {
-    final User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    activateUser(user.getEmail(), user.getActivationCode() + "bla");
-    assertThat(
-      fetchUser(USER_EMAIL),
-      is(not(activeUser()))
-    );
-  }
-
-  @Test
-  public void activate_MUST_return_false_WHEN_activationCode_is_mismatched() throws Exception {
-    final User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    String wrongActivationCode = user.getActivationCode() + "bla";
-    assertFalse(activateUser(user.getEmail(), wrongActivationCode));
-  }
-
-  @Test
-  public void activate_MUST_return_true_WHEN_user_was_activated() throws Exception {
-    boolean wasActivated = activateUser(persistAndFetchUser(USER_EMAIL, USER_PASSWORD));
-    assertThat(
-      wasActivated,
-      is(true)
-    );
-  }
-
-  @Test
-  public void activate_MUST_not_change_the_creation_date() throws Exception {
-    User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    activateUser(user);
-    assertThat(
-      user.getCreationDate(),
-      is(equalTo(fetchUser(USER_EMAIL).getCreationDate()))
-    );
-  }
-
-  @Test
-  public void delete_MUST_return_false_WHEN_the_user_does_not_exist() throws Exception {
-    assertFalse(delete(USER_EMAIL));
-  }
-
-  @Test(expected = NoResultException.class)
-  public void delete_MUST_remove_the_persisted_user() throws Exception {
-    final User user = persistAndFetchUser();
-    delete(user.getEmail());
-    fetchUser(user.getEmail());
-  }
-
-  @Test
-  public void delete_MUST_return_true_WHEN_the_user_does_not_exist() throws Exception {
-    assertTrue(delete(persistAndFetchUser().getEmail()));
-  }
-
-  @Test(expected = NoResultException.class)
-  public void findUserById_MUST_throw_an_exception_WHEN_the_user_does_not_exist() throws Exception {
-    findUserById(1L);
-  }
-
-  @Test
-  public void findUserById_MUST_return_the_persisted_user() throws Exception {
-    final User user = persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
-    assertThat(
-      findUserById(user.getId()),
-      is(userWith(USER_EMAIL, USER_PASSWORD))
-    );
-  }
-
-  private User findUserById(final long userId) {
-    return withTransaction(new TransactionFunction<User>() {
-      @Override
-      public User invoke(EntityManager em) {
-        return new PlessJpaUserRepository(em).findUserById(userId);
-      }
-    });
-  }
-
-  private boolean delete(final String userEmail) {
-    return withTransaction(new TransactionFunction<Boolean>() {
-      @Override
-      public Boolean invoke(EntityManager em) {
-        return new PlessJpaUserRepository(em).delete(userEmail);
-      }
-    });
-  }
-
-  public static User persistAndFetchUser() {
-    return persistAndFetchUser(USER_EMAIL, USER_PASSWORD);
+  @After
+  public void tearDown() throws Exception {
+    jpaSetup.tearDown();
   }
 
   public static User persistAndFetchUser(String userEmail, String userPassword) {
@@ -185,26 +31,15 @@ public class PlessJpaUserRepositoryTest extends PlessJpaTest {
   }
 
   public static void persistUser(String userEmail, String userPassword) {
-    withTransaction(new PersistSingleUserTransaction(userEmail, userPassword));
+    getUserRepository().persistUser(userEmail, userPassword);
   }
 
   public static boolean activateUser(final User user) {
     return activateUser(user.getEmail(), user.getActivationCode());
   }
 
-  public static boolean activateUser(final String email,
-                                     final String activationCode) {
-    return withTransaction(new TransactionFunction<Boolean>() {
-      @Override
-      public Boolean invoke(EntityManager em) {
-        return new PlessJpaUserRepository(em)
-          .activateUser(email, activationCode);
-      }
-    });
-  }
-
-  public static User fetchUser() {
-    return fetchUser(USER_EMAIL);
+  public static boolean activateUser(final String email, final String activationCode) {
+    return getUserRepository().activateUser(email, activationCode);
   }
 
   public static User fetchUser(String userEmail) {

@@ -2,8 +2,11 @@ package si.urbas.pless.db;
 
 import org.junit.Before;
 import org.junit.Test;
-import play.libs.F;
 import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.util.Callback;
+import si.urbas.pless.util.Function;
+
+import javax.persistence.EntityManager;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -14,16 +17,16 @@ public class PlayJpaTransactionProviderTest extends PlessControllerWithJpaTest {
 
   private final String TRANSACTION_RESULT = "some result";
   private PlayJpaTransactionProvider playJpaTransactionProvider;
-  private F.Callback0 transactionCallback;
-  private F.Function0<String> transactionFunction;
+  private Callback<EntityManager> transactionCallback;
+  private Function<EntityManager, String> transactionFunction;
 
   @SuppressWarnings("unchecked")
   @Before
   public void setup() throws Throwable {
     playJpaTransactionProvider = new PlayJpaTransactionProvider();
-    transactionCallback = mock(F.Callback0.class);
-    transactionFunction = mock(F.Function0.class);
-    when(transactionFunction.apply()).thenReturn(TRANSACTION_RESULT);
+    transactionCallback = mock(Callback.class);
+    transactionFunction = mock(Function.class);
+    when(transactionFunction.invoke(any(EntityManager.class))).thenReturn(TRANSACTION_RESULT);
   }
 
   @Test
@@ -35,6 +38,6 @@ public class PlayJpaTransactionProviderTest extends PlessControllerWithJpaTest {
   @Test
   public void withTransaction_MUST_call_the_callback() throws Throwable {
     playJpaTransactionProvider.withTransaction(transactionCallback);
-    verify(transactionCallback).invoke();
+    verify(transactionCallback).invoke(any(EntityManager.class));
   }
 }

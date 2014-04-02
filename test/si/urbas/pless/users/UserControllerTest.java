@@ -55,16 +55,6 @@ public class UserControllerTest extends PlessControllerWithJpaTest {
       is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD)));
   }
 
-  @Test(expected = NoResultException.class)
-  public void createUser_MUST_not_persist_the_user_WHEN_an_exception_occurs_during_email_sending() throws Exception {
-    when(getEmailProvider().createEmail(getConfigurationSource()))
-      .thenThrow(new RuntimeException());
-    try {
-      callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    } catch (Exception ignored) {}
-    getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
-  }
-
   @Test(expected = IllegalArgumentException.class)
   public void createUser_MUST_throw_an_exception_WHEN_email_is_empty() throws Exception {
     createUser(new SignupForm("", JOHN_SMITH_PASSWORD));

@@ -1,21 +1,15 @@
 package si.urbas.pless.users;
 
-import static org.hamcrest.Matchers.not;
+import org.junit.Test;
+import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.TemporaryUserRepository;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.authentication.PlessClientSessionStorage.getClientSessionStorage;
 import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertThat;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-
-import org.junit.Test;
-
-import si.urbas.pless.authentication.ClientSessionStorage;
-import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryClientSessionStorage;
-import si.urbas.pless.test.TemporaryUserRepository;
 
 public class PlessUserRepositoryTest extends PlessTest {
 

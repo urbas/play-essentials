@@ -1,79 +1,96 @@
 package si.urbas.pless.users;
 
-import static si.urbas.pless.users.JpaUser.*;
+import si.urbas.pless.util.Callback;
+import si.urbas.pless.util.Function;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
-import javax.persistence.*;
-
-import si.urbas.pless.db.PlessEntityManager;
+import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
+import static si.urbas.pless.users.JpaUser.*;
 
 public class PlessJpaUserRepository implements UserRepository {
 
-  private final EntityManager entityManager;
-
-  public PlessJpaUserRepository() {
-    this(null);
-  }
-
-  public PlessJpaUserRepository(EntityManager em) {
-    this.entityManager = em;
-  }
-
   @Override
-  public User findUserByEmail(String email) {
-    TypedQuery<JpaUser> usersByEmailQuery = getEntityManager()
-      .createNamedQuery(QUERY_GET_BY_EMAIL, JpaUser.class);
-    usersByEmailQuery.setParameter("email", email);
-    return usersByEmailQuery.getSingleResult();
+  public User findUserByEmail(final String email) {
+    return getTransactionProvider().usingDb(new Function<EntityManager, User>() {
+      @Override
+      public User invoke(EntityManager entityManager) {
+        TypedQuery<JpaUser> usersByEmailQuery = entityManager
+          .createNamedQuery(QUERY_GET_BY_EMAIL, JpaUser.class);
+        usersByEmailQuery.setParameter("email", email);
+        return usersByEmailQuery.getSingleResult();
+      }
+    });
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<User> getAllUsers() {
-    return getEntityManager()
-      .createNamedQuery(QUERY_GET_ALL)
-      .getResultList();
+    return getTransactionProvider().usingDb(new Function<EntityManager, List<User>>() {
+      @Override
+      public List<User> invoke(EntityManager entityManager) {
+        return entityManager
+          .createNamedQuery(QUERY_GET_ALL)
+          .getResultList();
+      }
+    });
   }
 
   @Override
-  public void persistUser(String email, String password) {
-    User user = new JpaUser(email, password);
-    getEntityManager().persist(user);
-    getEntityManager().flush();
+  public void persistUser(final String email, final String password) {
+    getTransactionProvider().withTransaction(new Callback<EntityManager>() {
+      @Override
+      public void invoke(EntityManager entityManager) {
+        User user = new JpaUser(email, password);
+        entityManager.persist(user);
+      }
+    });
   }
 
   @Override
-  public boolean activateUser(String userEmail, String activationCode) {
-    Query usersByEmailQuery = getEntityManager()
-      .createNamedQuery(QUERY_ACTIVATE_USER);
-    usersByEmailQuery.setParameter("email", userEmail);
-    usersByEmailQuery.setParameter("activationCode", activationCode);
-    return usersByEmailQuery.executeUpdate() > 0;
+  public boolean activateUser(final String userEmail, final String activationCode) {
+    return getTransactionProvider().withTransaction(new Function<EntityManager, Boolean>() {
+      @Override
+      public Boolean invoke(EntityManager entityManager) {
+        Query usersByEmailQuery = entityManager
+          .createNamedQuery(QUERY_ACTIVATE_USER);
+        usersByEmailQuery.setParameter("email", userEmail);
+        usersByEmailQuery.setParameter("activationCode", activationCode);
+        return usersByEmailQuery.executeUpdate() > 0;
+      }
+    });
   }
 
   @Override
-  public boolean delete(String userEmail) {
-    Query deleteUserQuery = getEntityManager()
-      .createNamedQuery(JpaUser.QUERY_DELETE_USER);
-    deleteUserQuery.setParameter("email", userEmail);
-    int deletedRows = deleteUserQuery.executeUpdate();
-    return deletedRows > 0;
-  }
-
-  private EntityManager getEntityManager() {
-    return entityManager == null
-      ? PlessEntityManager.getEntityManager()
-      : entityManager;
+  public boolean delete(final String userEmail) {
+    return getTransactionProvider().withTransaction(new Function<EntityManager, Boolean>() {
+      @Override
+      public Boolean invoke(EntityManager entityManager) {
+        Query deleteUserQuery = entityManager
+          .createNamedQuery(JpaUser.QUERY_DELETE_USER);
+        deleteUserQuery.setParameter("email", userEmail);
+        int deletedRows = deleteUserQuery.executeUpdate();
+        return deletedRows > 0;
+      }
+    });
   }
 
   @Override
-  public User findUserById(long userId) {
-    final JpaUser foundUser = getEntityManager().find(JpaUser.class, userId);
-    if (foundUser == null) {
-      throw new NoResultException("Could not find the user with the id " + userId);
-    }
-    return foundUser;
+  public User findUserById(final long userId) {
+    return getTransactionProvider().usingDb(new Function<EntityManager, User>() {
+      @Override
+      public User invoke(EntityManager entityManager) {
+        final JpaUser foundUser = entityManager.find(JpaUser.class, userId);
+        if (foundUser == null) {
+          throw new NoResultException("Could not find the user with the id " + userId);
+        }
+        return foundUser;
+      }
+    });
   }
 
 }

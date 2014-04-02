@@ -1,41 +1,24 @@
 package si.urbas.pless.authentication;
 
-import play.libs.F;
-import si.urbas.pless.db.PlessEntityManager;
-import si.urbas.pless.db.PlessTransactions;
+import si.urbas.pless.util.Callback;
+import si.urbas.pless.util.Function;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
+
 public class JpaServerSessionStorage implements ServerSessionStorage {
 
-  private EntityManager entityManager;
-
-  /**
-   * Creates a session storage that uses Play's entity manager from the context. Such
-   * a session storage can be shared across multiple requests.
-   */
-  public JpaServerSessionStorage() {
-    this(null);
-  }
-
-  /**
-   * Creates a session storage that uses the provided entity manager for all
-   * its operations.
-   */
-  public JpaServerSessionStorage(EntityManager entityManager) {
-    this.entityManager = entityManager;
-  }
-
   @Override
-  public void put(String key, String value, int expirationMillis) {
-    JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
-    try {
-      getEntityManager().persist(jpaServerSessionKeyValue);
-      getEntityManager().flush();
-    } catch (Exception ex) {
-      throw new IllegalStateException("Could not store the session key '" + key + "' into the session storage.", ex);
-    }
+  public void put(final String key, final String value, final int expirationMillis) {
+    getTransactionProvider().withTransaction(new Callback<EntityManager>() {
+      @Override
+      public void invoke(EntityManager entityManager) {
+        JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
+        entityManager.persist(jpaServerSessionKeyValue);
+      }
+    });
   }
 
   @Override
@@ -62,29 +45,26 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
     removeSessionValue(key);
   }
 
-  private JpaServerSessionKeyValue fetchSessionValue(String key) {
-    return getEntityManager()
-      .find(JpaServerSessionKeyValue.class, key);
+  private JpaServerSessionKeyValue fetchSessionValue(final String key) {
+    return getTransactionProvider().usingDb(new Function<EntityManager, JpaServerSessionKeyValue>() {
+      @Override
+      public JpaServerSessionKeyValue invoke(EntityManager entityManager) {
+        return entityManager.find(JpaServerSessionKeyValue.class, key);
+      }
+    });
   }
 
   private boolean removeSessionValue(final String key) {
-    try {
-      return PlessTransactions.getTransactionProvider().withTransaction(new F.Function0<Boolean>() {
-        @Override
-        public Boolean apply() throws Throwable {
-          Query deleteSessionKeyQuery = getEntityManager()
-            .createNamedQuery(JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY);
-          deleteSessionKeyQuery.setParameter("key", key);
-          int deletedRows = deleteSessionKeyQuery.executeUpdate();
-          return deletedRows > 0;
-        }
-      });
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Could not delete a session key.", throwable);
-    }
+    return getTransactionProvider().withTransaction(new Function<EntityManager, Boolean>() {
+      @Override
+      public Boolean invoke(EntityManager entityManager) {
+        Query deleteSessionKeyQuery = entityManager
+          .createNamedQuery(JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY);
+        deleteSessionKeyQuery.setParameter("key", key);
+        int deletedRows = deleteSessionKeyQuery.executeUpdate();
+        return deletedRows > 0;
+      }
+    });
   }
 
-  private EntityManager getEntityManager() {
-    return entityManager == null ? PlessEntityManager.getEntityManager() : entityManager;
-  }
 }

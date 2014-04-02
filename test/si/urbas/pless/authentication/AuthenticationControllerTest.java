@@ -1,23 +1,21 @@
 package si.urbas.pless.authentication;
 
+import org.junit.Test;
+import play.libs.Json;
+import play.mvc.Result;
+import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.users.User;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.contentAsString;
 import static si.urbas.pless.authentication.routes.ref.AuthenticationController;
 import static si.urbas.pless.authentication.routes.ref.PasswordAuthenticationController;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.activateUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static play.test.Helpers.callAction;
-import static play.test.Helpers.contentAsString;
-
-import org.junit.Test;
-
-import play.libs.Json;
-import play.mvc.Result;
-
-import si.urbas.pless.test.PlessControllerWithJpaTest;
-import si.urbas.pless.users.User;
 
 public class AuthenticationControllerTest extends PlessControllerWithJpaTest {
 

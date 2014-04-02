@@ -1,26 +1,38 @@
 package si.urbas.pless.db;
 
 import play.db.jpa.JPA;
-import play.libs.F;
 
-import static si.urbas.pless.db.PlessEntityManager.throwJpaDescriptiveMisConfigurationException;
+import javax.persistence.EntityManager;
 
-public class PlayJpaTransactionProvider implements TransactionProvider {
+public class PlayJpaTransactionProvider extends JpaTransactionProvider {
+  protected final String defaultEntityManagerName;
+
+  public PlayJpaTransactionProvider() {
+    defaultEntityManagerName = "default";
+  }
+
+  public PlayJpaTransactionProvider(String defaultEntityManagerName) {
+    this.defaultEntityManagerName = defaultEntityManagerName;
+  }
+
   @Override
-  public void withTransaction(F.Callback0 callback) {
-    try {
-      JPA.withTransaction(callback);
-    } catch (Throwable throwable) {
-      throwJpaDescriptiveMisConfigurationException(throwable);
+  protected void closeEntityManager(EntityManager entityManager) {
+    JPA.bindForCurrentThread(null);
+    if (entityManager != null) {
+      entityManager.close();
     }
   }
 
   @Override
-  public <T> T withTransaction(F.Function0<T> transactionFunction) throws Throwable {
-    try {
-      return JPA.withTransaction(transactionFunction);
-    } catch (Throwable throwable) {
-      return throwJpaDescriptiveMisConfigurationException(throwable);
-    }
+  protected EntityManager getEntityManager(String name) {
+    EntityManager em = JPA.em(name);
+    JPA.bindForCurrentThread(em);
+    return em;
   }
+
+  @Override
+  protected String getDefaultEntityManagerName() {
+    return defaultEntityManagerName;
+  }
+
 }

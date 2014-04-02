@@ -1,14 +1,17 @@
 package si.urbas.pless;
 
-import play.libs.F;
 import play.mvc.Controller;
 import si.urbas.pless.authentication.AuthenticationService;
 import si.urbas.pless.authentication.PlessAuthentication;
 import si.urbas.pless.emailing.PlessEmailing;
 import si.urbas.pless.users.PlessUserRepository;
 import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.util.Callback;
 import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.Function;
 import si.urbas.pless.util.PlessConfigurationSource;
+
+import javax.persistence.EntityManager;
 
 import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
 
@@ -30,11 +33,15 @@ public class PlessController extends Controller {
     return PlessEmailing.getEmailing();
   }
 
-  protected static void withTransaction(F.Callback0 callback) {
+  protected static void withTransaction(Callback<EntityManager> callback) {
     getTransactionProvider().withTransaction(callback);
   }
 
-  protected static <T> T withTransaction(F.Function0<T> transactionFunction) throws Throwable {
+  protected static <T> T withTransaction(Function<EntityManager, T> transactionFunction) {
     return getTransactionProvider().withTransaction(transactionFunction);
+  }
+
+  protected static <T> T usingDb(Function<EntityManager, T> transactionFunction) {
+    return getTransactionProvider().usingDb(transactionFunction);
   }
 }

@@ -1,5 +1,4 @@
 import com.typesafe.sbt.pgp.PgpKeys
-import sbt.Keys._
 import sbtrelease.ReleasePlugin.ReleaseKeys
 import sbtrelease.ReleasePlugin.ReleaseKeys.versions
 import sbtrelease.ReleaseStep

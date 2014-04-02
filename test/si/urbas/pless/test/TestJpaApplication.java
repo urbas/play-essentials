@@ -3,7 +3,7 @@ package si.urbas.pless.test;
 import si.urbas.pless.authentication.ClientSessionStorage;
 import si.urbas.pless.authentication.JpaServerSessionStorage;
 import si.urbas.pless.db.RawEntityManagerProvider;
-import si.urbas.pless.db.SimpleTestTransactionProvider;
+import si.urbas.pless.db.TestJpaTransactionProvider;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.users.PlessJpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
@@ -25,7 +25,7 @@ public class TestJpaApplication extends MockedApplication {
       mock(ConfigurationSource.class),
       spy(new RawEntityManagerProvider()),
       createMockedClientSessionStorage(),
-      spy(new SimpleTestTransactionProvider())
+      spy(new TestJpaTransactionProvider())
     );
   }
 
