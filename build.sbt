@@ -33,7 +33,8 @@ libraryDependencies ++= Seq(
 
 // Test dependencies
 libraryDependencies ++= Seq(
-  "junit" % "junit-dep" % "4.11" % "test",
+  ("junit" % "junit-dep" % "4.11" % "test")
+    .exclude("org.hamcrest", "hamcrest-core"),
   ("org.mockito" % "mockito-all" % "1.9.5" % "test")
     .exclude("org.hamcrest", "hamcrest-core"),
   "org.hamcrest" % "hamcrest-all" % "1.3" % "test",

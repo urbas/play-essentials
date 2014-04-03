@@ -124,6 +124,11 @@ public abstract class UserRepositoryTest {
   }
 
   @Test
+  public void activateUser_MUST_return_false_WHEN_the_user_does_not_exist() {
+    assertFalse(userRepository.activateUser(USER_EMAIL, null));
+  }
+
+  @Test
   public void delete_MUST_return_false_WHEN_the_user_does_not_exist() throws Exception {
     assertFalse(delete(USER_EMAIL));
   }

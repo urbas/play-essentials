@@ -2,7 +2,7 @@ package si.urbas.pless.authentication;
 
 import org.junit.Test;
 import play.mvc.Result;
-import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.users.User;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,7 @@ import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUse
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 
-public class PasswordAuthenticationControllerTest extends PlessControllerWithJpaTest {
+public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static final PasswordAuthenticationController passwordAuthController = new PasswordAuthenticationController();

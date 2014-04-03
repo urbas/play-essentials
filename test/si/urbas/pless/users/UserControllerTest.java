@@ -2,7 +2,7 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 import play.mvc.Result;
-import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.test.TemporaryUserRepository;
 
 import javax.persistence.NoResultException;
@@ -15,9 +15,9 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.status;
-import static si.urbas.pless.authentication.AuthenticationControllerTest.callstatus;
 import static si.urbas.pless.authentication.AuthenticationControllerTest.parseContentAsBoolean;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
+import static si.urbas.pless.authentication.routes.ref.AuthenticationController;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.fetchUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
@@ -28,7 +28,7 @@ import static si.urbas.pless.users.UserMatchers.userWith;
 import static si.urbas.pless.users.routes.ref.UserController;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class UserControllerTest extends PlessControllerWithJpaTest {
+public class UserControllerTest extends PlessTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
@@ -120,23 +120,23 @@ public class UserControllerTest extends PlessControllerWithJpaTest {
 
   @Test
   public void delete_MUST_return_ok_WHEN_user_is_logged_in() throws Exception {
-    Result loginResult = signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
-      status(callDelete(loginResult)),
+      status(callDelete()),
       is(equalTo(OK))
     );
   }
 
   @Test(expected = NoResultException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
-    Result loginResult = signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-    callDelete(loginResult);
+    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    callDelete();
     getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
 
   @Test
   public void delete_MUST_log_the_user_out() throws Exception {
-    assertFalse(parseContentAsBoolean(callstatus(callDelete(signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD)))));
+    assertFalse(parseContentAsBoolean(callStatus()));
   }
 
   private Result signupAndLogin(final String userEmail,
@@ -160,8 +160,7 @@ public class UserControllerTest extends PlessControllerWithJpaTest {
     return callAction(UserController.delete());
   }
 
-  private Result callDelete(Result previousCall) {
-    return callAction(UserController.delete(), withSession(previousCall));
+  public static Result callStatus() {
+    return callAction(AuthenticationController.status());
   }
-
 }

@@ -2,7 +2,7 @@ package si.urbas.pless.authentication;
 
 import java.util.HashMap;
 
-public final class TestClientSessionStorage implements ClientSessionStorage {
+public class TestClientSessionStorage implements ClientSessionStorage {
   private final HashMap<String, String> hashMap = new HashMap<>();
 
   @Override

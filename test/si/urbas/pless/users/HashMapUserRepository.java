@@ -12,14 +12,17 @@ public class HashMapUserRepository implements UserRepository {
   private final HashMap<Long, User> idToUserMap = new HashMap<>();
   private long maxId = 0;
 
+  public User getUser(String email) {return emailToUserMap.get(email);}
+
   @Override
   public synchronized User findUserByEmail(String email) {
-    User user = emailToUserMap.get(email);
+    User user = getUser(email);
     if (user == null) {
       throw new NoResultException();
     }
     return user;
   }
+
 
   @Override
   public synchronized List<User> getAllUsers() {
@@ -36,8 +39,8 @@ public class HashMapUserRepository implements UserRepository {
 
   @Override
   public synchronized boolean activateUser(String userEmail, String activationCode) {
-    User user = findUserByEmail(userEmail);
-    if (user.getActivationCode().equals(activationCode)) {
+    User user = getUser(userEmail);
+    if (user != null && user.getActivationCode().equals(activationCode)) {
       user.setActivated(true);
       return true;
     }

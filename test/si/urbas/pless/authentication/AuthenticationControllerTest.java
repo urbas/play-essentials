@@ -3,7 +3,7 @@ package si.urbas.pless.authentication;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
-import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.users.User;
 
 import static org.junit.Assert.assertEquals;
@@ -17,15 +17,15 @@ import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUse
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 
-public class AuthenticationControllerTest extends PlessControllerWithJpaTest {
+public class AuthenticationControllerTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static final AuthenticationController authController = new AuthenticationController();
 
   @Test
   public void status_MUST_return_the_userId_WHEN_the_user_has_logged_in() throws Exception {
-    Result loginResult = createUserAndLogin();
-    Result result = callstatus(loginResult);
+    createUserAndLogin();
+    Result result = callstatus();
     assertEquals(JOHN_SMITH_EMAIL, Json.parse(contentAsString(result)).asText());
   }
 
@@ -37,9 +37,9 @@ public class AuthenticationControllerTest extends PlessControllerWithJpaTest {
 
   @Test
   public void status_MUST_return_false_AFTER_logout() throws Exception {
-    Result loginResult = createUserAndLogin();
-    callAction(AuthenticationController.logOut(), withSession(loginResult));
-    Result result = callstatus(loginResult);
+    createUserAndLogin();
+    callAction(AuthenticationController.logOut());
+    Result result = callstatus();
     assertFalse(parseContentAsBoolean(result));
   }
 
@@ -47,10 +47,8 @@ public class AuthenticationControllerTest extends PlessControllerWithJpaTest {
     return Json.parse(contentAsString(result)).asBoolean();
   }
 
-  public static Result callstatus(Result loginResult) {
-    return callAction(
-      AuthenticationController.status(),
-      withSession(loginResult));
+  public static Result callstatus() {
+    return callAction(AuthenticationController.status());
   }
 
   private Result createUserAndLogin() {

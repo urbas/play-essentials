@@ -2,21 +2,18 @@ package si.urbas.pless.test;
 
 
 import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
+import si.urbas.pless.authentication.TestClientSessionStorage;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.users.HashMapUserRepository;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
-
-import javax.persistence.EntityManager;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class MockedApplication extends TestApplication {
 
@@ -24,9 +21,9 @@ public class MockedApplication extends TestApplication {
     this(
       mock(ConfigurationSource.class),
       createMockedEmailProvider(),
-      createMockedClientSessionStorage(),
+      createSpiedClientSessionStorage(),
       createMockedTransactionProvider(),
-      createMockedServerSessionStorage(),
+      createSpiedServerSessionStorage(),
       createSpiedHashMapUserRepository()
     );
   }
@@ -46,19 +43,12 @@ public class MockedApplication extends TestApplication {
   }
 
 
-  protected static Factory<EntityManager> createMockedEntityManagerFactory() {
-    @SuppressWarnings("unchecked") Factory<EntityManager> entityManagerFactory = mock(Factory.class);
-    when(entityManagerFactory.createInstance(getConfigurationSource()))
-      .thenReturn(mock(EntityManager.class));
-    return entityManagerFactory;
-  }
-
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
-  protected static ServerSessionStorage createMockedServerSessionStorage() {return mock(ServerSessionStorage.class);}
+  protected static ServerSessionStorage createSpiedServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
 
   protected static TransactionProvider createMockedTransactionProvider() {return mock(TransactionProvider.class);}
 
-  protected static ClientSessionStorage createMockedClientSessionStorage() {return mock(ClientSessionStorage.class);}
+  protected static ClientSessionStorage createSpiedClientSessionStorage() {return spy(new TestClientSessionStorage());}
 
 }

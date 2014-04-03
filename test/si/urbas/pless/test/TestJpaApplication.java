@@ -20,7 +20,7 @@ public class TestJpaApplication extends MockedApplication {
   public TestJpaApplication() {
     this(
       mock(ConfigurationSource.class),
-      createMockedClientSessionStorage(),
+      createSpiedClientSessionStorage(),
       spy(new RawJpaTransactionProvider())
     );
   }
