@@ -5,15 +5,6 @@ import play.db.jpa.JPA;
 import javax.persistence.EntityManager;
 
 public class PlayJpaTransactionProvider extends JpaTransactionProvider {
-  protected final String defaultEntityManagerName;
-
-  public PlayJpaTransactionProvider() {
-    defaultEntityManagerName = "default";
-  }
-
-  public PlayJpaTransactionProvider(String defaultEntityManagerName) {
-    this.defaultEntityManagerName = defaultEntityManagerName;
-  }
 
   @Override
   protected void closeEntityManager(EntityManager entityManager) {
@@ -32,7 +23,7 @@ public class PlayJpaTransactionProvider extends JpaTransactionProvider {
 
   @Override
   protected String getDefaultEntityManagerName() {
-    return defaultEntityManagerName;
+    return "default";
   }
 
 }

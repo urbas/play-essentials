@@ -43,13 +43,9 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
       T result = block.invoke(entityManager);
       commitTransaction(tx);
       return result;
-
-    } catch (RuntimeException ex) {
+    } catch (Exception ex) {
       rollbackTransaction(tx);
       throw ex;
-    } catch (Exception t) {
-      rollbackTransaction(tx);
-      throw new RuntimeException("Transaction failed.", t);
     } finally {
       closeEntityManager(entityManager);
     }
@@ -62,12 +58,10 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
   protected abstract String getDefaultEntityManagerName();
 
   private void commitTransaction(EntityTransaction tx) {
-    if (tx != null) {
-      if (tx.getRollbackOnly()) {
-        tx.rollback();
-      } else {
-        tx.commit();
-      }
+    if (tx.getRollbackOnly()) {
+      tx.rollback();
+    } else {
+      tx.commit();
     }
   }
 

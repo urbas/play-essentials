@@ -3,8 +3,6 @@ package si.urbas.pless.db;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.test.PlessControllerWithJpaTest;
-import si.urbas.pless.util.Callback;
-import si.urbas.pless.util.Function;
 
 import javax.persistence.EntityManager;
 

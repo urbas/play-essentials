@@ -1,12 +1,13 @@
 package si.urbas.pless.util;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 public class CachingFactoryTest {
 
@@ -89,8 +90,8 @@ public class CachingFactoryTest {
 
   @Test
   public void createInstance_MUST_construct_only_one_factory_WHEN_in_production() throws Exception {
-    doReturn(true).when(configurationSource).isProduction();
-    try (ScopedTestFactory scopedFactory = new ScopedTestFactory(configuredFactory)) {
+    makeProduction();
+    try (ScopedTestFactory ignored = new ScopedTestFactory(configuredFactory)) {
       useScopedFactory();
       cachingFactory.createInstance(configurationSource);
       cachingFactory.createInstance(configurationSource);
@@ -100,9 +101,31 @@ public class CachingFactoryTest {
     }
   }
 
+
+  @Test
+  public void clearCache_MUST_lead_to_instantiating_the_factory_again() throws Exception {
+    makeProduction();
+    withScopedTestFactory(new Body() {
+      public void invoke() {
+        cachingFactory.createInstance(configurationSource);
+        cachingFactory.clearCache();
+        cachingFactory.createInstance(configurationSource);
+        assertEquals(ScopedTestFactory.getConstructorInvokations(), 2);
+      }
+    });
+  }
+
+  private void withScopedTestFactory(Body callback) throws Exception {
+    try (ScopedTestFactory ignored = new ScopedTestFactory(configuredFactory)) {
+      useScopedFactory();
+      callback.invoke();
+    }
+  }
+
   private void useScopedFactory() {
     when(configurationSource.getString(FACTORY_CONFIG_KEY))
       .thenReturn(ScopedTestFactory.class.getCanonicalName());
   }
 
+  public void makeProduction() {doReturn(true).when(configurationSource).isProduction();}
 }
