@@ -3,6 +3,8 @@ package si.urbas.pless;
 import play.mvc.Controller;
 import si.urbas.pless.authentication.AuthenticationService;
 import si.urbas.pless.authentication.PlessAuthentication;
+import si.urbas.pless.db.TransactionCallback;
+import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.emailing.PlessEmailing;
 import si.urbas.pless.users.PlessUserRepository;
 import si.urbas.pless.users.UserRepository;
@@ -33,15 +35,15 @@ public class PlessController extends Controller {
     return PlessEmailing.getEmailing();
   }
 
-  protected static void withTransaction(Callback<EntityManager> callback) {
+  protected static void withTransaction(TransactionCallback callback) {
     getTransactionProvider().withTransaction(callback);
   }
 
-  protected static <T> T withTransaction(Function<EntityManager, T> transactionFunction) {
+  protected static <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     return getTransactionProvider().withTransaction(transactionFunction);
   }
 
-  protected static <T> T usingDb(Function<EntityManager, T> transactionFunction) {
+  protected static <T> T usingDb(TransactionFunction<T> transactionFunction) {
     return getTransactionProvider().usingDb(transactionFunction);
   }
 }

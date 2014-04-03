@@ -17,15 +17,15 @@ public class PlayJpaTransactionProviderTest extends PlessControllerWithJpaTest {
 
   private final String TRANSACTION_RESULT = "some result";
   private PlayJpaTransactionProvider playJpaTransactionProvider;
-  private Callback<EntityManager> transactionCallback;
-  private Function<EntityManager, String> transactionFunction;
+  private TransactionCallback transactionCallback;
+  private TransactionFunction<String> transactionFunction;
 
   @SuppressWarnings("unchecked")
   @Before
   public void setup() throws Throwable {
     playJpaTransactionProvider = new PlayJpaTransactionProvider();
-    transactionCallback = mock(Callback.class);
-    transactionFunction = mock(Function.class);
+    transactionCallback = mock(TransactionCallback.class);
+    transactionFunction = mock(TransactionFunction.class);
     when(transactionFunction.invoke(any(EntityManager.class))).thenReturn(TRANSACTION_RESULT);
   }
 

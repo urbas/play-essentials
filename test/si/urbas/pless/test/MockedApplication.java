@@ -27,8 +27,7 @@ public class MockedApplication extends TestApplication {
       createMockedClientSessionStorage(),
       createMockedTransactionProvider(),
       createMockedServerSessionStorage(),
-      createSpiedHashMapUserRepository(),
-      createMockedEntityManagerFactory()
+      createSpiedHashMapUserRepository()
     );
   }
 
@@ -37,15 +36,13 @@ public class MockedApplication extends TestApplication {
                            ClientSessionStorage clientSessionStorage,
                            TransactionProvider transactionProvider,
                            ServerSessionStorage serverSessionStorage,
-                           UserRepository userRepository,
-                           Factory<EntityManager> entityManagerFactory) {
+                           UserRepository userRepository) {
     temporaryServices.add(new TemporaryConfiguration(configurationSource));
     temporaryServices.add(new TemporaryEmailProvider(emailProvider));
     temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage));
     temporaryServices.add(new TemporaryTransactionProvider(transactionProvider));
     temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage));
     temporaryServices.add(new TemporaryUserRepository(userRepository));
-    temporaryServices.add(new TemporaryEntityManagerFactory(entityManagerFactory));
   }
 
 

@@ -1,6 +1,5 @@
 package si.urbas.pless.db;
 
-import si.urbas.pless.util.Callback;
 import si.urbas.pless.util.Function;
 
 import javax.persistence.EntityManager;
@@ -9,7 +8,7 @@ import javax.persistence.EntityTransaction;
 public abstract class JpaTransactionProvider implements TransactionProvider {
 
   @Override
-  public void withTransaction(final Callback<EntityManager> callback) {
+  public void withTransaction(final TransactionCallback callback) {
     withTransaction(getDefaultEntityManagerName(), new Function<EntityManager, Void>() {
       @Override
       public Void invoke(EntityManager entityManager) {
@@ -20,12 +19,12 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
   }
 
   @Override
-  public <T> T withTransaction(Function<EntityManager, T> transactionFunction) {
+  public <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     return withTransaction(getDefaultEntityManagerName(), transactionFunction);
   }
 
   @Override
-  public <T> T usingDb(Function<EntityManager, T> databaseQueryFunction) {
+  public <T> T usingDb(TransactionFunction<T> databaseQueryFunction) {
     EntityManager entityManager = null;
     try {
       entityManager = getEntityManager(getDefaultEntityManagerName());

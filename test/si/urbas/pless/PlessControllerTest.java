@@ -1,14 +1,12 @@
 package si.urbas.pless;
 
 import org.junit.Test;
+import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.test.TemporaryEmailProvider;
 import si.urbas.pless.test.TemporaryTransactionProvider;
-import si.urbas.pless.util.Callback;
-
-import javax.persistence.EntityManager;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,7 +20,7 @@ public class PlessControllerTest extends PlessTest {
   @Test
   public void withTransaction_MUST_pass_the_callback_to_the_transaction_provider() {
     TransactionProvider transactionProvider = mock(TransactionProvider.class);
-    @SuppressWarnings("unchecked") Callback<EntityManager> callback = mock(Callback.class);
+    TransactionCallback callback = mock(TransactionCallback.class);
     try (TemporaryTransactionProvider ignored = new TemporaryTransactionProvider(transactionProvider)) {
       PlessController.withTransaction(callback);
       verify(transactionProvider).withTransaction(callback);
