@@ -82,14 +82,8 @@ releaseSettings
 
 si.urbas.sbtutils.textfiles.tasks
 
-lazy val plessRelease = taskKey[Boolean]("stages artifacts at Sonatype Public Nexus, closes the staging, and promotes it into a release.")
-
-plessRelease := {
-  (sonatypeRelease in Global).evaluated
-}
-
 releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd).before(setReleaseVersion)
-  .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, plessRelease)
+  .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
 play.Project.playJavaSettings

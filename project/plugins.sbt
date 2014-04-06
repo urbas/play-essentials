@@ -1,19 +1,13 @@
 import sbt._
 
-// Comment to get more information during initialization
 logLevel := Level.Warn
 
-// The Typesafe repository 
 resolvers ++= Seq(
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
   "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 )
 
-lazy val root = project
-  .in(file("."))
-  .dependsOn(sbtPlessPlugin % "test->test;compile->compile")
-
-lazy val sbtPlessPlugin = uri("git://github.com/urbas/sbt-pless.git#master")
+addSbtPlugin("si.urbas" % "sbt-pless" % "0.0.1")
 
 addSbtPlugin("de.johoop" % "jacoco4sbt" % "2.1.4")
 
