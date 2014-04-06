@@ -13,7 +13,7 @@ lazy val root = project
   .in(file("."))
   .dependsOn(sbtPlessPlugin % "test->test;compile->compile")
 
-lazy val sbtPlessPlugin = uri("git://github.com/urbas/sbt-pless.git")
+lazy val sbtPlessPlugin = uri("git://github.com/urbas/sbt-pless.git#master")
 //lazy val sbtPlessPlugin = file("../../sbt-pless")
 
 

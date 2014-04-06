@@ -9,7 +9,6 @@ import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
 import xerial.sbt.Sonatype.SonatypeKeys._
-import sbt._
 
 name := "pless"
 
