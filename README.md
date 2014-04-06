@@ -7,7 +7,7 @@ Play Essentials (Pless) is a library that helps you develop Play Framework appli
 Quickstart instructions below, and you'll get a working application with authentication, user management, emailing
 support and all that other jazz.
 
-Pless takes away the worry of having to develop all the silly login, email-sending, and user-managy boilerplate and
+Pless takes away the worry of having to develop all the silly login, email-sending, and user-management boilerplate. It
 lets you focus on what matters to your business.
 
 Why Pless? Because it provides a Java 8-friendly API and focuses on testability, ease of use (for casual users), and
@@ -42,19 +42,19 @@ reusability from Java, testability from JUnit, and general configurability.
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
 
-        ->      /                           si.urbas.pless.Route
+        ->     /                  si.urbas.pless.Routes
 
 5.  Copy [persistence.xml](./samples/jpa/h2/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
 
         jpa.default=si.urbas.pless.defaultPersistenceUnit
 
-That's it, now you can start developing.
+That's it. Start developing!
 
-You can run your application the usual Play way:
+You can run your application in the usual Play way:
 
     play run
 
-and open it in your browser via the following link: [http://localhost:9000/](http://localhost:9000/)
+Open your browser and navigate to: [http://localhost:9000/](http://localhost:9000/)
 
 >   TODO: make Quickstart simpler by providing a seedling.
 
@@ -90,14 +90,14 @@ To log the user out:
 
 Here's how you send an email:
 
-    emailing().sendEmail(recepient, emailSubject, htmlBody);
+    emailing().sendEmail(recipient, emailSubject, htmlBody);
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
 Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an
 email like this:
 
     Html offerUpdateHtml = OfferUpdateEmailTemplate.apply(offerUpdateData);
-    emailing().sendEmail(recepient, emailSubject, offerUpdateHtml);
+    emailing().sendEmail(recipient, emailSubject, offerUpdateHtml);
 
 ### Advanced usage
 
