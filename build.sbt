@@ -1,10 +1,9 @@
 import com.typesafe.sbt.pgp.PgpKeys.publishSigned
-import de.johoop.jacoco4sbt._
-import JacocoPlugin._
+import de.johoop.jacoco4sbt.JacocoPlugin._
 import sbtrelease.ReleasePlugin._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleaseStateTransformations._
-import si.urbas.sbtutils.releases.ReleaseTransformers._
+import si.urbas.sbtutils.releases.ReleaseProcessTransformation._
 import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
@@ -83,12 +82,8 @@ releaseSettings
 
 si.urbas.sbtutils.textfiles.tasks
 
-releaseProcess := insertTasks(bumpVersionInReadmeMd)
-  .into(releaseProcess.value)
-  .before(setReleaseVersion)
-
-releaseProcess := replaceReleaseStep(publishArtifacts)
-  .withTasks(publishSigned, sonatypeReleaseAll)
+releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd).before(setReleaseVersion)
+  .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
 play.Project.playJavaSettings
