@@ -1,12 +1,15 @@
-import PlessReleaseSteps._
-import PlessReleaseTransformers._
+import com.typesafe.sbt.pgp.PgpKeys.publishSigned
 import de.johoop.jacoco4sbt._
 import JacocoPlugin._
-import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleasePlugin._
+import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleaseStateTransformations._
+import si.urbas.sbtutils.releases.ReleaseTransformers._
+import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
+import xerial.sbt.Sonatype.SonatypeKeys._
+import sbt._
 
 name := "pless"
 
@@ -43,24 +46,24 @@ libraryDependencies ++= Seq(
 
 pomExtra := {
   <url>https://github.com/urbas/play-essentials</url>
-  <licenses>
-    <license>
-      <name>Apache 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-  <scm>
-    <connection>scm:git:github.com/urbas/play-essentials</connection>
-    <developerConnection>scm:git:git@github.com:urbas/play-essentials</developerConnection>
-    <url>github.com/urbas/play-essentials</url>
-  </scm>
-  <developers>
-    <developer>
-      <id>urbas</id>
-      <name>urbas</name>
-      <url>https://github.com/urbas</url>
-    </developer>
-  </developers>
+    <licenses>
+      <license>
+        <name>Apache 2</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      </license>
+    </licenses>
+    <scm>
+      <connection>scm:git:github.com/urbas/play-essentials</connection>
+      <developerConnection>scm:git:git@github.com:urbas/play-essentials</developerConnection>
+      <url>github.com/urbas/play-essentials</url>
+    </scm>
+    <developers>
+      <developer>
+        <id>urbas</id>
+        <name>urbas</name>
+        <url>https://github.com/urbas</url>
+      </developer>
+    </developers>
 }
 
 jacoco.settings
@@ -79,12 +82,14 @@ publishArtifact in(Test, packageSrc) := true
 
 releaseSettings
 
-releaseProcess := insertReleaseSteps(bumpVersionInReadmeFile, addReadmeFileToVcs)
+si.urbas.sbtutils.textfiles.tasks
+
+releaseProcess := insertTasks(bumpVersionInReadmeMd)
   .into(releaseProcess.value)
   .before(setReleaseVersion)
 
 releaseProcess := replaceReleaseStep(publishArtifacts)
-  .withReleaseSteps(publishSigned, sonatypeRelease)
+  .withTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
 play.Project.playJavaSettings
