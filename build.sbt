@@ -74,6 +74,8 @@ publishArtifact in(Compile, packageDoc) := true
 
 publishArtifact in(Compile, packageSrc) := true
 
+sources in doc in Test := Nil
+
 publishArtifact in(Test, packageBin) := true
 
 publishArtifact in(Test, packageSrc) := true
@@ -82,7 +84,7 @@ releaseSettings
 
 si.urbas.sbtutils.textfiles.tasks
 
-releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd).before(setReleaseVersion)
+releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd).after(setReleaseVersion)
   .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 

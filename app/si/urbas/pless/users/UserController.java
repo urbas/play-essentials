@@ -2,6 +2,7 @@ package si.urbas.pless.users;
 
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 import si.urbas.pless.util.SingletonFactory;
@@ -21,9 +22,9 @@ public final class UserController extends PlessController {
     return ok();
   }
 
-  public static Result activate(final String email, final String activationCode) {
+  public static Result activationPage(final String email, final String activationCode) {
     boolean wasActivated = users().activateUser(email, activationCode);
-    return wasActivated ? ok() : badRequest();
+    return ok(ActivationView.apply(wasActivated));
   }
 
   public static Result delete() throws Throwable {

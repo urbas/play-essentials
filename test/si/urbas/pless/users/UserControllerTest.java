@@ -7,6 +7,7 @@ import si.urbas.pless.test.TemporaryUserRepository;
 
 import javax.persistence.NoResultException;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
+import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationControllerTest.parseContentAsBoolean;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
@@ -68,8 +70,8 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
-      status(callAction(UserController.activate(JOHN_SMITH_EMAIL, null))),
-      is(BAD_REQUEST)
+      contentAsString(callAction(UserController.activationPage(JOHN_SMITH_EMAIL, null))),
+      containsString("We could not activate your account")
     );
   }
 
@@ -77,8 +79,8 @@ public class UserControllerTest extends PlessTest {
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
     final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
-      status(callActivate(user)),
-      is(OK)
+      contentAsString(callActivate(user)),
+      containsString("Thank you very much for registering with us")
     );
   }
 
@@ -148,7 +150,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   private Result callActivate(final User user) {
-    return callAction(UserController.activate(user.getEmail(), user
+    return callAction(UserController.activationPage(user.getEmail(), user
       .getActivationCode()));
   }
 

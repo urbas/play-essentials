@@ -1,0 +1,19 @@
+@(activationSuccess: Boolean)
+
+@si.urbas.pless.views.html.MasterContainerView("User Account Activation") {
+@if(activationSuccess) {
+<div class="thank-you">
+  Thank you very much for registering with us!
+</div>
+<div class="explanation">
+  Your account has now been activated. You can start using the application.
+</div>
+} else {
+<div class="apologies">
+  We could not activate your account.
+</div>
+<div class="explanation-of-failure">
+  The email or the activation code do not match your account.
+</div>
+}
+}

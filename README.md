@@ -36,7 +36,7 @@ reusability from Java, testability from JUnit, and general configurability.
 
 3.  Add these lines into `build.sbt`:
 
-        resolvers += "Pless Releases" at "http://urbas.si:8081/nexus/content/repositories/releases/"
+        resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 
         libraryDependencies += "si.urbas" %% "pless" % "0.0.5-SNAPSHOT"
 

@@ -8,12 +8,8 @@ import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.emailing.PlessEmailing;
 import si.urbas.pless.users.PlessUserRepository;
 import si.urbas.pless.users.UserRepository;
-import si.urbas.pless.util.Callback;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Function;
 import si.urbas.pless.util.PlessConfigurationSource;
-
-import javax.persistence.EntityManager;
 
 import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
 
