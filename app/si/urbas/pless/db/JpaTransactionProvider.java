@@ -1,7 +1,5 @@
 package si.urbas.pless.db;
 
-import si.urbas.pless.util.Function;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -9,7 +7,7 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
 
   @Override
   public void withTransaction(final TransactionCallback callback) {
-    withTransaction(getDefaultEntityManagerName(), new Function<EntityManager, Void>() {
+    withTransaction(new TransactionFunction<Void>() {
       @Override
       public Void invoke(EntityManager entityManager) {
         callback.invoke(entityManager);
@@ -20,27 +18,12 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
 
   @Override
   public <T> T withTransaction(TransactionFunction<T> transactionFunction) {
-    return withTransaction(getDefaultEntityManagerName(), transactionFunction);
-  }
-
-  @Override
-  public <T> T usingDb(TransactionFunction<T> databaseQueryFunction) {
-    EntityManager entityManager = null;
-    try {
-      entityManager = getEntityManager(getDefaultEntityManagerName());
-      return databaseQueryFunction.invoke(entityManager);
-    } finally {
-      closeEntityManager(entityManager);
-    }
-  }
-
-  protected <T> T withTransaction(String entityManagerName, Function<EntityManager, T> block) {
     EntityManager entityManager = null;
     EntityTransaction tx = null;
     try {
-      entityManager = getEntityManager(entityManagerName);
+      entityManager = getEntityManager();
       tx = beginTransaction(entityManager);
-      T result = block.invoke(entityManager);
+      T result = transactionFunction.invoke(entityManager);
       commitTransaction(tx);
       return result;
     } catch (Exception ex) {
@@ -51,11 +34,20 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
     }
   }
 
+  @Override
+  public <T> T usingDb(TransactionFunction<T> databaseQueryFunction) {
+    EntityManager entityManager = null;
+    try {
+      entityManager = getEntityManager();
+      return databaseQueryFunction.invoke(entityManager);
+    } finally {
+      closeEntityManager(entityManager);
+    }
+  }
+
   protected abstract void closeEntityManager(EntityManager entityManager);
 
-  protected abstract EntityManager getEntityManager(String name);
-
-  protected abstract String getDefaultEntityManagerName();
+  protected abstract EntityManager getEntityManager();
 
   private void commitTransaction(EntityTransaction tx) {
     if (tx.getRollbackOnly()) {

@@ -71,7 +71,6 @@ public class JpaTransactionProviderTest extends PlessTest {
 
     public final JpaTransactionProvider self = mock(JpaTransactionProvider.class);
     public final EntityManager entityManager = mock(EntityManager.class);
-    public final String entityManagerName = "entity manager name";
     public final EntityTransaction transaction = mock(EntityTransaction.class);
 
     private TestableJpaTransactionProvider() {
@@ -84,13 +83,8 @@ public class JpaTransactionProviderTest extends PlessTest {
     }
 
     @Override
-    protected EntityManager getEntityManager(String name) {
+    protected EntityManager getEntityManager() {
       return entityManager;
-    }
-
-    @Override
-    protected String getDefaultEntityManagerName() {
-      return entityManagerName;
     }
   }
 }

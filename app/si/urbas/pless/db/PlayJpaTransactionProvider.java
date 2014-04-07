@@ -15,15 +15,10 @@ public class PlayJpaTransactionProvider extends JpaTransactionProvider {
   }
 
   @Override
-  protected EntityManager getEntityManager(String name) {
-    EntityManager em = JPA.em(name);
+  protected EntityManager getEntityManager() {
+    EntityManager em = JPA.em("default");
     JPA.bindForCurrentThread(em);
     return em;
-  }
-
-  @Override
-  protected String getDefaultEntityManagerName() {
-    return "default";
   }
 
 }

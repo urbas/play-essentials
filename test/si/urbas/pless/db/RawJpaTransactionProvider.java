@@ -17,16 +17,7 @@ public class RawJpaTransactionProvider extends JpaTransactionProvider {
   }
 
   @Override
-  protected EntityManager getEntityManager(String name) {
-    return createEntityManager();
-  }
-
-  @Override
-  protected String getDefaultEntityManagerName() {
-    return "";
-  }
-
-  private EntityManager createEntityManager() {
+  protected EntityManager getEntityManager() {
     return getEntityManagerFactory().createEntityManager();
   }
 
