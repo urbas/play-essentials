@@ -4,7 +4,7 @@ GET   /                    si.urbas.pless.WelcomeController.welcome()
 # Authentication Routes
 POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn(email, password)
 POST  /api/auth/logout     si.urbas.pless.authentication.AuthenticationController.logOut()
-POST  /api/auth/status     si.urbas.pless.authentication.AuthenticationController.status()
+GET   /api/auth/status     si.urbas.pless.authentication.AuthenticationController.status()
 
 # User Management Routes
 GET   /user/activate       si.urbas.pless.users.UserController.activationPage(email, activationCode)
