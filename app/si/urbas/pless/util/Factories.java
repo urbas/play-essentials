@@ -49,7 +49,7 @@ public class Factories {
   @SuppressWarnings("unchecked")
   private static <T> Factory<T> createFactoryFromClassName(String factoryClassName) {
     try {
-      return (Factory<T>) Singletons.CLASS_LOADER
+      return (Factory<T>) getClassLoader()
         .loadClass(factoryClassName)
         .getConstructor()
         .newInstance();
@@ -59,17 +59,13 @@ public class Factories {
     }
   }
 
-  private static class Singletons {
-    public static final ClassLoader CLASS_LOADER;
-
-    static {
-      // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
-      // that was running in development mode.
-      if (getConfigurationSource().isDevelopment()) {
-        CLASS_LOADER = Play.application().classloader();
-      } else {
-        CLASS_LOADER = ClassLoader.getSystemClassLoader();
-      }
+  private static ClassLoader getClassLoader() {
+    // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
+    // that was running in development mode.
+    if (getConfigurationSource().isDevelopment()) {
+      return Play.application().classloader();
+    } else {
+      return Factories.class.getClassLoader();
     }
   }
 }
