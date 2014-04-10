@@ -7,6 +7,8 @@ import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSourc
 
 public class Factories {
 
+  private static ClassLoader classLoader;
+
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
    *                             class name of the factory with which to create an instance.
@@ -59,7 +61,10 @@ public class Factories {
     }
   }
 
-  private static ClassLoader getClassLoader() {
+  public static ClassLoader getClassLoader() {
+    if (getOverridenClassLoader() != null) {
+      return getOverridenClassLoader();
+    }
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
     if (getConfigurationSource().isDevelopment()) {
@@ -67,5 +72,13 @@ public class Factories {
     } else {
       return Factories.class.getClassLoader();
     }
+  }
+
+  public static void overrideClassLoader(ClassLoader classLoader) {
+    Factories.classLoader = classLoader;
+  }
+
+  public static ClassLoader getOverridenClassLoader() {
+    return classLoader;
   }
 }
