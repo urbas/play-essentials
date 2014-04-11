@@ -4,10 +4,12 @@ import org.junit.After;
 import org.junit.Before;
 import play.mvc.Result;
 import play.test.FakeRequest;
+import si.urbas.pless.util.Factory;
+import si.urbas.pless.util.Function;
 
 import static play.test.Helpers.cookie;
 import static play.test.Helpers.fakeRequest;
-import static si.urbas.pless.util.Factories.getOverridenClassLoader;
+import static si.urbas.pless.util.Factories.getOverriddenClassLoader;
 import static si.urbas.pless.util.Factories.overrideClassLoader;
 
 /**
@@ -17,20 +19,20 @@ import static si.urbas.pless.util.Factories.overrideClassLoader;
  */
 public class PlessControllerWithJpaTest extends PlessJpaTest {
   public static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
-  private ClassLoader oldOverridenClassLoader;
+  private Function<String, Factory> oldOverriddenClassLoader;
 
   @Before
   public void setUp() {
+    oldOverriddenClassLoader = getOverriddenClassLoader();
     overrideClassLoader(getClassLoader());
     plessTestApplication = new PlayFunctionalJpaApplication();
-    this.oldOverridenClassLoader = getOverridenClassLoader();
   }
 
   protected ClassLoader getClassLoader() {return this.getClass().getClassLoader();}
 
   @After
   public void tearDown() {
-    overrideClassLoader(oldOverridenClassLoader);
+    overrideClassLoader(oldOverriddenClassLoader);
     super.tearDown();
   }
 

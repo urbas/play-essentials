@@ -2,32 +2,28 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 import play.mvc.Result;
+import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.test.PlessTest;
 import si.urbas.pless.test.TemporaryUserRepository;
 
 import javax.persistence.NoResultException;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.callAction;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
-import static si.urbas.pless.authentication.AuthenticationControllerTest.parseContentAsBoolean;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
-import static si.urbas.pless.authentication.routes.ref.AuthenticationController;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
+import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.fetchUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.UserController.createUser;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserMatchers.userWith;
-import static si.urbas.pless.users.routes.ref.UserController;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class UserControllerTest extends PlessTest {
@@ -70,7 +66,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
-      contentAsString(callAction(UserController.activationPage(JOHN_SMITH_EMAIL, null))),
+      contentAsString(UserController.activationPage(JOHN_SMITH_EMAIL, null)),
       containsString("We could not activate your account")
     );
   }
@@ -150,19 +146,23 @@ public class UserControllerTest extends PlessTest {
   }
 
   private Result callActivate(final User user) {
-    return callAction(UserController.activationPage(user.getEmail(), user
-      .getActivationCode()));
+    return UserController.activationPage(user.getEmail(), user
+      .getActivationCode());
   }
 
   private Result callSignUp(String email, String password) {
-    return callAction(UserController.signUp(email, password));
+    return UserController.signUp(email, password);
   }
 
   private Result callDelete() {
-    return callAction(UserController.delete());
+    try {
+      return UserController.delete();
+    } catch (Throwable throwable) {
+      throw new RuntimeException(throwable);
+    }
   }
 
   public static Result callStatus() {
-    return callAction(AuthenticationController.status());
+    return AuthenticationController.status();
   }
 }

@@ -7,7 +7,7 @@ import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSourc
 
 public class Factories {
 
-  private static ThreadLocal<ClassLoader> classLoader = new ThreadLocal<>();
+  private static ThreadLocal<Function<String, Factory>> instanceCreator = new ThreadLocal<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -45,10 +45,10 @@ public class Factories {
    * @param body the method that is executed within this function. During the execution of this method {@link
    *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
    */
-  public static void withClassLoader(ClassLoader newClassLoader, Body body) {
-    ClassLoader oldClassLoader = getOverridenClassLoader();
+  public static void withClassLoader(final ClassLoader newClassLoader, Body body) {
+    Function<String, Factory> oldClassLoader = getOverriddenClassLoader();
     try {
-      overrideClassLoader(newClassLoader);
+      overrideClassLoader(new ClassLoaderInstanceCreator(newClassLoader));
       body.invoke();
     } finally {
       overrideClassLoader(oldClassLoader);
@@ -68,34 +68,54 @@ public class Factories {
   @SuppressWarnings("unchecked")
   private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
-      return (Factory<T>) getClassLoader()
-        .loadClass(factoryClassName)
-        .getConstructor()
-        .newInstance();
+      return (Factory<T>) getInstanceCreator()
+        .invoke(factoryClassName);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
         + factoryClassName + "'.", ex);
     }
   }
 
-  public static ClassLoader getClassLoader() {
-    if (getOverridenClassLoader() != null) {
-      return getOverridenClassLoader();
+  public static Function<String, Factory> getInstanceCreator() {
+    if (getOverriddenClassLoader() != null) {
+      return getOverriddenClassLoader();
     }
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
     if (getConfigurationSource().isDevelopment()) {
-      return Play.application().classloader();
+      return PlayApplicationClassLoader.INSTANCE;
     } else {
-      return Factories.class.getClassLoader();
+      return FactoriesClassLoader.INSTANCE;
     }
   }
 
-  public static void overrideClassLoader(ClassLoader classLoader) {
-    Factories.classLoader.set(classLoader);
+  public static void overrideClassLoader(Function<String, Factory> classLoader) {
+    Factories.instanceCreator.set(classLoader);
   }
 
-  public static ClassLoader getOverridenClassLoader() {
-    return classLoader.get();
+  public static void overrideClassLoader(ClassLoader classLoader) {
+    Factories.instanceCreator.set(new ClassLoaderInstanceCreator(classLoader));
   }
+
+  public static Function<String, Factory> getOverriddenClassLoader() {
+    return instanceCreator.get();
+  }
+
+  private static class PlayApplicationClassLoader implements Function<String, Factory> {
+    private static final PlayApplicationClassLoader INSTANCE = new PlayApplicationClassLoader();
+
+    @Override
+    public Factory invoke(String s) {
+      try {
+        return (Factory) Play.application().classloader().loadClass(s).getConstructor().newInstance();
+      } catch (Exception e) {
+        throw new RuntimeException("Could not instantiate class '" + s + "'.", e);
+      }
+    }
+  }
+
+  private static class FactoriesClassLoader {
+    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
+  }
+
 }
