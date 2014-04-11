@@ -7,7 +7,7 @@ import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSourc
 
 public class Factories {
 
-  private static ClassLoader classLoader;
+  private static ThreadLocal<ClassLoader> classLoader = new ThreadLocal<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -38,6 +38,23 @@ public class Factories {
     }
   }
 
+  /**
+   * Temporarily sets the given class loader as the one through which factory classes are loaded in {@link
+   * si.urbas.pless.util.Factories}.
+   *
+   * @param body the method that is executed within this function. During the execution of this method {@link
+   *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
+   */
+  public static void withClassLoader(ClassLoader newClassLoader, Body body) {
+    ClassLoader oldClassLoader = getOverridenClassLoader();
+    try {
+      overrideClassLoader(newClassLoader);
+      body.invoke();
+    } finally {
+      overrideClassLoader(oldClassLoader);
+    }
+  }
+
   private static <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey,
                                                                   ConfigurationSource configurationSource) {
     String factoryClassName = configurationSource
@@ -49,7 +66,7 @@ public class Factories {
   }
 
   @SuppressWarnings("unchecked")
-  private static <T> Factory<T> createFactoryFromClassName(String factoryClassName) {
+  private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
       return (Factory<T>) getClassLoader()
         .loadClass(factoryClassName)
@@ -75,10 +92,10 @@ public class Factories {
   }
 
   public static void overrideClassLoader(ClassLoader classLoader) {
-    Factories.classLoader = classLoader;
+    Factories.classLoader.set(classLoader);
   }
 
   public static ClassLoader getOverridenClassLoader() {
-    return classLoader;
+    return classLoader.get();
   }
 }
