@@ -7,7 +7,7 @@ import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSourc
 
 public class Factories {
 
-  private static ThreadLocal<Function<String, Factory>> instanceCreator = new ThreadLocal<>();
+  private static ThreadLocal<Function<String, Factory<?>>> instanceCreator = new ThreadLocal<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -46,7 +46,7 @@ public class Factories {
    *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
    */
   public static void withClassLoader(final ClassLoader newClassLoader, Body body) {
-    Function<String, Factory> oldClassLoader = getOverriddenClassLoader();
+    Function<String, Factory<?>> oldClassLoader = getOverriddenClassLoader();
     try {
       overrideClassLoader(new ClassLoaderInstanceCreator(newClassLoader));
       body.invoke();
@@ -76,7 +76,7 @@ public class Factories {
     }
   }
 
-  public static Function<String, Factory> getInstanceCreator() {
+  public static Function<String, Factory<?>> getInstanceCreator() {
     if (getOverriddenClassLoader() != null) {
       return getOverriddenClassLoader();
     }
@@ -89,7 +89,7 @@ public class Factories {
     }
   }
 
-  public static void overrideClassLoader(Function<String, Factory> classLoader) {
+  public static void overrideClassLoader(Function<String, Factory<?>> classLoader) {
     Factories.instanceCreator.set(classLoader);
   }
 
@@ -97,17 +97,17 @@ public class Factories {
     Factories.instanceCreator.set(new ClassLoaderInstanceCreator(classLoader));
   }
 
-  public static Function<String, Factory> getOverriddenClassLoader() {
+  public static Function<String, Factory<?>> getOverriddenClassLoader() {
     return instanceCreator.get();
   }
 
-  private static class PlayApplicationClassLoader implements Function<String, Factory> {
+  private static class PlayApplicationClassLoader implements Function<String, Factory<?>> {
     private static final PlayApplicationClassLoader INSTANCE = new PlayApplicationClassLoader();
 
     @Override
-    public Factory invoke(String s) {
+    public Factory<?> invoke(String s) {
       try {
-        return (Factory) Play.application().classloader().loadClass(s).getConstructor().newInstance();
+        return (Factory<?>) Play.application().classloader().loadClass(s).getConstructor().newInstance();
       } catch (Exception e) {
         throw new RuntimeException("Could not instantiate class '" + s + "'.", e);
       }

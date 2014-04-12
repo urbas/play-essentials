@@ -19,12 +19,10 @@ import si.urbas.pless.util.Factory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
 import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
 import static si.urbas.pless.users.UserController.CONFIG_SIGNUP_EMAIL_FACTORY;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class MockedApplication extends TestApplication {
 
@@ -35,7 +33,8 @@ public class MockedApplication extends TestApplication {
       createSpiedClientSessionStorage(),
       createMockedTransactionProvider(),
       createSpiedServerSessionStorage(),
-      createSpiedHashMapUserRepository()
+      createSpiedHashMapUserRepository(),
+      createMockedSignupEmailSender()
     );
   }
 
@@ -44,21 +43,22 @@ public class MockedApplication extends TestApplication {
                            ClientSessionStorage clientSessionStorage,
                            TransactionProvider transactionProvider,
                            ServerSessionStorage serverSessionStorage,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           Map<String, Factory<?>> factories) {
     temporaryServices.add(new TemporaryConfiguration(configurationSource));
     temporaryServices.add(new TemporaryEmailProvider(emailProvider));
     temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage));
     temporaryServices.add(new TemporaryTransactionProvider(transactionProvider));
     temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage));
     temporaryServices.add(new TemporaryUserRepository(userRepository));
-    temporaryServices.add(new TemporaryFactoryOfMocks(createMockedSignupEmailSender()));
+    temporaryServices.add(new TemporaryFactories(factories));
   }
 
-  private static Map<String, Factory> createMockedSignupEmailSender() {
-    Map<String, Factory> signupEmailSenderFactoryConfiguration = new HashMap<>();
+  private static Map<String, Factory<?>> createMockedSignupEmailSender() {
+    Map<String, Factory<?>> signupEmailSenderFactoryConfiguration = new HashMap<>();
     @SuppressWarnings("unchecked") Factory<SignupEmailSender> signupEmailSenderFactory = mock(Factory.class);
     SignupEmailSender signupEmailSender = mock(SignupEmailSender.class);
-    when(signupEmailSenderFactory.createInstance(getConfigurationSource())).thenReturn(signupEmailSender);
+    when(signupEmailSenderFactory.createInstance(any(ConfigurationSource.class))).thenReturn(signupEmailSender);
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {

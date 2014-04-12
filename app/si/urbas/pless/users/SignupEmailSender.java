@@ -9,9 +9,9 @@ public class SignupEmailSender {
 
   public void sendSignupEmail(User userDetails) {
     Html emailContent = SignupEmailTemplate.apply(userDetails);
-    String recepient = userDetails.getEmail();
+    String recipient = userDetails.getEmail();
     String emailSubject = "Pless Signup";
-    getEmailing().sendEmail(recepient, emailSubject, emailContent);
+    getEmailing().sendEmail(recipient, emailSubject, emailContent);
   }
 
 }

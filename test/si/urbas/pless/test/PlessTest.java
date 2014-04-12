@@ -18,7 +18,7 @@ import org.junit.Before;
  */
 public class PlessTest {
 
-  protected TestApplication plessTestApplication;
+  protected MockedApplication plessTestApplication;
 
   @Before
   public void setUp() {
