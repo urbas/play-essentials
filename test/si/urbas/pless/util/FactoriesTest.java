@@ -99,6 +99,7 @@ public class FactoriesTest {
     });
   }
 
+  @SuppressWarnings("unchecked")
   public ClassLoader prepareMockedClassLoader() throws ClassNotFoundException {
     final ClassLoader classLoader = mock(ClassLoader.class);
     Class testFactoryClass = TestFactory.class;

@@ -64,6 +64,8 @@ pomExtra := {
     </developers>
 }
 
+javacOptions += "-Xlint:unchecked"
+
 jacoco.settings
 
 parallelExecution in jacoco.Config := false
