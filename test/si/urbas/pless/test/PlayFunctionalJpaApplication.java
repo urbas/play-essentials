@@ -11,8 +11,9 @@ import static org.mockito.Mockito.spy;
 
 public class PlayFunctionalJpaApplication extends TestJpaApplication {
 
-  public PlayFunctionalJpaApplication() {
+  public PlayFunctionalJpaApplication(String testPersistenceUnit) {
     super(
+      testPersistenceUnit,
       createTestModePlayConfiguration(),
       spy(new PlayHttpContextClientSessionStorage()),
       spy(new PlayJpaTransactionProvider())

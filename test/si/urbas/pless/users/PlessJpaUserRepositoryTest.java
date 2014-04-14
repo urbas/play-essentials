@@ -2,7 +2,8 @@ package si.urbas.pless.users;
 
 import org.junit.After;
 import org.junit.Before;
-import si.urbas.pless.test.PlessJpaTest;
+import si.urbas.pless.test.PlessJpaConfiguration;
+import si.urbas.pless.test.TestJpaApplication;
 
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 
@@ -10,19 +11,18 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static final JpaUser FIRST_USER = new JpaUser(1L);
-  private PlessJpaTest jpaSetup;
+  private TestJpaApplication jpaApplication;
 
 
   @Before
   public void setUp() throws Exception {
-    jpaSetup = new PlessJpaTest();
-    jpaSetup.setUp();
+    jpaApplication = new TestJpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);
     userRepository = PlessUserRepository.getUserRepository();
   }
 
   @After
   public void tearDown() throws Exception {
-    jpaSetup.tearDown();
+    jpaApplication.close();
   }
 
   public static User persistAndFetchUser(String userEmail, String userPassword) {

@@ -16,18 +16,19 @@ import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvid
 import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
 
 public class TestJpaApplication extends MockedApplication {
-  public static final String TEST_PERSISTENCE_UNIT = "testPersistenceUnit";
   public static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";
 
-  public TestJpaApplication() {
+  public TestJpaApplication(String testPersistenceUnit) {
     this(
+      testPersistenceUnit,
       mock(ConfigurationSource.class),
       createSpiedClientSessionStorage(),
       spy(new RawJpaTransactionProvider())
     );
   }
 
-  public TestJpaApplication(ConfigurationSource configurationSource,
+  public TestJpaApplication(String testPersistenceUnit,
+                            ConfigurationSource configurationSource,
                             ClientSessionStorage clientSessionStorage,
                             TransactionProvider transactionProvider) {
     super(
@@ -39,7 +40,7 @@ public class TestJpaApplication extends MockedApplication {
       spy(new PlessJpaUserRepository()),
       Collections.<String, Factory<?>>emptyMap()
     );
-    setConfigurationString(APP_CONFIG_JPA_DEFAULT, TEST_PERSISTENCE_UNIT);
+    setConfigurationString(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
 
 }

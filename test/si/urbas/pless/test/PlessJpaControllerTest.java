@@ -12,12 +12,12 @@ import static play.test.Helpers.fakeRequest;
  * <p/>
  * Use this to test your controllers.
  */
-public class PlessControllerWithJpaTest extends PlessJpaTest {
+public class PlessJpaControllerTest extends PlessJpaTest {
   public static final String SESSION_COOKIE_NAME = "PLAY_SESSION";
 
   @Before
   public void setUp() {
-    plessTestApplication = new PlayFunctionalJpaApplication();
+    plessTestApplication = new PlayFunctionalJpaApplication(getTestPersistenceUnit());
   }
 
   public static FakeRequest withSession(Result result) {

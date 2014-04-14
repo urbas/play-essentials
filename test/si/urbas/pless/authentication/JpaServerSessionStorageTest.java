@@ -1,6 +1,7 @@
 package si.urbas.pless.authentication;
 
 import org.junit.Test;
+import si.urbas.pless.test.PlessJpaConfiguration;
 import si.urbas.pless.test.PlessJpaTest;
 
 import static org.junit.Assert.assertEquals;
@@ -61,5 +62,10 @@ public class JpaServerSessionStorageTest extends PlessJpaTest {
   private void storeSessionValue(final int expirationDuration) {
     getServerSessionStorage()
       .put(FOO_SESSION_KEY, FOO_SESSION_VALUE, expirationDuration);
+  }
+
+  @Override
+  protected String getTestPersistenceUnit() {
+    return PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT;
   }
 }

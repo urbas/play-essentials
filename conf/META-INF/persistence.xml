@@ -22,7 +22,7 @@
         </properties>
     </persistence-unit>
 
-    <persistence-unit name="testPersistenceUnit"
+    <persistence-unit name="si.urbas.pless.testPersistenceUnit"
                       transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 

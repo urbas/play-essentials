@@ -6,8 +6,6 @@ import play.test.Helpers;
 import java.util.HashMap;
 
 import static play.test.Helpers.*;
-import static si.urbas.pless.test.TestJpaApplication.APP_CONFIG_JPA_DEFAULT;
-import static si.urbas.pless.test.TestJpaApplication.TEST_PERSISTENCE_UNIT;
 
 public class TemporaryPlayJpaApplication implements AutoCloseable {
   private final HashMap<String, String> applicationOptions = new HashMap<>();
@@ -26,6 +24,5 @@ public class TemporaryPlayJpaApplication implements AutoCloseable {
 
   private void configureInMemoryTestDatabase() {
     applicationOptions.putAll(inMemoryDatabase());
-    applicationOptions.put(APP_CONFIG_JPA_DEFAULT, TEST_PERSISTENCE_UNIT);
   }
 }

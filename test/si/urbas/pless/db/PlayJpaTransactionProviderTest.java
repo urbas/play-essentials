@@ -2,7 +2,8 @@ package si.urbas.pless.db;
 
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.test.PlessJpaConfiguration;
+import si.urbas.pless.test.PlessJpaControllerTest;
 
 import javax.persistence.EntityManager;
 
@@ -11,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-public class PlayJpaTransactionProviderTest extends PlessControllerWithJpaTest {
+public class PlayJpaTransactionProviderTest extends PlessJpaControllerTest {
 
   private final String TRANSACTION_RESULT = "some result";
   private PlayJpaTransactionProvider playJpaTransactionProvider;
@@ -37,5 +38,10 @@ public class PlayJpaTransactionProviderTest extends PlessControllerWithJpaTest {
   public void withTransaction_MUST_call_the_callback() throws Throwable {
     playJpaTransactionProvider.withTransaction(transactionCallback);
     verify(transactionCallback).invoke(any(EntityManager.class));
+  }
+
+  @Override
+  protected String getTestPersistenceUnit() {
+    return PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT;
   }
 }

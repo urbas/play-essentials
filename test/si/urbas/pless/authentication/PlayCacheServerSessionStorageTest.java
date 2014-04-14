@@ -1,12 +1,12 @@
 package si.urbas.pless.authentication;
 
 import org.junit.Test;
-import si.urbas.pless.test.PlessControllerWithJpaTest;
+import si.urbas.pless.test.PlessJpaControllerTest;
 
 import static org.junit.Assert.assertEquals;
 
 
-public class PlayCacheServerSessionStorageTest extends PlessControllerWithJpaTest {
+public class PlayCacheServerSessionStorageTest extends PlessJpaControllerTest {
   private static final String FOO = "foo";
   private static final String BAR = "bar";
   private static final int ONE_HOUR_IN_MILLIS = 60 * 60 * 1000;
