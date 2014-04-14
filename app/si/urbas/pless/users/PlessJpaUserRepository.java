@@ -2,7 +2,6 @@ package si.urbas.pless.users;
 
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
-import si.urbas.pless.util.Callback;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
