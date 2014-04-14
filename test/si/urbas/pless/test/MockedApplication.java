@@ -13,6 +13,7 @@ import si.urbas.pless.users.HashMapUserRepository;
 import si.urbas.pless.users.SignupEmailSender;
 import si.urbas.pless.users.User;
 import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
@@ -38,20 +39,25 @@ public class MockedApplication extends TestApplication {
     );
   }
 
-  public MockedApplication(ConfigurationSource configurationSource,
-                           EmailProvider emailProvider,
-                           ClientSessionStorage clientSessionStorage,
-                           TransactionProvider transactionProvider,
-                           ServerSessionStorage serverSessionStorage,
-                           UserRepository userRepository,
-                           Map<String, Factory<?>> factories) {
-    temporaryServices.add(new TemporaryConfiguration(configurationSource));
-    temporaryServices.add(new TemporaryEmailProvider(emailProvider));
-    temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage));
-    temporaryServices.add(new TemporaryTransactionProvider(transactionProvider));
-    temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage));
-    temporaryServices.add(new TemporaryUserRepository(userRepository));
-    temporaryServices.add(new TemporaryFactories(factories));
+  public MockedApplication(final ConfigurationSource configurationSource,
+                           final EmailProvider emailProvider,
+                           final ClientSessionStorage clientSessionStorage,
+                           final TransactionProvider transactionProvider,
+                           final ServerSessionStorage serverSessionStorage,
+                           final UserRepository userRepository,
+                           final Map<String, Factory<?>> factories) {
+    doInitialisation(new Body() {
+      @Override
+      public void invoke() {
+        temporaryServices.add(new TemporaryConfiguration(configurationSource));
+        temporaryServices.add(new TemporaryEmailProvider(emailProvider));
+        temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage));
+        temporaryServices.add(new TemporaryTransactionProvider(transactionProvider));
+        temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage));
+        temporaryServices.add(new TemporaryUserRepository(userRepository));
+        temporaryServices.add(new TemporaryFactories(factories));
+      }
+    });
   }
 
   private static Map<String, Factory<?>> createMockedSignupEmailSender() {
@@ -79,4 +85,12 @@ public class MockedApplication extends TestApplication {
 
   protected static ClientSessionStorage createSpiedClientSessionStorage() {return spy(new TestClientSessionStorage());}
 
+  protected void doInitialisation(Body initialisationMethod) {
+    try {
+      initialisationMethod.invoke();
+    } catch (Exception e) {
+      close();
+      throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
+    }
+  }
 }

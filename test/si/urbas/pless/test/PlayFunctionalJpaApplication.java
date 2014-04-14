@@ -2,6 +2,7 @@ package si.urbas.pless.test;
 
 import si.urbas.pless.authentication.PlayHttpContextClientSessionStorage;
 import si.urbas.pless.db.PlayJpaTransactionProvider;
+import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 
@@ -11,14 +12,19 @@ import static org.mockito.Mockito.spy;
 
 public class PlayFunctionalJpaApplication extends TestJpaApplication {
 
-  public PlayFunctionalJpaApplication(String testPersistenceUnit) {
+  public PlayFunctionalJpaApplication(final String testPersistenceUnit) {
     super(
       testPersistenceUnit,
       createTestModePlayConfiguration(),
       spy(new PlayHttpContextClientSessionStorage()),
       spy(new PlayJpaTransactionProvider())
     );
-    temporaryServices.add(new TemporaryPlayJpaApplication(testPersistenceUnit));
+    doInitialisation(new Body() {
+      @Override
+      public void invoke() {
+        temporaryServices.add(new TemporaryPlayJpaApplication(testPersistenceUnit));
+      }
+    });
   }
 
   private static ConfigurationSource createTestModePlayConfiguration() {
