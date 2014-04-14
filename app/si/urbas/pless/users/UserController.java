@@ -9,7 +9,7 @@ import si.urbas.pless.util.SingletonFactory;
 
 public final class UserController extends PlessController {
 
-  public static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailFactory";
+  public static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailSender";
 
   public static Result signUp(final String email, final String password) {
     SignupForm newUserDetails = new SignupForm(email, password);
