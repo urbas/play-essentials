@@ -18,7 +18,7 @@ public class PlayFunctionalJpaApplication extends TestJpaApplication {
       spy(new PlayHttpContextClientSessionStorage()),
       spy(new PlayJpaTransactionProvider())
     );
-    temporaryServices.add(new TemporaryPlayJpaApplication());
+    temporaryServices.add(new TemporaryPlayJpaApplication(testPersistenceUnit));
   }
 
   private static ConfigurationSource createTestModePlayConfiguration() {

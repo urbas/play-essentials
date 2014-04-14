@@ -6,11 +6,11 @@ public class ClassLoaderInstanceCreator implements Function<String, Factory<?>> 
   public ClassLoaderInstanceCreator(ClassLoader newClassLoader) {this.newClassLoader = newClassLoader;}
 
   @Override
-  public Factory<?> invoke(String s) {
+  public Factory<?> invoke(String className) {
     try {
-      return (Factory) newClassLoader.loadClass(s).getConstructor().newInstance();
+      return (Factory) newClassLoader.loadClass(className).getConstructor().newInstance();
     } catch (Exception e) {
-      throw new RuntimeException("Could not instantiate class '" + s + "'.", e);
+      throw new RuntimeException("Could not instantiate class '" + className + "'.", e);
     }
   }
 }
