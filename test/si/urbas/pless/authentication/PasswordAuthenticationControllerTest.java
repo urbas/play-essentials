@@ -3,7 +3,7 @@ package si.urbas.pless.authentication;
 import org.junit.Test;
 import play.mvc.Result;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.users.User;
+import si.urbas.pless.users.PlessUser;
 
 import static org.junit.Assert.assertEquals;
 import static play.mvc.Http.Status.BAD_REQUEST;
@@ -30,7 +30,7 @@ public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_ok_WHEN_the_right_credentials_are_given() throws Exception {
-    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     activateUser(user);
     Result result = si.urbas.pless.authentication.PasswordAuthenticationController.logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(OK, status(result));
@@ -38,7 +38,7 @@ public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_the_user_is_not_active() throws Exception {
-    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     Result result = si.urbas.pless.authentication.PasswordAuthenticationController.logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(BAD_REQUEST, status(result));
   }

@@ -7,7 +7,7 @@ import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
 
 public class SignupEmailSender {
 
-  public void sendSignupEmail(User userDetails) {
+  public void sendSignupEmail(PlessUser userDetails) {
     Html emailContent = SignupEmailTemplate.apply(userDetails);
     String recipient = userDetails.getEmail();
     String emailSubject = "Pless Signup";

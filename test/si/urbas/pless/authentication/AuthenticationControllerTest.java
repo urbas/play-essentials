@@ -4,8 +4,7 @@ import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.ResultParsers;
-import si.urbas.pless.users.User;
+import si.urbas.pless.users.PlessUser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -47,7 +46,7 @@ public class AuthenticationControllerTest extends PlessTest {
   }
 
   private void localCreateUserAndLogin() {
-    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     activateUser(user);
     logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }

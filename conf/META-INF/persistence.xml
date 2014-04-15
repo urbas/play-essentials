@@ -27,6 +27,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <mapping-file>si/urbas/pless/entities.xml</mapping-file>
+        <class>si.urbas.pless.users.TestExtendingJpaUser</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

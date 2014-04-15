@@ -10,8 +10,8 @@ import si.urbas.pless.authentication.TestClientSessionStorage;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.users.HashMapUserRepository;
+import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.users.SignupEmailSender;
-import si.urbas.pless.users.User;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
@@ -71,7 +71,7 @@ public class MockedApplication extends TestApplication {
         getEmailing().sendEmail(null, null, null);
         return null;
       }
-    }).when(signupEmailSender).sendSignupEmail(any(User.class));
+    }).when(signupEmailSender).sendSignupEmail(any(PlessUser.class));
     signupEmailSenderFactoryConfiguration.put(CONFIG_SIGNUP_EMAIL_FACTORY, signupEmailSenderFactory);
     return signupEmailSenderFactoryConfiguration;
   }

@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface UserRepository {
 
-  User findUserByEmail(String email);
+  PlessUser findUserByEmail(String email);
 
-  List<User> getAllUsers();
+  List<PlessUser> getAllUsers();
 
   void persistUser(String email, String password);
 
@@ -14,5 +14,5 @@ public interface UserRepository {
 
   boolean delete(String userEmail);
 
-  User findUserById(long userId);
+  PlessUser findUserById(long userId);
 }

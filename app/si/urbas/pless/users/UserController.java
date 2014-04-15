@@ -51,7 +51,7 @@ public final class UserController extends PlessController {
   private static void sendSignUpEmail(SignupForm newUserDetails) {
     SignupEmailSender signupEmailFactory = SignupEmailSenderSingleton.INSTANCE
       .createInstance(config());
-    User newUser = users().findUserByEmail(newUserDetails.email);
+    PlessUser newUser = users().findUserByEmail(newUserDetails.email);
     signupEmailFactory.sendSignupEmail(newUser);
   }
 

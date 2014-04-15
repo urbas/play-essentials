@@ -2,8 +2,8 @@ package si.urbas.pless.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.users.JpaUser;
-import si.urbas.pless.users.User;
+import si.urbas.pless.users.JpaPlessUser;
+import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.users.UserControllerTest;
 
 import static org.junit.Assert.*;
@@ -13,10 +13,10 @@ import static org.mockito.Mockito.spy;
 public class AuthenticationServiceTest {
 
   private static final long JOHN_SMITH_USER_ID = 123L;
-  private final User user = createJohnSmithUser();
+  private final PlessUser user = createJohnSmithUser();
   private AuthenticationService authenticationSession;
   private HashMapServerSessionStorage serverSessionStorage;
-  private User activatedUser;
+  private PlessUser activatedUser;
   private TestClientSessionStorage clientSessionStorage;
 
   @Before
@@ -84,8 +84,8 @@ public class AuthenticationServiceTest {
     assertEquals(activatedUser.getEmail(), authenticationSession.getLoggedInUserEmail());
   }
 
-  private User createJohnSmithUser() {
-    return new JpaUser(UserControllerTest.JOHN_SMITH_EMAIL, UserControllerTest.JOHN_SMITH_PASSWORD)
+  private PlessUser createJohnSmithUser() {
+    return new JpaPlessUser(UserControllerTest.JOHN_SMITH_EMAIL, UserControllerTest.JOHN_SMITH_PASSWORD)
       .withId(JOHN_SMITH_USER_ID);
   }
 }

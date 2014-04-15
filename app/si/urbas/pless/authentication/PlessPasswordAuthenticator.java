@@ -2,7 +2,7 @@ package si.urbas.pless.authentication;
 
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 
-import si.urbas.pless.users.User;
+import si.urbas.pless.users.PlessUser;
 
 public class PlessPasswordAuthenticator {
 
@@ -11,18 +11,18 @@ public class PlessPasswordAuthenticator {
    *                          authenticate them).
    * @return a user when the credentials match, otherwise this method throws an exception.
    */
-  public User authenticateUser(PasswordLoginForm passwordLoginForm) {
+  public PlessUser authenticateUser(PasswordLoginForm passwordLoginForm) {
     if (!passwordLoginForm.isValid()) {
       throw new IllegalArgumentException("Log in credentials form is incomplete.");
     }
-    User user = getUserRepository().findUserByEmail(passwordLoginForm.email);
+    PlessUser user = getUserRepository().findUserByEmail(passwordLoginForm.email);
     if (user == null || !isPasswordCorrect(passwordLoginForm.password, user)) {
       throw new IllegalArgumentException("The credentials are not correct.");
     }
     return user;
   }
 
-  private boolean isPasswordCorrect(String password, User user) {
+  private boolean isPasswordCorrect(String password, PlessUser user) {
     SaltedHashedPassword saltedHashedPassword = new SaltedHashedPassword(password, user
       .getSalt());
     return saltedHashedPassword.matches(user.getHashedPassword());

@@ -6,35 +6,35 @@ import si.urbas.pless.authentication.SaltedHashedPassword;
 
 public class UserMatchers {
 
-  public static Matcher<? super User> userWith(String userEmail, String password) {
+  public static Matcher<? super PlessUser> userWith(String userEmail, String password) {
     return new UserWithEmailAndPasswordMatcher(userEmail, password);
   }
 
-  public static Matcher<User> activeUser() {
+  public static Matcher<PlessUser> activeUser() {
     return new IsActiveUserMatcher();
   }
 
   public static BaseUserMatcher userWithLongActivationCode() {
     return new BaseUserMatcher() {
       @Override
-      public boolean matches(User user) {
+      public boolean matches(PlessUser user) {
         return user.getActivationCode() != null &&
           user.getActivationCode().length() > 16;
       }
     };
   }
 
-  public static abstract class BaseUserMatcher extends BaseMatcher<User> {
+  public static abstract class BaseUserMatcher extends BaseMatcher<PlessUser> {
 
     @Override
     public boolean matches(Object item) {
-      if (item instanceof User) {
-        return matches((User) item);
+      if (item instanceof PlessUser) {
+        return matches((PlessUser) item);
       }
       return false;
     }
 
-    public abstract boolean matches(User user);
+    public abstract boolean matches(PlessUser user);
 
     @Override
     public void describeTo(Description description) {}
@@ -48,7 +48,7 @@ public class UserMatchers {
     }
 
     @Override
-    public boolean matches(User user) {
+    public boolean matches(PlessUser user) {
       return user.isActivated();
     }
   }
@@ -65,11 +65,11 @@ public class UserMatchers {
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("User [email=" + userEmail + ", password=" + password + "]");
+      description.appendText("PlessUser [email=" + userEmail + ", password=" + password + "]");
     }
 
     @Override
-    public boolean matches(User user) {
+    public boolean matches(PlessUser user) {
       return userEmail.equalsIgnoreCase(user.getEmail()) &&
         new SaltedHashedPassword(password, user.getSalt()).matches(user
           .getHashedPassword());

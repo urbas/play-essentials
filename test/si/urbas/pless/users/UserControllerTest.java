@@ -73,7 +73,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
-    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     assertThat(
       contentAsString(callActivate(user)),
       containsString("Thank you very much for registering with us")
@@ -82,7 +82,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
-    final User user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
     callActivate(user);
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
@@ -140,12 +140,12 @@ public class UserControllerTest extends PlessTest {
   private Result signupAndLogin(final String userEmail,
                                 final String userPassword) {
     callSignUp(userEmail, userPassword);
-    final User user = getUserRepository().findUserByEmail(userEmail);
+    final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
     return callLogIn(userEmail, userPassword);
   }
 
-  private Result callActivate(final User user) {
+  private Result callActivate(final PlessUser user) {
     return UserController.activationPage(user.getEmail(), user
       .getActivationCode());
   }

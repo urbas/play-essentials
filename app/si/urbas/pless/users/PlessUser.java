@@ -2,7 +2,7 @@ package si.urbas.pless.users;
 
 import java.util.Date;
 
-public interface User {
+public interface PlessUser {
 
   String getEmail();
 

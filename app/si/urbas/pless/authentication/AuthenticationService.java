@@ -1,6 +1,6 @@
 package si.urbas.pless.authentication;
 
-import si.urbas.pless.users.User;
+import si.urbas.pless.users.PlessUser;
 
 public class AuthenticationService {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
@@ -17,7 +17,7 @@ public class AuthenticationService {
     this.sessionIdGenerator = sessionIdGenerator;
   }
 
-  public void logIn(User user) {
+  public void logIn(PlessUser user) {
     if (user == null) {
       throw new IllegalArgumentException("Cannot log in. Log in credentials are invalid.");
     }

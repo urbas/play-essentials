@@ -1,24 +1,24 @@
 package si.urbas.pless.users;
 
-import java.util.Date;
-
-import javax.persistence.*;
-
 import si.urbas.pless.authentication.SaltedHashedPassword;
 import si.urbas.pless.authentication.SessionIdGenerator;
 
-@Entity
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity(name = "PlessUser")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
-  @NamedQuery(name = JpaUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM JpaUser u WHERE u.email = :email"),
-  @NamedQuery(name = JpaUser.QUERY_ACTIVATE_USER, query = "UPDATE JpaUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
-  @NamedQuery(name = JpaUser.QUERY_DELETE_USER, query = "DELETE FROM JpaUser u WHERE u.email = :email"),
-  @NamedQuery(name = JpaUser.QUERY_GET_ALL, query = "SELECT u FROM JpaUser u")
+  @NamedQuery(name = JpaPlessUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM PlessUser u WHERE u.email = :email"),
+  @NamedQuery(name = JpaPlessUser.QUERY_ACTIVATE_USER, query = "UPDATE PlessUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
+  @NamedQuery(name = JpaPlessUser.QUERY_DELETE_USER, query = "DELETE FROM PlessUser u WHERE u.email = :email"),
+  @NamedQuery(name = JpaPlessUser.QUERY_GET_ALL, query = "SELECT u FROM PlessUser u")
 })
-public class JpaUser implements User {
-  public static final String QUERY_GET_BY_EMAIL = "JpaUser.getByEmail";
-  public static final String QUERY_GET_ALL = "JpaUser.getAll";
-  public static final String QUERY_ACTIVATE_USER = "JpaUser.activate";
-  public static final String QUERY_DELETE_USER = "JpaUser.delete";
+public class JpaPlessUser implements PlessUser {
+  public static final String QUERY_GET_BY_EMAIL = "PlessUser.getByEmail";
+  public static final String QUERY_GET_ALL = "PlessUser.getAll";
+  public static final String QUERY_ACTIVATE_USER = "PlessUser.activate";
+  public static final String QUERY_DELETE_USER = "PlessUser.delete";
   @Id
   @GeneratedValue
   private long id;
@@ -36,25 +36,24 @@ public class JpaUser implements User {
   @Column(nullable = false)
   private String activationCode;
 
-  @Deprecated
-  public JpaUser() {}
+  public JpaPlessUser() {}
 
-  public JpaUser(String email, SaltedHashedPassword password) {
+  public JpaPlessUser(String email, SaltedHashedPassword password) {
     this(email, password.getHashedPassword(), password.getSalt());
   }
 
-  public JpaUser(String email, byte[] hashedPassword, byte[] salt) {
+  public JpaPlessUser(String email, byte[] hashedPassword, byte[] salt) {
     this.email = email;
     this.hashedPassword = hashedPassword;
     this.salt = salt;
     this.activationCode = new SessionIdGenerator().createSessionId();
   }
 
-  public JpaUser(long id) {
+  public JpaPlessUser(long id) {
     this.id = id;
   }
 
-  public JpaUser(String email, String password) {
+  public JpaPlessUser(String email, String password) {
     this(email, new SaltedHashedPassword(password));
   }
 
@@ -80,11 +79,11 @@ public class JpaUser implements User {
 
   @Override
   public String toString() {
-    return "User [id=" + id + ", email=" + email + ", activated=" + activated + "]";
+    return "PlessUser [id=" + id + ", email=" + email + ", activated=" + activated + "]";
   }
 
-  public JpaUser withId(long idOfNewUser) {
-    JpaUser user = new JpaUser(email, hashedPassword, salt);
+  public JpaPlessUser withId(long idOfNewUser) {
+    JpaPlessUser user = new JpaPlessUser(email, hashedPassword, salt);
     user.id = idOfNewUser;
     return user;
   }
@@ -111,5 +110,15 @@ public class JpaUser implements User {
 
   public void setCreationDate(Date creationDate) {
     this.creationDate = creationDate;
+  }
+
+  /**
+   * This method is called before the user is persisted by {@link si.urbas.pless.users.PlessJpaUserRepository}.
+   *
+   * @return if the user is valid, returns {@code null}, otherwise it returns a string that describes the validation
+   * error.
+   */
+  public String validateForPersist() {
+    return null;
   }
 }
