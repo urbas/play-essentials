@@ -33,7 +33,12 @@ public class HashMapUserRepository implements UserRepository {
   public synchronized void persistUser(String email, String password) {
     JpaPlessUser newUser = new JpaPlessUser(email, password).withId(++maxId);
     newUser.setCreationDate(new Date());
-    emailToUserMap.put(email, newUser);
+    persistUser(newUser);
+  }
+
+  @Override
+  public void persistUser(PlessUser newUser) {
+    emailToUserMap.put(newUser.getEmail(), newUser);
     idToUserMap.put(newUser.getId(), newUser);
   }
 

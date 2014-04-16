@@ -118,6 +118,7 @@ public class JpaPlessUser implements PlessUser {
    * @return if the user is valid, returns {@code null}, otherwise it returns a string that describes the validation
    * error.
    */
+  @Override
   public String validateForPersist() {
     return null;
   }

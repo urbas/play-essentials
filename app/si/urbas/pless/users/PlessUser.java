@@ -19,4 +19,6 @@ public interface PlessUser {
   String getActivationCode();
 
   void setActivated(boolean activated);
+
+  String validateForPersist();
 }

@@ -45,7 +45,8 @@ public class PlessJpaUserRepository implements UserRepository {
     persistUser(new JpaPlessUser(email, password));
   }
 
-  public void persistUser(final JpaPlessUser user) {
+  @Override
+  public void persistUser(final PlessUser user) {
     getTransactionProvider().withTransaction(new TransactionCallback() {
       @Override
       public void invoke(EntityManager entityManager) {
