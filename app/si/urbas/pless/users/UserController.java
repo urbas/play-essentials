@@ -9,7 +9,7 @@ import si.urbas.pless.util.SingletonFactory;
 
 public final class UserController extends PlessController {
 
-  public static final String CONFIG_SIGNUP_EMAIL_FACTORY = "pless.signupEmailSender";
+  public static final String CONFIG_SIGNUP_HANDLER = "pless.signupHandler";
 
   public static Result signUp(final String email, final String password) {
     SignupForm newUserDetails = new SignupForm(email, password);
@@ -53,20 +53,20 @@ public final class UserController extends PlessController {
   }
 
   private static void sendSignUpEmail(SignupForm newUserDetails) {
-    SignupEmailSender signupEmailFactory = SignupEmailSenderSingleton.INSTANCE
+    SignupHandler signupHandler = SignupHandlerSingleton.INSTANCE
       .createInstance(config());
     PlessUser newUser = users().findUserByEmail(newUserDetails.email);
-    signupEmailFactory.sendSignupEmail(newUser);
+    signupHandler.sendSignupEmail(newUser);
   }
 
-  private static final class SignupEmailSenderSingleton {
-    private static final Factory<SignupEmailSender> INSTANCE = new SingletonFactory<>(CONFIG_SIGNUP_EMAIL_FACTORY, new DefaultSignupEmailSender());
+  private static final class SignupHandlerSingleton {
+    private static final Factory<SignupHandler> INSTANCE = new SingletonFactory<>(CONFIG_SIGNUP_HANDLER, new DefaultSignupHandler());
   }
 
-  private final static class DefaultSignupEmailSender implements Factory<SignupEmailSender> {
+  private final static class DefaultSignupHandler implements Factory<SignupHandler> {
     @Override
-    public SignupEmailSender createInstance(ConfigurationSource configurationSource) {
-      return new SignupEmailSender();
+    public SignupHandler createInstance(ConfigurationSource configurationSource) {
+      return new SignupHandler();
     }
   }
 }

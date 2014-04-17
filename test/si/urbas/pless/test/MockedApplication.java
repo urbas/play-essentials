@@ -9,10 +9,7 @@ import si.urbas.pless.authentication.ServerSessionStorage;
 import si.urbas.pless.authentication.TestClientSessionStorage;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.emailing.EmailProvider;
-import si.urbas.pless.users.HashMapUserRepository;
-import si.urbas.pless.users.PlessUser;
-import si.urbas.pless.users.SignupEmailSender;
-import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.users.*;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
@@ -23,7 +20,7 @@ import java.util.Map;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
 import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
-import static si.urbas.pless.users.UserController.CONFIG_SIGNUP_EMAIL_FACTORY;
+import static si.urbas.pless.users.UserController.CONFIG_SIGNUP_HANDLER;
 
 public class MockedApplication extends TestApplication {
 
@@ -61,9 +58,9 @@ public class MockedApplication extends TestApplication {
   }
 
   private static Map<String, Factory<?>> createMockedSignupEmailSender() {
-    Map<String, Factory<?>> signupEmailSenderFactoryConfiguration = new HashMap<>();
-    @SuppressWarnings("unchecked") Factory<SignupEmailSender> signupEmailSenderFactory = mock(Factory.class);
-    SignupEmailSender signupEmailSender = mock(SignupEmailSender.class);
+    Map<String, Factory<?>> signupHandlerConfiguration = new HashMap<>();
+    @SuppressWarnings("unchecked") Factory<SignupHandler> signupEmailSenderFactory = mock(Factory.class);
+    SignupHandler signupEmailSender = mock(SignupHandler.class);
     when(signupEmailSenderFactory.createInstance(any(ConfigurationSource.class))).thenReturn(signupEmailSender);
     doAnswer(new Answer() {
       @Override
@@ -72,8 +69,8 @@ public class MockedApplication extends TestApplication {
         return null;
       }
     }).when(signupEmailSender).sendSignupEmail(any(PlessUser.class));
-    signupEmailSenderFactoryConfiguration.put(CONFIG_SIGNUP_EMAIL_FACTORY, signupEmailSenderFactory);
-    return signupEmailSenderFactoryConfiguration;
+    signupHandlerConfiguration.put(CONFIG_SIGNUP_HANDLER, signupEmailSenderFactory);
+    return signupHandlerConfiguration;
   }
 
 
