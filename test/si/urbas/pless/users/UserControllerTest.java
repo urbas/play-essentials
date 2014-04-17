@@ -55,12 +55,12 @@ public class UserControllerTest extends PlessTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void createUser_MUST_throw_an_exception_WHEN_email_is_empty() throws Exception {
-    createUser(new SignupForm("", JOHN_SMITH_PASSWORD));
+    createUser(new SignupData("", JOHN_SMITH_PASSWORD));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void createUser_MUST_throw_an_exception_WHEN_password_is_empty() throws Exception {
-    createUser(new SignupForm(JOHN_SMITH_EMAIL, ""));
+    createUser(new SignupData(JOHN_SMITH_EMAIL, ""));
   }
 
   @Test

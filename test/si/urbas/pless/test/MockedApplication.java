@@ -20,7 +20,7 @@ import java.util.Map;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
 import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
-import static si.urbas.pless.users.UserController.CONFIG_SIGNUP_HANDLER;
+import static si.urbas.pless.users.SignupHandler.CONFIG_SIGNUP_HANDLER;
 
 public class MockedApplication extends TestApplication {
 

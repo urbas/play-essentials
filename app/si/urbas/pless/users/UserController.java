@@ -1,18 +1,14 @@
 package si.urbas.pless.users;
 
+import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.users.views.html.ActivationView;
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
-import si.urbas.pless.util.SingletonFactory;
 
 public final class UserController extends PlessController {
 
-  public static final String CONFIG_SIGNUP_HANDLER = "pless.signupHandler";
-
   public static Result signUp(final String email, final String password) {
-    SignupForm newUserDetails = new SignupForm(email, password);
+    SignupData newUserDetails = new SignupData(email, password);
     try {
       createUser(newUserDetails);
     } catch (Exception ex) {
@@ -20,6 +16,23 @@ public final class UserController extends PlessController {
     }
     sendSignUpEmail(newUserDetails);
     return ok();
+  }
+
+  public static Result newSignUp() {
+    SignupHandler signupHandler = SignupHandler.getInstance();
+    try {
+      Form<?> signupForm = signupHandler.getSignupForm();
+      signupForm = signupForm.bindFromRequest();
+      if (signupForm.hasErrors()) {
+        return badRequest(signupForm.errorsAsJson());
+      }
+      PlessUser newUser = signupHandler.createUser(signupForm);
+      createUser(newUser);
+      SignupHandler.getInstance().sendSignupEmail(newUser);
+      return ok();
+    } catch (Exception ex) {
+      return badRequest();
+    }
   }
 
   public static Result activationPage(final String email, final String activationCode) {
@@ -37,7 +50,7 @@ public final class UserController extends PlessController {
     }
   }
 
-  public static void createUser(SignupForm createUserForm) {
+  public static void createUser(SignupData createUserForm) {
     if (createUserForm.isValid()) {
       users().persistUser(
         createUserForm.email,
@@ -52,21 +65,8 @@ public final class UserController extends PlessController {
     users().persistUser(user);
   }
 
-  private static void sendSignUpEmail(SignupForm newUserDetails) {
-    SignupHandler signupHandler = SignupHandlerSingleton.INSTANCE
-      .createInstance(config());
+  private static void sendSignUpEmail(SignupData newUserDetails) {
     PlessUser newUser = users().findUserByEmail(newUserDetails.email);
-    signupHandler.sendSignupEmail(newUser);
-  }
-
-  private static final class SignupHandlerSingleton {
-    private static final Factory<SignupHandler> INSTANCE = new SingletonFactory<>(CONFIG_SIGNUP_HANDLER, new DefaultSignupHandler());
-  }
-
-  private final static class DefaultSignupHandler implements Factory<SignupHandler> {
-    @Override
-    public SignupHandler createInstance(ConfigurationSource configurationSource) {
-      return new SignupHandler();
-    }
+    SignupHandler.getInstance().sendSignupEmail(newUser);
   }
 }

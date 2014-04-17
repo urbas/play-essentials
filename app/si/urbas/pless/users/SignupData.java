@@ -1,14 +1,18 @@
 package si.urbas.pless.users;
 
+import static play.data.validation.Constraints.Required;
 import static si.urbas.pless.util.StringUtils.isNullOrEmpty;
 
-public class SignupForm {
+public class SignupData {
+  @Required
   public String email;
+  @Required
   public String password;
 
-  public SignupForm() {}
+  @SuppressWarnings("UnusedDeclaration")
+  public SignupData() {}
 
-  public SignupForm(String email, String password) {
+  public SignupData(String email, String password) {
     this.email = email;
     this.password = password;
   }
