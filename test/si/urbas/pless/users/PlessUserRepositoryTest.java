@@ -6,15 +6,18 @@ import si.urbas.pless.test.TemporaryUserRepository;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
-import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
+import static si.urbas.pless.users.PlessUserRepository.*;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class PlessUserRepositoryTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final PlessUserRepository plessUserRepository = new PlessUserRepository();
+  @SuppressWarnings("UnusedDeclaration")
+  private final PlessUserRepositorySingleton plessUserRepositorySingleton = new PlessUserRepositorySingleton();
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
@@ -39,6 +42,12 @@ public class PlessUserRepositoryTest extends PlessTest {
       getUserRepository(),
       is(not(sameInstance(getScopedUserRepository())))
     );
+  }
+
+  @Test
+  public void getUserRepository_MUST_return_the_JPA_user_repository_WHEN_a_custom_repository_is_not_configured() throws Exception {
+    doReturn(null).when(getConfigurationSource()).getString(CONFIG_USER_REPOSITORY);
+    assertThat(getUserRepository(), is(instanceOf(PlessJpaUserRepository.class)));
   }
 
   private UserRepository getScopedUserRepository() throws Exception {

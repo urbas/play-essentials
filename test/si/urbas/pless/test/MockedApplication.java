@@ -1,8 +1,6 @@
 package si.urbas.pless.test;
 
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import si.urbas.pless.authentication.ClientSessionStorage;
 import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
@@ -14,13 +12,11 @@ import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
+import static si.urbas.pless.test.MockedSignupService.createMockedSignupService;
 import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
-import static si.urbas.pless.users.SignupHandler.CONFIG_SIGNUP_HANDLER;
 
 public class MockedApplication extends TestApplication {
 
@@ -32,7 +28,7 @@ public class MockedApplication extends TestApplication {
       createMockedTransactionProvider(),
       createSpiedServerSessionStorage(),
       createSpiedHashMapUserRepository(),
-      createMockedSignupHandler()
+      createMockedSignupService()
     );
   }
 
@@ -57,23 +53,6 @@ public class MockedApplication extends TestApplication {
     });
   }
 
-  private static Map<String, Factory<?>> createMockedSignupHandler() {
-    Map<String, Factory<?>> signupHandlerConfiguration = new HashMap<>();
-    @SuppressWarnings("unchecked") Factory<SignupHandler> signupEmailSenderFactory = mock(Factory.class);
-    SignupHandler signupEmailSender = spy(new SignupHandler());
-    when(signupEmailSenderFactory.createInstance(any(ConfigurationSource.class))).thenReturn(signupEmailSender);
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        getEmailing().sendEmail(null, null, null);
-        return null;
-      }
-    }).when(signupEmailSender).sendSignupEmail(any(PlessUser.class));
-    signupHandlerConfiguration.put(CONFIG_SIGNUP_HANDLER, signupEmailSenderFactory);
-    return signupHandlerConfiguration;
-  }
-
-
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
   protected static ServerSessionStorage createSpiedServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
@@ -90,4 +69,5 @@ public class MockedApplication extends TestApplication {
       throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
     }
   }
+
 }

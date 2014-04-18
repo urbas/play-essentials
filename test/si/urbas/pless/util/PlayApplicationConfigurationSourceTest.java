@@ -2,13 +2,13 @@ package si.urbas.pless.util;
 
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.PlessJpaControllerTest;
+import si.urbas.pless.test.PlayJpaControllerTest;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class PlayApplicationConfigurationSourceTest extends PlessJpaControllerTest {
+public class PlayApplicationConfigurationSourceTest extends PlayJpaControllerTest {
 
   private PlayApplicationConfigurationSource playApplicationConfigurationSource;
   private TemporaryPlayApplication temporaryPlayApplication;

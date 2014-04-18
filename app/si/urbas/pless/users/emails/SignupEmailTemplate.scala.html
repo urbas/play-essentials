@@ -6,7 +6,7 @@
   <title>Thank you for signing up to Pless!</title>
 </head>
 <body>
-<p>Hello!</p>
+<p>Hello, @loginDetails.getUsername!</p>
 
 <p>Thanks for signing up to Pless.</p>
 
@@ -21,8 +21,8 @@
   To complete your registration please visit the following link:
 
   <div>
-    <a href="@{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}">
-      @{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(true)}
+    <a href="@{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}">
+      @{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}
     </a>
   </div>
   Visiting this link will activate your account.

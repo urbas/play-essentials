@@ -1,6 +1,7 @@
 package si.urbas.pless.users;
 
 import org.junit.Test;
+import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.test.PlessTest;
@@ -10,6 +11,7 @@ import javax.persistence.NoResultException;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
@@ -21,6 +23,7 @@ import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.fetchUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
+import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserMatchers.userWith;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
@@ -36,23 +39,42 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
-    assertEquals(BAD_REQUEST, status(signUp("", "")));
-    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_PASSWORD)));
-    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, "")));
+    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, "")));
+    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)));
+    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, "")));
+    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, "", JOHN_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
+    Form<SignupData> signupForm = spy(Form.form(SignupData.class));
+    SignupService signupHandler = getSignupService();
+    doReturn(signupForm).when(signupHandler).getSignupForm();
+    doReturn(true).when(signupForm).hasErrors();
+    doReturn(signupForm).when(signupForm).bindFromRequest();
+    signUp();
+    verify(signupForm).bindFromRequest();
+  }
+
+  @Test
+  public void signUp_MUST_ask_the_SignupHandler_to_create_the_user() throws Exception {
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    verify(getSignupService()).createUser(any(Form.class));
+  }
+
+  @Test
+  public void signUp_MUST_persist_the_user_in_the_user_repository() throws Exception {
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    assertThat(
+      getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL),
+      is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD))
+    );
   }
 
   @Test
   public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
     Result result = signUp(user);
     assertEquals(OK, status(result));
-  }
-
-  @Test
-  public void createUser_MUST_persist_the_user_in_the_user_repository() throws Exception {
-    signUp(user);
-    assertThat(
-      getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL),
-      is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)));
   }
 
   @Test

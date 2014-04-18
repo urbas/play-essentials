@@ -8,12 +8,12 @@ import si.urbas.pless.users.views.html.ActivationView;
 
 import java.util.HashMap;
 
-import static si.urbas.pless.users.SignupHandler.getSignupHandler;
+import static si.urbas.pless.users.SignupService.getSignupService;
 
 public final class UserController extends PlessController {
 
   public static Result signUp() {
-    return signUp(getSignupHandler().getSignupForm().bindFromRequest());
+    return signUp(getSignupService().getSignupForm().bindFromRequest());
   }
 
   public static Result activationPage(final String email, final String activationCode) {
@@ -31,25 +31,25 @@ public final class UserController extends PlessController {
     }
   }
 
-  static Result signUp(String email, String password) {
+  static Result signUp(String email, String username, String password) {
     HashMap<String, String[]> requestData = new HashMap<>();
     requestData.put("email", new String[]{email});
+    requestData.put("username", new String[]{username});
     requestData.put("password", new String[]{password});
-    Form<?> signupForm = getSignupHandler().getSignupForm();
-    return signUp(signupForm.bindFromRequest(requestData));
+    return signUp(getSignupService().getSignupForm().bindFromRequest(requestData));
   }
 
   static Result signUp(Form<?> signupForm) {
     if (signupForm.hasErrors()) {
       return badRequest(signupForm.errorsAsJson(new Lang(play.api.i18n.Lang.defaultLang())));
     }
-    return signUp(getSignupHandler().createUser(signupForm));
+    return signUp(getSignupService().createUser(signupForm));
   }
 
   static Result signUp(PlessUser newUser) {
     try {
       users().persistUser(newUser);
-      getSignupHandler().sendSignupEmail(newUser);
+      getSignupService().sendSignupEmail(newUser);
       return ok();
     } catch (Exception ex) {
       return badRequest();

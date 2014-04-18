@@ -2,8 +2,8 @@ package si.urbas.pless.db;
 
 import org.junit.Before;
 import org.junit.Test;
+import si.urbas.pless.test.PlayJpaControllerTest;
 import si.urbas.pless.test.PlessJpaConfiguration;
-import si.urbas.pless.test.PlessJpaControllerTest;
 
 import javax.persistence.EntityManager;
 
@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-public class PlayJpaTransactionProviderTest extends PlessJpaControllerTest {
+public class PlayJpaTransactionProviderTest extends PlayJpaControllerTest {
 
   private final String TRANSACTION_RESULT = "some result";
   private PlayJpaTransactionProvider playJpaTransactionProvider;
