@@ -18,10 +18,6 @@ public class SignupHandler {
     return form(SignupData.class);
   }
 
-  public static SignupHandler getInstance() {
-    return SignupHandlerSingleton.INSTANCE.createInstance(getConfigurationSource());
-  }
-
   public void sendSignupEmail(PlessUser userDetails) {
     Html emailContent = SignupEmailTemplate.apply(userDetails);
     String recipient = userDetails.getEmail();
@@ -32,6 +28,10 @@ public class SignupHandler {
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
     return new JpaPlessUser(signupData.email, signupData.password);
+  }
+
+  public static SignupHandler getSignupHandler() {
+    return SignupHandlerSingleton.INSTANCE.createInstance(getConfigurationSource());
   }
 
   private static final class SignupHandlerSingleton {

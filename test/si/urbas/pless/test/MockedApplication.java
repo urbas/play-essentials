@@ -32,7 +32,7 @@ public class MockedApplication extends TestApplication {
       createMockedTransactionProvider(),
       createSpiedServerSessionStorage(),
       createSpiedHashMapUserRepository(),
-      createMockedSignupEmailSender()
+      createMockedSignupHandler()
     );
   }
 
@@ -57,10 +57,10 @@ public class MockedApplication extends TestApplication {
     });
   }
 
-  private static Map<String, Factory<?>> createMockedSignupEmailSender() {
+  private static Map<String, Factory<?>> createMockedSignupHandler() {
     Map<String, Factory<?>> signupHandlerConfiguration = new HashMap<>();
     @SuppressWarnings("unchecked") Factory<SignupHandler> signupEmailSenderFactory = mock(Factory.class);
-    SignupHandler signupEmailSender = mock(SignupHandler.class);
+    SignupHandler signupEmailSender = spy(new SignupHandler());
     when(signupEmailSenderFactory.createInstance(any(ConfigurationSource.class))).thenReturn(signupEmailSender);
     doAnswer(new Answer() {
       @Override

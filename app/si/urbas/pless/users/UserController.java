@@ -1,38 +1,19 @@
 package si.urbas.pless.users;
 
 import play.data.Form;
+import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.users.views.html.ActivationView;
 
+import java.util.HashMap;
+
+import static si.urbas.pless.users.SignupHandler.getSignupHandler;
+
 public final class UserController extends PlessController {
 
-  public static Result signUp(final String email, final String password) {
-    SignupData newUserDetails = new SignupData(email, password);
-    try {
-      createUser(newUserDetails);
-    } catch (Exception ex) {
-      return badRequest();
-    }
-    sendSignUpEmail(newUserDetails);
-    return ok();
-  }
-
-  public static Result newSignUp() {
-    SignupHandler signupHandler = SignupHandler.getInstance();
-    try {
-      Form<?> signupForm = signupHandler.getSignupForm();
-      signupForm = signupForm.bindFromRequest();
-      if (signupForm.hasErrors()) {
-        return badRequest(signupForm.errorsAsJson());
-      }
-      PlessUser newUser = signupHandler.createUser(signupForm);
-      createUser(newUser);
-      SignupHandler.getInstance().sendSignupEmail(newUser);
-      return ok();
-    } catch (Exception ex) {
-      return badRequest();
-    }
+  public static Result signUp() {
+    return signUp(getSignupHandler().getSignupForm().bindFromRequest());
   }
 
   public static Result activationPage(final String email, final String activationCode) {
@@ -50,23 +31,28 @@ public final class UserController extends PlessController {
     }
   }
 
-  public static void createUser(SignupData createUserForm) {
-    if (createUserForm.isValid()) {
-      users().persistUser(
-        createUserForm.email,
-        createUserForm.password
-      );
-    } else {
-      throw new IllegalArgumentException("Could not create a new user. Some mandatory user info was missing.");
+  static Result signUp(String email, String password) {
+    HashMap<String, String[]> requestData = new HashMap<>();
+    requestData.put("email", new String[]{email});
+    requestData.put("password", new String[]{password});
+    Form<?> signupForm = getSignupHandler().getSignupForm();
+    return signUp(signupForm.bindFromRequest(requestData));
+  }
+
+  static Result signUp(Form<?> signupForm) {
+    if (signupForm.hasErrors()) {
+      return badRequest(signupForm.errorsAsJson(new Lang(play.api.i18n.Lang.defaultLang())));
     }
+    return signUp(getSignupHandler().createUser(signupForm));
   }
 
-  private static void createUser(PlessUser user) {
-    users().persistUser(user);
-  }
-
-  private static void sendSignUpEmail(SignupData newUserDetails) {
-    PlessUser newUser = users().findUserByEmail(newUserDetails.email);
-    SignupHandler.getInstance().sendSignupEmail(newUser);
+  static Result signUp(PlessUser newUser) {
+    try {
+      users().persistUser(newUser);
+      getSignupHandler().sendSignupEmail(newUser);
+      return ok();
+    } catch (Exception ex) {
+      return badRequest();
+    }
   }
 }

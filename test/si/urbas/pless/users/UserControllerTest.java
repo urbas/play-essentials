@@ -21,7 +21,6 @@ import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.fetchUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
-import static si.urbas.pless.users.UserController.createUser;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserMatchers.userWith;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
@@ -30,37 +29,29 @@ public class UserControllerTest extends PlessTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
+  public static final JpaPlessUser user = new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
 
   @Test
-  public void signUp_MUST_result_in_bad_request_WHEN_the_parameters_are_empty() throws Exception {
-    Result result = callSignUp("", "");
-    assertEquals(BAD_REQUEST, status(result));
+  public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
+    assertEquals(BAD_REQUEST, status(signUp("", "")));
+    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_PASSWORD)));
+    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, "")));
   }
 
   @Test
   public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
-    Result result = callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    Result result = signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
     assertEquals(OK, status(result));
   }
 
   @Test
   public void createUser_MUST_persist_the_user_in_the_user_repository() throws Exception {
-    callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
     assertThat(
       getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL),
       is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD)));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void createUser_MUST_throw_an_exception_WHEN_email_is_empty() throws Exception {
-    createUser(new SignupData("", JOHN_SMITH_PASSWORD));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void createUser_MUST_throw_an_exception_WHEN_password_is_empty() throws Exception {
-    createUser(new SignupData(JOHN_SMITH_EMAIL, ""));
   }
 
   @Test
@@ -92,18 +83,17 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
-    callSignUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
     verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
+
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
     try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
       UserRepository scopedUserRepository = getUserRepository();
-      doThrow(new RuntimeException())
-        .when(scopedUserRepository)
-        .persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
-      signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+      doThrow(new RuntimeException()).when(scopedUserRepository).persistUser(user);
+      signUp(user);
       verify(getEmailProvider(), never()).createEmail(getConfigurationSource());
     }
   }
@@ -139,7 +129,7 @@ public class UserControllerTest extends PlessTest {
 
   private Result signupAndLogin(final String userEmail,
                                 final String userPassword) {
-    callSignUp(userEmail, userPassword);
+    signUp(new JpaPlessUser(userEmail, userPassword));
     final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
     return callLogIn(userEmail, userPassword);
@@ -148,10 +138,6 @@ public class UserControllerTest extends PlessTest {
   private Result callActivate(final PlessUser user) {
     return UserController.activationPage(user.getEmail(), user
       .getActivationCode());
-  }
-
-  private Result callSignUp(String email, String password) {
-    return UserController.signUp(email, password);
   }
 
   private Result callDelete() {
