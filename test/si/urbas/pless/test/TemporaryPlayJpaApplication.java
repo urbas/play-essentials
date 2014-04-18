@@ -1,30 +1,20 @@
 package si.urbas.pless.test;
 
-import play.test.FakeApplication;
-import play.test.Helpers;
-
 import java.util.HashMap;
+import java.util.Map;
 
-import static play.test.Helpers.*;
+import static play.test.Helpers.inMemoryDatabase;
 import static si.urbas.pless.test.TestJpaApplication.APP_CONFIG_JPA_DEFAULT;
 
-public class TemporaryPlayJpaApplication implements AutoCloseable {
-  private final HashMap<String, String> applicationOptions = new HashMap<>();
-  private final FakeApplication fakeApplication;
+public class TemporaryPlayJpaApplication extends TemporaryPlayApplication {
 
   public TemporaryPlayJpaApplication(String testPersistenceUnit) {
-    configureInMemoryTestDatabase(testPersistenceUnit);
-    fakeApplication = fakeApplication(applicationOptions);
-    Helpers.start(fakeApplication);
+    super(configureInMemoryTestDatabase(new HashMap<String, String>(), testPersistenceUnit));
   }
 
-  @Override
-  public void close() {
-    stop(fakeApplication);
-  }
-
-  private void configureInMemoryTestDatabase(String testPersistenceUnit) {
+  private static Map<String, String> configureInMemoryTestDatabase(Map<String, String> applicationOptions, String testPersistenceUnit) {
     applicationOptions.putAll(inMemoryDatabase());
     applicationOptions.put(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
+    return applicationOptions;
   }
 }

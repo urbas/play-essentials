@@ -9,25 +9,31 @@ public class PlessConfigurationSource {
     return configurationSource == null ? Singleton.INSTANCE : configurationSource;
   }
 
+  public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
+    PlessConfigurationSource.configurationSource = newConfigurationSource;
+  }
+
   private static final class Singleton {
     public static final ConfigurationSource INSTANCE;
 
     static {
       ConfigurationSource configurationSource;
       try {
-        configurationSource = new PlayApplicationConfigurationSource();
-        // NOTE: The following call throws if there is no Play application. We assume that we are in test mode when this
-        // fails.
-        configurationSource.isProduction();
+        configurationSource = loadPlayConfiguration();
       } catch (Exception e) {
         configurationSource = new EmptyConfigurationSource();
       }
       INSTANCE = configurationSource;
     }
+
   }
 
-  public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
-    PlessConfigurationSource.configurationSource = newConfigurationSource;
+  static ConfigurationSource loadPlayConfiguration() {
+    ConfigurationSource configurationSource;
+    configurationSource = new PlayApplicationConfigurationSource();
+    // NOTE: The following call throws if there is no Play application. We assume that we are in test mode when this
+    // fails.
+    configurationSource.isProduction();
+    return configurationSource;
   }
-
 }

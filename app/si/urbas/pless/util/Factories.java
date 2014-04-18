@@ -83,9 +83,9 @@ public class Factories {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
     if (getConfigurationSource().isDevelopment()) {
-      return PlayApplicationClassLoader.INSTANCE;
+      return PlayApplicationFactoryCreator.INSTANCE;
     } else {
-      return FactoriesClassLoader.INSTANCE;
+      return DefaultFactoryCreator.INSTANCE;
     }
   }
 
@@ -101,8 +101,8 @@ public class Factories {
     return factoryCreator.get();
   }
 
-  static class PlayApplicationClassLoader implements Function<String, Factory<?>> {
-    private static final PlayApplicationClassLoader INSTANCE = new PlayApplicationClassLoader();
+  static class PlayApplicationFactoryCreator implements Function<String, Factory<?>> {
+    static final PlayApplicationFactoryCreator INSTANCE = new PlayApplicationFactoryCreator();
 
     @Override
     public Factory<?> invoke(String s) {
@@ -114,7 +114,7 @@ public class Factories {
     }
   }
 
-  static class FactoriesClassLoader {
+  static class DefaultFactoryCreator {
     private static final ClassLoaderFactoryCreator INSTANCE = new ClassLoaderFactoryCreator(Factories.class.getClassLoader());
   }
 

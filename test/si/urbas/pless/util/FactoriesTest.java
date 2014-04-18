@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.test.TemporaryConfiguration;
+import si.urbas.pless.test.TemporaryPlayApplication;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -23,7 +24,7 @@ public class FactoriesTest {
   @SuppressWarnings("UnusedDeclaration")
   private final Factories factories = new Factories();
   @SuppressWarnings("UnusedDeclaration")
-  private final FactoriesClassLoader factoriesClassLoader = new FactoriesClassLoader();
+  private final DefaultFactoryCreator defaultFactoryCreator = new DefaultFactoryCreator();
 
   @SuppressWarnings("unchecked")
   @Before
@@ -105,7 +106,22 @@ public class FactoriesTest {
   public void getInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
     try (TemporaryConfiguration ignored = new TemporaryConfiguration(configurationSource)) {
       when(configurationSource.isDevelopment()).thenReturn(true);
-      assertThat(getFactoryCreator(), is(instanceOf(PlayApplicationClassLoader.class)));
+      assertThat(getFactoryCreator(), is(instanceOf(PlayApplicationFactoryCreator.class)));
+    }
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void PlayApplicationFactoryCreator_MUST_throw_an_exception_WHEN_the_Play_application_is_not_started() throws Exception {
+    PlayApplicationFactoryCreator.INSTANCE.invoke(TestFactory.class.getCanonicalName());
+  }
+
+  @Test
+  public void PlayApplicationFactoryCreator_MUST_return_an_instance_WHEN_the_Play_application_is_started() throws Exception {
+    try (TemporaryPlayApplication ignored = new TemporaryPlayApplication()) {
+      assertThat(
+        PlayApplicationFactoryCreator.INSTANCE.invoke(TestFactory.class.getCanonicalName()),
+        is(instanceOf(TestFactory.class))
+      );
     }
   }
 
