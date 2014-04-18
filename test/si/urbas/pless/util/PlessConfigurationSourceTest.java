@@ -23,7 +23,7 @@ public class PlessConfigurationSourceTest {
   public void getInstance_MUST_return_the_scoped_configuration() throws Exception {
     try (TemporaryConfiguration scopedConfiguration = new TemporaryConfiguration()) {
       assertEquals(
-        scopedConfiguration.curentConfigurationSource,
+        scopedConfiguration.currentConfigurationSource,
         getConfigurationSource()
       );
     }

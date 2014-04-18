@@ -3,14 +3,14 @@ package si.urbas.pless.util;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
+import si.urbas.pless.test.TemporaryConfiguration;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.util.Factories.createInstance;
-import static si.urbas.pless.util.Factories.withClassLoader;
+import static si.urbas.pless.util.Factories.*;
 
 public class FactoriesTest {
 
@@ -22,6 +22,8 @@ public class FactoriesTest {
   private Factory<String> defaultFactory;
   @SuppressWarnings("UnusedDeclaration")
   private final Factories factories = new Factories();
+  @SuppressWarnings("UnusedDeclaration")
+  private final FactoriesClassLoader factoriesClassLoader = new FactoriesClassLoader();
 
   @SuppressWarnings("unchecked")
   @Before
@@ -97,6 +99,14 @@ public class FactoriesTest {
         );
       }
     });
+  }
+
+  @Test
+  public void getInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
+    try (TemporaryConfiguration ignored = new TemporaryConfiguration(configurationSource)) {
+      when(configurationSource.isDevelopment()).thenReturn(true);
+      assertThat(getFactoryCreator(), is(instanceOf(PlayApplicationClassLoader.class)));
+    }
   }
 
   @SuppressWarnings("unchecked")

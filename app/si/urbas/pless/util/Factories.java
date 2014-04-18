@@ -7,7 +7,7 @@ import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSourc
 
 public class Factories {
 
-  private static ThreadLocal<Function<String, Factory<?>>> instanceCreator = new ThreadLocal<>();
+  private static ThreadLocal<Function<String, Factory<?>>> factoryCreator = new ThreadLocal<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -46,12 +46,12 @@ public class Factories {
    *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
    */
   public static void withClassLoader(final ClassLoader newClassLoader, Body body) {
-    Function<String, Factory<?>> oldClassLoader = getOverriddenClassLoader();
+    Function<String, Factory<?>> oldClassLoader = getOverriddenFactoryCreator();
     try {
-      overrideClassLoader(new ClassLoaderInstanceCreator(newClassLoader));
+      overrideFactoryCreator(newClassLoader);
       body.invoke();
     } finally {
-      overrideClassLoader(oldClassLoader);
+      overrideFactoryCreator(oldClassLoader);
     }
   }
 
@@ -68,7 +68,7 @@ public class Factories {
   @SuppressWarnings("unchecked")
   private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
-      return (Factory<T>) getInstanceCreator()
+      return (Factory<T>) getFactoryCreator()
         .invoke(factoryClassName);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
@@ -76,9 +76,9 @@ public class Factories {
     }
   }
 
-  public static Function<String, Factory<?>> getInstanceCreator() {
-    if (getOverriddenClassLoader() != null) {
-      return getOverriddenClassLoader();
+  public static Function<String, Factory<?>> getFactoryCreator() {
+    if (getOverriddenFactoryCreator() != null) {
+      return getOverriddenFactoryCreator();
     }
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
@@ -89,19 +89,19 @@ public class Factories {
     }
   }
 
-  public static void overrideClassLoader(Function<String, Factory<?>> classLoader) {
-    Factories.instanceCreator.set(classLoader);
+  public static void overrideFactoryCreator(Function<String, Factory<?>> factoryCreator) {
+    Factories.factoryCreator.set(factoryCreator);
   }
 
-  public static void overrideClassLoader(ClassLoader classLoader) {
-    Factories.instanceCreator.set(new ClassLoaderInstanceCreator(classLoader));
+  public static void overrideFactoryCreator(ClassLoader classLoader) {
+    overrideFactoryCreator(classLoader == null ? null : new ClassLoaderFactoryCreator(classLoader));
   }
 
-  public static Function<String, Factory<?>> getOverriddenClassLoader() {
-    return instanceCreator.get();
+  public static Function<String, Factory<?>> getOverriddenFactoryCreator() {
+    return factoryCreator.get();
   }
 
-  private static class PlayApplicationClassLoader implements Function<String, Factory<?>> {
+  static class PlayApplicationClassLoader implements Function<String, Factory<?>> {
     private static final PlayApplicationClassLoader INSTANCE = new PlayApplicationClassLoader();
 
     @Override
@@ -114,8 +114,8 @@ public class Factories {
     }
   }
 
-  private static class FactoriesClassLoader {
-    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
+  static class FactoriesClassLoader {
+    private static final ClassLoaderFactoryCreator INSTANCE = new ClassLoaderFactoryCreator(Factories.class.getClassLoader());
   }
 
 }

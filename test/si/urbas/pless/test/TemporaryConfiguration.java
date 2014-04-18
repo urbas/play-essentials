@@ -10,15 +10,15 @@ import si.urbas.pless.util.ConfigurationSource;
 public class TemporaryConfiguration implements AutoCloseable {
 
   private final ConfigurationSource oldConfiguration = getConfigurationSource();
-  public final ConfigurationSource curentConfigurationSource;
+  public final ConfigurationSource currentConfigurationSource;
 
   public TemporaryConfiguration() {
     this(mock(ConfigurationSource.class));
   }
   
   public TemporaryConfiguration(ConfigurationSource newConfigurationSource) {
-    curentConfigurationSource = newConfigurationSource;
-    setConfigurationSource(curentConfigurationSource);
+    currentConfigurationSource = newConfigurationSource;
+    setConfigurationSource(currentConfigurationSource);
   }
 
   @Override
