@@ -16,6 +16,7 @@ import static si.urbas.pless.users.PlessJpaUserRepositoryTest.activateUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
+import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;
 
 public class PasswordAuthenticationControllerTest extends PlessTest {
 
@@ -30,7 +31,7 @@ public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_ok_WHEN_the_right_credentials_are_given() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     activateUser(user);
     Result result = si.urbas.pless.authentication.PasswordAuthenticationController.logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(OK, status(result));
@@ -38,7 +39,7 @@ public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_the_user_is_not_active() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     Result result = si.urbas.pless.authentication.PasswordAuthenticationController.logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(BAD_REQUEST, status(result));
   }
@@ -51,7 +52,7 @@ public class PasswordAuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_the_wrong_credentials_are_given() throws Exception {
-    persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     Result result = si.urbas.pless.authentication.PasswordAuthenticationController.logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD + "a");
     assertEquals(BAD_REQUEST, status(result));
   }

@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
+import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;
 
 public class PlessPasswordAuthenticatorTest extends PlessTest {
 
@@ -40,6 +41,6 @@ public class PlessPasswordAuthenticatorTest extends PlessTest {
   }
 
   private void addJohnSmithToRepository() {
-    getUserRepository().persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    getUserRepository().persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   }
 }

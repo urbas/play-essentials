@@ -6,8 +6,8 @@ import si.urbas.pless.authentication.SaltedHashedPassword;
 
 public class UserMatchers {
 
-  public static Matcher<? super PlessUser> userWith(String userEmail, String password) {
-    return new UserWithEmailAndPasswordMatcher(userEmail, password);
+  public static Matcher<? super PlessUser> userWith(String userEmail, String username, String password) {
+    return new UserWithEmailAndPasswordMatcher(userEmail, username, password);
   }
 
   public static Matcher<PlessUser> activeUser() {
@@ -28,10 +28,7 @@ public class UserMatchers {
 
     @Override
     public boolean matches(Object item) {
-      if (item instanceof PlessUser) {
-        return matches((PlessUser) item);
-      }
-      return false;
+      return item instanceof PlessUser && matches((PlessUser) item);
     }
 
     public abstract boolean matches(PlessUser user);
@@ -56,16 +53,18 @@ public class UserMatchers {
   private static final class UserWithEmailAndPasswordMatcher extends BaseUserMatcher {
 
     private final String userEmail;
+    private final String username;
     private String password;
 
-    public UserWithEmailAndPasswordMatcher(String userEmail, String password) {
+    public UserWithEmailAndPasswordMatcher(String userEmail, String username, String password) {
       this.userEmail = userEmail;
+      this.username = username;
       this.password = password;
     }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("PlessUser [email=" + userEmail + ", password=" + password + "]");
+      description.appendText("PlessUser [email=" + userEmail + ", username=" + username + ", password=" + password + "]");
     }
 
     @Override

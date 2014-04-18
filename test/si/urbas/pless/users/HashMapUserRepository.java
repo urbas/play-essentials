@@ -30,8 +30,8 @@ public class HashMapUserRepository implements UserRepository {
   }
 
   @Override
-  public synchronized void persistUser(String email, String password) {
-    JpaPlessUser newUser = new JpaPlessUser(email, password).withId(++maxId);
+  public synchronized void persistUser(String email, String username, String password) {
+    JpaPlessUser newUser = new JpaPlessUser(email, username, password).withId(++maxId);
     newUser.setCreationDate(new Date());
     persistUser(newUser);
   }

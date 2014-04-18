@@ -7,6 +7,8 @@ public class SignupData {
   public String email;
   @Required
   public String password;
+  @Required
+  public String username;
 
   @SuppressWarnings("UnusedDeclaration")
   public SignupData() {}
@@ -17,5 +19,9 @@ public class SignupData {
 
   public String getPassword() {
     return password;
+  }
+
+  public String getUsername() {
+    return username;
   }
 }

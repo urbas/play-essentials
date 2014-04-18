@@ -6,6 +6,8 @@ public interface PlessUser {
 
   String getEmail();
 
+  String getUsername();
+
   long getId();
 
   byte[] getSalt();

@@ -34,22 +34,22 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
 
   @Test
   public void findUserByEmail_MUST_return_persisted_extended_users() {
-    getJpaUserRepository().persistUser(new TestExtendingJpaUser(USER_EMAIL, USER_PASSWORD, EXTENDED_COLUMN_VALUE));
+    getJpaUserRepository().persistUser(new TestExtendingJpaUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD, EXTENDED_COLUMN_VALUE));
     PlessUser user = getJpaUserRepository().findUserByEmail(USER_EMAIL);
     assertThat(user, is(instanceOf(TestExtendingJpaUser.class)));
-    assertThat(user, is(userWith(USER_EMAIL, USER_PASSWORD)));
+    assertThat(user, is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD)));
     assertEquals("this is test", ((TestExtendingJpaUser)user).testColumn);
   }
 
   private PlessJpaUserRepository getJpaUserRepository() {return (PlessJpaUserRepository) userRepository;}
 
-  public static PlessUser persistAndFetchUser(String userEmail, String userPassword) {
-    persistUser(userEmail, userPassword);
+  public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
+    persistUser(userEmail, username, userPassword);
     return fetchUser(userEmail);
   }
 
-  public static void persistUser(String userEmail, String userPassword) {
-    getUserRepository().persistUser(userEmail, userPassword);
+  public static void persistUser(String userEmail, String username, String userPassword) {
+    getUserRepository().persistUser(userEmail, username, userPassword);
   }
 
   public static boolean activateUser(final PlessUser user) {

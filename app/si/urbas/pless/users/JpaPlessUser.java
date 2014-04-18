@@ -24,6 +24,8 @@ public class JpaPlessUser implements PlessUser {
   private long id;
   @Column(nullable = false, unique = true)
   private String email;
+  @Column(nullable = false, unique = true)
+  private String username;
   @Column(nullable = false)
   private byte[] hashedPassword;
   @Column(nullable = false)
@@ -38,12 +40,13 @@ public class JpaPlessUser implements PlessUser {
 
   public JpaPlessUser() {}
 
-  public JpaPlessUser(String email, SaltedHashedPassword password) {
-    this(email, password.getHashedPassword(), password.getSalt());
+  public JpaPlessUser(String email, String username, SaltedHashedPassword password) {
+    this(email, username, password.getHashedPassword(), password.getSalt());
   }
 
-  public JpaPlessUser(String email, byte[] hashedPassword, byte[] salt) {
+  public JpaPlessUser(String email, String username, byte[] hashedPassword, byte[] salt) {
     this.email = email;
+    this.username = username;
     this.hashedPassword = hashedPassword;
     this.salt = salt;
     this.activationCode = new SessionIdGenerator().createSessionId();
@@ -53,13 +56,18 @@ public class JpaPlessUser implements PlessUser {
     this.id = id;
   }
 
-  public JpaPlessUser(String email, String password) {
-    this(email, new SaltedHashedPassword(password));
+  public JpaPlessUser(String email, String username, String password) {
+    this(email, username, new SaltedHashedPassword(password));
   }
 
   @Override
   public String getEmail() {
     return email;
+  }
+
+  @Override
+  public String getUsername() {
+    return username;
   }
 
   @Override
@@ -83,7 +91,7 @@ public class JpaPlessUser implements PlessUser {
   }
 
   public JpaPlessUser withId(long idOfNewUser) {
-    JpaPlessUser user = new JpaPlessUser(email, hashedPassword, salt);
+    JpaPlessUser user = new JpaPlessUser(email, username, hashedPassword, salt);
     user.id = idOfNewUser;
     return user;
   }

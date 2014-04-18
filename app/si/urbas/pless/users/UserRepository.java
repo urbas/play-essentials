@@ -8,7 +8,7 @@ public interface UserRepository {
 
   List<PlessUser> getAllUsers();
 
-  void persistUser(String email, String password);
+  void persistUser(String email, String username, String password);
 
   void persistUser(PlessUser user);
 

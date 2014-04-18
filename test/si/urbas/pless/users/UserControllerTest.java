@@ -29,7 +29,8 @@ public class UserControllerTest extends PlessTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
-  public static final JpaPlessUser user = new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+  public static final String JOHN_SMITH_USERNAME = "John Smith";
+  public static final JpaPlessUser user = new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
 
@@ -42,16 +43,16 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
-    Result result = signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
+    Result result = signUp(user);
     assertEquals(OK, status(result));
   }
 
   @Test
   public void createUser_MUST_persist_the_user_in_the_user_repository() throws Exception {
-    signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
+    signUp(user);
     assertThat(
       getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL),
-      is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD)));
+      is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)));
   }
 
   @Test
@@ -64,7 +65,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
       contentAsString(callActivate(user)),
       containsString("Thank you very much for registering with us")
@@ -73,7 +74,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callActivate(user);
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
@@ -83,7 +84,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
-    signUp(new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD));
+    signUp(user);
     verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
 
@@ -108,7 +109,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void delete_MUST_return_ok_WHEN_user_is_logged_in() throws Exception {
-    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
       status(callDelete()),
       is(equalTo(OK))
@@ -117,7 +118,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test(expected = NoResultException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
-    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callDelete();
     getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
@@ -128,8 +129,9 @@ public class UserControllerTest extends PlessTest {
   }
 
   private Result signupAndLogin(final String userEmail,
+                                final String username,
                                 final String userPassword) {
-    signUp(new JpaPlessUser(userEmail, userPassword));
+    signUp(new JpaPlessUser(userEmail, username, userPassword));
     final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
     return callLogIn(userEmail, userPassword);

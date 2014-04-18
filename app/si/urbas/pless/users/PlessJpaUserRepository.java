@@ -41,8 +41,8 @@ public class PlessJpaUserRepository implements UserRepository {
   }
 
   @Override
-  public void persistUser(final String email, final String password) {
-    persistUser(new JpaPlessUser(email, password));
+  public void persistUser(String email, String username, String password) {
+    persistUser(new JpaPlessUser(email, username, password));
   }
 
   @Override

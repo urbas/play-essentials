@@ -8,16 +8,14 @@ import si.urbas.pless.users.PlessUser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static play.test.Helpers.callAction;
 import static play.test.Helpers.contentAsString;
 import static si.urbas.pless.authentication.AuthenticationController.logOut;
 import static si.urbas.pless.authentication.AuthenticationController.status;
-import static si.urbas.pless.authentication.PasswordAuthenticationController.*;
+import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.activateUser;
 import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
-import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
-import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
+import static si.urbas.pless.users.UserControllerTest.*;
 
 public class AuthenticationControllerTest extends PlessTest {
 
@@ -46,7 +44,7 @@ public class AuthenticationControllerTest extends PlessTest {
   }
 
   private void localCreateUserAndLogin() {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
+    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     activateUser(user);
     logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }

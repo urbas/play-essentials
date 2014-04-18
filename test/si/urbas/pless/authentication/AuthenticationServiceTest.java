@@ -4,11 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.users.JpaPlessUser;
 import si.urbas.pless.users.PlessUser;
-import si.urbas.pless.users.UserControllerTest;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static si.urbas.pless.users.UserControllerTest.*;
 
 public class AuthenticationServiceTest {
 
@@ -85,7 +85,7 @@ public class AuthenticationServiceTest {
   }
 
   private PlessUser createJohnSmithUser() {
-    return new JpaPlessUser(UserControllerTest.JOHN_SMITH_EMAIL, UserControllerTest.JOHN_SMITH_PASSWORD)
+    return new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)
       .withId(JOHN_SMITH_USER_ID);
   }
 }

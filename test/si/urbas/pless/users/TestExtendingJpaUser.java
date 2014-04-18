@@ -9,11 +9,12 @@ public class TestExtendingJpaUser extends JpaPlessUser {
 
   public String testColumn;
 
+  @SuppressWarnings("UnusedDeclaration")
   public TestExtendingJpaUser() {
   }
 
-  public TestExtendingJpaUser(String email, String password, String testValue) {
-    super(email, password);
+  public TestExtendingJpaUser(String email, String username, String password, String testValue) {
+    super(email, username, password);
     testColumn = testValue;
   }
 
