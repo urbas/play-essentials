@@ -8,6 +8,8 @@ import si.urbas.pless.test.TestTransactionProvider;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static si.urbas.pless.db.PlessTransactions.CONFIG_TRANSACTION_PROVIDER;
+import static si.urbas.pless.db.PlessTransactions.TransactionProviderFactory;
 import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
@@ -15,6 +17,8 @@ public class PlessTransactionsTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final PlessTransactions plessTransactions = new PlessTransactions();
+  @SuppressWarnings("UnusedDeclaration")
+  private final TransactionProviderFactory transactionProviderFactory = new TransactionProviderFactory();
 
   @Test
   public void getTransactionProvider_MUST_return_the_configured_transaction_provider() throws Exception {
@@ -38,6 +42,15 @@ public class PlessTransactionsTest extends PlessTest {
     assertThat(
       getTransactionProvider(),
       is(not(sameInstance(getScopedTransactionProvider())))
+    );
+  }
+
+  @Test
+  public void getTransactionProvider_MUST_return_a_play_jpa_transaction_provider_WHEN_no_transaction_provider_is_configured() throws Exception {
+    when(getConfigurationSource().getString(CONFIG_TRANSACTION_PROVIDER)).thenReturn(null);
+    assertThat(
+      getTransactionProvider(),
+      is(instanceOf(PlayJpaTransactionProvider.class))
     );
   }
 

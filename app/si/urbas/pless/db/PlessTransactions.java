@@ -11,11 +11,11 @@ public class PlessTransactions {
   public static final String CONFIG_TRANSACTION_PROVIDER = "pless.transactionProvider";
 
   public static TransactionProvider getTransactionProvider() {
-    return Singleton.TRANSACTION_PROVIDER_FACTORY.createInstance(getConfigurationSource());
+    return TransactionProviderFactory.INSTANCE.createInstance(getConfigurationSource());
   }
 
-  private static class Singleton {
-    public static final Factory<TransactionProvider> TRANSACTION_PROVIDER_FACTORY = new SingletonFactory<>(CONFIG_TRANSACTION_PROVIDER, new DefaultTransactionProviderFactory());
+  static class TransactionProviderFactory {
+    public static final Factory<TransactionProvider> INSTANCE = new SingletonFactory<>(CONFIG_TRANSACTION_PROVIDER, new DefaultTransactionProviderFactory());
   }
 
   private static class DefaultTransactionProviderFactory implements Factory<TransactionProvider> {
