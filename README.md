@@ -36,11 +36,11 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
 
 3.  Add these lines into `build.sbt`:
 
-        ```scala
-        resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
+    ```scala
+    resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 
-        libraryDependencies += "si.urbas" %% "pless" % "0.0.7"
-        ```
+    libraryDependencies += "si.urbas" %% "pless" % "0.0.7"
+    ```
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
 
