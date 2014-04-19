@@ -8,8 +8,8 @@ import java.util.Date;
 
 public class DateMatchers {
 
-  public static Matcher<Date> dateWithin(long rangeRadius) {
-    return new DateWithin(now().getTime() - rangeRadius, now().getTime() + rangeRadius);
+  public static Matcher<Date> dateWithin(long radiusMilliseconds) {
+    return new DateWithin(now().getTime() - radiusMilliseconds, now().getTime() + radiusMilliseconds);
   }
 
   public static Date now() {return new Date();}

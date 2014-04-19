@@ -7,10 +7,16 @@ import si.urbas.pless.PlessController;
 import si.urbas.pless.users.views.html.ActivationView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.util.RequestParameters.*;
 
 public final class UserController extends PlessController {
+
+  public static final String USERNAME_PARAMETER = "username";
+  public static final String EMAIL_PARAMETER = "email";
+  public static final String PASSWORD_PARAMETER = "password";
 
   public static Result signUp() {
     return signUp(getSignupService().getSignupForm().bindFromRequest());
@@ -31,22 +37,19 @@ public final class UserController extends PlessController {
     }
   }
 
-  static Result signUp(String email, String username, String password) {
-    HashMap<String, String[]> requestData = new HashMap<>();
-    requestData.put("email", new String[]{email});
-    requestData.put("username", new String[]{username});
-    requestData.put("password", new String[]{password});
-    return signUp(getSignupService().getSignupForm().bindFromRequest(requestData));
+  @SafeVarargs
+  public static Result signUp(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
+    return signUp(getSignupService().getSignupForm().bindFromRequest(buildSignUpParameters(email, username, password, additionalParams)));
   }
 
-  static Result signUp(Form<?> signupForm) {
+  public static Result signUp(Form<?> signupForm) {
     if (signupForm.hasErrors()) {
       return badRequest(signupForm.errorsAsJson(new Lang(play.api.i18n.Lang.defaultLang())));
     }
     return signUp(getSignupService().createUser(signupForm));
   }
 
-  static Result signUp(PlessUser newUser) {
+  public static Result signUp(PlessUser newUser) {
     try {
       users().persistUser(newUser);
       getSignupService().sendSignupEmail(newUser);
@@ -54,5 +57,13 @@ public final class UserController extends PlessController {
     } catch (Exception ex) {
       return badRequest();
     }
+  }
+
+  @SafeVarargs
+  public static HashMap<String, String[]> buildSignUpParameters(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
+    return addParams(
+      params(param(EMAIL_PARAMETER, email), param(USERNAME_PARAMETER, username), param(PASSWORD_PARAMETER, password)),
+      additionalParams
+    );
   }
 }
