@@ -13,9 +13,9 @@ public final class PasswordAuthenticationController extends PlessController {
       PasswordLoginForm passwordLoginForm = new PasswordLoginForm(email, password);
       PlessUser authenticatedUser = getPasswordAuthenticator().authenticateUser(passwordLoginForm);
       auth().logIn(authenticatedUser);
-      return ok("Authorized.");
+      return ok();
     } catch (Exception e) {
-      return badRequest("Authorization failed.");
+      return badRequest();
     }
   }
 }

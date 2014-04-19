@@ -17,23 +17,10 @@ public class ServiceLoader<T> {
 
   public T getInstance() {
     resetCacheIfNotTestMode();
-    if (cachedService != null) {
-      return cachedService;
+    if (cachedService == null) {
+      cachedService = createService();
     }
-    cachedService = createService();
     return cachedService;
-  }
-
-  void resetCacheIfNotTestMode() {
-    if (!getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment()) {
-      cachedService = null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  T createService() {
-    String serviceClassName = getConfigurationSource().getString(serviceClassNameConfigKey);
-    return serviceClassName == null ? defaultService : (T) getServiceCreator().invoke(serviceClassName);
   }
 
   public static Function<String, Object> getServiceCreator() {
@@ -46,6 +33,18 @@ public class ServiceLoader<T> {
 
   public static Function<String, Object> getOverriddenServiceCreator() {
     return ServiceLoader.overriddenServiceCreator;
+  }
+
+  private void resetCacheIfNotTestMode() {
+    if (!getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment()) {
+      cachedService = null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private T createService() {
+    String serviceClassName = getConfigurationSource().getString(serviceClassNameConfigKey);
+    return serviceClassName == null ? defaultService : (T) getServiceCreator().invoke(serviceClassName);
   }
 
 }
