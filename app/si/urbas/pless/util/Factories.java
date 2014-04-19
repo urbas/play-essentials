@@ -1,13 +1,12 @@
 package si.urbas.pless.util;
 
-import play.Play;
 import si.urbas.pless.ConfigurationException;
 
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class Factories {
 
-  private static ThreadLocal<Function<String, Factory<?>>> factoryCreator = new ThreadLocal<>();
+  private static ThreadLocal<Function<String, Object>> factoryCreator = new ThreadLocal<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -46,7 +45,7 @@ public class Factories {
    *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
    */
   public static void withClassLoader(final ClassLoader newClassLoader, Body body) {
-    Function<String, Factory<?>> oldClassLoader = getOverriddenFactoryCreator();
+    Function<String, Object> oldClassLoader = getOverriddenFactoryCreator();
     try {
       overrideFactoryCreator(newClassLoader);
       body.invoke();
@@ -76,46 +75,34 @@ public class Factories {
     }
   }
 
-  public static Function<String, Factory<?>> getFactoryCreator() {
-    if (getOverriddenFactoryCreator() != null) {
-      return getOverriddenFactoryCreator();
-    }
+  public static Function<String, Object> getFactoryCreator() {
+    return getOverriddenFactoryCreator() != null ? getOverriddenFactoryCreator() : getDefaultInstanceCreator();
+  }
+
+  public static void overrideFactoryCreator(Function<String, Object> factoryCreator) {
+    Factories.factoryCreator.set(factoryCreator);
+  }
+
+  public static void overrideFactoryCreator(ClassLoader classLoader) {
+    overrideFactoryCreator(classLoader == null ? null : new ClassLoaderInstanceCreator(classLoader));
+  }
+
+  public static Function<String, Object> getOverriddenFactoryCreator() {
+    return factoryCreator.get();
+  }
+
+  static Function<String, Object> getDefaultInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
     if (getConfigurationSource().isDevelopment()) {
-      return PlayApplicationFactoryCreator.INSTANCE;
+      return PlayApplicationInstanceCreator.getInstance();
     } else {
       return DefaultFactoryCreator.INSTANCE;
     }
   }
 
-  public static void overrideFactoryCreator(Function<String, Factory<?>> factoryCreator) {
-    Factories.factoryCreator.set(factoryCreator);
-  }
-
-  public static void overrideFactoryCreator(ClassLoader classLoader) {
-    overrideFactoryCreator(classLoader == null ? null : new ClassLoaderFactoryCreator(classLoader));
-  }
-
-  public static Function<String, Factory<?>> getOverriddenFactoryCreator() {
-    return factoryCreator.get();
-  }
-
-  static class PlayApplicationFactoryCreator implements Function<String, Factory<?>> {
-    static final PlayApplicationFactoryCreator INSTANCE = new PlayApplicationFactoryCreator();
-
-    @Override
-    public Factory<?> invoke(String s) {
-      try {
-        return (Factory<?>) Play.application().classloader().loadClass(s).newInstance();
-      } catch (Exception e) {
-        throw new RuntimeException("Could not instantiate class '" + s + "'.", e);
-      }
-    }
-  }
-
   static class DefaultFactoryCreator {
-    private static final ClassLoaderFactoryCreator INSTANCE = new ClassLoaderFactoryCreator(Factories.class.getClassLoader());
+    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
   }
 
 }

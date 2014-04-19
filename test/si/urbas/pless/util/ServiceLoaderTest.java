@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.test.TemporaryConfiguration;
+import si.urbas.pless.test.TemporaryPlayApplication;
 import si.urbas.pless.test.TemporaryServices;
 
 import static org.hamcrest.Matchers.instanceOf;
@@ -11,7 +12,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-import static si.urbas.pless.util.ServiceLoader.DefaultServiceCreator;
 
 public class ServiceLoaderTest {
 
@@ -20,8 +20,6 @@ public class ServiceLoaderTest {
   private final String SERVICE_CLASS_NAME = getClass().getCanonicalName();
   private ServiceLoader<Object> serviceLoader;
   private TemporaryConfiguration temporaryConfiguration;
-  @SuppressWarnings("UnusedDeclaration")
-  private final DefaultServiceCreator defaultServiceCreator = new DefaultServiceCreator();
 
   @Before
   public void setUp() throws Exception {
@@ -55,11 +53,13 @@ public class ServiceLoaderTest {
   @Test
   public void getInstance_MUST_return_the_same_instance_WHEN_in_dev_mode() throws Exception {
     doReturn(true).when(getConfigurationSource()).isDevelopment();
-    assertSame(serviceLoader.getInstance(), serviceLoader.getInstance());
+    try (TemporaryPlayApplication ignored = new TemporaryPlayApplication()) {
+      assertSame(serviceLoader.getInstance(), serviceLoader.getInstance());
+    }
   }
 
   @Test
-  public void getInstance_MUST_return_a_new_instance_WHEN_in_dev_mode() throws Exception {
+  public void getInstance_MUST_return_a_new_instance_WHEN_in_test_mode() throws Exception {
     assertNotSame(serviceLoader.getInstance(), serviceLoader.getInstance());
   }
 

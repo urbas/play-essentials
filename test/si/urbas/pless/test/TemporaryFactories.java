@@ -11,19 +11,18 @@ import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
 
 public class TemporaryFactories implements AutoCloseable {
 
-  private final Function<String, Factory<?>> oldOverriddenFactoryCreator;
+  private final Function<String, Object> oldOverriddenFactoryCreator;
 
   public TemporaryFactories(Map<String, Factory<?>> configuredFactories) {
     oldOverriddenFactoryCreator = Factories.getOverriddenFactoryCreator();
-    @SuppressWarnings("unchecked")
-    Function<String, Factory<?>> factoriesClassLoader = spy(Factories.getFactoryCreator());
+    Function<String, Object> factoriesClassLoader = spy(Factories.getFactoryCreator());
     for (String factoryConfigKey : configuredFactories.keySet()) {
       useFactoryForConfigKey(factoriesClassLoader, factoryConfigKey, configuredFactories.get(factoryConfigKey));
     }
     Factories.overrideFactoryCreator(factoriesClassLoader);
   }
 
-  private void useFactoryForConfigKey(Function<String, Factory<?>> factoriesClassLoader, String factoryConfigKey, Factory factory) {
+  private void useFactoryForConfigKey(Function<String, Object> factoriesClassLoader, String factoryConfigKey, Factory<?> factory) {
     setConfigurationString(factoryConfigKey, factoryConfigKey);
     doReturn(factory).when(factoriesClassLoader).invoke(factoryConfigKey);
   }

@@ -1,8 +1,10 @@
 package si.urbas.pless.util;
 
+import static si.urbas.pless.util.Factories.getDefaultInstanceCreator;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class ServiceLoader<T> {
+
   private static Function<String, Object> overriddenServiceCreator;
   private final String serviceClassNameConfigKey;
   private final T defaultService;
@@ -35,7 +37,7 @@ public class ServiceLoader<T> {
   }
 
   public static Function<String, Object> getServiceCreator() {
-    return getOverriddenServiceCreator() == null ? DefaultServiceCreator.INSTANCE : getOverriddenServiceCreator();
+    return getOverriddenServiceCreator() == null ? getDefaultInstanceCreator() : getOverriddenServiceCreator();
   }
 
   public static void overrideServiceCreator(Function<String, Object> serviceCreator) {
@@ -46,20 +48,4 @@ public class ServiceLoader<T> {
     return ServiceLoader.overriddenServiceCreator;
   }
 
-  public static class DefaultServiceCreator {
-    public static final Function<String, Object> INSTANCE = new ClassLoaderServiceCreator();
-
-  }
-
-  public static class ClassLoaderServiceCreator implements Function<String, Object> {
-    @Override
-    public Object invoke(String serviceClassName) {
-      try {
-        System.out.println("Creating instance: " + serviceClassName);
-        return ServiceLoader.class.getClassLoader().loadClass(serviceClassName).newInstance();
-      } catch (Exception e) {
-        throw new RuntimeException("Could not create the service '" + serviceClassName + "'.", e);
-      }
-    }
-  }
 }
