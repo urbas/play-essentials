@@ -1,7 +1,7 @@
 package si.urbas.pless.test;
 
 import si.urbas.pless.authentication.ClientSessionStorage;
-import si.urbas.pless.db.PlayJpaTransactionProvider;
+import si.urbas.pless.db.PlayJpaTransactions;
 import si.urbas.pless.util.Body;
 
 import static org.mockito.Mockito.spy;
@@ -15,7 +15,7 @@ public class PlayJpaApplication extends JpaApplication {
       testPersistenceUnit,
       createTestModePlayConfiguration(),
       clientSessionStorage,
-      spy(new PlayJpaTransactionProvider())
+      spy(new PlayJpaTransactions())
     );
     startPlayApplication(testPersistenceUnit);
   }

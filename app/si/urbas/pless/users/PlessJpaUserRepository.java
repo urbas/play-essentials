@@ -9,14 +9,14 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
+import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
 import static si.urbas.pless.users.JpaPlessUser.*;
 
 public class PlessJpaUserRepository implements UserRepository {
 
   @Override
   public PlessUser findUserByEmail(final String email) {
-    return getTransactionProvider().usingDb(new TransactionFunction<PlessUser>() {
+    return getJpaTransactions().usingDb(new TransactionFunction<PlessUser>() {
       @Override
       public PlessUser invoke(EntityManager entityManager) {
         TypedQuery<JpaPlessUser> usersByEmailQuery = entityManager
@@ -30,7 +30,7 @@ public class PlessJpaUserRepository implements UserRepository {
   @SuppressWarnings("unchecked")
   @Override
   public List<PlessUser> getAllUsers() {
-    return getTransactionProvider().usingDb(new TransactionFunction<List<PlessUser>>() {
+    return getJpaTransactions().usingDb(new TransactionFunction<List<PlessUser>>() {
       @Override
       public List<PlessUser> invoke(EntityManager entityManager) {
         return entityManager
@@ -47,7 +47,7 @@ public class PlessJpaUserRepository implements UserRepository {
 
   @Override
   public void persistUser(final PlessUser user) {
-    getTransactionProvider().withTransaction(new TransactionCallback() {
+    getJpaTransactions().withTransaction(new TransactionCallback() {
       @Override
       public void invoke(EntityManager entityManager) {
         String validationError = user.validateForPersist();
@@ -62,7 +62,7 @@ public class PlessJpaUserRepository implements UserRepository {
 
   @Override
   public boolean activateUser(final String userEmail, final String activationCode) {
-    return getTransactionProvider().withTransaction(new TransactionFunction<Boolean>() {
+    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
       @Override
       public Boolean invoke(EntityManager entityManager) {
         Query usersByEmailQuery = entityManager
@@ -76,7 +76,7 @@ public class PlessJpaUserRepository implements UserRepository {
 
   @Override
   public boolean delete(final String userEmail) {
-    return getTransactionProvider().withTransaction(new TransactionFunction<Boolean>() {
+    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
       @Override
       public Boolean invoke(EntityManager entityManager) {
         Query deleteUserQuery = entityManager
@@ -90,7 +90,7 @@ public class PlessJpaUserRepository implements UserRepository {
 
   @Override
   public PlessUser findUserById(final long userId) {
-    return getTransactionProvider().usingDb(new TransactionFunction<PlessUser>() {
+    return getJpaTransactions().usingDb(new TransactionFunction<PlessUser>() {
       @Override
       public PlessUser invoke(EntityManager entityManager) {
         final JpaPlessUser foundUser = entityManager.find(JpaPlessUser.class, userId);

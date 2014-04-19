@@ -5,7 +5,7 @@ import si.urbas.pless.authentication.ClientSessionStorage;
 import si.urbas.pless.authentication.HashMapClientSessionStorage;
 import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
-import si.urbas.pless.db.TransactionProvider;
+import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.users.*;
 import si.urbas.pless.util.Body;
@@ -32,7 +32,7 @@ public class MockedApplication extends TestApplication {
   public MockedApplication(final ConfigurationSource configurationSource,
                            final EmailProvider emailProvider,
                            final ClientSessionStorage clientSessionStorage,
-                           final TransactionProvider transactionProvider,
+                           final JpaTransactions jpaTransactions,
                            final ServerSessionStorage serverSessionStorage,
                            final UserRepository userRepository,
                            final Map<String, Factory<?>> factories,
@@ -43,7 +43,7 @@ public class MockedApplication extends TestApplication {
         temporaryServices.add(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
         temporaryServices.add(new TemporaryEmailProvider(emailProvider == null ? createMockedEmailProvider() : emailProvider));
         temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
-        temporaryServices.add(new TemporaryTransactionProvider(transactionProvider == null ? createMockedTransactionProvider() : transactionProvider));
+        temporaryServices.add(new TemporaryJpaTransactions(jpaTransactions == null ? createMockedJpaTransactions() : jpaTransactions));
         temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         temporaryServices.add(new TemporaryUserRepository(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
         temporaryServices.add(new TemporaryFactories(factories == null ? new HashMap<String, Factory<?>>() : factories));
@@ -58,7 +58,7 @@ public class MockedApplication extends TestApplication {
 
   protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
 
-  protected static TransactionProvider createMockedTransactionProvider() {return mock(TransactionProvider.class);}
+  protected static JpaTransactions createMockedJpaTransactions() {return mock(JpaTransactions.class);}
 
   protected void doInitialisation(Body initialisationMethod) {
     try {

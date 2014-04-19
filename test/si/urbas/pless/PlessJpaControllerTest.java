@@ -2,21 +2,21 @@ package si.urbas.pless;
 
 import org.junit.Before;
 import org.junit.Test;
+import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
-import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.test.PlessTest;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
+import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class PlessControllerTest extends PlessTest {
+public class PlessJpaControllerTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
-  private static final PlessController plessController = new PlessController();
+  private static final PlessJpaController PLESS_JPA_CONTROLLER = new PlessJpaController();
   private Object transactionReturnValue;
   private TransactionFunction<Object> transactionFunction;
 
@@ -29,44 +29,44 @@ public class PlessControllerTest extends PlessTest {
   }
 
   @Test
-  public void withTransaction_MUST_pass_the_callback_to_the_transaction_provider() {
-    TransactionProvider transactionProvider = getTransactionProvider();
+  public void withTransaction_MUST_pass_the_callback_to_jpa_transactions() {
+    JpaTransactions jpaTransactions = getJpaTransactions();
     TransactionCallback callback = mock(TransactionCallback.class);
-    PlessController.withTransaction(callback);
-    verify(transactionProvider).withTransaction(callback);
+    PlessJpaController.withTransaction(callback);
+    verify(jpaTransactions).withTransaction(callback);
   }
 
   @Test
   public void emailing_MUST_return_the_configured_emailing_service() throws Exception {
-    PlessController.emailing().createEmail();
+    PlessJpaController.emailing().createEmail();
     verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
 
   @Test
-  public void usingDb_MUST_pass_the_callback_to_the_transaction_provider() {
-    PlessController.usingDb(transactionFunction);
-    verify(getTransactionProvider()).usingDb(transactionFunction);
+  public void usingDb_MUST_pass_the_callback_to_jpa_transactions() {
+    PlessJpaController.usingDb(transactionFunction);
+    verify(getJpaTransactions()).usingDb(transactionFunction);
   }
 
   @Test
   public void usingDb_MUST_return_the_result_of_the_transaction() {
-    when(getTransactionProvider().usingDb(transactionFunction))
+    when(getJpaTransactions().usingDb(transactionFunction))
       .thenReturn(transactionReturnValue);
-    Object actualReturnValue = PlessController.usingDb(transactionFunction);
+    Object actualReturnValue = PlessJpaController.usingDb(transactionFunction);
     assertSame(actualReturnValue, transactionReturnValue);
   }
 
   @Test
-  public void withTransaction_MUST_pass_the_function_to_the_transaction_provider() {
-    PlessController.withTransaction(transactionFunction);
-    verify(getTransactionProvider()).withTransaction(transactionFunction);
+  public void withTransaction_MUST_pass_the_function_to_jpa_transactions() {
+    PlessJpaController.withTransaction(transactionFunction);
+    verify(getJpaTransactions()).withTransaction(transactionFunction);
   }
 
   @Test
   public void withTransaction_MUST_return_the_result_of_the_transaction() {
-    when(getTransactionProvider().withTransaction(transactionFunction))
+    when(getJpaTransactions().withTransaction(transactionFunction))
       .thenReturn(transactionReturnValue);
-    Object actualReturnValue = PlessController.withTransaction(transactionFunction);
+    Object actualReturnValue = PlessJpaController.withTransaction(transactionFunction);
     assertSame(actualReturnValue, transactionReturnValue);
   }
 }

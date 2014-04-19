@@ -6,19 +6,19 @@ import javax.persistence.EntityManagerFactory;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class RawJpaTransactionProvider extends JpaTransactionProvider {
+public class RawJpaTransactions extends JpaTransactions {
 
   public static final String PERSISTENCE_UNIT = "jpa.default";
   private EntityManagerFactory entityManagerFactory;
 
   @Override
-  protected void closeEntityManager(EntityManager entityManager) {
-    entityManager.close();
+  public EntityManager getEntityManager() {
+    return getEntityManagerFactory().createEntityManager();
   }
 
   @Override
-  protected EntityManager getEntityManager() {
-    return getEntityManagerFactory().createEntityManager();
+  public void closeEntityManager(EntityManager entityManager) {
+    entityManager.close();
   }
 
   private EntityManagerFactory getEntityManagerFactory() {

@@ -2,18 +2,17 @@ package si.urbas.pless.authentication;
 
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
-import si.urbas.pless.util.Callback;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import static si.urbas.pless.db.PlessTransactions.getTransactionProvider;
+import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
 
 public class JpaServerSessionStorage implements ServerSessionStorage {
 
   @Override
   public void put(final String key, final String value, final int expirationMillis) {
-    getTransactionProvider().withTransaction(new TransactionCallback() {
+    getJpaTransactions().withTransaction(new TransactionCallback() {
       @Override
       public void invoke(EntityManager entityManager) {
         JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
@@ -47,7 +46,7 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
   }
 
   private JpaServerSessionKeyValue fetchSessionValue(final String key) {
-    return getTransactionProvider().usingDb(new TransactionFunction<JpaServerSessionKeyValue>() {
+    return getJpaTransactions().usingDb(new TransactionFunction<JpaServerSessionKeyValue>() {
       @Override
       public JpaServerSessionKeyValue invoke(EntityManager entityManager) {
         return entityManager.find(JpaServerSessionKeyValue.class, key);
@@ -56,7 +55,7 @@ public class JpaServerSessionStorage implements ServerSessionStorage {
   }
 
   private boolean removeSessionValue(final String key) {
-    return getTransactionProvider().withTransaction(new TransactionFunction<Boolean>() {
+    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
       @Override
       public Boolean invoke(EntityManager entityManager) {
         Query deleteSessionKeyQuery = entityManager

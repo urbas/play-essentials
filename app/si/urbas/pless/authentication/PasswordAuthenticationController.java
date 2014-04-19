@@ -1,12 +1,12 @@
 package si.urbas.pless.authentication;
 
 import play.mvc.Result;
-import si.urbas.pless.PlessController;
+import si.urbas.pless.PlessJpaController;
 import si.urbas.pless.users.PlessUser;
 
 import static si.urbas.pless.authentication.PlessPasswordAuthenticator.getPasswordAuthenticator;
 
-public final class PasswordAuthenticationController extends PlessController {
+public final class PasswordAuthenticationController extends PlessJpaController {
 
   public static Result logIn(final String email, final String password) {
     try {

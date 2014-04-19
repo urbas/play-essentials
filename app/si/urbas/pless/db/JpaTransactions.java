@@ -3,9 +3,8 @@ package si.urbas.pless.db;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-public abstract class JpaTransactionProvider implements TransactionProvider {
+public abstract class JpaTransactions {
 
-  @Override
   public void withTransaction(final TransactionCallback callback) {
     withTransaction(new TransactionFunction<Void>() {
       @Override
@@ -16,7 +15,6 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
     });
   }
 
-  @Override
   public <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     EntityManager entityManager = null;
     EntityTransaction tx = null;
@@ -34,7 +32,14 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
     }
   }
 
-  @Override
+  /**
+   * Retrieves a connection to pass on to the given query function.
+   * This method does not start a transaction and should be used for read-only operations.
+   *
+   * @param databaseQueryFunction the callback that will be invoked with a database connection.
+   * @param <T> the type of the result of the callback function.
+   * @return the same return value that is returned by the database query function.
+   */
   public <T> T usingDb(TransactionFunction<T> databaseQueryFunction) {
     EntityManager entityManager = null;
     try {
@@ -45,9 +50,9 @@ public abstract class JpaTransactionProvider implements TransactionProvider {
     }
   }
 
-  protected abstract void closeEntityManager(EntityManager entityManager);
+  public abstract EntityManager getEntityManager();
 
-  protected abstract EntityManager getEntityManager();
+  public abstract void closeEntityManager(EntityManager entityManager);
 
   private void commitTransaction(EntityTransaction tx) {
     if (tx.getRollbackOnly()) {

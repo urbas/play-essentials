@@ -2,8 +2,8 @@ package si.urbas.pless.test;
 
 import si.urbas.pless.authentication.ClientSessionStorage;
 import si.urbas.pless.authentication.JpaServerSessionStorage;
-import si.urbas.pless.db.RawJpaTransactionProvider;
-import si.urbas.pless.db.TransactionProvider;
+import si.urbas.pless.db.JpaTransactions;
+import si.urbas.pless.db.RawJpaTransactions;
 import si.urbas.pless.users.PlessJpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
@@ -24,12 +24,12 @@ public class JpaApplication extends MockedApplication {
   public JpaApplication(String testPersistenceUnit,
                         ConfigurationSource configurationSource,
                         ClientSessionStorage clientSessionStorage,
-                        TransactionProvider transactionProvider) {
+                        JpaTransactions jpaTransaction) {
     super(
       configurationSource,
       null,
       clientSessionStorage,
-      transactionProvider == null ? createSpiedRawJpaTransactionProvider() : transactionProvider,
+      jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction,
       spy(new JpaServerSessionStorage()),
       spy(new PlessJpaUserRepository()),
       null,
@@ -39,5 +39,5 @@ public class JpaApplication extends MockedApplication {
     setConfigurationString(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
 
-  static RawJpaTransactionProvider createSpiedRawJpaTransactionProvider() {return spy(new RawJpaTransactionProvider());}
+  static RawJpaTransactions createSpiedRawJpaTransactions() {return spy(new RawJpaTransactions());}
 }
