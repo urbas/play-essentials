@@ -1,6 +1,5 @@
 package si.urbas.pless.test;
 
-import si.urbas.pless.authentication.PlayHttpContextClientSessionStorage;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
@@ -18,13 +17,8 @@ public class MockedPlayApplication extends MockedApplication {
   }
 
   public MockedPlayApplication(final Map<String, String> playApplicationOptions) {
-    super(createTestModePlayConfiguration(), createPlayHttpContextClientSessionStorage());
-    doInitialisation(new Body() {
-      @Override
-      public void invoke() {
-        temporaryServices.add(new TemporaryPlayApplication(playApplicationOptions));
-      }
-    });
+    super(createTestModePlayConfiguration(), null);
+    startPlayApplication(playApplicationOptions);
   }
 
   static ConfigurationSource createTestModePlayConfiguration() {
@@ -34,5 +28,13 @@ public class MockedPlayApplication extends MockedApplication {
     return currentConfiguration;
   }
 
-  static PlayHttpContextClientSessionStorage createPlayHttpContextClientSessionStorage() {return spy(new PlayHttpContextClientSessionStorage());}
+  private void startPlayApplication(final Map<String, String> playApplicationOptions) {
+    doInitialisation(new Body() {
+      @Override
+      public void invoke() {
+        temporaryServices.add(new TemporaryPlayApplication(playApplicationOptions));
+      }
+    });
+  }
+
 }

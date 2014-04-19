@@ -10,6 +10,7 @@ import org.junit.Before;
 public class PlayJpaControllerTest extends PlessJpaTest {
   @Before
   public void setUp() {
-    plessTestApplication = new PlayJpaApplication(getTestPersistenceUnit());
+    plessTestApplication = new PlayJpaApplication(getTestPersistenceUnit(), getClientSessionStorage());
   }
+
 }

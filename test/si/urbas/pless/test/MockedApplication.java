@@ -2,9 +2,9 @@ package si.urbas.pless.test;
 
 
 import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.authentication.HashMapClientSessionStorage;
 import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
-import si.urbas.pless.authentication.TestClientSessionStorage;
 import si.urbas.pless.db.TransactionProvider;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.users.*;
@@ -42,9 +42,9 @@ public class MockedApplication extends TestApplication {
       public void invoke() {
         temporaryServices.add(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
         temporaryServices.add(new TemporaryEmailProvider(emailProvider == null ? createMockedEmailProvider() : emailProvider));
-        temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage == null ? createSpiedClientSessionStorage() : clientSessionStorage));
+        temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
         temporaryServices.add(new TemporaryTransactionProvider(transactionProvider == null ? createMockedTransactionProvider() : transactionProvider));
-        temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedServerSessionStorage() : serverSessionStorage));
+        temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         temporaryServices.add(new TemporaryUserRepository(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
         temporaryServices.add(new TemporaryFactories(factories == null ? new HashMap<String, Factory<?>>() : factories));
         temporaryServices.add(new TemporaryServices(services == null ? collectEntries(createMockedSignupService()) : services));
@@ -54,11 +54,11 @@ public class MockedApplication extends TestApplication {
 
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
-  protected static ServerSessionStorage createSpiedServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
+  protected static ClientSessionStorage createSpiedHashMapClientSessionStorage() {return spy(new HashMapClientSessionStorage());}
+
+  protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
 
   protected static TransactionProvider createMockedTransactionProvider() {return mock(TransactionProvider.class);}
-
-  protected static ClientSessionStorage createSpiedClientSessionStorage() {return spy(new TestClientSessionStorage());}
 
   protected void doInitialisation(Body initialisationMethod) {
     try {

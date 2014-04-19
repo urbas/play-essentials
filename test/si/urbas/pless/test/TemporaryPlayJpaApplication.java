@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static play.test.Helpers.inMemoryDatabase;
-import static si.urbas.pless.test.TestJpaApplication.APP_CONFIG_JPA_DEFAULT;
+import static si.urbas.pless.test.JpaApplication.APP_CONFIG_JPA_DEFAULT;
 
 public class TemporaryPlayJpaApplication extends TemporaryPlayApplication {
 

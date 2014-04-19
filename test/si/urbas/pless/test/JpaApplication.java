@@ -8,26 +8,28 @@ import si.urbas.pless.users.PlessJpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
 import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
 
-public class TestJpaApplication extends MockedApplication {
+public class JpaApplication extends MockedApplication {
   public static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";
 
-  public TestJpaApplication(String testPersistenceUnit) {
-    this(testPersistenceUnit, null, null, spy(new RawJpaTransactionProvider())
-    );
+  public JpaApplication(String testPersistenceUnit) {
+    this(testPersistenceUnit, null);
   }
 
-  public TestJpaApplication(String testPersistenceUnit,
-                            ConfigurationSource configurationSource,
-                            ClientSessionStorage clientSessionStorage,
-                            TransactionProvider transactionProvider) {
+  public JpaApplication(String testPersistenceUnit, ClientSessionStorage clientSessionStorage) {
+    this(testPersistenceUnit, null, clientSessionStorage, null);
+  }
+
+  public JpaApplication(String testPersistenceUnit,
+                        ConfigurationSource configurationSource,
+                        ClientSessionStorage clientSessionStorage,
+                        TransactionProvider transactionProvider) {
     super(
       configurationSource,
-      createMockedEmailProvider(),
+      null,
       clientSessionStorage,
-      transactionProvider,
+      transactionProvider == null ? createSpiedRawJpaTransactionProvider() : transactionProvider,
       spy(new JpaServerSessionStorage()),
       spy(new PlessJpaUserRepository()),
       null,
@@ -37,4 +39,5 @@ public class TestJpaApplication extends MockedApplication {
     setConfigurationString(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
 
+  static RawJpaTransactionProvider createSpiedRawJpaTransactionProvider() {return spy(new RawJpaTransactionProvider());}
 }

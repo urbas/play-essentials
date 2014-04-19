@@ -17,14 +17,14 @@ public class AuthenticationServiceTest {
   private AuthenticationService authenticationSession;
   private HashMapServerSessionStorage serverSessionStorage;
   private PlessUser activatedUser;
-  private TestClientSessionStorage clientSessionStorage;
+  private HashMapClientSessionStorage clientSessionStorage;
 
   @Before
   public void setUp() {
     activatedUser = spy(user);
     doReturn(true).when(activatedUser).isActivated();
     serverSessionStorage = new HashMapServerSessionStorage();
-    clientSessionStorage = new TestClientSessionStorage();
+    clientSessionStorage = new HashMapClientSessionStorage();
     authenticationSession = new AuthenticationService(
       clientSessionStorage,
       serverSessionStorage,

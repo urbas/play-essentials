@@ -3,8 +3,8 @@ package si.urbas.pless.users;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import si.urbas.pless.test.JpaApplication;
 import si.urbas.pless.test.PlessJpaConfiguration;
-import si.urbas.pless.test.TestJpaApplication;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -18,11 +18,11 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
   @SuppressWarnings("UnusedDeclaration")
   private static final JpaPlessUser FIRST_USER = new JpaPlessUser(1L);
   public static final String EXTENDED_COLUMN_VALUE = "this is test";
-  private TestJpaApplication jpaApplication;
+  private JpaApplication jpaApplication;
 
   @Before
   public void setUp() throws Exception {
-    jpaApplication = new TestJpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);
+    jpaApplication = new JpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);
     userRepository = PlessUserRepository.getUserRepository();
   }
 
