@@ -5,7 +5,7 @@ import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
 
-public class TestClientSessionStorage implements Factory<ClientSessionStorage> {
+public class TestClientSessionStorageFactory implements Factory<ClientSessionStorage> {
   public static ClientSessionStorage currentClientSessionStorage;
 
   @Override

@@ -8,7 +8,7 @@ public class ClassLoaderFactoryCreator implements Function<String, Factory<?>> {
   @Override
   public Factory<?> invoke(String className) {
     try {
-      return (Factory) classLoader.loadClass(className).getConstructor().newInstance();
+      return (Factory) classLoader.loadClass(className).newInstance();
     } catch (Exception e) {
       throw new RuntimeException("Could not instantiate class '" + className + "'.", e);
     }

@@ -3,13 +3,10 @@ package si.urbas.pless.users;
 import play.api.templates.Html;
 import play.data.Form;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
-import si.urbas.pless.util.SingletonFactory;
+import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class SignupService {
   public static final String CONFIG_SIGNUP_SERVICE = "pless.signupService";
@@ -33,17 +30,11 @@ public class SignupService {
   }
 
   public static SignupService getSignupService() {
-    return SignupServiceSingleton.INSTANCE.createInstance(getConfigurationSource());
+    return SignupServiceSingleton.INSTANCE.getInstance();
   }
 
   static final class SignupServiceSingleton {
-    private static final Factory<SignupService> INSTANCE = new SingletonFactory<>(CONFIG_SIGNUP_SERVICE, new DefaultSignupHandler());
+    private static final ServiceLoader<SignupService> INSTANCE = new ServiceLoader<>(CONFIG_SIGNUP_SERVICE, new SignupService());
   }
 
-  final static class DefaultSignupHandler implements Factory<SignupService> {
-    @Override
-    public SignupService createInstance(ConfigurationSource configurationSource) {
-      return new SignupService();
-    }
-  }
 }

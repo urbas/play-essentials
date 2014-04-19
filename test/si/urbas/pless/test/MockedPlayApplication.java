@@ -10,8 +10,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.test.MockedSignupService.createMockedSignupService;
-import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
 
 public class MockedPlayApplication extends MockedApplication {
 
@@ -20,15 +18,7 @@ public class MockedPlayApplication extends MockedApplication {
   }
 
   public MockedPlayApplication(final Map<String, String> playApplicationOptions) {
-    super(
-      createTestModePlayConfiguration(),
-      createMockedEmailProvider(),
-      createPlayHttpContextClientSessionStorage(),
-      createMockedTransactionProvider(),
-      createSpiedServerSessionStorage(),
-      createSpiedHashMapUserRepository(),
-      createMockedSignupService()
-    );
+    super(createTestModePlayConfiguration(), createPlayHttpContextClientSessionStorage());
     doInitialisation(new Body() {
       @Override
       public void invoke() {

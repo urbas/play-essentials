@@ -20,7 +20,6 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
   public static final String EXTENDED_COLUMN_VALUE = "this is test";
   private TestJpaApplication jpaApplication;
 
-
   @Before
   public void setUp() throws Exception {
     jpaApplication = new TestJpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);

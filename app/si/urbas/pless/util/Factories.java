@@ -107,7 +107,7 @@ public class Factories {
     @Override
     public Factory<?> invoke(String s) {
       try {
-        return (Factory<?>) Play.application().classloader().loadClass(s).getConstructor().newInstance();
+        return (Factory<?>) Play.application().classloader().loadClass(s).newInstance();
       } catch (Exception e) {
         throw new RuntimeException("Could not instantiate class '" + s + "'.", e);
       }

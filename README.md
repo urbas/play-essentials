@@ -38,7 +38,7 @@ reusability from Java, testability from JUnit, and general configurability.
 
         resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 
-        libraryDependencies += "si.urbas" %% "pless" % "0.0.6"
+        libraryDependencies += "si.urbas" %% "pless" % "0.0.7"
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
 
@@ -124,4 +124,4 @@ You can put these configuration settings into `conf/application.conf`:
 
 Pless comes with classes that make tests in JUnit easier. To use them, just add this dependency:
 
-    libraryDependencies += "si.urbas" %% "pless" % "0.0.6" % "test->test" classifier "tests"
+    libraryDependencies += "si.urbas" %% "pless" % "0.0.7" % "test->test" classifier "tests"

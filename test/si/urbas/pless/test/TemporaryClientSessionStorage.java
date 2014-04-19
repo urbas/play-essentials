@@ -1,7 +1,7 @@
 package si.urbas.pless.test;
 
 import static si.urbas.pless.authentication.PlessClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
-import static si.urbas.pless.test.TestClientSessionStorage.currentClientSessionStorage;
+import static si.urbas.pless.test.TestClientSessionStorageFactory.currentClientSessionStorage;
 import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationClass;
 import static org.mockito.Mockito.mock;
 
@@ -17,7 +17,7 @@ public class TemporaryClientSessionStorage implements AutoCloseable {
 
   public TemporaryClientSessionStorage(ClientSessionStorage clientSessionStorage) {
     currentClientSessionStorage = clientSessionStorage;
-    setConfigurationClass(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, TestClientSessionStorage.class);
+    setConfigurationClass(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, TestClientSessionStorageFactory.class);
   }
 
   @Override

@@ -12,6 +12,7 @@ import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
@@ -21,15 +22,11 @@ import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvid
 public class MockedApplication extends TestApplication {
 
   public MockedApplication() {
-    this(
-      mock(ConfigurationSource.class),
-      createMockedEmailProvider(),
-      createSpiedClientSessionStorage(),
-      createMockedTransactionProvider(),
-      createSpiedServerSessionStorage(),
-      createSpiedHashMapUserRepository(),
-      createMockedSignupService()
-    );
+    this(null, null, null, null, null, null, null, null);
+  }
+
+  public MockedApplication(ConfigurationSource configurationSource, ClientSessionStorage clientSessionStorage) {
+    this(configurationSource, null, clientSessionStorage, null, null, null, null, null);
   }
 
   public MockedApplication(final ConfigurationSource configurationSource,
@@ -38,17 +35,19 @@ public class MockedApplication extends TestApplication {
                            final TransactionProvider transactionProvider,
                            final ServerSessionStorage serverSessionStorage,
                            final UserRepository userRepository,
-                           final Map<String, Factory<?>> factories) {
+                           final Map<String, Factory<?>> factories,
+                           final Map<String, Object> services) {
     doInitialisation(new Body() {
       @Override
       public void invoke() {
-        temporaryServices.add(new TemporaryConfiguration(configurationSource));
-        temporaryServices.add(new TemporaryEmailProvider(emailProvider));
-        temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage));
-        temporaryServices.add(new TemporaryTransactionProvider(transactionProvider));
-        temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage));
-        temporaryServices.add(new TemporaryUserRepository(userRepository));
-        temporaryServices.add(new TemporaryFactories(factories));
+        temporaryServices.add(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
+        temporaryServices.add(new TemporaryEmailProvider(emailProvider == null ? createMockedEmailProvider() : emailProvider));
+        temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage == null ? createSpiedClientSessionStorage() : clientSessionStorage));
+        temporaryServices.add(new TemporaryTransactionProvider(transactionProvider == null ? createMockedTransactionProvider() : transactionProvider));
+        temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedServerSessionStorage() : serverSessionStorage));
+        temporaryServices.add(new TemporaryUserRepository(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
+        temporaryServices.add(new TemporaryFactories(factories == null ? new HashMap<String, Factory<?>>() : factories));
+        temporaryServices.add(new TemporaryServices(services == null ? collectEntries(createMockedSignupService()) : services));
       }
     });
   }
@@ -68,6 +67,15 @@ public class MockedApplication extends TestApplication {
       close();
       throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
     }
+  }
+
+  @SafeVarargs
+  static <K, V> Map<K, V> collectEntries(Map.Entry<K, V>... serviceEntries) {
+    HashMap<K, V> services = new HashMap<>();
+    for (Map.Entry<K, V> service : serviceEntries) {
+      services.put(service.getKey(), service.getValue());
+    }
+    return services;
   }
 
 }

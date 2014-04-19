@@ -6,6 +6,8 @@ import javax.persistence.NoResultException;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.DateMatchers.dateWithin;
 import static si.urbas.pless.users.UserMatchers.*;
 
@@ -57,6 +59,13 @@ public abstract class UserRepositoryTest {
       persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
       is(not(activeUser()))
     );
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void persistUser_MUST_throw_an_exception_WHEN_user_validation_fails() {
+    PlessUser invalidUser = mock(PlessUser.class);
+    when(invalidUser.validateForPersist()).thenReturn("User is not valid");
+    userRepository.persistUser(invalidUser);
   }
 
   @Test

@@ -37,9 +37,14 @@ public class HashMapUserRepository implements UserRepository {
   }
 
   @Override
-  public void persistUser(PlessUser newUser) {
-    emailToUserMap.put(newUser.getEmail(), newUser);
-    idToUserMap.put(newUser.getId(), newUser);
+  public void persistUser(PlessUser user) {
+    String validationError = user.validateForPersist();
+    if (validationError == null) {
+      emailToUserMap.put(user.getEmail(), user);
+      idToUserMap.put(user.getId(), user);
+    } else {
+      throw new RuntimeException("Cannot persist the user '" + user + "'. Validation error: " + validationError);
+    }
   }
 
   @Override
