@@ -6,14 +6,14 @@ public class PlessConfigurationSource {
   static ConfigurationSource configurationSource;
 
   public static ConfigurationSource getConfigurationSource() {
-    return configurationSource == null ? Singleton.INSTANCE : configurationSource;
+    return configurationSource == null ? ConfigurationSourceSingleton.INSTANCE : configurationSource;
   }
 
   public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
     PlessConfigurationSource.configurationSource = newConfigurationSource;
   }
 
-  private static final class Singleton {
+  static final class ConfigurationSourceSingleton {
     public static final ConfigurationSource INSTANCE;
 
     static {
