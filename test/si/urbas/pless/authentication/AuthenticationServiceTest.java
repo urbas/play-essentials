@@ -41,6 +41,11 @@ public class AuthenticationServiceTest {
     assertNull(authenticationSession.getLoggedInUserEmail());
   }
 
+  @Test
+  public void getLoggedInUserId_MUST_return_negative_1_WHEN_session_is_not_started() throws Exception {
+    assertEquals(-1, authenticationSession.getLoggedInUserId());
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void logIn_MUST_throw_an_exception_WHEN_no_authentication_token_is_present() throws Exception {
     authenticationSession.logIn(null);
@@ -79,9 +84,15 @@ public class AuthenticationServiceTest {
   }
 
   @Test
-  public void getLoggedInUserEmail_MUST_return_the_id_with_which_the_session_was_started() throws Exception {
+  public void getLoggedInUserEmail_MUST_return_the_email_with_which_the_session_was_started() throws Exception {
     authenticationSession.logIn(activatedUser);
     assertEquals(activatedUser.getEmail(), authenticationSession.getLoggedInUserEmail());
+  }
+
+  @Test
+  public void getLoggedInUserId_MUST_return_the_id_with_which_the_session_was_started() throws Exception {
+    authenticationSession.logIn(activatedUser);
+    assertEquals(activatedUser.getId(), authenticationSession.getLoggedInUserId());
   }
 
   private PlessUser createJohnSmithUser() {

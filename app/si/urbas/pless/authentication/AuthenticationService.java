@@ -2,6 +2,8 @@ package si.urbas.pless.authentication;
 
 import si.urbas.pless.users.PlessUser;
 
+import static si.urbas.pless.authentication.LoggedInUserInfo.toRawLoginData;
+
 public class AuthenticationService {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
   static final String SESSION_ID_KEY = "pless.session";
@@ -25,20 +27,27 @@ public class AuthenticationService {
       throw new IllegalStateException("Could not log in. The user is not activated.");
     }
     String sessionId = createSessionId();
-    storeServerSessionValue(getEmailServerSessionKey(sessionId), user.getEmail());
+    storeServerSessionValue(getEmailServerSessionKey(sessionId), toRawLoginData(user));
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
 
   public boolean isLoggedIn() {
-    return getLoggedInUserEmail() != null;
+    return getRawLoginSessionData() != null;
+  }
+
+  public LoggedInUserInfo getLoggedInUserInfo() {
+    String loginSessionData = getRawLoginSessionData();
+    return loginSessionData == null ? null : new LoggedInUserInfo(loginSessionData);
   }
 
   public String getLoggedInUserEmail() {
-    final String sessionIdFromClient = getSessionIdFromClient();
-    if (sessionIdFromClient == null) {
-      return null;
-    }
-    return serverSessionStorage.get(getEmailServerSessionKey(sessionIdFromClient));
+    LoggedInUserInfo loggedInUserInfo = getLoggedInUserInfo();
+    return loggedInUserInfo == null ? null : loggedInUserInfo.email;
+  }
+
+  public long getLoggedInUserId() {
+    LoggedInUserInfo loggedInUserInfo = getLoggedInUserInfo();
+    return loggedInUserInfo == null ? -1 : loggedInUserInfo.userId;
   }
 
   public void logOut() {
@@ -69,5 +78,10 @@ public class AuthenticationService {
 
   private String getEmailServerSessionKey(String sessionId) {
     return sessionId;
+  }
+
+  private String getRawLoginSessionData() {
+    String sessionIdFromClient = getSessionIdFromClient();
+    return sessionIdFromClient == null ? null : serverSessionStorage.get(getEmailServerSessionKey(sessionIdFromClient));
   }
 }
