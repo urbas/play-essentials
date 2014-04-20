@@ -6,7 +6,7 @@ import play.mvc.Results.Status;
 
 public class JsonResults {
 
-  public static Status ok(JsValue json) {
+  public static Status okJson(JsValue json) {
     return new play.mvc.Results.Status(play.core.j.JavaResults.Ok(), asContent(json), Codec.utf_8());
   }
 

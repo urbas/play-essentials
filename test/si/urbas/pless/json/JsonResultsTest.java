@@ -14,17 +14,17 @@ import static si.urbas.pless.json.JsonResults.asContent;
 public class JsonResultsTest {
 
   private final JsString fooJsString = new JsString("foo");
-  private final ResponseHeader responseHeader = JsonResults.ok(fooJsString).getWrappedSimpleResult().header();
+  private final ResponseHeader responseHeader = JsonResults.okJson(fooJsString).getWrappedSimpleResult().header();
   @SuppressWarnings("UnusedDeclaration")
   private final JsonResults jsonResults = new JsonResults();
 
   @Test
-  public void ok_MUST_return_an_OK_status_result() throws Exception {
+  public void okJson_MUST_return_an_OK_status_result() throws Exception {
     assertEquals(OK, responseHeader.status());
   }
 
   @Test
-  public void ok_MUST_return_json_content_type_result() throws Exception {
+  public void okJson_MUST_return_json_content_type_result() throws Exception {
     assertThat(
       responseHeader.headers().get(CONTENT_TYPE).get(),
       startsWith(asContent(fooJsString).contentType())
