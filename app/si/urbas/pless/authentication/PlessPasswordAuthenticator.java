@@ -29,10 +29,10 @@ public class PlessPasswordAuthenticator {
   }
   
   public static PlessPasswordAuthenticator getPasswordAuthenticator() {
-      return Singletons.PASSWORD_AUTHENTICATOR;
+      return PasswordAuthenticatorSingleton.INSTANCE;
   }
 
-  private static final class Singletons {
-    public static final PlessPasswordAuthenticator PASSWORD_AUTHENTICATOR = new PlessPasswordAuthenticator();
+  static final class PasswordAuthenticatorSingleton {
+    public static final PlessPasswordAuthenticator INSTANCE = new PlessPasswordAuthenticator();
   }
 }

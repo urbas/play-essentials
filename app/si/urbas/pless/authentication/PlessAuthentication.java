@@ -8,14 +8,14 @@ public final class PlessAuthentication {
 
   public static AuthenticationService getAuthenticationService() {
     if (getConfigurationSource().isProduction()) {
-      return Singletons.AUTHENTICATION_SERVICE;
+      return AuthenticationServiceSingleton.INSTANCE;
     } else {
       return createAuthenticationSession();
     }
   }
   
-  private static final class Singletons {
-    public static final AuthenticationService AUTHENTICATION_SERVICE = createAuthenticationSession();
+  static final class AuthenticationServiceSingleton {
+    public static final AuthenticationService INSTANCE = createAuthenticationSession();
   }
 
   private static AuthenticationService createAuthenticationSession() {

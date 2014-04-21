@@ -5,6 +5,7 @@ import si.urbas.pless.test.PlessTest;
 
 import javax.persistence.NoResultException;
 
+import static si.urbas.pless.authentication.PlessPasswordAuthenticator.PasswordAuthenticatorSingleton;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
@@ -16,6 +17,8 @@ public class PlessPasswordAuthenticatorTest extends PlessTest {
   private final PasswordLoginForm emptyPasswordLoginForm = new PasswordLoginForm();
   private final PasswordLoginForm incorrectPasswordLoginForm = new PasswordLoginForm(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD + "a");
   private final PlessPasswordAuthenticator plessPasswordAuthenticator = new PlessPasswordAuthenticator();
+  @SuppressWarnings("UnusedDeclaration")
+  private final PasswordAuthenticatorSingleton passwordAuthenticatorSingleton = new PasswordAuthenticatorSingleton();
 
   @Test(expected = NoResultException.class)
   public void authenticateUser_MUST_throw_WHEN_the_user_does_not_exist() throws Exception {

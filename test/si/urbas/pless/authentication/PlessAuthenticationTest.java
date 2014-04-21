@@ -6,6 +6,7 @@ import si.urbas.pless.test.PlessTest;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static si.urbas.pless.authentication.PlessAuthentication.AuthenticationServiceSingleton;
 import static si.urbas.pless.authentication.PlessAuthentication.getAuthenticationService;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
@@ -13,6 +14,8 @@ public class PlessAuthenticationTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static PlessAuthentication plessAuthentication = new PlessAuthentication();
+  @SuppressWarnings("UnusedDeclaration")
+  private static AuthenticationServiceSingleton authenticationServiceSingleton = new AuthenticationServiceSingleton();
 
   @Test
   public void getAuthenticationService_MUST_always_return_the_same_instance_WHEN_in_production_mode() throws Exception {
