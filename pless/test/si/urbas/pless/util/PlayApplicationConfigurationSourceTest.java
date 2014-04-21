@@ -1,25 +1,38 @@
 package si.urbas.pless.util;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.PlayJpaControllerTest;
 import si.urbas.pless.test.TemporaryPlayApplication;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class PlayApplicationConfigurationSourceTest extends PlayJpaControllerTest {
+public class PlayApplicationConfigurationSourceTest {
 
+  private static final String CONFIG_STRING_TEST = "pless.configurationTest";
+  private static final String CONFIG_STRING_TEST_VALUE = "test configuration value";
+  private static final String CONFIG_BOOLEAN_TEST = "pless.booleanConfigurationTest";
+  private static final boolean CONFIG_BOOLEAN_TEST_VALUE = false;
+  private static final String CONFIG_INT_TEST = "pless.intConfigurationTest";
+  private static final int CONFIG_INT_TEST_VALUE = 4242;
   private PlayApplicationConfigurationSource playApplicationConfigurationSource;
   private TemporaryPlayApplication temporaryPlayApplication;
+  private HashMap<String, String> applicationOptions;
 
   @Before
   public void setUp() {
-    temporaryPlayApplication = new TemporaryPlayApplication();
+    applicationOptions = new HashMap<>();
+    applicationOptions.put(CONFIG_STRING_TEST, CONFIG_STRING_TEST_VALUE);
+    applicationOptions.put(CONFIG_BOOLEAN_TEST, Boolean.toString(CONFIG_BOOLEAN_TEST_VALUE));
+    applicationOptions.put(CONFIG_INT_TEST, Integer.toString(CONFIG_INT_TEST_VALUE));
+    temporaryPlayApplication = new TemporaryPlayApplication(applicationOptions);
     playApplicationConfigurationSource = new PlayApplicationConfigurationSource();
   }
 
-  @Override
+  @After
   public void tearDown() {
     temporaryPlayApplication.close();
   }
@@ -37,8 +50,8 @@ public class PlayApplicationConfigurationSourceTest extends PlayJpaControllerTes
   @Test
   public void getString_MUST_return_the_value_from_application_configuration() throws Exception {
     assertEquals(
-      "test configuration value",
-      playApplicationConfigurationSource.getString("pless.configurationTest")
+      CONFIG_STRING_TEST_VALUE,
+      playApplicationConfigurationSource.getString(CONFIG_STRING_TEST)
     );
   }
 
@@ -53,8 +66,8 @@ public class PlayApplicationConfigurationSourceTest extends PlayJpaControllerTes
   @Test
   public void getInt_MUST_return_the_value_from_application_configuration() throws Exception {
     assertEquals(
-      4242,
-      playApplicationConfigurationSource.getInt("pless.intConfigurationTest", 123)
+      CONFIG_INT_TEST_VALUE,
+      playApplicationConfigurationSource.getInt(CONFIG_INT_TEST, 123)
     );
   }
 
@@ -69,8 +82,8 @@ public class PlayApplicationConfigurationSourceTest extends PlayJpaControllerTes
   @Test
   public void getBoolean_MUST_return_the_value_from_application_configuration() throws Exception {
     assertEquals(
-      false,
-      playApplicationConfigurationSource.getBoolean("pless.booleanConfigurationTest", true)
+      CONFIG_BOOLEAN_TEST_VALUE,
+      playApplicationConfigurationSource.getBoolean(CONFIG_BOOLEAN_TEST, true)
     );
   }
 }

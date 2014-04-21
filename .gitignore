@@ -1,7 +1,13 @@
 /.idea/libraries
 /.idea/modules
+/.idea_modules
 /.idea/vcs.xml
 /.idea/workspace.xml
+/.idea/uiDesigner.xml
+/**/*.iml
 /target/
 /project/target/
 /project/project/
+/logs/
+/.settings/
+README.html

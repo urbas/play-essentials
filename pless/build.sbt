@@ -92,22 +92,4 @@ releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).a
   .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
-//lazy val pless = Project.project
-//  .in(file("."))
-//  .aggregate(plessAggregator)
-//
-//lazy val plessAggregator = Project.project
-//  .in(file("plessAggregator"))
-//  .aggregate(plessTest, plessJpa, plessJpaTest)
-//
-//lazy val plessTest = Project.project
-//  .in(file("plessTest"))
-//  .dependsOn(pless % "compile->compile")
-//
-//lazy val plessJpa = Project.project
-//  .in(file("plessJpa"))
-//
-//lazy val plessJpaTest = Project.project
-//  .in(file("plessJpaTest"))
-
 play.Project.playJavaSettings

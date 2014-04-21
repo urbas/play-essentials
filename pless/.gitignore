@@ -6,11 +6,6 @@ target
 tmp
 .history
 dist
-/.idea/uiDesigner.xml
-/.idea/workspace.xml
-/.idea/tasks.xml
-/.idea/libraries
-/.idea/sbt.xml
 *.iml
 /out
 /.idea_modules
