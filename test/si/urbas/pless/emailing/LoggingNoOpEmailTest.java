@@ -24,4 +24,9 @@ public class LoggingNoOpEmailTest {
     verify(logger).debug(any(String.class));
   }
 
+  @Test
+  public void send_MUST_use_the_system_logger_WHEN_none_is_provided() throws Exception {
+    new LoggingNoOpEmail().send();
+  }
+
 }

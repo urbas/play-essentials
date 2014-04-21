@@ -15,14 +15,14 @@ public final class PlessEmailing {
   public static final String CONFIG_SMTP_FROM = "smtp.from";
   public static final String CONFIG_EMAIL_PROVIDER = "pless.emailProviderFactory";
 
-  public void sendEmail(String recepient,
+  public void sendEmail(String recipient,
                         String subject,
                         Html body) {
     String sender = getConfigurationSource()
       .getString(CONFIG_SMTP_FROM);
     Email email = getEmailProvider().createEmail(getConfigurationSource());
     email.setFrom(sender);
-    email.setRecipient(recepient);
+    email.setRecipient(recipient);
     email.setSubject(subject);
     email.setBody(body);
     email.send();
@@ -33,15 +33,15 @@ public final class PlessEmailing {
   }
 
   public static EmailProvider getEmailProvider() {
-    return Singleton.EMAIL_PROVIDER_FACTORY
+    return EmailingSingletons.EMAIL_PROVIDER_FACTORY
       .createInstance(getConfigurationSource());
   }
 
   public static PlessEmailing getEmailing() {
-    return Singleton.PLESS_EMAILING;
+    return EmailingSingletons.PLESS_EMAILING;
   }
 
-  private static class Singleton {
+  static class EmailingSingletons {
     private static final SingletonFactory<EmailProvider> EMAIL_PROVIDER_FACTORY = new SingletonFactory<>(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());
     private static final PlessEmailing PLESS_EMAILING = new PlessEmailing();
   }

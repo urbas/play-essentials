@@ -8,6 +8,7 @@ import si.urbas.pless.test.TemporaryEmailProvider;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static si.urbas.pless.emailing.PlessEmailing.EmailingSingletons;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
@@ -15,6 +16,8 @@ public class PlessEmailingTest extends PlessTest {
   private static final String EMAIL_RECEPIENT = "Jane Doe <jane.doe@example.com>";
   private static final String EMAIL_SUBJECT = "An email subject";
   private static final Html EMAIL_HTML_BODY = new Html(new StringBuilder("Some html content..."));
+  @SuppressWarnings("UnusedDeclaration")
+  private final EmailingSingletons emailingSingletons = new EmailingSingletons();
 
   @Test
   public void createEmail_MUST_use_the_email_provider() throws Exception {

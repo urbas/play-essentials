@@ -7,12 +7,21 @@ public class ServiceLoader<T> {
 
   private static Function<String, Object> overriddenServiceCreator;
   private final String serviceClassNameConfigKey;
-  private final T defaultService;
+  private final Supplier<T> defaultServiceSupplier;
   private T cachedService;
 
-  public ServiceLoader(String serviceClassNameConfigKey, T defaultService) {
+  public ServiceLoader(String serviceClassNameConfigKey, final T defaultService) {
+    this(serviceClassNameConfigKey, new Supplier<T>() {
+      @Override
+      public T get() {
+        return defaultService;
+      }
+    });
+  }
+
+  public ServiceLoader(String serviceClassNameConfigKey, Supplier<T> defaultServiceSupplier) {
     this.serviceClassNameConfigKey = serviceClassNameConfigKey;
-    this.defaultService = defaultService;
+    this.defaultServiceSupplier = defaultServiceSupplier;
   }
 
   public T getInstance() {
@@ -44,7 +53,7 @@ public class ServiceLoader<T> {
   @SuppressWarnings("unchecked")
   private T createService() {
     String serviceClassName = getConfigurationSource().getString(serviceClassNameConfigKey);
-    return serviceClassName == null ? defaultService : (T) getServiceCreator().invoke(serviceClassName);
+    return serviceClassName == null ? defaultServiceSupplier.get() : (T) getServiceCreator().invoke(serviceClassName);
   }
 
 }
