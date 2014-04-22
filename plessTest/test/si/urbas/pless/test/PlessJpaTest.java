@@ -2,7 +2,7 @@ package si.urbas.pless.test;
 
 import org.junit.After;
 import org.junit.Before;
-import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.sessions.ClientSessionStorage;
 
 public class PlessJpaTest {
   public static final String DEFAULT_TEST_PERSISTENCE_UNIT = "testPersistenceUnit";

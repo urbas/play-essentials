@@ -1,6 +1,6 @@
 package si.urbas.pless.test;
 
-import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.db.PlayJpaTransactions;
 import si.urbas.pless.util.Body;
 

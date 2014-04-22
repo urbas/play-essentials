@@ -1,13 +1,15 @@
 package si.urbas.pless.test;
 
 
-import si.urbas.pless.authentication.ClientSessionStorage;
-import si.urbas.pless.authentication.HashMapClientSessionStorage;
-import si.urbas.pless.authentication.HashMapServerSessionStorage;
-import si.urbas.pless.authentication.ServerSessionStorage;
+import si.urbas.pless.sessions.ClientSessionStorage;
+import si.urbas.pless.sessions.HashMapClientSessionStorage;
+import si.urbas.pless.sessions.HashMapServerSessionStorage;
+import si.urbas.pless.sessions.ServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.test.emailing.TemporaryEmailProvider;
+import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
+import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.util.TemporaryFactories;
 import si.urbas.pless.test.util.TemporaryServices;

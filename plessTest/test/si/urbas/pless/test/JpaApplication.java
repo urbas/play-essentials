@@ -1,7 +1,7 @@
 package si.urbas.pless.test;
 
-import si.urbas.pless.authentication.ClientSessionStorage;
-import si.urbas.pless.authentication.JpaServerSessionStorage;
+import si.urbas.pless.sessions.ClientSessionStorage;
+import si.urbas.pless.sessions.JpaServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.RawJpaTransactions;
 import si.urbas.pless.users.PlessJpaUserRepository;

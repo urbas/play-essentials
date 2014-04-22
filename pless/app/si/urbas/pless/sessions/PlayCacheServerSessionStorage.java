@@ -1,13 +1,13 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import play.cache.Cache;
 
 /**
  * This server session storage uses Play's cache.
- * 
+ * <p/>
  * This class is stateless. Therefore, one instance of this class may be shared
  * across multiple requests.
- * 
+ *
  * @author matej
  */
 public class PlayCacheServerSessionStorage implements ServerSessionStorage {

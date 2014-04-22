@@ -1,4 +1,4 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 

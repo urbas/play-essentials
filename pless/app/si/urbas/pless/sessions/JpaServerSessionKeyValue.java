@@ -1,4 +1,4 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import java.util.Calendar;
 
@@ -20,6 +20,7 @@ public class JpaServerSessionKeyValue {
   @Column(nullable = false)
   private int expirationDuration;
 
+  @SuppressWarnings("UnusedDeclaration")
   public JpaServerSessionKeyValue() {}
 
   public JpaServerSessionKeyValue(String key, String value, int expirationDuration) {
@@ -27,6 +28,10 @@ public class JpaServerSessionKeyValue {
     this.value = value;
     this.expirationDuration = expirationDuration;
     this.expirationStart = Calendar.getInstance();
+  }
+
+  public String getKey() {
+    return key;
   }
 
   public String getValue() {

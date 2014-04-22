@@ -1,7 +1,7 @@
 package si.urbas.pless.users;
 
 import si.urbas.pless.authentication.SaltedHashedPassword;
-import si.urbas.pless.authentication.SessionIdGenerator;
+import si.urbas.pless.sessions.SessionIdGenerator;
 
 import javax.persistence.*;
 import java.util.Date;

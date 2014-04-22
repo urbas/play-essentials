@@ -5,6 +5,6 @@
         http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" version="2.1">
 	
 	<entity class="si.urbas.pless.users.JpaPlessUser"/>
-	<entity class="si.urbas.pless.authentication.JpaServerSessionKeyValue"/>
+	<entity class="si.urbas.pless.sessions.JpaServerSessionKeyValue"/>
 	
 </entity-mappings>

@@ -1,16 +1,14 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryServerSessionStorage;
-import si.urbas.pless.test.TestServerSessionStorage;
+import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
+import si.urbas.pless.test.sessions.TestServerSessionStorage;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.authentication.PlessServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
-import static si.urbas.pless.authentication.PlessServerSessionStorage.ServerSessionStorageSingleton;
-import static si.urbas.pless.authentication.PlessServerSessionStorage.getServerSessionStorage;
+import static si.urbas.pless.sessions.PlessServerSessionStorage.*;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class PlessServerSessionStorageTest extends PlessTest {
@@ -19,7 +17,7 @@ public class PlessServerSessionStorageTest extends PlessTest {
   private final PlessServerSessionStorage plessServerSessionStorage = new PlessServerSessionStorage();
   @SuppressWarnings("UnusedDeclaration")
   private final ServerSessionStorageSingleton serverSessionStorageSingleton = new ServerSessionStorageSingleton();
-  
+
   @Test
   public void getServerSessionStorage_MUST_return_the_configured_session_storage() throws Exception {
     assertThat(

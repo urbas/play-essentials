@@ -1,10 +1,12 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
+
+import si.urbas.pless.authentication.ValueWithExpiration;
 
 import java.util.HashMap;
 
 /**
  * This class is not thread-safe.
- * 
+ *
  * @author matej
  */
 public class HashMapServerSessionStorage implements ServerSessionStorage {

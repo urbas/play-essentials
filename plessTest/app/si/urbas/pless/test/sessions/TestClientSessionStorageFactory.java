@@ -1,6 +1,6 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.sessions;
 
-import si.urbas.pless.authentication.ClientSessionStorage;
+import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 

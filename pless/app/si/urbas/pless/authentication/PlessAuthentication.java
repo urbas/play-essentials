@@ -1,7 +1,9 @@
 package si.urbas.pless.authentication;
 
-import static si.urbas.pless.authentication.PlessClientSessionStorage.getClientSessionStorage;
-import static si.urbas.pless.authentication.PlessServerSessionStorage.getServerSessionStorage;
+import si.urbas.pless.sessions.SessionIdGenerator;
+
+import static si.urbas.pless.sessions.PlessClientSessionStorage.getClientSessionStorage;
+import static si.urbas.pless.sessions.PlessServerSessionStorage.getServerSessionStorage;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public final class PlessAuthentication {

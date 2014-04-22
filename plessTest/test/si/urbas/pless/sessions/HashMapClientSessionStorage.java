@@ -1,4 +1,4 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import java.util.HashMap;
 

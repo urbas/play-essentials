@@ -1,13 +1,13 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryClientSessionStorage;
+import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.authentication.PlessClientSessionStorage.*;
+import static si.urbas.pless.sessions.PlessClientSessionStorage.*;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class PlessClientSessionStorageTest extends PlessTest {

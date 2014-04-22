@@ -1,4 +1,4 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.sessions;
 
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
