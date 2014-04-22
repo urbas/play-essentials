@@ -7,6 +7,7 @@ import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.emailing.EmailProvider;
+import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.*;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;

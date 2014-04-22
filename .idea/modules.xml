@@ -6,6 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-essentials-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-essentials-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pless.iml" filepath="$PROJECT_DIR$/.idea/modules/pless.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pless-build.iml" filepath="$PROJECT_DIR$/.idea/modules/pless-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plessTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/plessTest-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/root.iml" filepath="$PROJECT_DIR$/.idea/modules/root.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/root-build.iml" filepath="$PROJECT_DIR$/.idea/modules/root-build.iml" />
     </modules>

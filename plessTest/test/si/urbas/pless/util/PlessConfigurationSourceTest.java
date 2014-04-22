@@ -11,7 +11,7 @@ import static si.urbas.pless.util.PlessConfigurationSource.loadPlayConfiguration
 import org.junit.Before;
 import org.junit.Test;
 
-import si.urbas.pless.test.TemporaryConfiguration;
+import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
 public class PlessConfigurationSourceTest {

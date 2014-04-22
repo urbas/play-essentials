@@ -3,7 +3,7 @@ package si.urbas.pless.util;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
-import si.urbas.pless.test.TemporaryConfiguration;
+import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
 import static org.hamcrest.Matchers.instanceOf;

@@ -32,18 +32,6 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-email" % "1.3.2"
 )
 
-// Test dependencies
-libraryDependencies ++= Seq(
-  "org.hamcrest" % "hamcrest-all" % "1.3" % "test",
-  "org.hamcrest" % "hamcrest-core" % "1.3" % "test",
-  ("junit" % "junit-dep" % "4.11" % "test")
-    .exclude("org.hamcrest", "hamcrest-core"),
-  ("org.mockito" % "mockito-all" % "1.9.5" % "test")
-    .exclude("org.hamcrest", "hamcrest-core"),
-  ("org.mockito" % "mockito-core" % "1.9.5" % "test")
-    .exclude("org.hamcrest", "hamcrest-core")
-)
-
 pomExtra := {
   <url>https://github.com/urbas/play-essentials</url>
     <licenses>

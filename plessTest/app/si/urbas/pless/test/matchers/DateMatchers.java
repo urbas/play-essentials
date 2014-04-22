@@ -1,4 +1,4 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.matchers;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
