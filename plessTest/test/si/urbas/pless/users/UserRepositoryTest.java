@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
-import static si.urbas.pless.users.UserMatchers.*;
+import static si.urbas.pless.test.matchers.UserMatchers.*;
 
 public abstract class UserRepositoryTest {
   protected UserRepository userRepository;

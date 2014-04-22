@@ -1,12 +1,12 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.emailing;
 
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
-public class TestEmailProvider implements Factory<EmailProvider> {
+public class TestEmailProviderFactory implements Factory<EmailProvider> {
   
-  static EmailProvider currentEmailProvider;
+  public static EmailProvider currentEmailProvider;
 
   @Override
   public EmailProvider createInstance(ConfigurationSource instance) {

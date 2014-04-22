@@ -1,4 +1,4 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.util;
 
 import si.urbas.pless.util.Factories;
 import si.urbas.pless.util.Factory;
@@ -7,7 +7,7 @@ import si.urbas.pless.util.Function;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
+import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationString;
 
 public class TemporaryFactories implements AutoCloseable {
 

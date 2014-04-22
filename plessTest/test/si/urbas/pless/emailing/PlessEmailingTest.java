@@ -4,7 +4,7 @@ import org.junit.Test;
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryEmailProvider;
+import si.urbas.pless.test.emailing.TemporaryEmailProvider;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

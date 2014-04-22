@@ -1,4 +1,4 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.util;
 
 import si.urbas.pless.util.Function;
 import si.urbas.pless.util.ServiceLoader;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
+import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationString;
 
 public class TemporaryServices implements AutoCloseable {
 

@@ -10,7 +10,7 @@ import play.mvc.Http;
  * 
  * @author matej
  */
-public class PlayHttpContextClientSessionStorage implements ClientSessionStorage {
+public class PlayHttpContextClientSessionStorage extends ClientSessionStorage {
   
   @Override
   public void put(String key, String value) {

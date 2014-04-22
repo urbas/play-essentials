@@ -1,22 +1,22 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.emailing;
 
 import si.urbas.pless.emailing.Email;
 import si.urbas.pless.emailing.EmailProvider;
+import si.urbas.pless.test.util.TestConfigurationUtils;
 import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.emailing.PlessEmailing.CONFIG_EMAIL_PROVIDER;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationClass;
-import static si.urbas.pless.test.TestEmailProvider.currentEmailProvider;
+import static si.urbas.pless.test.emailing.TestEmailProviderFactory.currentEmailProvider;
 
 public class TemporaryEmailProvider implements AutoCloseable {
   private final EmailProvider oldEmailProvider = currentEmailProvider;
 
   public TemporaryEmailProvider(EmailProvider emailProvider) {
     currentEmailProvider = emailProvider;
-    setConfigurationClass(CONFIG_EMAIL_PROVIDER, TestEmailProvider.class);
+    TestConfigurationUtils.setConfigurationClass(CONFIG_EMAIL_PROVIDER, TestEmailProviderFactory.class);
   }
 
   public TemporaryEmailProvider(Email emailToProvide) {

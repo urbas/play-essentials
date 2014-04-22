@@ -3,7 +3,7 @@ package si.urbas.pless.test;
 import si.urbas.pless.users.UserRepository;
 
 import static org.mockito.Mockito.mock;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationClass;
+import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationClass;
 import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
 import static si.urbas.pless.users.PlessUserRepository.CONFIG_USER_REPOSITORY;
 

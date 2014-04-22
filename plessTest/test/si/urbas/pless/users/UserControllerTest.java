@@ -25,7 +25,7 @@ import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUse
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserController.signUp;
-import static si.urbas.pless.users.UserMatchers.userWith;
+import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class UserControllerTest extends PlessTest {

@@ -1,11 +1,11 @@
 package si.urbas.pless.authentication;
 
-public interface ClientSessionStorage {
+public abstract class ClientSessionStorage {
 
-  void put(String key, String value);
+  public abstract void put(String key, String value);
 
-  void remove(String key);
+  public abstract void remove(String key);
 
-  String get(String key);
+  public abstract String get(String key);
 
 }

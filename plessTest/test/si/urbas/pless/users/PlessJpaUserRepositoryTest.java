@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
-import static si.urbas.pless.users.UserMatchers.userWith;
+import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 
 public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
 

@@ -8,7 +8,7 @@ import si.urbas.pless.users.PlessJpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationString;
+import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationString;
 
 public class JpaApplication extends MockedApplication {
   public static final String APP_CONFIG_JPA_DEFAULT = "jpa.default";

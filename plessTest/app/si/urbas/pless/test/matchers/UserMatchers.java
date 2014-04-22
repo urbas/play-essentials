@@ -1,8 +1,9 @@
-package si.urbas.pless.users;
+package si.urbas.pless.test.matchers;
 
 import org.hamcrest.*;
 
 import si.urbas.pless.authentication.SaltedHashedPassword;
+import si.urbas.pless.users.PlessUser;
 
 public class UserMatchers {
 

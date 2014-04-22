@@ -4,7 +4,7 @@ import si.urbas.pless.authentication.ServerSessionStorage;
 
 import static org.mockito.Mockito.mock;
 import static si.urbas.pless.authentication.PlessServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
-import static si.urbas.pless.test.TestConfigurationUtils.setConfigurationClass;
+import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationClass;
 import static si.urbas.pless.test.TestServerSessionStorage.currentServerSessionStorage;
 
 public class TemporaryServerSessionStorage implements AutoCloseable {

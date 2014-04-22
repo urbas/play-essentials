@@ -7,7 +7,10 @@ import si.urbas.pless.authentication.HashMapServerSessionStorage;
 import si.urbas.pless.authentication.ServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.emailing.EmailProvider;
+import si.urbas.pless.test.emailing.TemporaryEmailProvider;
 import si.urbas.pless.test.util.TemporaryConfiguration;
+import si.urbas.pless.test.util.TemporaryFactories;
+import si.urbas.pless.test.util.TemporaryServices;
 import si.urbas.pless.users.*;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
@@ -18,7 +21,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.MockedSignupService.createMockedSignupService;
-import static si.urbas.pless.test.TemporaryEmailProvider.createMockedEmailProvider;
+import static si.urbas.pless.test.emailing.TemporaryEmailProvider.createMockedEmailProvider;
 
 public class MockedApplication extends TestApplication {
 

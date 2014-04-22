@@ -2,7 +2,7 @@ name := "pless-root"
 
 organization := "si.urbas"
 
-lazy val root = Project.project
+lazy val plessRoot = Project.project
   .in(file("."))
   .aggregate(pless, plessTest)
 

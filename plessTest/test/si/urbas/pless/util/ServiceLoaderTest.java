@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
-import si.urbas.pless.test.TemporaryServices;
+import si.urbas.pless.test.util.TemporaryServices;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
