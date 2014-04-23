@@ -3,8 +3,8 @@ package si.urbas.pless.db;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryJpaTransactions;
-import si.urbas.pless.test.TestJpaTransactionsFactory;
+import si.urbas.pless.test.db.TemporaryJpaTransactions;
+import si.urbas.pless.test.db.TestJpaTransactionsFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

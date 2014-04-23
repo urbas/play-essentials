@@ -1,10 +1,10 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.users;
 
 import si.urbas.pless.users.UserRepository;
 
 import static org.mockito.Mockito.mock;
+import static si.urbas.pless.test.users.TestUserRepositoryFactory.currentUserRepository;
 import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationClass;
-import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 
 public class TemporaryUserRepository implements AutoCloseable {
@@ -16,7 +16,7 @@ public class TemporaryUserRepository implements AutoCloseable {
 
   public TemporaryUserRepository(UserRepository newUserRepository) {
     currentUserRepository = newUserRepository;
-    setConfigurationClass(CONFIG_USER_REPOSITORY, TestUserRepository.class);
+    setConfigurationClass(CONFIG_USER_REPOSITORY, TestUserRepositoryFactory.class);
   }
 
   @Override

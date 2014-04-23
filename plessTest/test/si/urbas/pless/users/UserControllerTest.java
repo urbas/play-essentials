@@ -5,7 +5,7 @@ import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryUserRepository;
+import si.urbas.pless.test.users.TemporaryUserRepository;
 
 import javax.persistence.NoResultException;
 

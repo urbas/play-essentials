@@ -1,4 +1,4 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.db;
 
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.util.ConfigurationSource;

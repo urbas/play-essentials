@@ -1,10 +1,10 @@
-package si.urbas.pless.test;
+package si.urbas.pless.test.users;
 
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
-public class TestUserRepository implements Factory<UserRepository> {
+public class TestUserRepositoryFactory implements Factory<UserRepository> {
 
   public static UserRepository currentUserRepository;
 

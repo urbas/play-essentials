@@ -2,13 +2,13 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
-import si.urbas.pless.test.TemporaryUserRepository;
+import si.urbas.pless.test.users.TemporaryUserRepository;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
+import static si.urbas.pless.test.users.TestUserRepositoryFactory.currentUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class UserRepositoryFactoryTest extends PlessTest {
