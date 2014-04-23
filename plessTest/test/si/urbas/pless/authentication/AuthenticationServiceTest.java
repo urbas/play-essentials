@@ -2,8 +2,8 @@ package si.urbas.pless.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.sessions.HashMapClientSessionStorage;
-import si.urbas.pless.sessions.HashMapServerSessionStorage;
+import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
+import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.sessions.SessionIdGenerator;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.JpaPlessUser;

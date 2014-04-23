@@ -1,7 +1,7 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.MockedAppTest;
 import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
 import si.urbas.pless.test.sessions.TestServerSessionStorage;
 
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class ServerSessionStorageTest extends PlessTest {
+public class ServerSessionStorageTest extends MockedAppTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final ServerSessionStorage.ServerSessionStorageSingleton serverSessionStorageSingleton = new ServerSessionStorage.ServerSessionStorageSingleton();

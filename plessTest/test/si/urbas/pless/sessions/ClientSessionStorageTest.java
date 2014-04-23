@@ -1,7 +1,7 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.MockedAppTest;
 import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
 
 import static org.hamcrest.Matchers.*;
@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import static si.urbas.pless.sessions.ClientSessionStorage.ClientSessionStorageSingleton;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class ClientSessionStorageTest extends PlessTest {
+public class ClientSessionStorageTest extends MockedAppTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final ClientSessionStorageSingleton clientSessionStorageSingleton = new ClientSessionStorageSingleton();

@@ -1,4 +1,6 @@
-package si.urbas.pless.sessions;
+package si.urbas.pless.test.sessions;
+
+import si.urbas.pless.sessions.ClientSessionStorage;
 
 import java.util.HashMap;
 

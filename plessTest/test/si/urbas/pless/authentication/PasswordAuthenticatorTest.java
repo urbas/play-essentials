@@ -1,7 +1,7 @@
 package si.urbas.pless.authentication;
 
 import org.junit.Test;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.MockedAppTest;
 
 import javax.persistence.NoResultException;
 
@@ -11,7 +11,7 @@ import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;
 
-public class PasswordAuthenticatorTest extends PlessTest {
+public class PasswordAuthenticatorTest extends MockedAppTest {
 
   private final PasswordLoginForm passwordLoginForm = new PasswordLoginForm(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   private final PasswordLoginForm emptyPasswordLoginForm = new PasswordLoginForm();

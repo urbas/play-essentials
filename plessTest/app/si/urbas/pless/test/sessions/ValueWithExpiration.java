@@ -1,4 +1,4 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.test.sessions;
 
 import java.util.Date;
 

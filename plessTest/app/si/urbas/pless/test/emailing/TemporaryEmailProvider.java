@@ -6,9 +6,7 @@ import si.urbas.pless.test.util.TestConfigurationUtils;
 import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static si.urbas.pless.emailing.EmailProvider.CONFIG_EMAIL_PROVIDER;
 import static si.urbas.pless.test.emailing.TestEmailProviderFactory.currentEmailProvider;
 

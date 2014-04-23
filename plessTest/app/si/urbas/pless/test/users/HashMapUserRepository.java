@@ -1,4 +1,8 @@
-package si.urbas.pless.users;
+package si.urbas.pless.test.users;
+
+import si.urbas.pless.users.JpaPlessUser;
+import si.urbas.pless.users.PlessUser;
+import si.urbas.pless.users.UserRepository;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;

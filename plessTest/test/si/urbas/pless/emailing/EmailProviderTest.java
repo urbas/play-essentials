@@ -3,7 +3,7 @@ package si.urbas.pless.emailing;
 import org.junit.Test;
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.MockedAppTest;
 import si.urbas.pless.test.emailing.TemporaryEmailProvider;
 import si.urbas.pless.test.emailing.TestEmailProviderFactory;
 
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 import static si.urbas.pless.emailing.EmailProvider.EmailingSingletons;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 
-public class EmailProviderTest extends PlessTest {
+public class EmailProviderTest extends MockedAppTest {
   private static final String EMAIL_RECIPIENT = "Jane Doe <jane.doe@example.com>";
   private static final String EMAIL_SUBJECT = "An email subject";
   private static final Html EMAIL_HTML_BODY = new Html(new StringBuilder("Some html content..."));

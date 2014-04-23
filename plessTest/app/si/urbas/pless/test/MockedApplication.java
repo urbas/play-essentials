@@ -3,17 +3,18 @@ package si.urbas.pless.test;
 
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.sessions.ClientSessionStorage;
-import si.urbas.pless.sessions.HashMapClientSessionStorage;
-import si.urbas.pless.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.sessions.ServerSessionStorage;
 import si.urbas.pless.test.emailing.TemporaryEmailProvider;
+import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
+import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
 import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
+import si.urbas.pless.test.users.HashMapUserRepository;
+import si.urbas.pless.test.users.TestSignupService;
 import si.urbas.pless.test.users.TemporaryUserRepository;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.util.TemporaryFactories;
 import si.urbas.pless.test.util.TemporaryServices;
-import si.urbas.pless.users.HashMapUserRepository;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
@@ -24,7 +25,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.test.MockedSignupService.createMockedSignupService;
 import static si.urbas.pless.test.emailing.TemporaryEmailProvider.createMockedEmailProvider;
 
 public class MockedApplication extends TestApplication {
@@ -53,7 +53,7 @@ public class MockedApplication extends TestApplication {
         temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         temporaryServices.add(new TemporaryUserRepository(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
         temporaryServices.add(new TemporaryFactories(factories == null ? new HashMap<String, Factory<?>>() : factories));
-        temporaryServices.add(new TemporaryServices(services == null ? collectEntries(createMockedSignupService()) : services));
+        temporaryServices.add(new TemporaryServices(services == null ? collectEntries(TestSignupService.createMockedSignupService()) : services));
       }
     });
   }
