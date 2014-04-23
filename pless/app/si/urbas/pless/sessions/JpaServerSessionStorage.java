@@ -6,7 +6,7 @@ import si.urbas.pless.db.TransactionFunction;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
+import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 
 public class JpaServerSessionStorage extends ServerSessionStorage {
 

@@ -3,7 +3,7 @@ package si.urbas.pless.test;
 import si.urbas.pless.db.JpaTransactions;
 
 import static org.mockito.Mockito.mock;
-import static si.urbas.pless.db.PlessJpaTransactions.CONFIG_JPA_TRANSACTIONS;
+import static si.urbas.pless.db.JpaTransactions.CONFIG_JPA_TRANSACTIONS;
 import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationClass;
 import static si.urbas.pless.test.TestJpaTransactionsFactory.currentJpaTransactions;
 

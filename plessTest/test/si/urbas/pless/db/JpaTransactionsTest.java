@@ -3,16 +3,27 @@ package si.urbas.pless.db;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.TemporaryJpaTransactions;
+import si.urbas.pless.test.TestJpaTransactionsFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.db.JpaTransactions.CONFIG_JPA_TRANSACTIONS;
+import static si.urbas.pless.db.JpaTransactions.JpaTransactionsFactory;
+import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
+import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
 
   private TestableJpaTransactions jpaTransactions;
   private TransactionFunction<Object> transactionFunction;
+
+  @SuppressWarnings("UnusedDeclaration")
+  private final JpaTransactionsFactory jpaTransactionsFactory = new JpaTransactionsFactory();
 
   @SuppressWarnings("unchecked")
   @Before
@@ -44,6 +55,7 @@ public class JpaTransactionsTest extends PlessTest {
     }
     verify(jpaTransactions.transaction).rollback();
   }
+
   @Test
   public void withTransaction_MUST_not_commit_WHEN_the_transaction_function_throws() {
     doThrow(new IllegalArgumentException()).when(transactionFunction).invoke(jpaTransactions.entityManager);
@@ -65,6 +77,46 @@ public class JpaTransactionsTest extends PlessTest {
     when(jpaTransactions.transaction.getRollbackOnly()).thenReturn(true);
     jpaTransactions.withTransaction(transactionFunction);
     verify(jpaTransactions.transaction).rollback();
+  }
+
+  @Test
+  public void getJpaTransactions_MUST_return_the_configured_transaction_provider() throws Exception {
+    assertThat(
+      getJpaTransactions(),
+      is(sameInstance(TestJpaTransactionsFactory.currentJpaTransactions))
+    );
+  }
+
+  @Test
+  public void getJpaTransactions_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
+    when(getConfigurationSource().isProduction()).thenReturn(true);
+    assertThat(
+      getJpaTransactions(),
+      is(sameInstance(getScopedJpaTransactions()))
+    );
+  }
+
+  @Test
+  public void getJpaTransactions_MUST_return_a_new_instance_all_the_time_WHEN_not_in_production_mode() throws Exception {
+    assertThat(
+      getJpaTransactions(),
+      is(not(sameInstance(getScopedJpaTransactions())))
+    );
+  }
+
+  @Test
+  public void getJpaTransactions_MUST_return_a_play_jpa_transaction_provider_WHEN_no_transaction_provider_is_configured() throws Exception {
+    when(getConfigurationSource().getString(CONFIG_JPA_TRANSACTIONS)).thenReturn(null);
+    assertThat(
+      getJpaTransactions(),
+      is(instanceOf(PlayJpaTransactions.class))
+    );
+  }
+
+  private JpaTransactions getScopedJpaTransactions() throws Exception {
+    try (TemporaryJpaTransactions ignored = new TemporaryJpaTransactions()) {
+      return getJpaTransactions();
+    }
   }
 
   private static class TestableJpaTransactions extends JpaTransactions {

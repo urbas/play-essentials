@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
+import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 import static si.urbas.pless.users.JpaPlessUser.*;
 
 public class PlessJpaUserRepository implements UserRepository {
