@@ -2,7 +2,6 @@ package si.urbas.pless;
 
 import play.mvc.Controller;
 import si.urbas.pless.authentication.AuthenticationService;
-import si.urbas.pless.authentication.PlessAuthentication;
 import si.urbas.pless.emailing.PlessEmailing;
 import si.urbas.pless.users.PlessUserRepository;
 import si.urbas.pless.users.UserRepository;
@@ -15,7 +14,7 @@ public class PlessController extends Controller {
   }
 
   protected static AuthenticationService auth() {
-    return PlessAuthentication.getAuthenticationService();
+    return AuthenticationService.getAuthenticationService();
   }
 
   protected static ConfigurationSource config() {

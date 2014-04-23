@@ -4,7 +4,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 
-import static si.urbas.pless.authentication.PlessAuthentication.getAuthenticationService;
+import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 
 public class LoginAuthenticator extends Security.Authenticator {
 

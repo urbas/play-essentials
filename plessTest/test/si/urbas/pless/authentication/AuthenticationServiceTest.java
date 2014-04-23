@@ -5,17 +5,22 @@ import org.junit.Test;
 import si.urbas.pless.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.sessions.SessionIdGenerator;
+import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.JpaPlessUser;
 import si.urbas.pless.users.PlessUser;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
+import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.users.UserControllerTest.*;
+import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class AuthenticationServiceTest {
 
   private static final long JOHN_SMITH_USER_ID = 123L;
+  @SuppressWarnings("UnusedDeclaration")
+  private static AuthenticationService.AuthenticationServiceSingleton authenticationServiceSingleton = new AuthenticationService.AuthenticationServiceSingleton();
   private final PlessUser user = createJohnSmithUser();
   private AuthenticationService authenticationSession;
   private HashMapServerSessionStorage serverSessionStorage;
@@ -97,6 +102,28 @@ public class AuthenticationServiceTest {
     authenticationSession.logIn(activatedUser);
     assertEquals(activatedUser.getId(), authenticationSession.getLoggedInUserId());
   }
+
+  @Test
+  public void getAuthenticationService_MUST_always_return_the_same_instance_WHEN_in_production_mode() throws Exception {
+    try (TemporaryConfiguration ignored = new TemporaryConfiguration()) {
+      when(getConfigurationSource().isProduction()).thenReturn(true);
+      assertThat(
+        getAuthenticationService(),
+        is(sameInstance(getAuthenticationService()))
+      );
+    }
+  }
+
+  @Test
+  public void getAuthenticationService_MUST_always_return_a_new_instance_WHEN_not_in_production_mode() throws Exception {
+    try (TemporaryConfiguration ignored = new TemporaryConfiguration()) {
+      assertThat(
+        getAuthenticationService(),
+        is(not(sameInstance(getAuthenticationService())))
+      );
+    }
+  }
+
 
   private PlessUser createJohnSmithUser() {
     return new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)

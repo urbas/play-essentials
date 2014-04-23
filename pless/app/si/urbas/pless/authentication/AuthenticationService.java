@@ -6,6 +6,9 @@ import si.urbas.pless.sessions.SessionIdGenerator;
 import si.urbas.pless.users.PlessUser;
 
 import static si.urbas.pless.authentication.LoggedInUserInfo.toRawLoginData;
+import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
+import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
+import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
 public class AuthenticationService {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
@@ -20,6 +23,21 @@ public class AuthenticationService {
     this.clientSessionStorage = clientSessionStorage;
     this.serverSessionStorage = serverSessionStorage;
     this.sessionIdGenerator = sessionIdGenerator;
+  }
+
+  public static AuthenticationService getAuthenticationService() {
+    if (getConfigurationSource().isProduction()) {
+      return AuthenticationServiceSingleton.INSTANCE;
+    } else {
+      return createAuthenticationSession();
+    }
+  }
+
+  private static AuthenticationService createAuthenticationSession() {
+    return new AuthenticationService(
+      getClientSessionStorage(),
+      getServerSessionStorage(),
+      new SessionIdGenerator());
   }
 
   public void logIn(PlessUser user) {
@@ -86,5 +104,9 @@ public class AuthenticationService {
   private String getRawLoginSessionData() {
     String sessionIdFromClient = getSessionIdFromClient();
     return sessionIdFromClient == null ? null : serverSessionStorage.get(getEmailServerSessionKey(sessionIdFromClient));
+  }
+
+  static final class AuthenticationServiceSingleton {
+    public static final AuthenticationService INSTANCE = createAuthenticationSession();
   }
 }
