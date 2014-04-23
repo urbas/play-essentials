@@ -14,7 +14,7 @@ import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 public class UserRepositoryFactoryTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
-  private final UserRepository.PlessUserRepositorySingleton plessUserRepositorySingleton = new UserRepository.PlessUserRepositorySingleton();
+  private final UserRepository.UserRepositorySingleton userRepositorySingleton = new UserRepository.UserRepositorySingleton();
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {

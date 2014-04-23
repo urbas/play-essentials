@@ -6,12 +6,13 @@ import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.emailing.TestEmailProviderFactory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.PlessController.emailing;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
-import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class PlessJpaControllerTest extends PlessTest {
 
@@ -38,8 +39,7 @@ public class PlessJpaControllerTest extends PlessTest {
 
   @Test
   public void emailing_MUST_return_the_configured_emailing_service() throws Exception {
-    PlessJpaController.emailing().createEmail();
-    verify(getEmailProvider()).createEmail(getConfigurationSource());
+    assertEquals(TestEmailProviderFactory.currentEmailProvider, emailing());
   }
 
   @Test

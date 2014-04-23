@@ -18,7 +18,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
-import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
+import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.JpaUserRepositoryTest.fetchUser;
 import static si.urbas.pless.users.JpaUserRepositoryTest.persistAndFetchUser;

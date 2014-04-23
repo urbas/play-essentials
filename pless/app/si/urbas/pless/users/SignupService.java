@@ -6,7 +6,7 @@ import si.urbas.pless.users.emails.html.SignupEmailTemplate;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
-import static si.urbas.pless.emailing.PlessEmailing.getEmailing;
+import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 
 public class SignupService {
   public static final String CONFIG_SIGNUP_SERVICE = "pless.signupService";
@@ -19,7 +19,7 @@ public class SignupService {
     Html emailContent = signupEmailContent(userDetails);
     String recipient = userDetails.getEmail();
     String emailSubject = "Pless Signup";
-    getEmailing().sendEmail(recipient, emailSubject, emailContent);
+    getEmailProvider().sendEmail(recipient, emailSubject, emailContent);
   }
 
   public Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}

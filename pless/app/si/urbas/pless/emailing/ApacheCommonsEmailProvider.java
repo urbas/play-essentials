@@ -1,18 +1,17 @@
 package si.urbas.pless.emailing;
 
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
 
 
-public class ApacheCommonsEmailProvider implements EmailProvider {
-  
+public class ApacheCommonsEmailProvider extends EmailProvider {
+
   public static final String APP_CONFIG_SMTP_PASSWORD = "smtp.password";
   public static final String APP_CONFIG_SMTP_USER = "smtp.user";
   public static final String APP_CONFIG_SMTP_PORT = "smtp.port";
   public static final String APP_CONFIG_SMTP_SSL = "smtp.ssl";
   public static final String APP_CONFIG_SMTP_HOST = "smtp.host";
   public static final String APP_CONFIG_SMTP_TLS = "smtp.tls";
-  
+
   @Override
   public Email createEmail(ConfigurationSource configurationProvider) {
     return new ApacheCommonsEmail(

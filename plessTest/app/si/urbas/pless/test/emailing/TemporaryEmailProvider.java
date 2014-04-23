@@ -7,8 +7,9 @@ import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.emailing.PlessEmailing.CONFIG_EMAIL_PROVIDER;
+import static si.urbas.pless.emailing.EmailProvider.CONFIG_EMAIL_PROVIDER;
 import static si.urbas.pless.test.emailing.TestEmailProviderFactory.currentEmailProvider;
 
 public class TemporaryEmailProvider implements AutoCloseable {
@@ -33,9 +34,21 @@ public class TemporaryEmailProvider implements AutoCloseable {
   }
 
   public static EmailProvider createMockedEmailProvider(Email emailToProvide) {
-    EmailProvider emailProvider = mock(EmailProvider.class);
+    EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));
     when(emailProvider.createEmail(any(ConfigurationSource.class)))
       .thenReturn(emailToProvide);
     return emailProvider;
+  }
+
+  private static class SingleEmailProvider extends EmailProvider {
+
+    private final Email email;
+
+    private SingleEmailProvider(Email email) {this.email = email;}
+
+    @Override
+    public Email createEmail(ConfigurationSource configurationSource) {
+      return email;
+    }
   }
 }

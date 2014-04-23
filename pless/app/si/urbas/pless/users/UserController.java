@@ -39,7 +39,8 @@ public final class UserController extends PlessJpaController {
 
   @SafeVarargs
   public static Result signUp(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    return signUp(getSignupService().getSignupForm().bindFromRequest(buildSignUpParameters(email, username, password, additionalParams)));
+    HashMap<String, String[]> requestData = buildSignUpParameters(email, username, password, additionalParams);
+    return signUp(getSignupService().getSignupForm().bindFromRequest(requestData));
   }
 
   public static Result signUp(Form<?> signupForm) {

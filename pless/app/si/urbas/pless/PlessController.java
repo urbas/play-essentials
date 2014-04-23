@@ -2,7 +2,7 @@ package si.urbas.pless;
 
 import play.mvc.Controller;
 import si.urbas.pless.authentication.AuthenticationService;
-import si.urbas.pless.emailing.PlessEmailing;
+import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
@@ -19,7 +19,7 @@ public class PlessController extends Controller {
     return ConfigurationSource.getConfigurationSource();
   }
 
-  protected static PlessEmailing emailing() {
-    return PlessEmailing.getEmailing();
+  protected static EmailProvider emailing() {
+    return EmailProvider.getEmailProvider();
   }
 }

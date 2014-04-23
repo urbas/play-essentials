@@ -13,7 +13,7 @@ public abstract class UserRepository {
   public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
 
   public static UserRepository getUserRepository() {
-    return PlessUserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
+    return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
   }
 
   public abstract PlessUser findUserByEmail(String email);
@@ -30,7 +30,7 @@ public abstract class UserRepository {
 
   public abstract PlessUser findUserById(long userId);
 
-  static class PlessUserRepositorySingleton {
+  static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
   }
 

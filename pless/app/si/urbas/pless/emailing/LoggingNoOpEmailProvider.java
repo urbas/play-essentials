@@ -4,7 +4,7 @@ package si.urbas.pless.emailing;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 
-public class LoggingNoOpEmailProvider implements EmailProvider, Factory<EmailProvider> {
+public class LoggingNoOpEmailProvider extends EmailProvider implements Factory<EmailProvider> {
   @Override
   public Email createEmail(ConfigurationSource configurationProvider) {
     return new LoggingNoOpEmail();

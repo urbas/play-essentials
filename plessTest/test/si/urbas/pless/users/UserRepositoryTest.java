@@ -19,7 +19,7 @@ public abstract class UserRepositoryTest {
   String USER_2_EMAIL = "user 2 email";
   String USER_2_USERNAME = "John II the User";
   String USER_2_PASSWORD = "user 2 password";
-  long CREATE_DATE_THRESHOLD_MILLISECONDS = 100;
+  long CREATE_DATE_THRESHOLD_MILLISECONDS = 1000;
 
   @Test(expected = NoResultException.class)
   public void findUserByEmail_MUST_throw_an_exception_WHEN_the_user_is_not_present() {
