@@ -10,7 +10,7 @@ import play.cache.Cache;
  *
  * @author matej
  */
-public class PlayCacheServerSessionStorage implements ServerSessionStorage {
+public class PlayCacheServerSessionStorage extends ServerSessionStorage {
 
   @Override
   public void put(String key, String value, int expirationMillis) {

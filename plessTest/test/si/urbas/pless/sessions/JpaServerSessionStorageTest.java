@@ -6,7 +6,7 @@ import si.urbas.pless.test.PlessJpaTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static si.urbas.pless.sessions.PlessServerSessionStorage.getServerSessionStorage;
+import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
 
 public class JpaServerSessionStorageTest extends PlessJpaTest {
   private static final int ONE_HOUR = 3600000;

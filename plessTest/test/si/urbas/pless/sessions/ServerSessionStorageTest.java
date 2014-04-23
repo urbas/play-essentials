@@ -8,20 +8,17 @@ import si.urbas.pless.test.sessions.TestServerSessionStorage;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.sessions.PlessServerSessionStorage.*;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
-public class PlessServerSessionStorageTest extends PlessTest {
+public class ServerSessionStorageTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
-  private final PlessServerSessionStorage plessServerSessionStorage = new PlessServerSessionStorage();
-  @SuppressWarnings("UnusedDeclaration")
-  private final ServerSessionStorageSingleton serverSessionStorageSingleton = new ServerSessionStorageSingleton();
+  private final ServerSessionStorage.ServerSessionStorageSingleton serverSessionStorageSingleton = new ServerSessionStorage.ServerSessionStorageSingleton();
 
   @Test
   public void getServerSessionStorage_MUST_return_the_configured_session_storage() throws Exception {
     assertThat(
-      getServerSessionStorage(),
+      ServerSessionStorage.getServerSessionStorage(),
       is(sameInstance(TestServerSessionStorage.currentServerSessionStorage))
     );
   }
@@ -30,7 +27,7 @@ public class PlessServerSessionStorageTest extends PlessTest {
   public void getServerSessionStorage_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
     when(getConfigurationSource().isProduction()).thenReturn(true);
     assertThat(
-      getServerSessionStorage(),
+      ServerSessionStorage.getServerSessionStorage(),
       is(sameInstance(getScopedServerSessionStorage()))
     );
   }
@@ -38,23 +35,23 @@ public class PlessServerSessionStorageTest extends PlessTest {
   @Test
   public void getServerSessionStorage_MUST_return_a_new_instance_all_the_time_WHEN_not_in_production_mode() throws Exception {
     assertThat(
-      getServerSessionStorage(),
+      ServerSessionStorage.getServerSessionStorage(),
       is(not(sameInstance(getScopedServerSessionStorage())))
     );
   }
 
   @Test
   public void getServerSessionStorage_MUST_return_plays_cache_based_server_session_storage_WHEN_none_is_configured() throws Exception {
-    when(getConfigurationSource().getString(CONFIG_SERVER_SESSION_STORAGE_FACTORY)).thenReturn(null);
+    when(getConfigurationSource().getString(ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY)).thenReturn(null);
     assertThat(
-      getServerSessionStorage(),
+      ServerSessionStorage.getServerSessionStorage(),
       is(instanceOf(PlayCacheServerSessionStorage.class))
     );
   }
 
   private ServerSessionStorage getScopedServerSessionStorage() throws Exception {
     try (TemporaryServerSessionStorage ignored = new TemporaryServerSessionStorage()) {
-      return getServerSessionStorage();
+      return ServerSessionStorage.getServerSessionStorage();
     }
   }
 }

@@ -8,7 +8,7 @@ import javax.persistence.Query;
 
 import static si.urbas.pless.db.PlessJpaTransactions.getJpaTransactions;
 
-public class JpaServerSessionStorage implements ServerSessionStorage {
+public class JpaServerSessionStorage extends ServerSessionStorage {
 
   @Override
   public void put(final String key, final String value, final int expirationMillis) {

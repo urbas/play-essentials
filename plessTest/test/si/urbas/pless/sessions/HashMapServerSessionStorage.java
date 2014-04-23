@@ -9,7 +9,7 @@ import java.util.HashMap;
  *
  * @author matej
  */
-public class HashMapServerSessionStorage implements ServerSessionStorage {
+public class HashMapServerSessionStorage extends ServerSessionStorage {
   public HashMap<String, ValueWithExpiration<String>> hashMap = new HashMap<>();
 
   @Override
