@@ -12,7 +12,7 @@ import play.Play;
  * @author matej
  * 
  */
-public class PlayApplicationConfigurationSource implements ConfigurationSource {
+public class PlayApplicationConfigurationSource extends ConfigurationSource {
 
   @Override
   public boolean isProduction() {

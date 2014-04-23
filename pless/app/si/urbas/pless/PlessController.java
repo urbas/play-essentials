@@ -6,7 +6,6 @@ import si.urbas.pless.emailing.PlessEmailing;
 import si.urbas.pless.users.PlessUserRepository;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.PlessConfigurationSource;
 
 public class PlessController extends Controller {
   protected static UserRepository users() {
@@ -18,7 +17,7 @@ public class PlessController extends Controller {
   }
 
   protected static ConfigurationSource config() {
-    return PlessConfigurationSource.getConfigurationSource();
+    return ConfigurationSource.getConfigurationSource();
   }
 
   protected static PlessEmailing emailing() {

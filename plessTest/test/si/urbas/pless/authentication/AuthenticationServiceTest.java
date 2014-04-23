@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.users.UserControllerTest.*;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class AuthenticationServiceTest {
 

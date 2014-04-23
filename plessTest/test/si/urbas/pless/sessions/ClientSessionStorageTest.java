@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.sessions.ClientSessionStorage.ClientSessionStorageSingleton;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class ClientSessionStorageTest extends PlessTest {
 

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
 import static si.urbas.pless.users.PlessUserRepository.*;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class PlessUserRepositoryTest extends PlessTest {
 

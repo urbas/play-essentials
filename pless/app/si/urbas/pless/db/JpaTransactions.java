@@ -7,7 +7,7 @@ import si.urbas.pless.util.SingletonFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public abstract class JpaTransactions {
 

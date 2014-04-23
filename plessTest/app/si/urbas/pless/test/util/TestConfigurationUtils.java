@@ -1,6 +1,6 @@
 package si.urbas.pless.test.util;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static org.mockito.Mockito.doReturn;
 
 public class TestConfigurationUtils {

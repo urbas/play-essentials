@@ -1,6 +1,6 @@
 package si.urbas.pless.users;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 import si.urbas.pless.util.*;
 

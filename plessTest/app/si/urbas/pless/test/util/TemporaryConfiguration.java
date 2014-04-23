@@ -1,7 +1,7 @@
 package si.urbas.pless.test.util;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-import static si.urbas.pless.util.PlessConfigurationSource.setConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.setConfigurationSource;
 import static org.mockito.Mockito.mock;
 
 import si.urbas.pless.util.ConfigurationSource;

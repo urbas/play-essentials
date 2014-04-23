@@ -5,16 +5,49 @@ package si.urbas.pless.util;
  * 
  * @author matej
  */
-public interface ConfigurationSource {
+public abstract class ConfigurationSource {
 
-  boolean isDevelopment();
+  static ConfigurationSource configurationSource;
 
-  boolean isProduction();
+  public static ConfigurationSource getConfigurationSource() {
+    return configurationSource == null ? ConfigurationSourceSingleton.INSTANCE : configurationSource;
+  }
 
-  String getString(String configKey);
+  public static void setConfigurationSource(ConfigurationSource newConfigurationSource) {
+    configurationSource = newConfigurationSource;
+  }
 
-  int getInt(String configKey, int defaultValue);
+  static ConfigurationSource loadPlayConfiguration() {
+    ConfigurationSource configurationSource;
+    configurationSource = new PlayApplicationConfigurationSource();
+    // NOTE: The following call throws if there is no Play application. We assume that we are in test mode when this
+    // fails.
+    configurationSource.isProduction();
+    return configurationSource;
+  }
 
-  boolean getBoolean(String configKey, boolean defaultValue);
+  public abstract boolean isDevelopment();
 
+  public abstract boolean isProduction();
+
+  public abstract String getString(String configKey);
+
+  public abstract int getInt(String configKey, int defaultValue);
+
+  public abstract boolean getBoolean(String configKey, boolean defaultValue);
+
+  static final class ConfigurationSourceSingleton {
+    public static final ConfigurationSource INSTANCE;
+
+    static {
+      ConfigurationSource configurationSource;
+      try {
+        configurationSource = loadPlayConfiguration();
+      } catch (Exception e) {
+        configurationSource = new EmptyConfigurationSource();
+      }
+      INSTANCE = configurationSource;
+    }
+
+  }
 }

@@ -1,7 +1,7 @@
 package si.urbas.pless.util;
 
 import static si.urbas.pless.util.Factories.getDefaultInstanceCreator;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class ServiceLoader<T> {
 

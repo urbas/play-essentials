@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.util.PlessConfigurationSource.ConfigurationSourceSingleton;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
-import static si.urbas.pless.util.PlessConfigurationSource.loadPlayConfiguration;
+import static si.urbas.pless.util.ConfigurationSource.ConfigurationSourceSingleton;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.loadPlayConfiguration;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +14,9 @@ import org.junit.Test;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
-public class PlessConfigurationSourceTest {
+public class ConfigurationSourceTest {
 
   private ConfigurationSource defaultPlayConfigurationSource;
-  @SuppressWarnings("UnusedDeclaration")
-  private final PlessConfigurationSource plessConfigurationSource = new PlessConfigurationSource();
   @SuppressWarnings("UnusedDeclaration")
   private final ConfigurationSourceSingleton configurationSourceSingleton = new ConfigurationSourceSingleton();
 

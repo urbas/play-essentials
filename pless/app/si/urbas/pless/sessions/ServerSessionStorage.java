@@ -4,7 +4,7 @@ import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 import si.urbas.pless.util.SingletonFactory;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public abstract class ServerSessionStorage {
 

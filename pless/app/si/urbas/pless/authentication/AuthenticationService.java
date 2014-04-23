@@ -8,7 +8,7 @@ import si.urbas.pless.users.PlessUser;
 import static si.urbas.pless.authentication.LoggedInUserInfo.toRawLoginData;
 import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
 import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class AuthenticationService {
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;

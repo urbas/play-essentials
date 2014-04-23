@@ -11,7 +11,7 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class PlessJpaControllerTest extends PlessTest {
 

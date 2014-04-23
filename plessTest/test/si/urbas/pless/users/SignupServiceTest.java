@@ -14,7 +14,7 @@ import static si.urbas.pless.users.SignupService.CONFIG_SIGNUP_SERVICE;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserControllerTest.*;
 import static si.urbas.pless.users.routes.UserController;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class SignupServiceTest extends PlayControllerTest {
 

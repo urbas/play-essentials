@@ -2,7 +2,7 @@ package si.urbas.pless.util;
 
 import si.urbas.pless.ConfigurationException;
 
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class Factories {
 

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static si.urbas.pless.emailing.PlessEmailing.EmailingSingletons;
 import static si.urbas.pless.emailing.PlessEmailing.getEmailProvider;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class PlessEmailingTest extends PlessTest {
   private static final String EMAIL_RECEPIENT = "Jane Doe <jane.doe@example.com>";

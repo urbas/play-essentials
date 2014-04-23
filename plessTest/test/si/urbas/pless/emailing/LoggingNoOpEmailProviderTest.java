@@ -6,7 +6,7 @@ import si.urbas.pless.test.PlessTest;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class LoggingNoOpEmailProviderTest extends PlessTest {
 

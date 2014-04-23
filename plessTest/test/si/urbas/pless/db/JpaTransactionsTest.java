@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 import static si.urbas.pless.db.JpaTransactions.CONFIG_JPA_TRANSACTIONS;
 import static si.urbas.pless.db.JpaTransactions.JpaTransactionsFactory;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
-import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
 

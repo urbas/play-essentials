@@ -1,6 +1,6 @@
 package si.urbas.pless.util;
 
-public class EmptyConfigurationSource implements ConfigurationSource {
+public class EmptyConfigurationSource extends ConfigurationSource {
   @Override
   public boolean isDevelopment() {
     return false;
