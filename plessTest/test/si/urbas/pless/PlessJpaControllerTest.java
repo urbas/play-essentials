@@ -1,12 +1,13 @@
 package si.urbas.pless;
 
-import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.JpaApplication;
+import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.emailing.TestEmailProviderFactory;
+import si.urbas.pless.test.util.PlessTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -22,11 +23,11 @@ public class PlessJpaControllerTest extends PlessTest {
   private TransactionFunction<Object> transactionFunction;
 
   @SuppressWarnings("unchecked")
-  @Before
-  public void setUp() {
-    super.setUp();
+  @Override
+  protected TestApplication createTestApplication() {
     transactionReturnValue = new Object();
     transactionFunction = mock(TransactionFunction.class);
+    return JpaApplication.mockedJpaApplication();
   }
 
   @Test

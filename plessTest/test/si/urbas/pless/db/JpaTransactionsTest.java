@@ -1,10 +1,11 @@
 package si.urbas.pless.db;
 
-import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.PlessTest;
+import si.urbas.pless.test.JpaApplication;
+import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.db.TemporaryJpaTransactions;
 import si.urbas.pless.test.db.TestJpaTransactionsFactory;
+import si.urbas.pless.test.util.PlessTest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -12,9 +13,7 @@ import javax.persistence.EntityTransaction;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.db.JpaTransactions.CONFIG_JPA_TRANSACTIONS;
-import static si.urbas.pless.db.JpaTransactions.JpaTransactionsFactory;
-import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
+import static si.urbas.pless.db.JpaTransactions.*;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
@@ -26,11 +25,11 @@ public class JpaTransactionsTest extends PlessTest {
   private final JpaTransactionsFactory jpaTransactionsFactory = new JpaTransactionsFactory();
 
   @SuppressWarnings("unchecked")
-  @Before
-  public void setUp() {
-    super.setUp();
+  @Override
+  protected TestApplication createTestApplication() {
     jpaTransactions = new TestableJpaTransactions();
     transactionFunction = mock(TransactionFunction.class);
+    return JpaApplication.mockedJpaApplication();
   }
 
   @Test

@@ -16,6 +16,7 @@ import org.junit.Before;
  * </li>
  * </ul>
  */
+@Deprecated
 public class PlessTest {
 
   protected MockedApplication plessTestApplication;

@@ -4,9 +4,12 @@ import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.JpaServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.RawJpaTransactions;
+import si.urbas.pless.test.db.TemporaryJpaTransactions;
 import si.urbas.pless.users.JpaUserRepository;
+import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationString;
 
@@ -24,20 +27,32 @@ public class JpaApplication extends MockedApplication {
   public JpaApplication(String testPersistenceUnit,
                         ConfigurationSource configurationSource,
                         ClientSessionStorage clientSessionStorage,
-                        JpaTransactions jpaTransaction) {
+                        final JpaTransactions jpaTransaction) {
     super(
       configurationSource,
       null,
       clientSessionStorage,
-      jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction,
       spy(new JpaServerSessionStorage()),
       spy(new JpaUserRepository()),
       null,
       null
     );
 
+    doInitialisation(new Body() {
+      @Override
+      public void invoke() {
+        temporaryServices.add(new TemporaryJpaTransactions(jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction));
+      }
+    });
+
     setConfigurationString(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
 
+  public static JpaApplication mockedJpaApplication() {
+    return new JpaApplication("foo persistence unit", null, null, createMockedJpaTransactions());
+  }
+
   static RawJpaTransactions createSpiedRawJpaTransactions() {return spy(new RawJpaTransactions());}
+
+  private static JpaTransactions createMockedJpaTransactions() {return mock(JpaTransactions.class);}
 }
