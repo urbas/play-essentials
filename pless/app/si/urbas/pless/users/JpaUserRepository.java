@@ -12,7 +12,7 @@ import java.util.List;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 import static si.urbas.pless.users.JpaPlessUser.*;
 
-public class PlessJpaUserRepository implements UserRepository {
+public class JpaUserRepository extends UserRepository {
 
   @Override
   public PlessUser findUserByEmail(final String email) {

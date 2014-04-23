@@ -4,7 +4,7 @@ import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.JpaServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.db.RawJpaTransactions;
-import si.urbas.pless.users.PlessJpaUserRepository;
+import si.urbas.pless.users.JpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
 import static org.mockito.Mockito.spy;
@@ -31,7 +31,7 @@ public class JpaApplication extends MockedApplication {
       clientSessionStorage,
       jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction,
       spy(new JpaServerSessionStorage()),
-      spy(new PlessJpaUserRepository()),
+      spy(new JpaUserRepository()),
       null,
       null
     );

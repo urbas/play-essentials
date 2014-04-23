@@ -1,6 +1,6 @@
 package si.urbas.pless.authentication;
 
-import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 
 import si.urbas.pless.users.PlessUser;
 

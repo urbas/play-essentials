@@ -9,20 +9,17 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.TestUserRepository.currentUserRepository;
-import static si.urbas.pless.users.PlessUserRepository.*;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class PlessUserRepositoryTest extends PlessTest {
+public class UserRepositoryFactoryTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
-  private final PlessUserRepository plessUserRepository = new PlessUserRepository();
-  @SuppressWarnings("UnusedDeclaration")
-  private final PlessUserRepositorySingleton plessUserRepositorySingleton = new PlessUserRepositorySingleton();
+  private final UserRepository.PlessUserRepositorySingleton plessUserRepositorySingleton = new UserRepository.PlessUserRepositorySingleton();
 
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
     assertThat(
-      getUserRepository(),
+      UserRepository.getUserRepository(),
       is(sameInstance(currentUserRepository))
     );
   }
@@ -31,7 +28,7 @@ public class PlessUserRepositoryTest extends PlessTest {
   public void getUserRepository_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
     when(getConfigurationSource().isProduction()).thenReturn(true);
     assertThat(
-      getUserRepository(),
+      UserRepository.getUserRepository(),
       is(sameInstance(getScopedUserRepository()))
     );
   }
@@ -39,20 +36,20 @@ public class PlessUserRepositoryTest extends PlessTest {
   @Test
   public void getUserRepository_MUST_return_a_new_instance_all_the_time_WHEN_not_in_production_mode() throws Exception {
     assertThat(
-      getUserRepository(),
+      UserRepository.getUserRepository(),
       is(not(sameInstance(getScopedUserRepository())))
     );
   }
 
   @Test
   public void getUserRepository_MUST_return_the_JPA_user_repository_WHEN_a_custom_repository_is_not_configured() throws Exception {
-    doReturn(null).when(getConfigurationSource()).getString(CONFIG_USER_REPOSITORY);
-    assertThat(getUserRepository(), is(instanceOf(PlessJpaUserRepository.class)));
+    doReturn(null).when(getConfigurationSource()).getString(UserRepository.CONFIG_USER_REPOSITORY);
+    assertThat(UserRepository.getUserRepository(), is(instanceOf(JpaUserRepository.class)));
   }
 
   private UserRepository getScopedUserRepository() throws Exception {
     try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
-      return getUserRepository();
+      return UserRepository.getUserRepository();
     }
   }
 }

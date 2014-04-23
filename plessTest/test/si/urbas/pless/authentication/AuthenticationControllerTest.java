@@ -13,8 +13,8 @@ import static si.urbas.pless.authentication.AuthenticationController.logOut;
 import static si.urbas.pless.authentication.AuthenticationController.status;
 import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
-import static si.urbas.pless.users.PlessJpaUserRepositoryTest.activateUser;
-import static si.urbas.pless.users.PlessJpaUserRepositoryTest.persistAndFetchUser;
+import static si.urbas.pless.users.JpaUserRepositoryTest.activateUser;
+import static si.urbas.pless.users.JpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.UserControllerTest.*;
 
 public class AuthenticationControllerTest extends PlessTest {

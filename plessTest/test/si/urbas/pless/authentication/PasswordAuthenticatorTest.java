@@ -6,7 +6,7 @@ import si.urbas.pless.test.PlessTest;
 import javax.persistence.NoResultException;
 
 import static si.urbas.pless.authentication.PasswordAuthenticator.PasswordAuthenticatorSingleton;
-import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;

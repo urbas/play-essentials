@@ -121,7 +121,7 @@ public class JpaPlessUser implements PlessUser {
   }
 
   /**
-   * This method is called before the user is persisted by {@link si.urbas.pless.users.PlessJpaUserRepository}.
+   * This method is called before the user is persisted by {@link JpaUserRepository}.
    *
    * @return if the user is valid, returns {@code null}, otherwise it returns a string that describes the validation
    * error.

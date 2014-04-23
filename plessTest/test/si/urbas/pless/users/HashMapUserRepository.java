@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class HashMapUserRepository implements UserRepository {
+public class HashMapUserRepository extends UserRepository {
 
   private final HashMap<String, PlessUser> emailToUserMap = new HashMap<>();
   private final HashMap<Long, PlessUser> idToUserMap = new HashMap<>();

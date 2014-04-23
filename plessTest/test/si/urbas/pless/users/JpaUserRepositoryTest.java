@@ -10,10 +10,10 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 
-public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
+public class JpaUserRepositoryTest extends UserRepositoryTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static final JpaPlessUser FIRST_USER = new JpaPlessUser(1L);
@@ -23,7 +23,7 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
   @Before
   public void setUp() throws Exception {
     jpaApplication = new JpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);
-    userRepository = PlessUserRepository.getUserRepository();
+    userRepository = UserRepository.getUserRepository();
   }
 
   @After
@@ -40,7 +40,7 @@ public class PlessJpaUserRepositoryTest extends UserRepositoryTest {
     assertEquals("this is test", ((TestExtendingJpaUser)user).testColumn);
   }
 
-  private PlessJpaUserRepository getJpaUserRepository() {return (PlessJpaUserRepository) userRepository;}
+  private JpaUserRepository getJpaUserRepository() {return (JpaUserRepository) userRepository;}
 
   public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
     persistUser(userEmail, username, userPassword);
