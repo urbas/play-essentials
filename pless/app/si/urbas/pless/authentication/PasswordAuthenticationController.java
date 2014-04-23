@@ -4,7 +4,7 @@ import play.mvc.Result;
 import si.urbas.pless.PlessJpaController;
 import si.urbas.pless.users.PlessUser;
 
-import static si.urbas.pless.authentication.PlessPasswordAuthenticator.getPasswordAuthenticator;
+import static si.urbas.pless.authentication.PasswordAuthenticator.getPasswordAuthenticator;
 
 public final class PasswordAuthenticationController extends PlessJpaController {
 

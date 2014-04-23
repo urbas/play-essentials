@@ -4,7 +4,7 @@ import static si.urbas.pless.users.PlessUserRepository.getUserRepository;
 
 import si.urbas.pless.users.PlessUser;
 
-public class PlessPasswordAuthenticator {
+public class PasswordAuthenticator {
 
   /**
    * @param passwordLoginForm contains the email (with which to find the user) and the password (with which to
@@ -28,11 +28,11 @@ public class PlessPasswordAuthenticator {
     return saltedHashedPassword.matches(user.getHashedPassword());
   }
   
-  public static PlessPasswordAuthenticator getPasswordAuthenticator() {
+  public static PasswordAuthenticator getPasswordAuthenticator() {
       return PasswordAuthenticatorSingleton.INSTANCE;
   }
 
   static final class PasswordAuthenticatorSingleton {
-    public static final PlessPasswordAuthenticator INSTANCE = new PlessPasswordAuthenticator();
+    public static final PasswordAuthenticator INSTANCE = new PasswordAuthenticator();
   }
 }
