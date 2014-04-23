@@ -3,7 +3,7 @@ package si.urbas.pless.test.sessions;
 import si.urbas.pless.sessions.ClientSessionStorage;
 
 import static org.mockito.Mockito.mock;
-import static si.urbas.pless.sessions.PlessClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
+import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.test.util.TestConfigurationUtils.setConfigurationClass;
 
 public class TemporaryClientSessionStorage implements AutoCloseable {

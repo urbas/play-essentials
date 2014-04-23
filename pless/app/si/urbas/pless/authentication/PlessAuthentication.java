@@ -2,7 +2,7 @@ package si.urbas.pless.authentication;
 
 import si.urbas.pless.sessions.SessionIdGenerator;
 
-import static si.urbas.pless.sessions.PlessClientSessionStorage.getClientSessionStorage;
+import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
 import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
 import static si.urbas.pless.util.PlessConfigurationSource.getConfigurationSource;
 
