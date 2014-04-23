@@ -2,6 +2,7 @@ package si.urbas.pless.test.util;
 
 import org.junit.After;
 import org.junit.Before;
+import si.urbas.pless.test.MockedApplication;
 import si.urbas.pless.test.TestApplication;
 
 public abstract class PlessTest {
@@ -13,7 +14,9 @@ public abstract class PlessTest {
     plessTestApplication = createTestApplication();
   }
 
-  protected abstract TestApplication createTestApplication();
+  protected TestApplication createTestApplication() {
+    return new MockedApplication();
+  }
 
   @After
   public void tearDown() {

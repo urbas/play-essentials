@@ -1,8 +1,8 @@
 package si.urbas.pless.users;
 
 import org.junit.Test;
-import si.urbas.pless.test.MockedAppTest;
 import si.urbas.pless.test.users.TemporaryUserRepository;
+import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.users.TestUserRepositoryFactory.currentUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class UserRepositoryFactoryTest extends MockedAppTest {
+public class UserRepositoryFactoryTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final UserRepository.UserRepositorySingleton userRepositorySingleton = new UserRepository.UserRepositorySingleton();

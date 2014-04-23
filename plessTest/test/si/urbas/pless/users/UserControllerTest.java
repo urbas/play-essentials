@@ -4,8 +4,8 @@ import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
-import si.urbas.pless.test.MockedAppTest;
 import si.urbas.pless.test.users.TemporaryUserRepository;
+import si.urbas.pless.test.util.PlessTest;
 
 import javax.persistence.NoResultException;
 
@@ -28,7 +28,7 @@ import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class UserControllerTest extends MockedAppTest {
+public class UserControllerTest extends PlessTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_PASSWORD = "john's password";

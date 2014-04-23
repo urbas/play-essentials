@@ -3,7 +3,7 @@ package si.urbas.pless.authentication;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
-import si.urbas.pless.test.MockedAppTest;
+import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.users.PlessUser;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +17,7 @@ import static si.urbas.pless.users.JpaUserRepositoryTest.activateUser;
 import static si.urbas.pless.users.JpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.UserControllerTest.*;
 
-public class AuthenticationControllerTest extends MockedAppTest {
+public class AuthenticationControllerTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private static final AuthenticationController authController = new AuthenticationController();

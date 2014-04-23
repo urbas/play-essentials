@@ -1,14 +1,14 @@
 package si.urbas.pless.emailing;
 
 import org.junit.Test;
-import si.urbas.pless.test.MockedAppTest;
+import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class LoggingNoOpEmailProviderTest extends MockedAppTest {
+public class LoggingNoOpEmailProviderTest extends PlessTest {
 
   private final LoggingNoOpEmailProvider loggingNoOpEmailProvider = new LoggingNoOpEmailProvider();
 

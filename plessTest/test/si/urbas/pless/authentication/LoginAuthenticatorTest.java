@@ -3,12 +3,12 @@ package si.urbas.pless.authentication;
 import org.junit.Before;
 import org.junit.Test;
 import play.mvc.Http;
-import si.urbas.pless.test.MockedAppTest;
+import si.urbas.pless.test.util.PlessTest;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
-public class LoginAuthenticatorTest extends MockedAppTest {
+public class LoginAuthenticatorTest extends PlessTest {
 
   private LoginAuthenticator loginAuthenticator;
   private Http.Context httpContext;
