@@ -23,18 +23,6 @@ libraryDependencies ++= Seq(
     .exclude("org.hamcrest", "hamcrest-core")
 )
 
-javacOptions += "-Xlint:unchecked"
-
-jacoco.settings
-
-parallelExecution in jacoco.Config := false
-
-sources in doc in Compile := Nil
-
-publishArtifact in(Compile, packageDoc) := true
-
-publishArtifact in(Compile, packageSrc) := true
-
-sources in doc in Test := Nil
+ProjectSettings.apply
 
 play.Project.playJavaSettings

@@ -2,7 +2,7 @@ name := "pless-root"
 
 organization := "si.urbas"
 
-lazy val plessRoot = Project.project
+lazy val root = Project.project
   .in(file("."))
   .aggregate(pless, plessTest)
 
@@ -12,5 +12,7 @@ lazy val pless = Project.project
 lazy val plessTest = Project.project
   .in(file("plessTest"))
   .dependsOn(pless % "compile->compile")
+
+ProjectSettings.apply
 
 play.Project.playJavaSettings

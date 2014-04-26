@@ -38,15 +38,4 @@ public class TemporaryEmailProvider implements AutoCloseable {
     return emailProvider;
   }
 
-  private static class SingleEmailProvider extends EmailProvider {
-
-    private final Email email;
-
-    private SingleEmailProvider(Email email) {this.email = email;}
-
-    @Override
-    public Email createEmail(ConfigurationSource configurationSource) {
-      return email;
-    }
-  }
 }
