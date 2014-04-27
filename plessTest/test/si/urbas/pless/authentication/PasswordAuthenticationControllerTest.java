@@ -12,8 +12,6 @@ import static play.test.Helpers.callAction;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.authentication.routes.ref.PasswordAuthenticationController;
-import static si.urbas.pless.users.JpaUserRepositoryTest.activateUser;
-import static si.urbas.pless.users.JpaUserRepositoryTest.persistAndFetchUser;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
 import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;

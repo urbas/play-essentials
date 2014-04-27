@@ -26,7 +26,7 @@ public class SignupService {
 
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
-    return new JpaPlessUser(signupData.email, signupData.username, signupData.password);
+    return new PlessUser(0, signupData.email, signupData.username, signupData.password);
   }
 
   public static SignupService getSignupService() {

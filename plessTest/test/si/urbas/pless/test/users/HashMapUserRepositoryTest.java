@@ -1,6 +1,7 @@
 package si.urbas.pless.test.users;
 
 import org.junit.Before;
+import si.urbas.pless.users.HashMapUserRepository;
 import si.urbas.pless.users.UserRepositoryTest;
 
 public class HashMapUserRepositoryTest extends UserRepositoryTest {

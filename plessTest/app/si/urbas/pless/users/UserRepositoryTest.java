@@ -2,8 +2,6 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 
-import javax.persistence.NoResultException;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -21,7 +19,7 @@ public abstract class UserRepositoryTest {
   String USER_2_PASSWORD = "user 2 password";
   long CREATE_DATE_THRESHOLD_MILLISECONDS = 1000;
 
-  @Test(expected = NoResultException.class)
+  @Test(expected = RuntimeException.class)
   public void findUserByEmail_MUST_throw_an_exception_WHEN_the_user_is_not_present() {
     fetchUser(USER_EMAIL);
   }
@@ -144,7 +142,7 @@ public abstract class UserRepositoryTest {
     assertFalse(delete(USER_EMAIL));
   }
 
-  @Test(expected = NoResultException.class)
+  @Test(expected = RuntimeException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     delete(user.getEmail());
@@ -157,7 +155,7 @@ public abstract class UserRepositoryTest {
     assertTrue(delete(user.getEmail()));
   }
 
-  @Test(expected = NoResultException.class)
+  @Test(expected = RuntimeException.class)
   public void findUserById_MUST_throw_WHEN_the_user_does_not_exist() throws Exception {
     userRepository.findUserById(1L);
   }

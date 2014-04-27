@@ -1,4 +1,4 @@
-name := "pless-test"
+name := "pless-jpa-test"
 
 libraryDependencies ++= Seq(
   cache,
@@ -15,8 +15,7 @@ libraryDependencies ++= Seq(
   ("org.mockito" % "mockito-all" % "1.9.5")
     .exclude("org.hamcrest", "hamcrest-core"),
   ("org.mockito" % "mockito-core" % "1.9.5")
-    .exclude("org.hamcrest", "hamcrest-core"),
-  "com.typesafe.play" %% "play-test" % play.core.PlayVersion.current
+    .exclude("org.hamcrest", "hamcrest-core")
 )
 
 ProjectSettings.apply

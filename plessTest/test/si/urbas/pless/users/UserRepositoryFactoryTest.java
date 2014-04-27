@@ -42,9 +42,9 @@ public class UserRepositoryFactoryTest extends PlessTest {
   }
 
   @Test
-  public void getUserRepository_MUST_return_the_JPA_user_repository_WHEN_a_custom_repository_is_not_configured() throws Exception {
+  public void getUserRepository_MUST_return_the_hash_map_user_repository_WHEN_a_custom_repository_is_not_configured() throws Exception {
     doReturn(null).when(getConfigurationSource()).getString(UserRepository.CONFIG_USER_REPOSITORY);
-    assertThat(UserRepository.getUserRepository(), is(instanceOf(JpaUserRepository.class)));
+    assertThat(UserRepository.getUserRepository(), is(instanceOf(HashMapUserRepository.class)));
   }
 
   private UserRepository getScopedUserRepository() throws Exception {

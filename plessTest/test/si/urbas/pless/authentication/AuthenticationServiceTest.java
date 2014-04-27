@@ -6,7 +6,6 @@ import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.sessions.SessionIdGenerator;
 import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.users.JpaPlessUser;
 import si.urbas.pless.users.PlessUser;
 
 import static org.hamcrest.Matchers.*;
@@ -126,7 +125,6 @@ public class AuthenticationServiceTest {
 
 
   private PlessUser createJohnSmithUser() {
-    return new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)
-      .withId(JOHN_SMITH_USER_ID);
+    return new PlessUser(JOHN_SMITH_USER_ID, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   }
 }

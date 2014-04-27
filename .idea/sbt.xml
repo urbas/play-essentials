@@ -10,6 +10,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pless" />
             <option value="$PROJECT_DIR$/pless/project" />
+            <option value="$PROJECT_DIR$/plessJpa" />
+            <option value="$PROJECT_DIR$/plessJpa/project" />
+            <option value="$PROJECT_DIR$/plessJpaTest" />
+            <option value="$PROJECT_DIR$/plessJpaTest/project" />
             <option value="$PROJECT_DIR$/plessTest" />
             <option value="$PROJECT_DIR$/plessTest/project" />
             <option value="$PROJECT_DIR$/project" />

@@ -7,8 +7,6 @@ import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.test.users.TemporaryUserRepository;
 import si.urbas.pless.test.util.PlessTest;
 
-import javax.persistence.NoResultException;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.any;
@@ -20,20 +18,18 @@ import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
-import static si.urbas.pless.users.JpaUserRepositoryTest.fetchUser;
-import static si.urbas.pless.users.JpaUserRepositoryTest.persistAndFetchUser;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserController.signUp;
-import static si.urbas.pless.test.matchers.UserMatchers.userWith;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class UserControllerTest extends PlessTest {
 
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
-  public static final String JOHN_SMITH_PASSWORD = "john's password";
   public static final String JOHN_SMITH_USERNAME = "John Smith";
-  public static final JpaPlessUser user = new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+  public static final String JOHN_SMITH_PASSWORD = "john's password";
+  public static final PlessUser user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
 
@@ -138,7 +134,7 @@ public class UserControllerTest extends PlessTest {
     );
   }
 
-  @Test(expected = NoResultException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callDelete();
@@ -153,7 +149,7 @@ public class UserControllerTest extends PlessTest {
   private Result signupAndLogin(final String userEmail,
                                 final String username,
                                 final String userPassword) {
-    signUp(new JpaPlessUser(userEmail, username, userPassword));
+    signUp(new PlessUser(0, userEmail, username, userPassword));
     final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
     return callLogIn(userEmail, userPassword);

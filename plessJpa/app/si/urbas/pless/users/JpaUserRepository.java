@@ -80,7 +80,7 @@ public class JpaUserRepository extends UserRepository {
       @Override
       public Boolean invoke(EntityManager entityManager) {
         Query deleteUserQuery = entityManager
-          .createNamedQuery(JpaPlessUser.QUERY_DELETE_USER);
+          .createNamedQuery(QUERY_DELETE_USER);
         deleteUserQuery.setParameter("email", userEmail);
         int deletedRows = deleteUserQuery.executeUpdate();
         return deletedRows > 0;

@@ -9,11 +9,9 @@ import xerial.sbt.Sonatype.SonatypeKeys._
 
 name := "pless-root"
 
-organization := "si.urbas"
-
 lazy val root = Project.project
   .in(file("."))
-  .aggregate(pless, plessTest)
+  .aggregate(pless, plessTest, plessJpa, plessJpaTest)
 
 lazy val pless = Project.project
   .in(file("pless"))
@@ -21,6 +19,14 @@ lazy val pless = Project.project
 lazy val plessTest = Project.project
   .in(file("plessTest"))
   .dependsOn(pless % "compile->compile")
+
+lazy val plessJpa = Project.project
+  .in(file("plessJpa"))
+  .dependsOn(pless % "compile->compile")
+
+lazy val plessJpaTest = Project.project
+  .in(file("plessJpaTest"))
+  .dependsOn(pless % "compile->compile", plessJpa % "compile->compile", plessTest % "compile->compile")
 
 ReleasePlugin.releaseSettings ++ ProjectSettings.apply
 

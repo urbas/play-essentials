@@ -10,7 +10,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 
 public class JpaUserRepositoryTest extends UserRepositoryTest {
@@ -37,29 +36,8 @@ public class JpaUserRepositoryTest extends UserRepositoryTest {
     PlessUser user = getJpaUserRepository().findUserByEmail(USER_EMAIL);
     assertThat(user, is(instanceOf(TestExtendingJpaUser.class)));
     assertThat(user, is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD)));
-    assertEquals("this is test", ((TestExtendingJpaUser)user).testColumn);
+    assertEquals(EXTENDED_COLUMN_VALUE, ((TestExtendingJpaUser) user).testColumn);
   }
 
   private JpaUserRepository getJpaUserRepository() {return (JpaUserRepository) userRepository;}
-
-  public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
-    persistUser(userEmail, username, userPassword);
-    return fetchUser(userEmail);
-  }
-
-  public static void persistUser(String userEmail, String username, String userPassword) {
-    getUserRepository().persistUser(userEmail, username, userPassword);
-  }
-
-  public static boolean activateUser(final PlessUser user) {
-    return activateUser(user.getEmail(), user.getActivationCode());
-  }
-
-  public static boolean activateUser(final String email, final String activationCode) {
-    return getUserRepository().activateUser(email, activationCode);
-  }
-
-  public static PlessUser fetchUser(String userEmail) {
-    return getUserRepository().findUserByEmail(userEmail);
-  }
 }

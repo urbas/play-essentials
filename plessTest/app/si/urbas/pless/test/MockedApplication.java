@@ -9,7 +9,7 @@ import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
 import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
-import si.urbas.pless.test.users.HashMapUserRepository;
+import si.urbas.pless.users.HashMapUserRepository;
 import si.urbas.pless.test.users.TestSignupService;
 import si.urbas.pless.test.users.TemporaryUserRepository;
 import si.urbas.pless.test.util.TemporaryConfiguration;

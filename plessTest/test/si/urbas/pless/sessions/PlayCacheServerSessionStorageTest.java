@@ -1,13 +1,13 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
-import si.urbas.pless.test.PlayJpaControllerTest;
-import si.urbas.pless.test.PlessJpaConfiguration;
+import si.urbas.pless.test.PlayControllerTest;
 
 import static org.junit.Assert.assertEquals;
 
 
-public class PlayCacheServerSessionStorageTest extends PlayJpaControllerTest {
+public class PlayCacheServerSessionStorageTest extends PlayControllerTest {
+
   private static final String FOO = "foo";
   private static final String BAR = "bar";
   private static final int ONE_HOUR_IN_MILLIS = 60 * 60 * 1000;
@@ -26,8 +26,4 @@ public class PlayCacheServerSessionStorageTest extends PlayJpaControllerTest {
     assertEquals(null, cachedServerSessionStorage.get(FOO));
   }
 
-  @Override
-  protected String getTestPersistenceUnit() {
-    return PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT;
-  }
 }

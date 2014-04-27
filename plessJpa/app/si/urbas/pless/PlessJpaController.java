@@ -9,6 +9,7 @@ import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 
 public class PlessJpaController extends PlessController {
 
+  @SuppressWarnings("UnusedDeclaration")
   protected static EntityManager em() {
     return getJpaTransactions().getEntityManager();
   }

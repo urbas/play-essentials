@@ -3,7 +3,7 @@ package si.urbas.pless.users;
 import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
-import si.urbas.pless.PlessJpaController;
+import si.urbas.pless.PlessController;
 import si.urbas.pless.users.views.html.ActivationView;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.util.RequestParameters.*;
 
-public final class UserController extends PlessJpaController {
+public final class UserController extends PlessController {
 
   public static final String USERNAME_PARAMETER = "username";
   public static final String EMAIL_PARAMETER = "email";

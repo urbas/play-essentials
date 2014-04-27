@@ -1,12 +1,6 @@
-package si.urbas.pless.test.users;
+package si.urbas.pless.users;
 
-import si.urbas.pless.users.JpaPlessUser;
-import si.urbas.pless.users.PlessUser;
-import si.urbas.pless.users.UserRepository;
-
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,13 +10,13 @@ public class HashMapUserRepository extends UserRepository {
   private final HashMap<Long, PlessUser> idToUserMap = new HashMap<>();
   private long maxId = 0;
 
-  public PlessUser getUser(String email) {return emailToUserMap.get(email);}
+  public synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
 
   @Override
   public synchronized PlessUser findUserByEmail(String email) {
     PlessUser user = getUser(email);
     if (user == null) {
-      throw new NoResultException();
+      throw new IllegalArgumentException("Could not find user with the email '" + email + "'");
     }
     return user;
   }
@@ -35,13 +29,11 @@ public class HashMapUserRepository extends UserRepository {
 
   @Override
   public synchronized void persistUser(String email, String username, String password) {
-    JpaPlessUser newUser = new JpaPlessUser(email, username, password).withId(++maxId);
-    newUser.setCreationDate(new Date());
-    persistUser(newUser);
+    persistUser(new PlessUser(++maxId, email, username, password));
   }
 
   @Override
-  public void persistUser(PlessUser user) {
+  public synchronized void persistUser(PlessUser user) {
     String validationError = user.validateForPersist();
     if (validationError == null) {
       emailToUserMap.put(user.getEmail(), user);
@@ -75,7 +67,7 @@ public class HashMapUserRepository extends UserRepository {
 
     PlessUser user = idToUserMap.get(userId);
     if (user == null) {
-      throw new NoResultException("Could not the user.");
+      throw new IllegalArgumentException("Could not find user with the id '" + userId + "'");
     }
     return user;
   }

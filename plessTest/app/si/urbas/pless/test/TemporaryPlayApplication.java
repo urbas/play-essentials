@@ -1,13 +1,11 @@
 package si.urbas.pless.test;
 
 import play.test.FakeApplication;
-import play.test.Helpers;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static play.test.Helpers.fakeApplication;
-import static play.test.Helpers.stop;
+import static play.test.Helpers.*;
 
 public class TemporaryPlayApplication implements AutoCloseable {
   protected final FakeApplication fakeApplication;
@@ -18,7 +16,7 @@ public class TemporaryPlayApplication implements AutoCloseable {
 
   public TemporaryPlayApplication(Map<String, String> applicationOptions) {
     fakeApplication = fakeApplication(applicationOptions);
-    Helpers.start(fakeApplication);
+    start(fakeApplication);
   }
 
   @Override

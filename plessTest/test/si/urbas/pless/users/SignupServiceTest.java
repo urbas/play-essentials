@@ -18,7 +18,7 @@ import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class SignupServiceTest extends PlayControllerTest {
 
-  private final JpaPlessUser user = new JpaPlessUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+  private final PlessUser user = new PlessUser(0, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
   private final SignupService.SignupServiceSingleton signupServiceSingleton = new SignupService.SignupServiceSingleton();
   private SignupService signupService;

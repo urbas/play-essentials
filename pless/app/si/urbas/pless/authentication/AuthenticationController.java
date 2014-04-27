@@ -2,9 +2,9 @@ package si.urbas.pless.authentication;
 
 import play.libs.Json;
 import play.mvc.Result;
-import si.urbas.pless.PlessJpaController;
+import si.urbas.pless.PlessController;
 
-public final class AuthenticationController extends PlessJpaController {
+public final class AuthenticationController extends PlessController {
 
   public static Result logOut() {
     auth().logOut();

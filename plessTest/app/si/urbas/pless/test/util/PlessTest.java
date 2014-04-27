@@ -4,6 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import si.urbas.pless.test.MockedApplication;
 import si.urbas.pless.test.TestApplication;
+import si.urbas.pless.users.PlessUser;
+
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 
 public abstract class PlessTest {
 
@@ -21,5 +24,26 @@ public abstract class PlessTest {
   @After
   public void tearDown() {
     plessTestApplication.close();
+  }
+
+  public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
+    persistUser(userEmail, username, userPassword);
+    return fetchUser(userEmail);
+  }
+
+  public static void persistUser(String userEmail, String username, String userPassword) {
+    getUserRepository().persistUser(userEmail, username, userPassword);
+  }
+
+  public static boolean activateUser(final PlessUser user) {
+    return activateUser(user.getEmail(), user.getActivationCode());
+  }
+
+  public static boolean activateUser(final String email, final String activationCode) {
+    return getUserRepository().activateUser(email, activationCode);
+  }
+
+  public static PlessUser fetchUser(String userEmail) {
+    return getUserRepository().findUserByEmail(userEmail);
   }
 }
