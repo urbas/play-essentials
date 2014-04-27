@@ -2,10 +2,14 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 import ProjectInfo._
 import sbt._
 import sbt.Keys._
+import si.urbas.sbtutils.textfiles.TextFileManipulation._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
 
 object ProjectSettings {
+
+  lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in 'project/plugins.sbt'.")
+
   lazy val apply: Seq[Setting[_]] = {
     Sonatype.sonatypeSettings ++
       jacoco.settings ++
@@ -19,7 +23,11 @@ object ProjectSettings {
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
         publishMavenStyle := true,
         SonatypeKeys.profileName := "org.xerial",
-        javacOptions += "-Xlint:unchecked"
+        javacOptions += "-Xlint:unchecked",
+        bumpPlessVersionsInReadmeMdFile := {
+          bumpVersionInFile(readmeMdFile, organization.value, "pless", version.value)
+          bumpVersionInFile(readmeMdFile, organization.value, "pless-test", version.value)
+        }
       ) ++
       si.urbas.sbtutils.textfiles.tasks
   }
@@ -59,5 +67,7 @@ object ProjectSettings {
         </developer>
       </developers>
   }
+
+  lazy val readmeMdFile = file("README.md")
 
 }

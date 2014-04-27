@@ -1,3 +1,4 @@
+import ProjectSettings.bumpPlessVersionsInReadmeMdFile
 import com.typesafe.sbt.pgp.PgpKeys._
 import sbtrelease.ReleasePlugin
 import sbtrelease.ReleasePlugin.ReleaseKeys._
@@ -24,7 +25,7 @@ lazy val plessTest = Project.project
 ReleasePlugin.releaseSettings ++ ProjectSettings.apply
 
 releaseProcess := ReleaseProcessTransformation
-  .insertTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).after(setReleaseVersion)
+  .insertTasks(bumpPlessVersionsInReadmeMdFile, addReadmeFileToVcs).after(setReleaseVersion)
   .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
