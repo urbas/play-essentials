@@ -24,8 +24,8 @@ lazy val plessTest = Project.project
 ReleasePlugin.releaseSettings ++ ProjectSettings.apply
 
 releaseProcess := ReleaseProcessTransformation
-  .insertReleaseTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).after(setReleaseVersion)
-  .replaceReleaseStep(publishArtifacts).withTasks(publishSigned, sonatypeReleaseAll)
+  .insertTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).after(setReleaseVersion)
+  .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
 
 play.Project.playJavaSettings
