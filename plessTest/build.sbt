@@ -1,5 +1,3 @@
-import de.johoop.jacoco4sbt.JacocoPlugin._
-
 name := "pless-test"
 
 organization := "si.urbas"
@@ -7,8 +5,7 @@ organization := "si.urbas"
 libraryDependencies ++= Seq(
   cache,
   "commons-codec" % "commons-codec" % "1.9",
-  "org.apache.commons" % "commons-email" % "1.3.2",
-  "si.urbas" %% "pless" % version.value
+  "org.apache.commons" % "commons-email" % "1.3.2"
 )
 
 // Test dependencies

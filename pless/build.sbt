@@ -1,10 +1,3 @@
-import com.typesafe.sbt.pgp.PgpKeys.publishSigned
-import sbtrelease.ReleasePlugin.ReleaseKeys._
-import sbtrelease.ReleaseStateTransformations._
-import si.urbas.sbtutils.releases.ReleaseProcessTransformation._
-import si.urbas.sbtutils.textfiles._
-import xerial.sbt.Sonatype.SonatypeKeys._
-
 name := "pless"
 
 organization := "si.urbas"
