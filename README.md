@@ -145,7 +145,7 @@ smtp.password=test1234
 Pless comes with classes that make tests in JUnit easier. To use them, just add this dependency:
 
 ```scala
-libraryDependencies += "si.urbas" %% "pless" % "0.0.7" % "test->test" classifier "tests"
+libraryDependencies += "si.urbas" %% "pless-test" % "0.0.7" % "test"
 ```
 
 ### Testing with an in-memory JPA database
