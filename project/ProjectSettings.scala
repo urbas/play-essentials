@@ -1,10 +1,16 @@
+import com.typesafe.sbt.pgp.PgpKeys._
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 import ProjectInfo._
 import sbt._
 import sbt.Keys._
 import sbtrelease.ReleasePlugin._
+import sbtrelease.ReleasePlugin.ReleaseKeys._
+import sbtrelease.ReleaseStateTransformations._
+import si.urbas.sbtutils.releases.ReleaseProcessTransformation
+import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
+import xerial.sbt.Sonatype.SonatypeKeys._
 
 object ProjectSettings {
   lazy val apply: Seq[Setting[_]] = {
@@ -21,7 +27,11 @@ object ProjectSettings {
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
         publishMavenStyle := true,
         SonatypeKeys.profileName := "org.xerial",
-        javacOptions += "-Xlint:unchecked"
+        javacOptions += "-Xlint:unchecked",
+        releaseProcess := ReleaseProcessTransformation
+          .insertReleaseTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).after(setReleaseVersion)
+          .replaceReleaseStep(publishArtifacts).withTasks(publishSigned, sonatypeReleaseAll)
+          .in(releaseProcess.value)
       ) ++
       si.urbas.sbtutils.textfiles.tasks
   }

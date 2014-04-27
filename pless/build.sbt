@@ -22,8 +22,4 @@ libraryDependencies ++= Seq(
 
 ProjectSettings.apply
 
-releaseProcess := insertGlobalTasks(bumpVersionInReadmeMd, addReadmeFileToVcs).after(setReleaseVersion)
-  .replaceReleaseStep(publishArtifacts).withGlobalTasks(publishSigned, sonatypeReleaseAll)
-  .in(releaseProcess.value)
-
 play.Project.playJavaSettings
