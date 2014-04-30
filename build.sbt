@@ -37,6 +37,8 @@ ReleasePlugin.releaseSettings ++ ProjectSettings.apply
 
 docsOutputDir := file(".")
 
+docsSnippetDirs += plessJpaSample.base / "app/si/urbas/pless"
+
 releaseProcess := ReleaseProcessTransformation
   .insertTasks(bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
   .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)

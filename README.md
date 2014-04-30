@@ -65,7 +65,9 @@ Open your browser and navigate to: [http://localhost:9000/](http://localhost:900
 Make sure your controllers extend `PlessController`:
 
 ```java
-public class MyController extends PlessController {
+import si.urbas.pless.PlessJpaController;
+
+public class MyController extends PlessJpaController {
 
 }
 ```
@@ -105,6 +107,7 @@ Here's how you send an email:
 ```java
 emailing().sendEmail(recipient, emailSubject, htmlBody);
 ```
+
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
 Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an

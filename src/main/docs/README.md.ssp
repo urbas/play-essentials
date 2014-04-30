@@ -65,9 +65,7 @@ Open your browser and navigate to: [http://localhost:9000/](http://localhost:900
 Make sure your controllers extend `PlessController`:
 
 ```java
-public class MyController extends PlessController {
-
-}
+<%= snippet("jpasample/MyController.java", "controller") %>
 ```
 
 Now you can use any of the below examples from within your controllers.
@@ -112,7 +110,7 @@ email like this:
 
 
 ```java
-<%= snippet("plessJpaSample/app/si/urbas/pless/jpasample/emailing/OfferController.java", "sendEmail", _ trim) %>
+<%= snippet("jpasample/emailing/OfferController.java", "sendEmail", _ trim) %>
 ```
 
 ### Advanced usage
