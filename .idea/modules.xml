@@ -6,6 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pless-build.iml" filepath="$PROJECT_DIR$/.idea/modules/pless-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpa.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpa-build.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpa-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpaSample.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpaSample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpaSample-build.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpaSample-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpaTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpaTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessJpaTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/plessJpaTest-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plessTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plessTest.iml" />

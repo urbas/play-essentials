@@ -112,9 +112,7 @@ email like this:
 
 
 ```java
-String subject = "Offer " + offerName + " updated";
-Html emailBody = OfferUpdateEmail.apply(userToNotify, offerName, offerDescription, offerPrice);
-emailing().sendEmail(userToNotify.getEmail(), subject, emailBody);
+<%= snippet("plessJpaSample/app/si/urbas/pless/jpasample/emailing/OfferController.java", "sendEmail", _ trim) %>
 ```
 
 ### Advanced usage

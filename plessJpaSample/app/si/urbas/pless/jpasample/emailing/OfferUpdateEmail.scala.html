@@ -1,0 +1,20 @@
+@(recipient: si.urbas.pless.users.PlessUser, offerName: String, offerDescription: String, offerPrice: String)
+@import si.urbas.pless.jpasample.emailing.routes.OfferController
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Offer update: @offerName</title>
+</head>
+<body>
+<p>Hello, @recipient.getUsername!</p>
+
+<p>We've got news on the offer: '@offerName'</p>
+
+<p>@offerDescription</p>
+
+<p>
+    Grab this offer for @offerPrice now at
+    <a href="@{OfferController.viewOffer(offerName).absoluteURL(false)}">@{OfferController.viewOffer(offerName).absoluteURL(false)}</a>!
+</p>
+</body>
+</html>

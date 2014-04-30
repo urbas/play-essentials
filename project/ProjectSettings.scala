@@ -11,9 +11,7 @@ object ProjectSettings {
   lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in 'project/plugins.sbt'.")
 
   lazy val apply: Seq[Setting[_]] = {
-    Seq(
-      organization := "si.urbas"
-    ) ++
+    Seq(organization := "si.urbas") ++
       Sonatype.sonatypeSettings ++
       jacoco.settings ++
       Seq(
@@ -32,7 +30,8 @@ object ProjectSettings {
           bumpVersionInFile(readmeMdFile, organization.value, "pless-test", version.value)
         }
       ) ++
-      si.urbas.sbtutils.textfiles.tasks
+      si.urbas.sbtutils.textfiles.tasks ++
+      si.urbas.sbtutils.docs.tasks
   }
 
   val pomExtraSettings = {
