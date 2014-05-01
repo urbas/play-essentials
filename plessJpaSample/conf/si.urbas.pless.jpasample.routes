@@ -5,7 +5,9 @@ POST  /offer               si.urbas.pless.jpasample.emailing.OfferController.off
 GET   /offer               si.urbas.pless.jpasample.emailing.OfferController.viewOffer(offerName: String)
 
 # Pless routes
+// SNIPPET: plessBaseRoute
 ->    /                  si.urbas.pless.Routes
+// ENDSNIPPET: plessBaseRoute
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file    controllers.Assets.at(path="/public", file)

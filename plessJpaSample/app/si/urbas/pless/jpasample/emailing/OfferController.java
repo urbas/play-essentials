@@ -3,9 +3,11 @@ package si.urbas.pless.jpasample.emailing;
 import play.api.templates.Html;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.emailing.Email;
 import si.urbas.pless.jpasample.emailing.html.OfferUpdateEmail;
 import si.urbas.pless.users.PlessUser;
 
+@SuppressWarnings("UnusedDeclaration")
 public class OfferController extends PlessController {
   public static Result offer(String offerName, String offerPrice, String offerDescription) {
     saveOffer(offerName, offerPrice, offerDescription);
@@ -25,6 +27,26 @@ public class OfferController extends PlessController {
     Html emailBody = OfferUpdateEmail.apply(userToNotify, offerName, offerDescription, offerPrice);
     emailing().sendEmail(userToNotify.getEmail(), subject, emailBody);
     // ENDSNIPPET: sendEmail
+    String email = "";
+    Html htmlBody = new Html(null);
+    // SNIPPET: simpleSendEmail
+    emailing().sendEmail(email, subject, htmlBody);
+    // ENDSNIPPET: simpleSendEmail
+  }
+
+  private static void complexSendMail() {
+    String recipient = "";
+    String sender = "";
+    String subject = "";
+    Html body = new Html(null);
+    // SNIPPET: complexSendEmail
+    Email email = emailing().createEmail();
+    email.setSubject(subject);
+    email.setRecipient(recipient);
+    email.setFrom(sender);
+    email.setBody(body);
+    email.send();
+    // ENDSNIPPET: complexSendEmail
   }
 
   @SuppressWarnings("UnusedParameters")

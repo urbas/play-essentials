@@ -31,13 +31,13 @@ lazy val plessJpaTest = Project.project
 
 lazy val plessJpaSample = Project.project
   .in(file("plessJpaSample"))
-  .dependsOn(pless % "compile->compile", plessJpa % "compile->compile")
+  .dependsOn(pless % "compile->compile", plessJpa % "compile->compile", plessTest % "test->compile", plessJpaTest % "test->compile")
 
 ReleasePlugin.releaseSettings ++ ProjectSettings.apply
 
 docsOutputDir := file(".")
 
-docsSnippetDirs += plessJpaSample.base / "app/si/urbas/pless"
+docsSnippetDirs ++= Seq("app/si/urbas/pless", "test/si/urbas/pless", "conf").map(plessJpaSample.base / _)
 
 releaseProcess := ReleaseProcessTransformation
   .insertTasks(bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)

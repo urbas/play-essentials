@@ -44,7 +44,9 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
 
-        ->     /                  si.urbas.pless.Routes
+    ```scala
+    ->    /                  si.urbas.pless.Routes
+    ```
 
 5.  Copy [persistence.xml](./samples/jpa/h2/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
 
@@ -119,7 +121,7 @@ auth().logIn(new PlessUser(userId, email, username, password));
 Here's how you send an email:
 
 ```java
-emailing().sendEmail(recipient, emailSubject, htmlBody);
+emailing().sendEmail(email, subject, htmlBody);
 ```
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
@@ -168,11 +170,14 @@ libraryDependencies += "si.urbas" %% "pless-test" % "0.0.8" % "test"
 
 ### Testing with an in-memory JPA database
 
-You tests should extend from `si.urbas.pless.test.PlayJpaControllerTest` and override the following function
+You tests should extend from our test base-class that brings up an in-memory JPA database together with a working test Play aplication. You only have to override the following function:
 
 ```java
-@Override
-protected String getTestPersistenceUnit() {
-  return "pless.example.testPersistenceUnit";
+public class MyControllerTest extends PlayJpaControllerTest {
+
+  @Override
+  protected String getTestPersistenceUnit() {
+    return "pless.example.testPersistenceUnit";
+  }
 }
 ```
