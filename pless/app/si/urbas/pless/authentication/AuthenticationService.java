@@ -47,9 +47,7 @@ public class AuthenticationService {
     if (!user.isActivated()) {
       throw new IllegalStateException("Could not log in. The user is not activated.");
     }
-    String sessionId = createSessionId();
-    storeServerSessionValue(getEmailServerSessionKey(sessionId), toRawLoginData(user));
-    clientSessionStorage.put(SESSION_ID_KEY, sessionId);
+    startLoginSession(toRawLoginData(user));
   }
 
   public boolean isLoggedIn() {
@@ -79,6 +77,12 @@ public class AuthenticationService {
 
   public int getExpirationMillis() {
     return SESSION_EXPIRATION_MILLIS;
+  }
+
+  private void startLoginSession(String loginData) {
+    String sessionId = createSessionId();
+    storeServerSessionValue(getEmailServerSessionKey(sessionId), loginData);
+    clientSessionStorage.put(SESSION_ID_KEY, sessionId);
   }
 
   private String createSessionId() {

@@ -2,7 +2,9 @@
 GET   /                    si.urbas.pless.WelcomeController.welcome()
 
 # Authentication Routes
+# SNIPPET: passwordLogin
 POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn(email, password)
+# ENDSNIPPET: passwordLogin
 POST  /api/auth/logout     si.urbas.pless.authentication.AuthenticationController.logOut()
 GET   /api/auth/status     si.urbas.pless.authentication.AuthenticationController.status()
 

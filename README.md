@@ -76,28 +76,42 @@ Now you can use any of the below examples from within your controllers.
 
 ## Authentication
 
-To login a user with their email and password:
-
-```java
-auth().logIn(new PasswordLoginForm(email, password));
-```
-
 Check that a user is currently logged in:
 
 ```java
-auth().isLoggedIn()
+auth().isLoggedIn();
 ```
 
 To get the email of the currently logged-in user:
 
 ```java
-auth().getLoggedInUserEmail()
+auth().getLoggedInUserEmail();
 ```
 
 To log the user out:
 
 ```java
-auth().logOut()
+auth().logOut();
+```
+
+Here's a REST path to the password login controller:
+
+```scala
+POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn(email, password)
+```
+
+You can log a user in directly from your controller. Here's an example of password authentication:
+
+```java
+PasswordAuthenticationController.logIn(email, password);
+```
+
+### Custom authentication mechanism
+
+You can write your own authentication controller on top of the authentication infrastructure. Here's the generic login method:
+
+```java
+auth().logIn(new PlessUser(userId, email, username, password));
 ```
 
 ## Emailing
@@ -107,7 +121,6 @@ Here's how you send an email:
 ```java
 emailing().sendEmail(recipient, emailSubject, htmlBody);
 ```
-
 
 Note that `htmlBody` is a Play HTML view template. Say you have a
 Play view named `OfferUpdateEmailTemplate.scala.html`, then you can send an

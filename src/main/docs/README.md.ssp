@@ -72,28 +72,42 @@ Now you can use any of the below examples from within your controllers.
 
 ## Authentication
 
-To login a user with their email and password:
-
-```java
-auth().logIn(new PasswordLoginForm(email, password));
-```
-
 Check that a user is currently logged in:
 
 ```java
-auth().isLoggedIn()
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "isLoggedIn", _ trim) %>
 ```
 
 To get the email of the currently logged-in user:
 
 ```java
-auth().getLoggedInUserEmail()
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "loggedInEmail", _ trim) %>
 ```
 
 To log the user out:
 
 ```java
-auth().logOut()
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "logOut", _ trim) %>
+```
+
+Here's a REST path to the password login controller:
+
+```scala
+<%= snippet("pless/conf/si.urbas.pless.routes", "passwordLogin") %>
+```
+
+You can log a user in directly from your controller. Here's an example of password authentication:
+
+```java
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "passwordAuthentication", _ trim) %>
+```
+
+### Custom authentication mechanism
+
+You can write your own authentication controller on top of the authentication infrastructure. Here's the generic login method:
+
+```java
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "genericAuthentication", _ trim) %>
 ```
 
 ## Emailing
