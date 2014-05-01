@@ -140,13 +140,7 @@ email like this:
 You can put these configuration settings into `conf/application.conf`:
 
 ```java
-smtp.from="Your Site <your.site@example.com>"
-smtp.host=smtp.example.com
-smtp.port=587
-smtp.ssl=yes
-smtp.tls=yes
-smtp.user="username@example.com"
-smtp.password=test1234
+<%= snippet("pless/conf/application.conf", "emailConfiguration") %>
 ```
 
 ## Testing

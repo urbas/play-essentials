@@ -151,12 +151,12 @@ email.send();
 You can put these configuration settings into `conf/application.conf`:
 
 ```java
-smtp.from="Your Site <your.site@example.com>"
-smtp.host=smtp.example.com
+smtp.from="Play Essentials <play.essentials@gmail.com>"
+smtp.host=smtp.gmail.com
 smtp.port=587
 smtp.ssl=yes
 smtp.tls=yes
-smtp.user="username@example.com"
+smtp.user="play.essentials@gmail.com"
 smtp.password=test1234
 ```
 
