@@ -3,7 +3,7 @@ package si.urbas.pless.test;
 import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.JpaServerSessionStorage;
 import si.urbas.pless.db.JpaTransactions;
-import si.urbas.pless.db.RawJpaTransactions;
+import si.urbas.pless.test.db.RawJpaTransactions;
 import si.urbas.pless.test.db.TemporaryJpaTransactions;
 import si.urbas.pless.users.JpaUserRepository;
 import si.urbas.pless.util.Body;

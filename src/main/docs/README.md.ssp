@@ -106,7 +106,9 @@ You can log a user in directly from your controller. Here's an example of passwo
 
 ### Custom authentication mechanism
 
-You can write your own authentication controller on top of the authentication infrastructure. Here's the generic login method:
+You can write your own authentication controller on top of the authentication infrastructure.
+
+Whatever authentication procedure you're going to introduce, you can use this generic login method to start an authentication session:
 
 ```java
 <%= snippet("jpasample/auth/AuthenticationSamples.java", "genericAuthentication", _ trim) %>

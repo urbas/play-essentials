@@ -110,7 +110,9 @@ PasswordAuthenticationController.logIn(email, password);
 
 ### Custom authentication mechanism
 
-You can write your own authentication controller on top of the authentication infrastructure. Here's the generic login method:
+You can write your own authentication controller on top of the authentication infrastructure.
+
+So, whatever authentication procedure you're going to introduce, you'll be using this generic login method:
 
 ```java
 auth().logIn(new PlessUser(userId, email, username, password));

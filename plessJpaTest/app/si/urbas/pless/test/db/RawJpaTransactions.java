@@ -1,4 +1,6 @@
-package si.urbas.pless.db;
+package si.urbas.pless.test.db;
+
+import si.urbas.pless.db.JpaTransactions;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
