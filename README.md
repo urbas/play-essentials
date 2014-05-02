@@ -110,13 +110,13 @@ PasswordAuthenticationController.logIn(email, password);
 
 ### Custom authentication mechanism
 
-You can write your own authentication controller on top of the authentication infrastructure.
-
-So, whatever authentication procedure you're going to introduce, you'll be using this generic login method:
+You can introduce a custom authentication procedure through the generic login method:
 
 ```java
 auth().logIn(new PlessUser(userId, email, username, password));
 ```
+
+The above method starts an authentication session for the given user (even if the user does not exist in the user repository).
 
 ## Emailing
 
@@ -153,12 +153,12 @@ email.send();
 You can put these configuration settings into `conf/application.conf`:
 
 ```java
-smtp.from="Play Essentials <play.essentials@gmail.com>"
+smtp.from="Your email <your.email@gmail.com>"
 smtp.host=smtp.gmail.com
 smtp.port=587
 smtp.ssl=yes
 smtp.tls=yes
-smtp.user="play.essentials@gmail.com"
+smtp.user="your.email@gmail.com"
 smtp.password=test1234
 ```
 

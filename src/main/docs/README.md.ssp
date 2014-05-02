@@ -106,13 +106,13 @@ You can log a user in directly from your controller. Here's an example of passwo
 
 ### Custom authentication mechanism
 
-You can write your own authentication controller on top of the authentication infrastructure.
-
-Whatever authentication procedure you're going to introduce, you can use this generic login method to start an authentication session:
+You can introduce a custom authentication procedure through the generic login method:
 
 ```java
 <%= snippet("jpasample/auth/AuthenticationSamples.java", "genericAuthentication", _ trim) %>
 ```
+
+The above method starts an authentication session for the given user (even if the user does not exist in the user repository).
 
 ## Emailing
 
@@ -142,7 +142,7 @@ email like this:
 You can put these configuration settings into `conf/application.conf`:
 
 ```java
-<%= snippet("pless/conf/application.conf", "emailConfiguration") %>
+<%= snippet("plessTest/conf/application.conf", "emailConfiguration") %>
 ```
 
 ## Testing

@@ -20,11 +20,10 @@ public class PlayApplicationConfigurationSourceTest {
   private static final int CONFIG_INT_TEST_VALUE = 4242;
   private PlayApplicationConfigurationSource playApplicationConfigurationSource;
   private TemporaryPlayApplication temporaryPlayApplication;
-  private HashMap<String, String> applicationOptions;
 
   @Before
   public void setUp() {
-    applicationOptions = new HashMap<>();
+    HashMap<String, String> applicationOptions = new HashMap<>();
     applicationOptions.put(CONFIG_STRING_TEST, CONFIG_STRING_TEST_VALUE);
     applicationOptions.put(CONFIG_BOOLEAN_TEST, Boolean.toString(CONFIG_BOOLEAN_TEST_VALUE));
     applicationOptions.put(CONFIG_INT_TEST, Integer.toString(CONFIG_INT_TEST_VALUE));
