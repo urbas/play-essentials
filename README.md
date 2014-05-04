@@ -108,6 +108,8 @@ You can log a user in directly from your controller. Here's an example of passwo
 PasswordAuthenticationController.logIn(email, password);
 ```
 
+>   TODO: Implement authentication through Play's authenticator mechanism.
+
 ### Custom authentication mechanism
 
 You can introduce a custom authentication procedure through the generic login method:
