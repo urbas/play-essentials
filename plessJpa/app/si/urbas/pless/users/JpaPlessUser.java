@@ -64,7 +64,7 @@ public class JpaPlessUser extends PlessUser {
     return super.getEmail();
   }
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = true, unique = true)
   @Override
   public String getUsername() {
     return super.getUsername();

@@ -2,6 +2,8 @@ package si.urbas.pless.users;
 
 import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
+import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.Factory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,7 +14,7 @@ import java.util.List;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 import static si.urbas.pless.users.JpaPlessUser.*;
 
-public class JpaUserRepository extends UserRepository {
+public class JpaUserRepository extends UserRepository implements Factory<UserRepository> {
 
   @Override
   public PlessUser findUserByEmail(final String email) {
@@ -102,4 +104,8 @@ public class JpaUserRepository extends UserRepository {
     });
   }
 
+  @Override
+  public UserRepository createInstance(ConfigurationSource configurationSource) {
+    return new JpaUserRepository();
+  }
 }

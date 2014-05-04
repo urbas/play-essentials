@@ -1,5 +1,6 @@
 package si.urbas.pless.users;
 
+import play.Logger;
 import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
@@ -56,6 +57,7 @@ public final class UserController extends PlessController {
       getSignupService().sendSignupEmail(newUser);
       return ok();
     } catch (Exception ex) {
+      Logger.error("Sign up error.", ex);
       return badRequest();
     }
   }
