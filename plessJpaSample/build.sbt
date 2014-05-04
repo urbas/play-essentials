@@ -8,8 +8,6 @@ libraryDependencies ++= Seq(
   cache
 )
 
-ProjectSettings.apply
+ProjectSettings.plessProjectWithPlaySettings
 
 docsOutputDir := baseDirectory.value / ".."
-
-play.Project.playJavaSettings

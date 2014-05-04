@@ -18,6 +18,4 @@ libraryDependencies ++= Seq(
     .exclude("org.hamcrest", "hamcrest-core")
 )
 
-ProjectSettings.apply
-
-play.Project.playJavaSettings
+ProjectSettings.plessProjectWithPlaySettings

@@ -6,6 +6,4 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-email" % "1.3.2"
 )
 
-ProjectSettings.apply
-
-play.Project.playJavaSettings
+ProjectSettings.plessProjectWithPlaySettings

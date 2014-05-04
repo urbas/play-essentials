@@ -2,6 +2,7 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 import ProjectInfo._
 import sbt._
 import sbt.Keys._
+import sbtrelease.ReleasePlugin
 import si.urbas.sbtutils.textfiles.TextFileManipulation._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
@@ -10,7 +11,7 @@ object ProjectSettings {
 
   lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in 'project/plugins.sbt'.")
 
-  lazy val apply: Seq[Setting[_]] = {
+  lazy val plessCommonSettings: Seq[Setting[_]] = {
     Seq(organization := "si.urbas") ++
       Sonatype.sonatypeSettings ++
       jacoco.settings ++
@@ -33,6 +34,10 @@ object ProjectSettings {
       si.urbas.sbtutils.textfiles.tasks ++
       si.urbas.sbtutils.docs.tasks
   }
+
+  lazy val plessProjectWithPlaySettings = ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+
+  lazy val rootSettings = ReleasePlugin.releaseSettings ++ plessProjectWithPlaySettings
 
   val pomExtraSettings = {
     <url>

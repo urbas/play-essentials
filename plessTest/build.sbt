@@ -19,6 +19,4 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-test" % play.core.PlayVersion.current
 )
 
-ProjectSettings.apply
-
-play.Project.playJavaSettings
+ProjectSettings.plessProjectWithPlaySettings

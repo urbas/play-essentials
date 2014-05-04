@@ -1,6 +1,5 @@
 import ProjectSettings.bumpPlessVersionsInReadmeMdFile
 import com.typesafe.sbt.pgp.PgpKeys._
-import sbtrelease.ReleasePlugin
 import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleaseStateTransformations._
 import si.urbas.sbtutils.docs._
@@ -23,7 +22,7 @@ lazy val plessJpaTest = project.dependsOn(pless, plessJpa, plessTest)
 
 lazy val plessJpaSample = project.dependsOn(pless, plessJpa, plessTest, plessJpaTest)
 
-ReleasePlugin.releaseSettings ++ ProjectSettings.apply
+ProjectSettings.rootSettings
 
 docsOutputDir := file(".")
 
@@ -33,5 +32,3 @@ releaseProcess := ReleaseProcessTransformation
   .insertTasks(bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
   .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
   .in(releaseProcess.value)
-
-play.Project.playJavaSettings
