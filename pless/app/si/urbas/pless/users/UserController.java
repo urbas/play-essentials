@@ -54,10 +54,11 @@ public final class UserController extends PlessController {
   public static Result signUp(PlessUser newUser) {
     try {
       users().persistUser(newUser);
+      getSignupService().afterUserPersisted(newUser);
       getSignupService().sendSignupEmail(newUser);
       return ok();
     } catch (Exception ex) {
-      Logger.error("Sign up error.", ex);
+      Logger.info("Sign up error.", ex);
       return badRequest();
     }
   }

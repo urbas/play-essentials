@@ -15,23 +15,27 @@ public class SignupService {
     return form(SignupData.class);
   }
 
-  public void sendSignupEmail(PlessUser userDetails) {
-    Html emailContent = signupEmailContent(userDetails);
-    String recipient = userDetails.getEmail();
-    String emailSubject = "Pless Signup";
-    getEmailProvider().sendEmail(recipient, emailSubject, emailContent);
-  }
-
-  public Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}
-
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
     return new PlessUser(0, signupData.email, signupData.username, signupData.password);
   }
 
+  public void sendSignupEmail(PlessUser userDetails) {
+    String recipient = userDetails.getEmail();
+    String emailSubject = getSignupEmailSubject();
+    Html emailContent = signupEmailContent(userDetails);
+    getEmailProvider().sendEmail(recipient, emailSubject, emailContent);
+  }
+
+  private String getSignupEmailSubject() {return "Pless Signup";}
+
+  public Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}
+
   public static SignupService getSignupService() {
     return SignupServiceSingleton.INSTANCE.getInstance();
   }
+
+  public void afterUserPersisted(PlessUser newUser) {}
 
   static final class SignupServiceSingleton {
     private static final ServiceLoader<SignupService> INSTANCE = new ServiceLoader<>(CONFIG_SIGNUP_SERVICE, new SignupService());

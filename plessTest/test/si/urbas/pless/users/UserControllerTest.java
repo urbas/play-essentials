@@ -32,6 +32,7 @@ public class UserControllerTest extends PlessTest {
   public static final PlessUser user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
+  private static final RuntimeException EXCEPTION_FOR_TESTING = new RuntimeException("Forced exception for testing.");
 
   @Test
   public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
@@ -46,10 +47,24 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
+  public void signUp_MUST_call_afterUserPersisted_of_SignupService() {
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    verify(getSignupService()).afterUserPersisted(userMatchesJohnSmith());
+  }
+
+  @Test
+  public void signUp_MUST_not_call_afterUserPersisted_of_SignupService_WHEN_user_not_persisted() {
+    UserRepository userRepository = getUserRepository();
+    doThrow(EXCEPTION_FOR_TESTING).when(userRepository).persistUser(userMatchesJohnSmith());
+    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    verify(getSignupService(), never()).afterUserPersisted(userMatchesJohnSmith());
+  }
+
+  @Test
   public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
     Form<SignupData> signupForm = spy(Form.form(SignupData.class));
-    SignupService signupHandler = getSignupService();
-    doReturn(signupForm).when(signupHandler).getSignupForm();
+    SignupService signupService = getSignupService();
+    doReturn(signupForm).when(signupService).getSignupForm();
     doReturn(true).when(signupForm).hasErrors();
     doReturn(signupForm).when(signupForm).bindFromRequest();
     signUp();
@@ -57,7 +72,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void signUp_MUST_ask_the_SignupHandler_to_create_the_user() throws Exception {
+  public void signUp_MUST_ask_the_SignupService_to_create_the_user() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     verify(getSignupService()).createUser(any(Form.class));
   }
@@ -110,16 +125,16 @@ public class UserControllerTest extends PlessTest {
     verify(getEmailProvider()).createEmail(getConfigurationSource());
   }
 
-
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
     try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
       UserRepository scopedUserRepository = getUserRepository();
-      doThrow(new RuntimeException()).when(scopedUserRepository).persistUser(user);
+      doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);
       verify(getEmailProvider(), never()).createEmail(getConfigurationSource());
     }
   }
+
 
   @Test
   public void delete_MUST_return_badRequest_WHEN_not_logged_in() throws Exception {
@@ -163,6 +178,8 @@ public class UserControllerTest extends PlessTest {
     return UserController.activationPage(user.getEmail(), user
       .getActivationCode());
   }
+
+  private PlessUser userMatchesJohnSmith() {return (PlessUser) argThat(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD));}
 
   private Result callDelete() {
     try {
