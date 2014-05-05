@@ -64,7 +64,9 @@ Open your browser and navigate to: [http://localhost:9000/](http://localhost:900
 
 # Usage
 
-Make sure your controllers extend `PlessController`:
+## JPA applications
+
+Make sure your controllers look like this:
 
 ```java
 <%= snippet("jpasample/MyController.java", "controller") %>

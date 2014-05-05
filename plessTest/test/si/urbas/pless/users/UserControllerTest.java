@@ -38,7 +38,11 @@ public class UserControllerTest extends PlessTest {
     assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, "")));
     assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)));
     assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, "")));
-    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, "", JOHN_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void signUp_MUST_result_in_ok_WHEN_the_username_is_null() {
+    assertEquals(OK, status(signUp(JOHN_SMITH_EMAIL, null, JOHN_SMITH_PASSWORD)));
   }
 
   @Test

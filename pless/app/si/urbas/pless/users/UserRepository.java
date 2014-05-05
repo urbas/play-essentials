@@ -1,5 +1,6 @@
 package si.urbas.pless.users;
 
+import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 import si.urbas.pless.util.SingletonFactory;
@@ -37,7 +38,7 @@ public abstract class UserRepository {
   public static class DefaultUserRepositoryCreator implements Factory<UserRepository> {
     @Override
     public UserRepository createInstance(ConfigurationSource configurationSource) {
-      return new HashMapUserRepository();
+      throw new ConfigurationException("No user repository configured. Please select an implementation of the user repository and add it to your configuration. " + ConfigurationException.getFactoryConfigurationInstruction(CONFIG_USER_REPOSITORY, UserRepository.class));
     }
   }
 }

@@ -1,6 +1,7 @@
 package si.urbas.pless.users;
 
 import org.junit.Test;
+import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.test.users.TemporaryUserRepository;
 import si.urbas.pless.test.util.PlessTest;
 
@@ -41,10 +42,10 @@ public class UserRepositoryFactoryTest extends PlessTest {
     );
   }
 
-  @Test
-  public void getUserRepository_MUST_return_the_hash_map_user_repository_WHEN_a_custom_repository_is_not_configured() throws Exception {
+  @Test(expected = ConfigurationException.class)
+  public void getUserRepository_MUST_throw_an_exception_WHEN_a_custom_repository_is_not_configured() throws Exception {
     doReturn(null).when(getConfigurationSource()).getString(UserRepository.CONFIG_USER_REPOSITORY);
-    assertThat(UserRepository.getUserRepository(), is(instanceOf(HashMapUserRepository.class)));
+    UserRepository.getUserRepository();
   }
 
   private UserRepository getScopedUserRepository() throws Exception {

@@ -4,10 +4,10 @@ import static play.data.validation.Constraints.Required;
 
 public class SignupData {
   @Required
-  public String email;
+  protected String email;
   @Required
-  public String password;
-  public String username;
+  protected String password;
+  protected String username;
 
   @SuppressWarnings("UnusedDeclaration")
   public SignupData() {}
@@ -22,5 +22,17 @@ public class SignupData {
 
   public String getUsername() {
     return username;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
   }
 }
