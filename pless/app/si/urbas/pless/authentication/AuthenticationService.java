@@ -70,8 +70,7 @@ public class AuthenticationService {
   }
 
   public void logOut() {
-    String sessionId = getSessionIdFromClient();
-    serverSessionStorage.remove(getEmailServerSessionKey(sessionId));
+    serverSessionStorage.remove(getSessionIdFromClient());
     clientSessionStorage.remove(SESSION_ID_KEY);
   }
 
@@ -80,34 +79,18 @@ public class AuthenticationService {
   }
 
   private void startLoginSession(String loginData) {
-    String sessionId = createSessionId();
-    storeServerSessionValue(getEmailServerSessionKey(sessionId), loginData);
+    String sessionId = sessionIdGenerator.createSessionId();
+    serverSessionStorage.put(sessionId, loginData, getExpirationMillis());
     clientSessionStorage.put(SESSION_ID_KEY, sessionId);
-  }
-
-  private String createSessionId() {
-    return sessionIdGenerator.createSessionId();
   }
 
   private String getSessionIdFromClient() {
     return clientSessionStorage.get(SESSION_ID_KEY);
   }
 
-  private void storeServerSessionValue(String key, String value) {
-    serverSessionStorage.put(
-      key,
-      value,
-      getExpirationMillis()
-    );
-  }
-
-  private String getEmailServerSessionKey(String sessionId) {
-    return sessionId;
-  }
-
   private String getRawLoginSessionData() {
     String sessionIdFromClient = getSessionIdFromClient();
-    return sessionIdFromClient == null ? null : serverSessionStorage.get(getEmailServerSessionKey(sessionIdFromClient));
+    return sessionIdFromClient == null ? null : serverSessionStorage.get(sessionIdFromClient);
   }
 
   static final class AuthenticationServiceSingleton {
