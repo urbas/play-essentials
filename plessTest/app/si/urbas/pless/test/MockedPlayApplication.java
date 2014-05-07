@@ -4,17 +4,12 @@ import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 public class MockedPlayApplication extends MockedApplication {
-
-  public MockedPlayApplication() {
-    this(new HashMap<String, String>());
-  }
 
   public MockedPlayApplication(final Map<String, String> playApplicationOptions) {
     super(createTestModePlayConfiguration(), null);

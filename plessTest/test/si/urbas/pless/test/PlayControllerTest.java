@@ -3,13 +3,15 @@ package si.urbas.pless.test;
 import org.junit.After;
 import org.junit.Before;
 
-public class PlayControllerTest {
+import java.util.HashMap;
+
+public class PlayControllerTest implements PlayTest {
 
   protected MockedPlayApplication plessTestApplication;
 
   @Before
   public void setUp() {
-    plessTestApplication = new MockedPlayApplication();
+    plessTestApplication = new MockedPlayApplication(getPlayApplicationConfiguration());
   }
 
   @After
@@ -17,4 +19,8 @@ public class PlayControllerTest {
     plessTestApplication.close();
   }
 
+  @Override
+  public HashMap<String, String> getPlayApplicationConfiguration() {
+    return new HashMap<>();
+  }
 }
