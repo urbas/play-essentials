@@ -18,7 +18,16 @@ public class MockedPlayApplication extends MockedApplication {
 
   public MockedPlayApplication(final Map<String, String> playApplicationOptions) {
     super(createTestModePlayConfiguration(), null);
-    startPlayApplication(playApplicationOptions);
+    startTemporaryPlayApplication(this, new TemporaryPlayApplication(playApplicationOptions));
+  }
+
+  public static void startTemporaryPlayApplication(final MockedApplication mockedApplication, final TemporaryPlayApplication temporaryPlayApplication) {
+    mockedApplication.doInitialisation(new Body() {
+      @Override
+      public void invoke() {
+        mockedApplication.temporaryServices.add(temporaryPlayApplication);
+      }
+    });
   }
 
   static ConfigurationSource createTestModePlayConfiguration() {
@@ -26,15 +35,6 @@ public class MockedPlayApplication extends MockedApplication {
     doReturn(false).when(currentConfiguration).isProduction();
     doReturn(false).when(currentConfiguration).isDevelopment();
     return currentConfiguration;
-  }
-
-  private void startPlayApplication(final Map<String, String> playApplicationOptions) {
-    doInitialisation(new Body() {
-      @Override
-      public void invoke() {
-        temporaryServices.add(new TemporaryPlayApplication(playApplicationOptions));
-      }
-    });
   }
 
 }

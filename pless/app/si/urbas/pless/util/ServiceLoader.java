@@ -1,12 +1,12 @@
 package si.urbas.pless.util;
 
 import static si.urbas.pless.util.Factories.getDefaultInstanceCreator;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class ServiceLoader<T> {
 
   private static Function<String, Object> overriddenServiceCreator;
   private final String serviceClassNameConfigKey;
+  private final ConfigurationSource configurationSource;
   private final Supplier<T> defaultServiceSupplier;
   private T cachedService;
 
@@ -20,7 +20,12 @@ public class ServiceLoader<T> {
   }
 
   public ServiceLoader(String serviceClassNameConfigKey, Supplier<T> defaultServiceSupplier) {
+    this(serviceClassNameConfigKey, null, defaultServiceSupplier);
+  }
+
+  public ServiceLoader(String serviceClassNameConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultServiceSupplier) {
     this.serviceClassNameConfigKey = serviceClassNameConfigKey;
+    this.configurationSource = configurationSource;
     this.defaultServiceSupplier = defaultServiceSupplier;
   }
 
@@ -48,6 +53,10 @@ public class ServiceLoader<T> {
     if (!getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment()) {
       cachedService = null;
     }
+  }
+
+  private ConfigurationSource getConfigurationSource() {
+    return configurationSource == null ? ConfigurationSource.getConfigurationSource() : configurationSource;
   }
 
   @SuppressWarnings("unchecked")

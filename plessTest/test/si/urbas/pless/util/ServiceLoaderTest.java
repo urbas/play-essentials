@@ -7,6 +7,8 @@ import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 import si.urbas.pless.test.util.TemporaryServices;
 
+import java.util.Date;
+
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -17,6 +19,7 @@ public class ServiceLoaderTest {
 
   private static final String CONFIG_KEY_SERVICE_CLASS_NAME = "configured.service.className";
   private static final int DEFAULT_SERVICE = 42;
+  private static final String DEFAULT_INSTANCE_FOR_OVERRIDEN_CONFIGURATION = "default instance for overriden_configuration";
   private final String SERVICE_CLASS_NAME = getClass().getCanonicalName();
   private ServiceLoader<Object> serviceLoader;
   private TemporaryConfiguration temporaryConfiguration;
@@ -96,5 +99,18 @@ public class ServiceLoaderTest {
   public void getInstance_MUST_throw_an_exception_WHEN_the_service_class_does_not_exist() throws Exception {
     doReturn("not a valid class name").when(getConfigurationSource()).getString(CONFIG_KEY_SERVICE_CLASS_NAME);
     serviceLoader.getInstance();
+  }
+
+  @Test
+  public void getInstance_MUST_user_the_given_configuration_WHEN_it_is_not_null() {
+    ConfigurationSource configurationSource = mock(ConfigurationSource.class);
+    when(configurationSource.getString(CONFIG_KEY_SERVICE_CLASS_NAME)).thenReturn(Date.class.getCanonicalName());
+    ServiceLoader<Object> serviceLoaderWithConfiguration = new ServiceLoader<>(CONFIG_KEY_SERVICE_CLASS_NAME, configurationSource, new Supplier<Object>() {
+      @Override
+      public Object get() {
+        return DEFAULT_INSTANCE_FOR_OVERRIDEN_CONFIGURATION;
+      }
+    });
+    assertThat(serviceLoaderWithConfiguration.getInstance(), is(instanceOf(Date.class)));
   }
 }
