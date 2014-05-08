@@ -8,7 +8,7 @@ public class MyControllerTest extends PlayJpaControllerTest {
 
   @Override
   protected String getTestPersistenceUnit() {
-    return "pless.example.testPersistenceUnit";
+    return "pless.jpasample.testPersistenceUnit";
   }
 }
 // ENDSNIPPET: testPersistenceUnit

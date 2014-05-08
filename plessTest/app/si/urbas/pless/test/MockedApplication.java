@@ -53,9 +53,13 @@ public class MockedApplication extends TestApplication {
         temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         temporaryServices.add(new TemporaryUserRepository(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
         temporaryServices.add(new TemporaryFactories(factories == null ? new HashMap<String, Factory<?>>() : factories));
-        temporaryServices.add(new TemporaryServices(services == null ? collectEntries(createSpiedSignupService()) : services));
+        temporaryServices.add(new TemporaryServices(services == null ? createMockedServices() : services));
       }
     });
+  }
+
+  public static Map<String, Object> createMockedServices() {
+    return collectEntries(createSpiedSignupService());
   }
 
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}

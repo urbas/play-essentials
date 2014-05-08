@@ -2,13 +2,18 @@ package si.urbas.pless.users;
 
 import play.api.templates.Html;
 import play.data.Form;
+import si.urbas.pless.PlessService;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 
-public class SignupService {
+/**
+ * Responsible for particular parts of the signup process. This service can be replaced by a custom one through
+ * the configuration key {@link si.urbas.pless.users.SignupService#CONFIG_SIGNUP_SERVICE}.
+ */
+public class SignupService implements PlessService {
   public static final String CONFIG_SIGNUP_SERVICE = "pless.signupService";
 
   public Form<?> getSignupForm() {
@@ -35,7 +40,7 @@ public class SignupService {
     return SignupServiceSingleton.INSTANCE.getInstance();
   }
 
-  public void afterUserPersisted(PlessUser newUser) {}
+  public void afterUserPersisted(@SuppressWarnings("UnusedParameters") PlessUser newUser) {}
 
   static final class SignupServiceSingleton {
     private static final ServiceLoader<SignupService> INSTANCE = new ServiceLoader<>(CONFIG_SIGNUP_SERVICE, new SignupService());

@@ -3,7 +3,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
 
-    <persistence-unit name="pless.example.defaultPersistenceUnit"
+    <persistence-unit name="pless.jpasample.defaultPersistenceUnit"
                       transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
@@ -22,7 +22,7 @@
         </properties>
     </persistence-unit>
 
-    <persistence-unit name="pless.example.testPersistenceUnit"
+    <persistence-unit name="pless.jpasample.testPersistenceUnit"
                       transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 

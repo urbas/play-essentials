@@ -8,7 +8,7 @@ import static si.urbas.pless.test.JpaApplication.APP_CONFIG_JPA_DEFAULT;
 
 public class TemporaryPlayJpaApplication extends TemporaryPlayApplication {
 
-  public TemporaryPlayJpaApplication(String testPersistenceUnit, HashMap<String, String> applicationOptions) {
+  public TemporaryPlayJpaApplication(HashMap<String, String> applicationOptions, String testPersistenceUnit) {
     super(configureInMemoryTestDatabase(applicationOptions, testPersistenceUnit));
   }
 

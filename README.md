@@ -50,7 +50,7 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
 
 5.  Copy [persistence.xml](./samples/jpa/h2/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
 
-        jpa.default=pless.example.defaultPersistenceUnit
+        jpa.default=pless.jpasample.defaultPersistenceUnit
 
 That's it. Start developing!
 
@@ -181,7 +181,7 @@ public class MyControllerTest extends PlayJpaControllerTest {
 
   @Override
   protected String getTestPersistenceUnit() {
-    return "pless.example.testPersistenceUnit";
+    return "pless.jpasample.testPersistenceUnit";
   }
 }
 ```

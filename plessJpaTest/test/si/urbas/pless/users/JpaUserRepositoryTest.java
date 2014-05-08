@@ -36,7 +36,7 @@ public class JpaUserRepositoryTest extends UserRepositoryTest {
     PlessUser user = getJpaUserRepository().findUserByEmail(USER_EMAIL);
     assertThat(user, is(instanceOf(TestExtendingJpaUser.class)));
     assertThat(user, is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD)));
-    assertEquals(EXTENDED_COLUMN_VALUE, ((TestExtendingJpaUser) user).testColumn);
+    assertEquals(EXTENDED_COLUMN_VALUE, ((TestExtendingJpaUser) user).getTestColumn());
   }
 
   private JpaUserRepository getJpaUserRepository() {return (JpaUserRepository) userRepository;}

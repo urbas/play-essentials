@@ -19,7 +19,7 @@ public class PlayJpaApplication extends JpaApplication {
       clientSessionStorage,
       spy(new PlayJpaTransactions())
     );
-    startTemporaryPlayApplication(this, new TemporaryPlayJpaApplication(testPersistenceUnit, applicationOptions));
+    startTemporaryPlayApplication(this, new TemporaryPlayJpaApplication(applicationOptions, testPersistenceUnit));
   }
 
 }
