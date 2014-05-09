@@ -34,7 +34,6 @@ public class JpaApplication extends MockedApplication {
       clientSessionStorage,
       spy(new JpaServerSessionStorage()),
       spy(new JpaUserRepository()),
-      null,
       null
     );
 

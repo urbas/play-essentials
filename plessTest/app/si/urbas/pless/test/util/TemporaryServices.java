@@ -31,8 +31,9 @@ public class TemporaryServices implements AutoCloseable {
   }
 
   private static void useServiceForConfigKey(Function<String, Object> spiedServiceCreator, String serviceConfigKey, Object service) {
-    setConfigurationString(serviceConfigKey, serviceConfigKey);
-    doReturn(service).when(spiedServiceCreator).invoke(serviceConfigKey);
+    String serviceClassName = service.getClass().getCanonicalName();
+    setConfigurationString(serviceConfigKey, serviceClassName);
+    doReturn(service).when(spiedServiceCreator).invoke(serviceClassName);
   }
 
   @Override

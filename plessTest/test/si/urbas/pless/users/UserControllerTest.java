@@ -15,7 +15,7 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
-import static si.urbas.pless.authentication.PasswordAuthenticationControllerTest.callLogIn;
+import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
@@ -165,13 +165,13 @@ public class UserControllerTest extends PlessTest {
     assertFalse(parseContentAsBoolean(callStatus()));
   }
 
-  private Result signupAndLogin(final String userEmail,
+  private void signupAndLogin(final String userEmail,
                                 final String username,
                                 final String userPassword) {
     signUp(new PlessUser(0, userEmail, username, userPassword));
     final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
-    return callLogIn(userEmail, userPassword);
+    logIn(userEmail, userPassword);
   }
 
   private Result callActivate(final PlessUser user) {

@@ -3,6 +3,7 @@ package si.urbas.pless.util;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
+import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
@@ -19,6 +20,9 @@ public class FactoriesTest {
   private static final String CONFIG_KEY_WRONG_CLASSNAME = "wrong classname configuration";
   private static final String CONFIG_KEY_UNCONFIGURED_FACTORY = "empty factory name configuration";
   private static final String CONFIG_KEY_VALID_FACTORY = "valid factory";
+  private static final String CONFIG_KEY_TEMPORARY_FACTORY = "temporarily configured factory";
+  private static final String TEMPORARY_FACTORY_CLASS_NAME = "temporary factory class name";
+  private static final String INSTANCE_FROM_TEMPORARY_FACTORY = "instance from temporary factory";
   private ConfigurationSource configurationSource;
   private Factory<String> defaultFactory;
   @SuppressWarnings("UnusedDeclaration")
@@ -122,6 +126,18 @@ public class FactoriesTest {
         PlayApplicationInstanceCreator.INSTANCE.invoke(TestFactory.class.getCanonicalName()),
         is(instanceOf(TestFactory.class))
       );
+    }
+  }
+
+  @Test
+  public void createInstance_WHEN_specifying_the_factory_with_overrideFactory_MUST_use_the_overridden_factory() {
+    when(configurationSource.getString(CONFIG_KEY_TEMPORARY_FACTORY)).thenReturn(TEMPORARY_FACTORY_CLASS_NAME);
+    @SuppressWarnings("unchecked") Factory<Object> temporaryFactory = mock(Factory.class);
+    when(temporaryFactory.createInstance(configurationSource)).thenReturn(INSTANCE_FROM_TEMPORARY_FACTORY);
+    try (TemporaryFactory ignored = new TemporaryFactory(TEMPORARY_FACTORY_CLASS_NAME, temporaryFactory)) {
+      Object instance = Factories.createInstance(CONFIG_KEY_TEMPORARY_FACTORY, null, configurationSource);
+      assertEquals(INSTANCE_FROM_TEMPORARY_FACTORY, instance);
+      verify(temporaryFactory).createInstance(configurationSource);
     }
   }
 

@@ -2,11 +2,14 @@ package si.urbas.pless.util;
 
 import si.urbas.pless.ConfigurationException;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class Factories {
 
   private static ThreadLocal<Function<String, Object>> factoryCreator = new ThreadLocal<>();
+  private static ConcurrentHashMap<String, Factory<Object>> factories = new ConcurrentHashMap<>();
 
   /**
    * @param factoryNameConfigKey a configuration key name. This configuration setting gives the
@@ -67,8 +70,8 @@ public class Factories {
   @SuppressWarnings("unchecked")
   private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
-      return (Factory<T>) getFactoryCreator()
-        .invoke(factoryClassName);
+      Factory<Object> overriddenFactory = getOverriddenFactory(factoryClassName);
+      return (Factory<T>) (overriddenFactory == null ? getFactoryCreator().invoke(factoryClassName) : overriddenFactory);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
         + factoryClassName + "'.", ex);
@@ -99,6 +102,14 @@ public class Factories {
     } else {
       return DefaultFactoryCreator.INSTANCE;
     }
+  }
+
+  public static Factory<Object> getOverriddenFactory(String factoryClassName) {
+    return factories.get(factoryClassName);
+  }
+
+  public static Factory<Object> overrideFactory(String factoryClassName, Factory<Object> factory) {
+    return factory == null ? factories.remove(factoryClassName) : factories.put(factoryClassName, factory);
   }
 
   static class DefaultFactoryCreator {
