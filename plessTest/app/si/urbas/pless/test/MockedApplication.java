@@ -11,37 +11,33 @@ import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
 import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
 import si.urbas.pless.test.users.HashMapUserRepository;
 import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.test.util.TemporaryServices;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static si.urbas.pless.test.TemporaryFactory.configureFactoryForInstance;
 import static si.urbas.pless.test.emailing.TemporaryEmailProvider.createMockedEmailProvider;
 import static si.urbas.pless.test.users.TestSignupService.createSpiedSignupService;
+import static si.urbas.pless.users.SignupService.CONFIG_SIGNUP_SERVICE;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 
 public class MockedApplication extends TestApplication {
 
   public MockedApplication() {
-    this(null, null, null, null, null, null);
+    this(null, null, null, null, null);
   }
 
   public MockedApplication(ConfigurationSource configurationSource, ClientSessionStorage clientSessionStorage) {
-    this(configurationSource, null, clientSessionStorage, null, null, null);
+    this(configurationSource, null, clientSessionStorage, null, null);
   }
 
   public MockedApplication(final ConfigurationSource configurationSource,
                            final EmailProvider emailProvider,
                            final ClientSessionStorage clientSessionStorage,
                            final ServerSessionStorage serverSessionStorage,
-                           final UserRepository userRepository,
-                           final Map<String, Object> services) {
+                           final UserRepository userRepository) {
     doInitialisation(new Body() {
       @Override
       public void invoke() {
@@ -50,13 +46,9 @@ public class MockedApplication extends TestApplication {
         temporaryServices.add(new TemporaryClientSessionStorage(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
         temporaryServices.add(new TemporaryServerSessionStorage(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         temporaryServices.add(configureFactoryForInstance(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
-        temporaryServices.add(new TemporaryServices(services == null ? createMockedServices() : services));
+        temporaryServices.add(configureFactoryForInstance(CONFIG_SIGNUP_SERVICE, createSpiedSignupService()));
       }
     });
-  }
-
-  public static Map<String, Object> createMockedServices() {
-    return collectEntries(createSpiedSignupService());
   }
 
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
@@ -72,15 +64,6 @@ public class MockedApplication extends TestApplication {
       close();
       throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
     }
-  }
-
-  @SafeVarargs
-  static <K, V> Map<K, V> collectEntries(Map.Entry<K, V>... serviceEntries) {
-    HashMap<K, V> services = new HashMap<>();
-    for (Map.Entry<K, V> service : serviceEntries) {
-      services.put(service.getKey(), service.getValue());
-    }
-    return services;
   }
 
 }

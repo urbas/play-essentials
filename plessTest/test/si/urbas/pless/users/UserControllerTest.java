@@ -179,7 +179,9 @@ public class UserControllerTest extends PlessTest {
       .getActivationCode());
   }
 
-  private PlessUser userMatchesJohnSmith() {return (PlessUser) argThat(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD));}
+  private PlessUser userMatchesJohnSmith() {
+    return (PlessUser) argThat(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD));
+  }
 
   private Result callDelete() {
     try {

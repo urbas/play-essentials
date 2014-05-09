@@ -33,8 +33,7 @@ public class JpaApplication extends MockedApplication {
       null,
       clientSessionStorage,
       spy(new JpaServerSessionStorage()),
-      spy(new JpaUserRepository()),
-      null
+      spy(new JpaUserRepository())
     );
 
     doInitialisation(new Body() {

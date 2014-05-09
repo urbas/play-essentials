@@ -20,7 +20,7 @@ public class SignupServiceTest extends PlayControllerTest {
 
   private final PlessUser user = new PlessUser(0, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
-  private final SignupService.SignupServiceSingleton signupServiceSingleton = new SignupService.SignupServiceSingleton();
+  private final SignupService.SignupServiceFactory signupServiceFactory = new SignupService.SignupServiceFactory();
   private SignupService signupService;
 
   @Before

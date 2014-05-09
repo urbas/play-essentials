@@ -6,6 +6,15 @@ public class SingletonFactory<T> implements Factory<T> {
   private T createdInstance;
   private String factoryConfigKey;
 
+  public SingletonFactory(String factoryConfigKey, final T defaultInstance) {
+    this(factoryConfigKey, new Factory<T>() {
+      @Override
+      public T createInstance(ConfigurationSource configurationSource) {
+        return defaultInstance;
+      }
+    });
+  }
+
   public SingletonFactory(String factoryConfigKey, Factory<T> defaultFactory) {
     this.factoryConfigKey = factoryConfigKey;
     this.defaultFactory = defaultFactory;
