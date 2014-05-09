@@ -8,7 +8,6 @@ import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class Factories {
 
-  private static ThreadLocal<Function<String, Object>> factoryCreator = new ThreadLocal<>();
   private static ConcurrentHashMap<String, Factory<Object>> factories = new ConcurrentHashMap<>();
 
   /**
@@ -40,23 +39,6 @@ public class Factories {
     }
   }
 
-  /**
-   * Temporarily sets the given class loader as the one through which factory classes are loaded in {@link
-   * si.urbas.pless.util.Factories}.
-   *
-   * @param body the method that is executed within this function. During the execution of this method {@link
-   *             si.urbas.pless.util.Factories} will use the given class loader to load the factory classes.
-   */
-  public static void withClassLoader(final ClassLoader newClassLoader, Body body) {
-    Function<String, Object> oldClassLoader = getOverriddenFactoryCreator();
-    try {
-      overrideFactoryCreator(newClassLoader);
-      body.invoke();
-    } finally {
-      overrideFactoryCreator(oldClassLoader);
-    }
-  }
-
   private static <T> Factory<T> tryCreateFactoryFromConfiguration(String factoryNameConfigKey,
                                                                   ConfigurationSource configurationSource) {
     String factoryClassName = configurationSource
@@ -71,27 +53,11 @@ public class Factories {
   private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
       Factory<Object> overriddenFactory = getOverriddenFactory(factoryClassName);
-      return (Factory<T>) (overriddenFactory == null ? getFactoryCreator().invoke(factoryClassName) : overriddenFactory);
+      return (Factory<T>) (overriddenFactory == null ? getDefaultInstanceCreator().invoke(factoryClassName) : overriddenFactory);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
         + factoryClassName + "'.", ex);
     }
-  }
-
-  public static Function<String, Object> getFactoryCreator() {
-    return getOverriddenFactoryCreator() != null ? getOverriddenFactoryCreator() : getDefaultInstanceCreator();
-  }
-
-  public static void overrideFactoryCreator(Function<String, Object> factoryCreator) {
-    Factories.factoryCreator.set(factoryCreator);
-  }
-
-  public static void overrideFactoryCreator(ClassLoader classLoader) {
-    overrideFactoryCreator(classLoader == null ? null : new ClassLoaderInstanceCreator(classLoader));
-  }
-
-  public static Function<String, Object> getOverriddenFactoryCreator() {
-    return factoryCreator.get();
   }
 
   static Function<String, Object> getDefaultInstanceCreator() {
