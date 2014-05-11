@@ -48,7 +48,7 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
     ->    /                  si.urbas.pless.Routes
     ```
 
-5.  Copy [persistence.xml](./samples/jpa/h2/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
+5.  Copy [persistence.xml](./plessJpaSample/conf/META-INF/persistence.xml) to `conf/META-INF` and add this line to `conf/application.conf`:
 
         jpa.default=pless.jpasample.defaultPersistenceUnit
 
@@ -64,7 +64,9 @@ Open your browser and navigate to: [http://localhost:9000/](http://localhost:900
 
 # Usage
 
-Make sure your controllers extend `PlessController`:
+## JPA applications
+
+Make sure your controllers look like this:
 
 ```java
 import si.urbas.pless.PlessJpaController;
