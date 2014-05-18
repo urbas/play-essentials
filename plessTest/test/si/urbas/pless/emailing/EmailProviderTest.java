@@ -3,15 +3,14 @@ package si.urbas.pless.emailing;
 import org.junit.Test;
 import play.api.templates.Html;
 import scala.collection.mutable.StringBuilder;
-import si.urbas.pless.test.emailing.TemporaryEmailProvider;
-import si.urbas.pless.test.emailing.TestEmailProviderFactory;
+import si.urbas.pless.test.TemporaryFactory;
+import si.urbas.pless.test.emailing.SingleEmailProvider;
 import si.urbas.pless.test.util.PlessTest;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static si.urbas.pless.emailing.EmailProvider.EmailingSingletons;
-import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
+import static si.urbas.pless.emailing.EmailProvider.*;
+import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 
 public class EmailProviderTest extends PlessTest {
   private static final String EMAIL_RECIPIENT = "Jane Doe <jane.doe@example.com>";
@@ -21,15 +20,9 @@ public class EmailProviderTest extends PlessTest {
   private final EmailingSingletons emailingSingletons = new EmailingSingletons();
 
   @Test
-  public void createEmail_MUST_use_the_email_provider() throws Exception {
-    assertEquals(TestEmailProviderFactory.currentEmailProvider, getEmailProvider());
-
-  }
-
-  @Test
   public void sendEmail_MUST_set_the_email_parameters_through_the_mailerApi() throws Exception {
     Email email = mock(Email.class);
-    try (TemporaryEmailProvider ignored = new TemporaryEmailProvider(email)) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_EMAIL_PROVIDER, new SingleEmailProvider(email))) {
       getEmailProvider().sendEmail(EMAIL_RECIPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
       verify(email).setRecipient(EMAIL_RECIPIENT);
       verify(email).setSubject(EMAIL_SUBJECT);

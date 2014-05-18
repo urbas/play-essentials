@@ -4,7 +4,7 @@ import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
-import si.urbas.pless.test.users.TemporaryUserRepository;
+import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.*;
@@ -18,9 +18,11 @@ import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
+import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserController.signUp;
+import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
@@ -127,7 +129,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
-    try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_USER_REPOSITORY, mock(UserRepository.class))) {
       UserRepository scopedUserRepository = getUserRepository();
       doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);
@@ -166,8 +168,8 @@ public class UserControllerTest extends PlessTest {
   }
 
   private void signupAndLogin(final String userEmail,
-                                final String username,
-                                final String userPassword) {
+                              final String username,
+                              final String userPassword) {
     signUp(new PlessUser(0, userEmail, username, userPassword));
     final PlessUser user = getUserRepository().findUserByEmail(userEmail);
     callActivate(user);
@@ -175,8 +177,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   private Result callActivate(final PlessUser user) {
-    return UserController.activationPage(user.getEmail(), user
-      .getActivationCode());
+    return UserController.activationPage(user.getEmail(), user.getActivationCode());
   }
 
   private PlessUser userMatchesJohnSmith() {

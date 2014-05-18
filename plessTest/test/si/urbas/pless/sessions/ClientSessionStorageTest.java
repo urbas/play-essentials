@@ -1,13 +1,16 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
-import si.urbas.pless.test.sessions.TemporaryClientSessionStorage;
+import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ClientSessionStorage.ClientSessionStorageSingleton;
+import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class ClientSessionStorageTest extends PlessTest {
@@ -42,7 +45,7 @@ public class ClientSessionStorageTest extends PlessTest {
   }
 
   private ClientSessionStorage getScopedClientSessionStorage() throws Exception {
-    try (TemporaryClientSessionStorage ignored = new TemporaryClientSessionStorage()) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, mock(ClientSessionStorage.class))) {
       return ClientSessionStorage.getClientSessionStorage();
     }
   }

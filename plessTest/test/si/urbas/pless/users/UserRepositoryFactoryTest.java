@@ -3,7 +3,6 @@ package si.urbas.pless.users;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.test.TemporaryFactory;
-import si.urbas.pless.test.users.TemporaryUserRepository;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.*;
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.test.TemporaryFactory.configureFactoryForInstance;
+import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
@@ -23,7 +22,7 @@ public class UserRepositoryFactoryTest extends PlessTest {
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
     UserRepository temporaryUserRepository = mock(UserRepository.class);
-    try (TemporaryFactory ignored = configureFactoryForInstance(CONFIG_USER_REPOSITORY, temporaryUserRepository)) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_USER_REPOSITORY, temporaryUserRepository)) {
       assertThat(
         UserRepository.getUserRepository(),
         is(sameInstance(temporaryUserRepository))
@@ -55,7 +54,7 @@ public class UserRepositoryFactoryTest extends PlessTest {
   }
 
   private UserRepository getScopedUserRepository() throws Exception {
-    try (TemporaryUserRepository ignored = new TemporaryUserRepository()) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_USER_REPOSITORY, mock(UserRepository.class))) {
       return UserRepository.getUserRepository();
     }
   }

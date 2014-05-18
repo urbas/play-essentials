@@ -1,13 +1,15 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
-import si.urbas.pless.test.sessions.TemporaryServerSessionStorage;
-import si.urbas.pless.test.sessions.TestServerSessionStorage;
+import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static si.urbas.pless.sessions.ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
+import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class ServerSessionStorageTest extends PlessTest {
@@ -17,10 +19,13 @@ public class ServerSessionStorageTest extends PlessTest {
 
   @Test
   public void getServerSessionStorage_MUST_return_the_configured_session_storage() throws Exception {
-    assertThat(
-      ServerSessionStorage.getServerSessionStorage(),
-      is(sameInstance(TestServerSessionStorage.currentServerSessionStorage))
-    );
+    ServerSessionStorage serverSessionStorage = mock(ServerSessionStorage.class);
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage)) {
+      assertThat(
+        ServerSessionStorage.getServerSessionStorage(),
+        is(sameInstance(serverSessionStorage))
+      );
+    }
   }
 
   @Test
@@ -50,7 +55,7 @@ public class ServerSessionStorageTest extends PlessTest {
   }
 
   private ServerSessionStorage getScopedServerSessionStorage() throws Exception {
-    try (TemporaryServerSessionStorage ignored = new TemporaryServerSessionStorage()) {
+    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, mock(ServerSessionStorage.class))) {
       return ServerSessionStorage.getServerSessionStorage();
     }
   }
