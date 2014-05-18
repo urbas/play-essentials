@@ -19,7 +19,7 @@ public class TemporaryFactory implements AutoCloseable {
     Factories.overrideFactory(factoryClassName, currentFactory);
   }
 
-  public static TemporaryFactory configureFactoryForInstance(String factoryConfigKey, final Object instance) {
+  public static TemporaryFactory setSingletonForFactory(String factoryConfigKey, final Object instance) {
     String factoryClassName = instance.getClass().getCanonicalName();
     doReturn(factoryClassName).when(getConfigurationSource()).getString(factoryConfigKey);
     return new TemporaryFactory(factoryClassName, new Factory<Object>() {

@@ -2,25 +2,26 @@ package si.urbas.pless.users;
 
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.PlayControllerTest;
 import si.urbas.pless.test.TemporaryHttpContext;
+import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.util.TemporaryService;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.users.SignupService.CONFIG_SIGNUP_SERVICE;
-import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.users.SignupService.*;
 import static si.urbas.pless.users.UserControllerTest.*;
 import static si.urbas.pless.users.routes.UserController;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class SignupServiceTest extends PlayControllerTest {
+public class SignupServiceTest extends PlessTest {
 
   private final PlessUser user = new PlessUser(0, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   @SuppressWarnings("UnusedDeclaration")
-  private final SignupService.SignupServiceFactory signupServiceFactory = new SignupService.SignupServiceFactory();
+  private final SignupServiceLoader signupServiceLoader = new SignupServiceLoader();
   private SignupService signupService;
 
   @Before
@@ -57,6 +58,8 @@ public class SignupServiceTest extends PlayControllerTest {
   @Test
   public void getSignupService_MUST_return_the_default_implementation_WHEN_it_no_custom_signupService_is_configured() throws Exception {
     when(getConfigurationSource().getString(CONFIG_SIGNUP_SERVICE)).thenReturn(null);
-    assertEquals(SignupService.class, getSignupService().getClass());
+    try (TemporaryService ignored = new TemporaryService(CONFIG_SIGNUP_SERVICE, null)) {
+      assertEquals(SignupService.class, getSignupService().getClass());
+    }
   }
 }

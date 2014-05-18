@@ -8,7 +8,7 @@ public class SingleEmailProvider extends EmailProvider {
 
   private final Email email;
 
-  SingleEmailProvider(Email email) {this.email = email;}
+  public SingleEmailProvider(Email email) {this.email = email;}
 
   @Override
   public Email createEmail(ConfigurationSource configurationSource) {
