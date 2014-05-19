@@ -15,12 +15,12 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
-import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.users.UserController.activationPage;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
@@ -97,7 +97,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
-      contentAsString(UserController.activationPage(JOHN_SMITH_EMAIL, null)),
+      contentAsString(activationPage(JOHN_SMITH_EMAIL, null)),
       containsString("We could not activate your account")
     );
   }
@@ -106,7 +106,7 @@ public class UserControllerTest extends PlessTest {
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
     final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
-      contentAsString(callActivate(user)),
+      contentAsString(activationPage(user.getEmail(), user.getActivationCode())),
       containsString("Thank you very much for registering with us")
     );
   }
@@ -114,7 +114,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
     final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    callActivate(user);
+    activateUser(user);
     assertThat(
       fetchUser(user.getEmail()).isActivated(),
       is(true)
@@ -148,7 +148,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void delete_MUST_return_ok_WHEN_user_is_logged_in() throws Exception {
-    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
       status(callDelete()),
       is(equalTo(OK))
@@ -157,7 +157,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
-    signupAndLogin(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callDelete();
     getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
   }
@@ -165,19 +165,6 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void delete_MUST_log_the_user_out() throws Exception {
     assertFalse(parseContentAsBoolean(callStatus()));
-  }
-
-  private void signupAndLogin(final String userEmail,
-                              final String username,
-                              final String userPassword) {
-    signUp(new PlessUser(0, userEmail, username, userPassword));
-    final PlessUser user = getUserRepository().findUserByEmail(userEmail);
-    callActivate(user);
-    logIn(userEmail, userPassword);
-  }
-
-  private Result callActivate(final PlessUser user) {
-    return UserController.activationPage(user.getEmail(), user.getActivationCode());
   }
 
   private PlessUser userMatchesJohnSmith() {

@@ -66,7 +66,11 @@ public final class UserController extends PlessController {
   @SafeVarargs
   public static HashMap<String, String[]> buildSignUpParameters(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
     return addParams(
-      params(param(EMAIL_PARAMETER, email), param(USERNAME_PARAMETER, username), param(PASSWORD_PARAMETER, password)),
+      params(
+        param(EMAIL_PARAMETER, email),
+        param(USERNAME_PARAMETER, username),
+        param(PASSWORD_PARAMETER, password)
+      ),
       additionalParams
     );
   }
