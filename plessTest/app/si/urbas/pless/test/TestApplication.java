@@ -1,5 +1,7 @@
 package si.urbas.pless.test;
 
+import si.urbas.pless.util.Body;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,4 +32,16 @@ public class TestApplication implements AutoCloseable {
     temporaryServices.clear();
   }
 
+  public void addTemporaryService(AutoCloseable temporaryService) {
+    temporaryServices.add(temporaryService);
+  }
+
+  protected void doInitialisation(Body initialisationMethod) {
+    try {
+      initialisationMethod.invoke();
+    } catch (Exception e) {
+      close();
+      throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
+    }
+  }
 }

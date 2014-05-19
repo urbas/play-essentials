@@ -71,13 +71,4 @@ public class MockedApplication extends TestApplication {
     return emailProvider;
   }
 
-  protected void doInitialisation(Body initialisationMethod) {
-    try {
-      initialisationMethod.invoke();
-    } catch (Exception e) {
-      close();
-      throw new RuntimeException("Could not properly set up the test application. Please check your test configuration.", e);
-    }
-  }
-
 }
