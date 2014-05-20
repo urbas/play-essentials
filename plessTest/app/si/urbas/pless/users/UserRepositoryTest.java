@@ -10,14 +10,15 @@ import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.*;
 
 public abstract class UserRepositoryTest {
+  protected static final long NON_EXISTENT_USER_ID = 198;
+  protected static final String USER_EMAIL = "user email";
+  protected static final String USER_USERNAME = "John the User";
+  protected static final String USER_PASSWORD = "user password";
+  protected static final String USER_2_EMAIL = "user 2 email";
+  protected static final String USER_2_USERNAME = "John II the User";
+  protected static final String USER_2_PASSWORD = "user 2 password";
+  protected static final long CREATE_DATE_THRESHOLD_MILLISECONDS = 1000;
   protected UserRepository userRepository;
-  String USER_EMAIL = "user email";
-  String USER_USERNAME = "John the User";
-  String USER_PASSWORD = "user password";
-  String USER_2_EMAIL = "user 2 email";
-  String USER_2_USERNAME = "John II the User";
-  String USER_2_PASSWORD = "user 2 password";
-  long CREATE_DATE_THRESHOLD_MILLISECONDS = 1000;
 
   @Test(expected = RuntimeException.class)
   public void findUserByEmail_MUST_throw_an_exception_WHEN_the_user_is_not_present() {
@@ -157,17 +158,40 @@ public abstract class UserRepositoryTest {
 
   @Test(expected = RuntimeException.class)
   public void findUserById_MUST_throw_WHEN_the_user_does_not_exist() throws Exception {
-    userRepository.findUserById(1L);
+    fetchUser(1L);
   }
 
   @Test
   public void findUserById_MUST_return_the_persisted_user() throws Exception {
     final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertThat(
-      userRepository.findUserById(user.getId()),
+      fetchUser(user.getId()),
       is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD))
     );
   }
+
+  @Test
+  public void setUsername_MUST_return_false_WHEN_user_with_the_given_id_does_not_exist() {
+    assertFalse(userRepository.setUsername(NON_EXISTENT_USER_ID, USER_USERNAME));
+  }
+
+  @Test
+  public void setUsername_MUST_return_true_WHEN_user_with_the_given_id_exists() {
+    final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertTrue(userRepository.setUsername(user.getId(), USER_2_USERNAME));
+  }
+
+  @Test
+  public void setUsername_MUST_change_the_username_of_the_user_with_the_given_id() {
+    long userId = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD).getId();
+    userRepository.setUsername(userId, USER_2_USERNAME);
+    assertThat(
+      fetchUser(userId),
+      is(userWith(USER_EMAIL, USER_2_USERNAME, USER_PASSWORD))
+    );
+  }
+
+  private PlessUser fetchUser(long userId) {return userRepository.findUserById(userId);}
 
   private PlessUser fetchUser(String userEmail) {
     return userRepository.findUserByEmail(userEmail);

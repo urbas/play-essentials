@@ -67,11 +67,20 @@ public class HashMapUserRepository extends UserRepository {
 
   @Override
   public synchronized PlessUser findUserById(long userId) {
-
     PlessUser user = idToUserMap.get(userId);
     if (user == null) {
       throw new IllegalArgumentException("Could not find user with the id '" + userId + "'");
     }
     return user;
+  }
+
+  @Override
+  public boolean setUsername(long userId, String username) {
+    PlessUser user = idToUserMap.get(userId);
+    if (user == null) {
+      return false;
+    }
+    user.setUsername(username);
+    return true;
   }
 }

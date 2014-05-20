@@ -40,6 +40,15 @@ public final class UserController extends PlessController {
     }
   }
 
+  public static Result setUsername(String username) {
+    if (auth().isLoggedIn()) {
+      users().setUsername(auth().getLoggedInUserId(), username);
+      return ok();
+    } else {
+      return badRequest();
+    }
+  }
+
   public static Result delete() throws Throwable {
     if (auth().isLoggedIn()) {
       users().delete(auth().getLoggedInUserEmail());

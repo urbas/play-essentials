@@ -31,6 +31,8 @@ public abstract class UserRepository {
 
   public abstract PlessUser findUserById(long userId);
 
+  public abstract boolean setUsername(long userId, String username);
+
   static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
   }

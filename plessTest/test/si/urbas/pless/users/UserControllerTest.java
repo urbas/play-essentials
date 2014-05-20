@@ -35,6 +35,7 @@ public class UserControllerTest extends PlessTest {
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
   private static final RuntimeException EXCEPTION_FOR_TESTING = new RuntimeException("Forced exception for testing.");
+  private static final String NEW_USERNAME = "New Username";
 
   @Test
   public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
@@ -186,6 +187,25 @@ public class UserControllerTest extends PlessTest {
     PlessUser user = publicUserInfo(contentAsString(UserController.info()));
     assertEquals(JOHN_SMITH_EMAIL, user.getEmail());
     assertEquals(JOHN_SMITH_USERNAME, user.getUsername());
+  }
+
+  @Test
+  public void setUsername_MUST_return_badRequest_WHEN_not_logged_in() {
+      assertEquals(BAD_REQUEST, status(UserController.setUsername(JOHN_SMITH_USERNAME)));
+  }
+
+  @Test
+  public void setUsername_MUST_return_ok_WHEN_logged_in() {
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    assertEquals(OK, status(UserController.setUsername(JOHN_SMITH_USERNAME)));
+  }
+  
+  @Test
+  public void setUsername_MUST_set_the_new_username() {
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    UserController.setUsername(NEW_USERNAME);
+    PlessUser user = fetchUser(JOHN_SMITH_EMAIL);
+    assertThat(user, is(userWith(JOHN_SMITH_EMAIL, NEW_USERNAME, JOHN_SMITH_PASSWORD)));
   }
 
   private PlessUser userMatchesJohnSmith() {

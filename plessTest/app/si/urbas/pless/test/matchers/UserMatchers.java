@@ -71,6 +71,7 @@ public class UserMatchers {
     @Override
     public boolean matches(PlessUser user) {
       return userEmail.equalsIgnoreCase(user.getEmail()) &&
+        username.equalsIgnoreCase(user.getUsername()) &&
         new SaltedHashedPassword(password, user.getSalt()).matches(user
           .getHashedPassword());
     }

@@ -105,6 +105,20 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   }
 
   @Override
+  public boolean setUsername(final long userId, final String username) {
+    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
+      @Override
+      public Boolean invoke(EntityManager entityManager) {
+        Query setUsernameQuery = entityManager.createNamedQuery(QUERY_SET_USERNAME);
+        setUsernameQuery.setParameter("id", userId);
+        setUsernameQuery.setParameter("username", username);
+        int updatedRows = setUsernameQuery.executeUpdate();
+        return updatedRows > 0;
+      }
+    });
+  }
+
+  @Override
   public UserRepository createInstance(ConfigurationSource configurationSource) {
     return new JpaUserRepository();
   }

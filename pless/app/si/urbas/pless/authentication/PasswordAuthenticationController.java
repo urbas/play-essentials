@@ -9,7 +9,7 @@ import static si.urbas.pless.authentication.PasswordAuthenticator.getPasswordAut
 
 public final class PasswordAuthenticationController extends PlessController {
 
-  public static Result logInWithForm() {
+  public static Result logIn() {
     Form<PasswordLoginForm> form = Form.form(PasswordLoginForm.class).bindFromRequest();
     if (form.hasErrors()) {
       return badRequest(form.errorsAsJson());
