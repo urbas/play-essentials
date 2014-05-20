@@ -18,8 +18,8 @@ object ProjectSettings {
       Seq(
         pomExtra := pomExtraSettings,
         sources in doc in Compile := Nil,
-        publishArtifact in(Compile, packageDoc) := true,
-        publishArtifact in(Compile, packageSrc) := true,
+        publishArtifact in(Compile, packageDoc) := false,
+        publishArtifact in(Compile, packageSrc) := false,
         publishArtifact in(Test, packageSrc) := false,
         parallelExecution in jacoco.Config := false,
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
