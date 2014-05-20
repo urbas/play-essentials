@@ -13,8 +13,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.contentAsString;
-import static play.test.Helpers.status;
+import static play.test.Helpers.*;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
@@ -24,6 +23,7 @@ import static si.urbas.pless.users.UserController.activationPage;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class UserControllerTest extends PlessTest {
@@ -165,6 +165,27 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void delete_MUST_log_the_user_out() throws Exception {
     assertFalse(parseContentAsBoolean(callStatus()));
+  }
+
+  @Test
+  public void info_MUST_return_badRequest_WHEN_not_logged_in() {
+    assertEquals(BAD_REQUEST, status(UserController.info()));
+  }
+
+  @Test
+  public void info_MUST_return_ok_json_content_type_WHEN_logged_in() {
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    Result infoResult = UserController.info();
+    assertEquals(OK, status(infoResult));
+    assertEquals("application/json", contentType(infoResult));
+  }
+
+  @Test
+  public void info_MUST_return_a_json_serialized_user_WHEN_logged_in() {
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    PlessUser user = publicUserInfo(contentAsString(UserController.info()));
+    assertEquals(JOHN_SMITH_EMAIL, user.getEmail());
+    assertEquals(JOHN_SMITH_USERNAME, user.getUsername());
   }
 
   private PlessUser userMatchesJohnSmith() {

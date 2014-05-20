@@ -5,12 +5,15 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.RequestParameters.*;
 
 public final class UserController extends PlessController {
@@ -26,6 +29,15 @@ public final class UserController extends PlessController {
   public static Result activationPage(final String email, final String activationCode) {
     boolean wasActivated = users().activateUser(email, activationCode);
     return ok(ActivationView.apply(wasActivated));
+  }
+
+  public static Result info() {
+    if (auth().isLoggedIn()) {
+      PlessUser loggedInUser = users().findUserById(auth().getLoggedInUserId());
+      return ok(JsonResults.asContent(publicUserInfo(loggedInUser)));
+    } else {
+      return badRequest();
+    }
   }
 
   public static Result delete() throws Throwable {
@@ -46,7 +58,7 @@ public final class UserController extends PlessController {
 
   public static Result signUp(Form<?> signupForm) {
     if (signupForm.hasErrors()) {
-      return badRequest(signupForm.errorsAsJson(new Lang(play.api.i18n.Lang.defaultLang())));
+      return badRequest(signupForm.errorsAsJson(new Lang(defaultLang())));
     }
     return signUp(getSignupService().createUser(signupForm));
   }
