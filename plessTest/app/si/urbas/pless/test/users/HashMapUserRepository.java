@@ -1,5 +1,6 @@
 package si.urbas.pless.test.users;
 
+import si.urbas.pless.authentication.SaltedHashedPassword;
 import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.users.UserRepository;
 
@@ -32,13 +33,17 @@ public class HashMapUserRepository extends UserRepository {
 
   @Override
   public synchronized void persistUser(String email, String username, String password) {
-    persistUser(new PlessUser(++maxId, email, username, password));
+    persistUser(createUser(email, username, password));
   }
 
   @Override
   public synchronized void persistUser(PlessUser user) {
     String validationError = user.validateForPersist();
     if (validationError == null) {
+      if (user.getId() != 0) {
+        throw new RuntimeException("Cannot persist the user '"+user+"'. This user already has a non-zero ID, which means it's already persisted.");
+      }
+      user.setId(++maxId);
       emailToUserMap.put(user.getEmail(), user);
       idToUserMap.put(user.getId(), user);
     } else {
@@ -75,12 +80,17 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
-  public boolean setUsername(long userId, String username) {
+  public synchronized boolean setUsername(long userId, String username) {
     PlessUser user = idToUserMap.get(userId);
     if (user == null) {
       return false;
     }
     user.setUsername(username);
     return true;
+  }
+
+  @Override
+  public PlessUser createUser(String email, String username, String password) {
+    return new PlessUser(0, email, username, new SaltedHashedPassword(password));
   }
 }

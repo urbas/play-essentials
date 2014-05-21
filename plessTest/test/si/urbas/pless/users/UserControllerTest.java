@@ -1,5 +1,6 @@
 package si.urbas.pless.users;
 
+import org.junit.Before;
 import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
@@ -31,11 +32,18 @@ public class UserControllerTest extends PlessTest {
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_USERNAME = "John Smith";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
-  public static final PlessUser user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+  public PlessUser user;
+
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
   private static final RuntimeException EXCEPTION_FOR_TESTING = new RuntimeException("Forced exception for testing.");
   private static final String NEW_USERNAME = "New Username";
+
+  @Before
+  public void setUp() {
+    super.setUp();
+    user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+  }
 
   @Test
   public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
@@ -91,8 +99,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
-    Result result = signUp(user);
-    assertEquals(OK, status(result));
+    assertEquals(OK, status(signUp(user)));
   }
 
   @Test
@@ -191,7 +198,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void setUsername_MUST_return_badRequest_WHEN_not_logged_in() {
-      assertEquals(BAD_REQUEST, status(UserController.setUsername(JOHN_SMITH_USERNAME)));
+    assertEquals(BAD_REQUEST, status(UserController.setUsername(JOHN_SMITH_USERNAME)));
   }
 
   @Test
@@ -199,7 +206,7 @@ public class UserControllerTest extends PlessTest {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertEquals(OK, status(UserController.setUsername(JOHN_SMITH_USERNAME)));
   }
-  
+
   @Test
   public void setUsername_MUST_set_the_new_username() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);

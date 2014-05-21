@@ -8,6 +8,7 @@ import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 
 /**
  * Responsible for particular parts of the signup process. This service can be replaced by a custom one through
@@ -20,7 +21,7 @@ public class SignupService implements PlessService {
 
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
-    return new PlessUser(0, signupData.email, signupData.username, signupData.password);
+    return getUserRepository().createUser(signupData.email, signupData.username, signupData.password);
   }
 
   public void sendSignupEmail(PlessUser userDetails) {

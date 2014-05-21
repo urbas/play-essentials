@@ -33,6 +33,11 @@ public abstract class UserRepository {
 
   public abstract boolean setUsername(long userId, String username);
 
+  /**
+   * @return a new user that is not yet persisted.
+   */
+  public abstract PlessUser createUser(String email, String username, String password);
+
   static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
   }

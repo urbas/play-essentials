@@ -84,6 +84,26 @@ public abstract class UserRepositoryTest {
   }
 
   @Test
+  public void createUser_MUST_create_a_new_user_with_the_given_details() {
+    PlessUser user = userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertThat(user, is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD)));
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void createUser_MUST_not_persist_the_created_user() {
+    userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    userRepository.findUserByEmail(USER_EMAIL);
+  }
+
+  @Test
+  public void persisting_a_created_user_MUST_set_its_id() {
+    PlessUser user = userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertEquals(0L, user.getId());
+    userRepository.persistUser(user);
+    assertEquals(1L, user.getId());
+  }
+
+  @Test
   public void activateUser_MUST_activate_a_persisted_user() {
     persistAndActivateUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertThat(

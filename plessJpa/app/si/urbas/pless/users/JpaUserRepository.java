@@ -119,6 +119,11 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   }
 
   @Override
+  public PlessUser createUser(String email, String username, String password) {
+    return new JpaPlessUser(email, username, password);
+  }
+
+  @Override
   public UserRepository createInstance(ConfigurationSource configurationSource) {
     return new JpaUserRepository();
   }
