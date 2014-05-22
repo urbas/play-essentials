@@ -120,6 +120,18 @@ public abstract class UserRepositoryTest {
     assertThat(user2.getId(), is(greaterThan(user1.getId())));
   }
 
+  @Test(expected = RuntimeException.class)
+  public void persistUser_MUST_throw_an_exception_WHEN_username_is_already_taken() {
+    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    persistAndFetchUser(USER_2_EMAIL, USER_USERNAME, USER_2_PASSWORD);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void persistUser_MUST_throw_an_exception_WHEN_email_is_already_taken() {
+    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    persistAndFetchUser(USER_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+  }
+
   @Test
   public void activateUser_MUST_return_true_WHEN_activation_succeeded() {
     assertTrue(persistAndActivateUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD));
@@ -209,6 +221,13 @@ public abstract class UserRepositoryTest {
       fetchUser(userId),
       is(userWith(USER_EMAIL, USER_2_USERNAME, USER_PASSWORD))
     );
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void setUsername_MUST_throw_an_exception_WHEN_the_new_username_is_already_taken() {
+    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    long userId = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD).getId();
+    userRepository.setUsername(userId, USER_USERNAME);
   }
 
   private PlessUser fetchUser(long userId) {return userRepository.findUserById(userId);}

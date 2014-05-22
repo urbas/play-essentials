@@ -69,24 +69,21 @@ public class PlessUser {
     return salt;
   }
 
-  public void setSalt(byte[] salt) {
-    this.salt = salt;
-  }
-
   public byte[] getHashedPassword() {
     return hashedPassword;
   }
 
-  public void setHashedPassword(byte[] hashedPassword) {
-    this.hashedPassword = hashedPassword;
+  public void setPassword(SaltedHashedPassword saltedHashedPassword) {
+    this.hashedPassword = saltedHashedPassword.getHashedPassword();
+    this.salt = saltedHashedPassword.getSalt();
+  }
+
+  public void setPassword(String password) {
+    setPassword(new SaltedHashedPassword(password));
   }
 
   public Date getCreationDate() {
     return creationDate;
-  }
-
-  public void setCreationDate(Date creationDate) {
-    this.creationDate = creationDate;
   }
 
   public boolean isActivated() {
@@ -101,13 +98,9 @@ public class PlessUser {
     return activationCode;
   }
 
-  public void setActivationCode(String activationCode) {
-    this.activationCode = activationCode;
-  }
-
   @Override
   public String toString() {
-    return "PlessUser [id=" + getId() + ", email=" + getEmail() + ", activated=" + isActivated() + "]";
+    return "PlessUser [id=" + getId() + ", email=" + getEmail() + ", username=" + getUsername() + ", activated=" + isActivated() + "]";
   }
 
   /**

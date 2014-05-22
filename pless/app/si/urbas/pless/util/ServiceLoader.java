@@ -23,7 +23,7 @@ public class ServiceLoader<T> {
   }
 
   public T getService() {
-    resetCacheIfNotTestMode();
+    resetCacheIfTestMode();
     if (cachedService == null) {
       cachedService = createService();
     }
@@ -51,7 +51,7 @@ public class ServiceLoader<T> {
     return overriddenService;
   }
 
-  private void resetCacheIfNotTestMode() {
+  private void resetCacheIfTestMode() {
     if (!getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment()) {
       cachedService = null;
     }

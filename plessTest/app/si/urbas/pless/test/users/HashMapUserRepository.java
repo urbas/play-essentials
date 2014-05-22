@@ -12,9 +12,8 @@ public class HashMapUserRepository extends UserRepository {
 
   private final HashMap<String, PlessUser> emailToUserMap = new HashMap<>();
   private final HashMap<Long, PlessUser> idToUserMap = new HashMap<>();
+  private final HashMap<String, PlessUser> usernameToUserMap = new HashMap<>();
   private long maxId = 0;
-
-  public synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
 
   @Override
   public synchronized PlessUser findUserByEmail(String email) {
@@ -25,11 +24,11 @@ public class HashMapUserRepository extends UserRepository {
     return user;
   }
 
-
   @Override
   public synchronized List<PlessUser> getAllUsers() {
     return new ArrayList<>(emailToUserMap.values());
   }
+
 
   @Override
   public synchronized void persistUser(String email, String username, String password) {
@@ -44,8 +43,7 @@ public class HashMapUserRepository extends UserRepository {
         throw new RuntimeException("Cannot persist the user '"+user+"'. This user already has a non-zero ID, which means it's already persisted.");
       }
       user.setId(++maxId);
-      emailToUserMap.put(user.getEmail(), user);
-      idToUserMap.put(user.getId(), user);
+      addUser(user);
     } else {
       throw new RuntimeException("Cannot persist the user '" + user + "'. Validation error: " + validationError);
     }
@@ -63,11 +61,7 @@ public class HashMapUserRepository extends UserRepository {
 
   @Override
   public synchronized boolean delete(String userEmail) {
-    PlessUser removedUser = emailToUserMap.remove(userEmail);
-    if (removedUser != null) {
-      idToUserMap.remove(removedUser.getId());
-    }
-    return removedUser != null;
+    return removeUser(getUser(userEmail)) != null;
   }
 
   @Override
@@ -85,6 +79,7 @@ public class HashMapUserRepository extends UserRepository {
     if (user == null) {
       return false;
     }
+    assertNoOtherUserHasGivenUsername(username, user);
     user.setUsername(username);
     return true;
   }
@@ -92,5 +87,35 @@ public class HashMapUserRepository extends UserRepository {
   @Override
   public PlessUser createUser(String email, String username, String password) {
     return new PlessUser(0, email, username, new SaltedHashedPassword(password));
+  }
+
+  private synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
+
+  private PlessUser addUser(PlessUser user) {
+    if (usernameToUserMap.containsKey(user.getUsername())) {
+      throw new RuntimeException("Cannot persist the user. Another user has the same username.");
+    }
+    if (emailToUserMap.containsKey(user.getEmail())) {
+      throw new RuntimeException("Cannot persist the user. Another user has the same email.");
+    }
+    usernameToUserMap.put(user.getUsername(), user);
+    emailToUserMap.put(user.getEmail(), user);
+    return idToUserMap.put(user.getId(), user);
+  }
+
+  private PlessUser removeUser(PlessUser user) {
+    if (user == null) {
+      return null;
+    }
+    usernameToUserMap.remove(user.getUsername());
+    emailToUserMap.remove(user.getEmail());
+    return idToUserMap.remove(user.getId());
+  }
+
+  private void assertNoOtherUserHasGivenUsername(String username, PlessUser user) {
+    PlessUser userWithSameUsername = usernameToUserMap.get(username);
+    if (userWithSameUsername != null && userWithSameUsername != user) {
+      throw new RuntimeException("Could not set the new username. Another user already has the given username.");
+    }
   }
 }

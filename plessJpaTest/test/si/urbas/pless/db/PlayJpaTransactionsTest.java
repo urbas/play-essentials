@@ -19,9 +19,11 @@ public class PlayJpaTransactionsTest extends PlayJpaControllerTest {
   private TransactionCallback transactionCallback;
   private TransactionFunction<String> transactionFunction;
 
+  @Override
   @SuppressWarnings("unchecked")
   @Before
-  public void setup() throws Throwable {
+  public void setUp() {
+    super.setUp();
     playJpaTransactions = new PlayJpaTransactions();
     transactionCallback = mock(TransactionCallback.class);
     transactionFunction = mock(TransactionFunction.class);
