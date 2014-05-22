@@ -69,8 +69,18 @@ public class PlessUser {
     return salt;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public void setSalt(byte[] salt) {
+    this.salt = salt;
+  }
+
   public byte[] getHashedPassword() {
     return hashedPassword;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setHashedPassword(byte[] hashedPassword) {
+    this.hashedPassword = hashedPassword;
   }
 
   public void setPassword(SaltedHashedPassword saltedHashedPassword) {
@@ -86,6 +96,11 @@ public class PlessUser {
     return creationDate;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public void setCreationDate(Date creationDate) {
+    this.creationDate = creationDate;
+  }
+
   public boolean isActivated() {
     return activated;
   }
@@ -96,6 +111,11 @@ public class PlessUser {
 
   public String getActivationCode() {
     return activationCode;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setActivationCode(String activationCode) {
+    this.activationCode = activationCode;
   }
 
   @Override

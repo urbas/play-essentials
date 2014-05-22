@@ -1,16 +1,14 @@
 package si.urbas.pless.test;
 
-import org.junit.After;
-import org.junit.Before;
 import si.urbas.pless.sessions.ClientSessionStorage;
+import si.urbas.pless.test.util.PlessTest;
 
-public class PlessJpaTest {
+public class PlessJpaTest extends PlessTest {
   public static final String DEFAULT_TEST_PERSISTENCE_UNIT = "testPersistenceUnit";
-  protected TestApplication plessTestApplication;
 
-  @Before
-  public void setUp() {
-    plessTestApplication = new JpaApplication(getTestPersistenceUnit(), getClientSessionStorage());
+  @Override
+  protected TestApplication createTestApplication() {
+    return new JpaApplication(getTestPersistenceUnit(), getClientSessionStorage());
   }
 
   protected String getTestPersistenceUnit() {
@@ -19,11 +17,6 @@ public class PlessJpaTest {
 
   protected ClientSessionStorage getClientSessionStorage() {
     return null;
-  }
-
-  @After
-  public void tearDown() {
-    plessTestApplication.close();
   }
 
 }
