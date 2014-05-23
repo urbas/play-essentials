@@ -41,8 +41,8 @@ public abstract class UserRepositoryTest {
   @SuppressWarnings("unchecked")
   @Test
   public void getAllUsers_MUST_return_all_persisted_users() {
-    userRepository.persistUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    userRepository.persistUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    persistNewUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    persistNewUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
     assertThat(
       userRepository.getAllUsers(),
       containsInAnyOrder(
@@ -85,19 +85,19 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void createUser_MUST_create_a_new_user_with_the_given_details() {
-    PlessUser user = userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertThat(user, is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD)));
   }
 
   @Test(expected = RuntimeException.class)
   public void createUser_MUST_not_persist_the_created_user() {
-    userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     userRepository.findUserByEmail(USER_EMAIL);
   }
 
   @Test
   public void persisting_a_created_user_MUST_set_its_id() {
-    PlessUser user = userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertEquals(0L, user.getId());
     userRepository.persistUser(user);
     assertEquals(1L, user.getId());
@@ -110,6 +110,16 @@ public abstract class UserRepositoryTest {
       fetchUser(USER_EMAIL),
       is(activeUser())
     );
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void persistUser_MUST_throw_an_exception_WHEN_email_is_null() {
+    persistNewUser(null, USER_USERNAME, USER_PASSWORD);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void persistUser_MUST_throw_an_exception_WHEN_email_is_empty() {
+    persistNewUser("", USER_USERNAME, USER_PASSWORD);
   }
 
   @Test
@@ -230,18 +240,18 @@ public abstract class UserRepositoryTest {
     userRepository.setUsername(userId, USER_USERNAME);
   }
 
+  private PlessUser createUser(String email, String username, String password) {return userRepository.createUser(email, username, password);}
+
+  private void persistNewUser(String email, String username, String password) {userRepository.persistUser(createUser(email, username, password));}
+
   private PlessUser fetchUser(long userId) {return userRepository.findUserById(userId);}
 
-  private PlessUser fetchUser(String userEmail) {
-    return userRepository.findUserByEmail(userEmail);
-  }
+  private PlessUser fetchUser(String userEmail) {return userRepository.findUserByEmail(userEmail);}
 
-  private boolean delete(String userEmail) {
-    return userRepository.delete(userEmail);
-  }
+  private boolean delete(String userEmail) {return userRepository.delete(userEmail);}
 
   private PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
-    userRepository.persistUser(userEmail, username, userPassword);
+    persistNewUser(userEmail, username, userPassword);
     return fetchUser(userEmail);
   }
 

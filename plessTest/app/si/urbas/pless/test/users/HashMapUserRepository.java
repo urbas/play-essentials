@@ -3,6 +3,7 @@ package si.urbas.pless.test.users;
 import si.urbas.pless.authentication.SaltedHashedPassword;
 import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,21 +32,16 @@ public class HashMapUserRepository extends UserRepository {
 
 
   @Override
-  public synchronized void persistUser(String email, String username, String password) {
-    persistUser(createUser(email, username, password));
-  }
-
-  @Override
   public synchronized void persistUser(PlessUser user) {
     String validationError = user.validateForPersist();
     if (validationError == null) {
       if (user.getId() != 0) {
-        throw new RuntimeException("Cannot persist the user '"+user+"'. This user already has a non-zero ID, which means it's already persisted.");
+        throwPersistUserException("This user already has a non-zero ID, which means it's already persisted.", user);
       }
       user.setId(++maxId);
       addUser(user);
     } else {
-      throw new RuntimeException("Cannot persist the user '" + user + "'. Validation error: " + validationError);
+      throwPersistUserException("Validation error: " + validationError, user);
     }
   }
 
@@ -92,11 +88,14 @@ public class HashMapUserRepository extends UserRepository {
   private synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
 
   private PlessUser addUser(PlessUser user) {
+    if (StringUtils.isNullOrEmpty(user.getEmail())) {
+      throwPersistUserException("The email cannot be 'null' or empty.", user);
+    }
     if (usernameToUserMap.containsKey(user.getUsername())) {
-      throw new RuntimeException("Cannot persist the user. Another user has the same username.");
+      throwPersistUserException("Another user has the same username.", user);
     }
     if (emailToUserMap.containsKey(user.getEmail())) {
-      throw new RuntimeException("Cannot persist the user. Another user has the same email.");
+      throwPersistUserException("Another user has the same email.", user);
     }
     usernameToUserMap.put(user.getUsername(), user);
     emailToUserMap.put(user.getEmail(), user);

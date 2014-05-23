@@ -40,7 +40,8 @@ public abstract class PlessTest {
   }
 
   public static void persistUser(String userEmail, String username, String userPassword) {
-    getUserRepository().persistUser(userEmail, username, userPassword);
+    PlessUser newUser = getUserRepository().createUser(userEmail, username, userPassword);
+    getUserRepository().persistUser(newUser);
   }
 
   public static boolean activateUser(final PlessUser user) {

@@ -4,6 +4,7 @@ import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
+import si.urbas.pless.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -43,12 +44,8 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   }
 
   @Override
-  public void persistUser(String email, String username, String password) {
-    persistUser(new JpaPlessUser(email, username, password));
-  }
-
-  @Override
   public void persistUser(final PlessUser user) {
+    assertUserPreconditionsForPersist(user);
     getJpaTransactions().withTransaction(new TransactionCallback() {
       @Override
       public void invoke(EntityManager entityManager) {
@@ -56,7 +53,7 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
         if (validationError == null) {
           entityManager.persist(user);
         } else {
-          throw new RuntimeException("Cannot persist the user '" + user + "'. Validation error: " + validationError);
+          throwPersistUserException("Validation error: " + validationError, user);
         }
       }
     });
@@ -126,5 +123,11 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   @Override
   public UserRepository createInstance(ConfigurationSource configurationSource) {
     return new JpaUserRepository();
+  }
+
+  private void assertUserPreconditionsForPersist(PlessUser user) {
+    if (StringUtils.isNullOrEmpty(user.getEmail())) {
+      throwPersistUserException("User's email must not be 'null' or empty.", user);
+    }
   }
 }

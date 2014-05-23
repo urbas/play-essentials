@@ -2,6 +2,7 @@ package si.urbas.pless.authentication;
 
 import org.junit.Test;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.users.PlessUser;
 
 import static si.urbas.pless.authentication.PasswordAuthenticator.PasswordAuthenticatorSingleton;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
@@ -42,6 +43,7 @@ public class PasswordAuthenticatorTest extends PlessTest {
   }
 
   private void addJohnSmithToRepository() {
-    getUserRepository().persistUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    PlessUser newUser = getUserRepository().createUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    getUserRepository().persistUser(newUser);
   }
 }

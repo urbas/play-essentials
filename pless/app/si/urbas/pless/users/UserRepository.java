@@ -4,6 +4,7 @@ import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.Factory;
 import si.urbas.pless.util.SingletonFactory;
+import si.urbas.pless.util.StringUtils;
 
 import java.util.List;
 
@@ -21,8 +22,6 @@ public abstract class UserRepository {
 
   public abstract List<PlessUser> getAllUsers();
 
-  public abstract void persistUser(String email, String username, String password);
-
   public abstract void persistUser(PlessUser user);
 
   public abstract boolean activateUser(String userEmail, String activationCode);
@@ -37,6 +36,14 @@ public abstract class UserRepository {
    * @return a new user that is not yet persisted.
    */
   public abstract PlessUser createUser(String email, String username, String password);
+
+  protected void throwPersistUserException(String message, PlessUser user) {
+    StringBuilder exceptionMessage = new StringBuilder("Cannot persist the user '" + user + "'.");
+    if (!StringUtils.isNullOrEmpty(message)) {
+      exceptionMessage.append(" Reason: ").append(message);
+    }
+    throw new RuntimeException(exceptionMessage.toString());
+  }
 
   static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
