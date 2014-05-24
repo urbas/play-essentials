@@ -14,28 +14,24 @@ public abstract class UserRepository {
 
   public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
 
-  public static UserRepository getUserRepository() {
-    return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
-  }
+  /**
+   * @return a new user that is not yet persisted.
+   */
+  public abstract PlessUser createUser(String email, String username, String password);
+
+  public abstract void persistUser(PlessUser user);
 
   public abstract PlessUser findUserByEmail(String email);
 
-  public abstract List<PlessUser> getAllUsers();
+  public abstract PlessUser findUserById(long userId);
 
-  public abstract void persistUser(PlessUser user);
+  public abstract List<PlessUser> getAllUsers();
 
   public abstract boolean activateUser(String userEmail, String activationCode);
 
   public abstract boolean delete(String userEmail);
 
-  public abstract PlessUser findUserById(long userId);
-
   public abstract boolean setUsername(long userId, String username);
-
-  /**
-   * @return a new user that is not yet persisted.
-   */
-  public abstract PlessUser createUser(String email, String username, String password);
 
   protected void throwPersistUserException(String message, PlessUser user) {
     StringBuilder exceptionMessage = new StringBuilder("Cannot persist the user '" + user + "'.");
@@ -43,6 +39,10 @@ public abstract class UserRepository {
       exceptionMessage.append(" Reason: ").append(message);
     }
     throw new RuntimeException(exceptionMessage.toString());
+  }
+
+  public static UserRepository getUserRepository() {
+    return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
   }
 
   static class UserRepositorySingleton {
