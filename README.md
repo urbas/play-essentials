@@ -101,7 +101,7 @@ auth().logOut();
 Here's a REST path to the password login controller:
 
 ```scala
-POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn(email, password)
+POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn()
 ```
 
 You can log a user in directly from your controller. Here's an example of password authentication:
