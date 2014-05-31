@@ -45,6 +45,8 @@ public abstract class UserRepository {
     return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
   }
 
+  public abstract void mergeUser(PlessUser updatedUser);
+
   static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
   }

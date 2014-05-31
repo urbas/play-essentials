@@ -81,6 +81,11 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
+  public void mergeUser(PlessUser updatedUser) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public PlessUser createUser(String email, String username, String password) {
     return new PlessUser(0, email, username, new SaltedHashedPassword(password));
   }

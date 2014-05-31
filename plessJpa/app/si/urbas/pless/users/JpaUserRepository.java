@@ -116,6 +116,11 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   }
 
   @Override
+  public void mergeUser(PlessUser updatedUser) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public PlessUser createUser(String email, String username, String password) {
     return new JpaPlessUser(email, username, password);
   }

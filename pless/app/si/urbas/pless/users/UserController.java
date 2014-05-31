@@ -1,5 +1,6 @@
 package si.urbas.pless.users;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import play.Logger;
 import play.data.Form;
 import play.i18n.Lang;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -40,6 +42,15 @@ public final class UserController extends PlessController {
     }
   }
 
+  public static Result updateUserAccount() {
+    if (auth().isLoggedIn()) {
+      Form<?> accountUpdateForm = getUserAccountService().getAccountUpdateForm();
+      return updateUserAccount(accountUpdateForm.bindFromRequest());
+    } else {
+      return badRequest();
+    }
+  }
+
   public static Result setUsername(String username) {
     if (auth().isLoggedIn()) {
       users().setUsername(auth().getLoggedInUserId(), username);
@@ -61,13 +72,36 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   public static Result signUp(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    HashMap<String, String[]> requestData = buildSignUpParameters(email, username, password, additionalParams);
-    return signUp(getSignupService().getSignupForm().bindFromRequest(requestData));
+    return signUp(getSignupService().getSignupForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+  }
+
+  @SafeVarargs
+  static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
+    return updateUserAccount(getUserAccountService().getAccountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+  }
+
+  private static Result updateUserAccount(Form<?> updateAccountForm) {
+    if (updateAccountForm.hasErrors()) {
+      return formErrorAsJson(updateAccountForm);
+    }
+    return updateUserAccount(getUserAccountService().createUpdatedUser(updateAccountForm));
+  }
+
+  private static Result updateUserAccount(PlessUser updatedUser) {
+    try {
+      updatedUser.setId(auth().getLoggedInUserId());
+      users().mergeUser(updatedUser);
+      return ok();
+    } catch (Exception ex) {
+      Logger.info("User account update error.", ex);
+      return badRequest();
+    }
+
   }
 
   public static Result signUp(Form<?> signupForm) {
     if (signupForm.hasErrors()) {
-      return badRequest(signupForm.errorsAsJson(new Lang(defaultLang())));
+      return formErrorAsJson(signupForm);
     }
     return signUp(getSignupService().createUser(signupForm));
   }
@@ -85,7 +119,7 @@ public final class UserController extends PlessController {
   }
 
   @SafeVarargs
-  public static HashMap<String, String[]> buildSignUpParameters(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
+  public static HashMap<String, String[]> createUserInfoParameters(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
     return addParams(
       params(
         param(EMAIL_PARAMETER, email),
@@ -95,4 +129,6 @@ public final class UserController extends PlessController {
       additionalParams
     );
   }
+
+  private static Result formErrorAsJson(Form<?> formWithErrors) {return badRequest(formWithErrors.errorsAsJson(new Lang(defaultLang())));}
 }
