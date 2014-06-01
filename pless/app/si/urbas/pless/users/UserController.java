@@ -1,6 +1,5 @@
 package si.urbas.pless.users;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import play.Logger;
 import play.data.Form;
 import play.i18n.Lang;
@@ -84,7 +83,8 @@ public final class UserController extends PlessController {
     if (updateAccountForm.hasErrors()) {
       return formErrorAsJson(updateAccountForm);
     }
-    return updateUserAccount(getUserAccountService().createUpdatedUser(updateAccountForm));
+    PlessUser loggedInUser = users().findUserById(auth().getLoggedInUserId());
+    return updateUserAccount(getUserAccountService().updateUser(updateAccountForm, loggedInUser));
   }
 
   private static Result updateUserAccount(PlessUser updatedUser) {
