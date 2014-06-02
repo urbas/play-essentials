@@ -28,10 +28,10 @@ public abstract class PlessTest {
   }
 
   public static PlessUser signUpAndLoginUser(String email, String username, String password) {
-    PlessUser user = persistAndFetchUser(email, username, password);
-    activateUser(user);
-    getAuthenticationService().logIn(user);
-    return user;
+    activateUser(persistAndFetchUser(email, username, password));
+    PlessUser activatedUser = fetchUser(email);
+    getAuthenticationService().logIn(activatedUser);
+    return activatedUser;
   }
 
   public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {

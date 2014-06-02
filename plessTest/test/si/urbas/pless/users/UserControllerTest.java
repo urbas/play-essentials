@@ -15,13 +15,13 @@ import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
+import static play.test.Helpers.status;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.SignupService.getSignupService;
-import static si.urbas.pless.users.UserController.activationPage;
-import static si.urbas.pless.users.UserController.signUp;
+import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
@@ -32,6 +32,9 @@ public class UserControllerTest extends PlessTest {
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   public static final String JOHN_SMITH_USERNAME = "John Smith";
   public static final String JOHN_SMITH_PASSWORD = "john's password";
+  public static final String JANE_SMITH_EMAIL = "jane.smith@email.com";
+  public static final String JANE_SMITH_USERNAME = "Jane Smith";
+  public static final String JANE_SMITH_PASSWORD = "janes's password";
   public PlessUser user;
 
   @SuppressWarnings("UnusedDeclaration")
@@ -194,6 +197,25 @@ public class UserControllerTest extends PlessTest {
     PlessUser user = publicUserInfo(contentAsString(UserController.info()));
     assertEquals(JOHN_SMITH_EMAIL, user.getEmail());
     assertEquals(JOHN_SMITH_USERNAME, user.getUsername());
+  }
+
+  @Test
+  public void updateUserAccount_MUST_return_badRequest_WHEN_not_logged_in() {
+    assertEquals(
+      BAD_REQUEST,
+      status(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))
+    );
+  }
+
+  @Test
+  public void updateUserAccount_MUST_change_user_details() {
+    PlessUser existingUser = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+    assertThat(
+      getUserRepository().findUserById(existingUser.getId()),
+      is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))
+    );
+    verify(getUserRepository()).mergeUser((PlessUser) argThat(is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))));
   }
 
   @Test

@@ -2,6 +2,8 @@ package si.urbas.pless.users;
 
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -238,6 +240,44 @@ public abstract class UserRepositoryTest {
     persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     long userId = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD).getId();
     userRepository.setUsername(userId, USER_USERNAME);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void mergeUser_MUST_throw_an_exception_WHEN_the_user_was_not_persisted() {
+    userRepository.mergeUser(userRepository.createUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD));
+  }
+
+  @Test
+  public void mergeUser_MUST_update_the_username() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    user.setUsername(USER_2_USERNAME);
+    userRepository.mergeUser(user);
+    assertThat(fetchUser(user.getId()), is(userWith(USER_EMAIL, USER_2_USERNAME, USER_PASSWORD)));
+  }
+
+  @Test
+  public void mergeUser_MUST_update_the_email() {
+    PlessUser user = persistAndFetchUser(USER_2_EMAIL, USER_USERNAME, USER_PASSWORD);
+    user.setEmail(USER_2_EMAIL);
+    userRepository.mergeUser(user);
+    assertThat(fetchUser(user.getId()), is(userWith(USER_2_EMAIL, USER_USERNAME, USER_PASSWORD)));
+  }
+
+  @Test
+  public void mergeUser_MUST_update_the_password() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_2_PASSWORD);
+    user.setPassword(USER_2_PASSWORD);
+    userRepository.mergeUser(user);
+    assertThat(fetchUser(user.getId()), is(userWith(USER_EMAIL, USER_USERNAME, USER_2_PASSWORD)));
+  }
+
+  @Test
+  public void mergeUser_MUST_not_update_the_creation_date() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    Date oldCreationDate = user.getCreationDate();
+    user.setCreationDate(new Date(12345));
+    userRepository.mergeUser(user);
+    assertEquals(oldCreationDate, fetchUser(user.getId()).getCreationDate());
   }
 
   private PlessUser createUser(String email, String username, String password) {return userRepository.createUser(email, username, password);}

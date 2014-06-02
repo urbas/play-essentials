@@ -116,8 +116,16 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
   }
 
   @Override
-  public void mergeUser(PlessUser updatedUser) {
-    throw new UnsupportedOperationException();
+  public void mergeUser(final PlessUser updatedUser) {
+    if (updatedUser.getId() <= 0) {
+      throw new RuntimeException("Could not apply changes to the user. The user with the ID '" + updatedUser.getId() + "' was not persisted in this user repository.");
+    }
+    getJpaTransactions().withTransaction(new TransactionCallback() {
+      @Override
+      public void invoke(EntityManager entityManager) {
+        entityManager.merge(updatedUser);
+      }
+    });
   }
 
   @Override

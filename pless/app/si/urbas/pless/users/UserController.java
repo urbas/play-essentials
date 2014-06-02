@@ -5,6 +5,7 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
 
@@ -42,12 +43,9 @@ public final class UserController extends PlessController {
   }
 
   public static Result updateUserAccount() {
-    if (auth().isLoggedIn()) {
-      Form<?> accountUpdateForm = getUserAccountService().getAccountUpdateForm();
-      return updateUserAccount(accountUpdateForm.bindFromRequest());
-    } else {
-      return badRequest();
-    }
+    // TODO: Update currently logged in user info.
+    Form<?> accountUpdateForm = getUserAccountService().getAccountUpdateForm();
+    return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
   public static Result setUsername(String username) {
@@ -80,16 +78,19 @@ public final class UserController extends PlessController {
   }
 
   private static Result updateUserAccount(Form<?> updateAccountForm) {
+    LoggedInUserInfo loggedInUserInfo = auth().getLoggedInUserInfo();
+    if (loggedInUserInfo == null) {
+      return badRequest();
+    }
     if (updateAccountForm.hasErrors()) {
       return formErrorAsJson(updateAccountForm);
     }
-    PlessUser loggedInUser = users().findUserById(auth().getLoggedInUserId());
+    PlessUser loggedInUser = users().findUserById(loggedInUserInfo.userId);
     return updateUserAccount(getUserAccountService().updateUser(updateAccountForm, loggedInUser));
   }
 
   private static Result updateUserAccount(PlessUser updatedUser) {
     try {
-      updatedUser.setId(auth().getLoggedInUserId());
       users().mergeUser(updatedUser);
       return ok();
     } catch (Exception ex) {

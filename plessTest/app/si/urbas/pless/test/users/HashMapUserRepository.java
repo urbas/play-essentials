@@ -22,12 +22,16 @@ public class HashMapUserRepository extends UserRepository {
     if (user == null) {
       throw new IllegalArgumentException("Could not find user with the email '" + email + "'");
     }
-    return user;
+    return user.clone();
   }
 
   @Override
   public synchronized List<PlessUser> getAllUsers() {
-    return new ArrayList<>(emailToUserMap.values());
+    ArrayList<PlessUser> plessUsers = new ArrayList<>();
+    for (PlessUser plessUser : emailToUserMap.values()) {
+      plessUsers.add(plessUser);
+    }
+    return plessUsers;
   }
 
 
@@ -66,7 +70,7 @@ public class HashMapUserRepository extends UserRepository {
     if (user == null) {
       throw new IllegalArgumentException("Could not find user with the id '" + userId + "'");
     }
-    return user;
+    return user.clone();
   }
 
   @Override
@@ -81,8 +85,15 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
-  public void mergeUser(PlessUser updatedUser) {
-    throw new UnsupportedOperationException();
+  public synchronized void mergeUser(PlessUser userWithUpdatedFields) {
+    PlessUser persistedUser = getUserById(userWithUpdatedFields.getId());
+    if (persistedUser == null) {
+      throw new RuntimeException("Could not apply changes to the user. The user with the ID '" + userWithUpdatedFields.getId() + "' was not persisted in this user repository.");
+    }
+    PlessUser newUser = userWithUpdatedFields.clone();
+    newUser.setCreationDate(persistedUser.getCreationDate());
+    removeUser(persistedUser);
+    addUser(newUser);
   }
 
   @Override
@@ -90,21 +101,24 @@ public class HashMapUserRepository extends UserRepository {
     return new PlessUser(0, email, username, new SaltedHashedPassword(password));
   }
 
+  private synchronized PlessUser getUserById(long updatedUserId) {return idToUserMap.get(updatedUserId);}
+
   private synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
 
-  private PlessUser addUser(PlessUser user) {
-    if (StringUtils.isNullOrEmpty(user.getEmail())) {
-      throwPersistUserException("The email cannot be 'null' or empty.", user);
+  private PlessUser addUser(PlessUser newUser) {
+    PlessUser clonedUser = newUser.clone();
+    if (StringUtils.isNullOrEmpty(clonedUser.getEmail())) {
+      throwPersistUserException("The email cannot be 'null' or empty.", clonedUser);
     }
-    if (usernameToUserMap.containsKey(user.getUsername())) {
-      throwPersistUserException("Another user has the same username.", user);
+    if (usernameToUserMap.containsKey(clonedUser.getUsername())) {
+      throwPersistUserException("Another user has the same username.", clonedUser);
     }
-    if (emailToUserMap.containsKey(user.getEmail())) {
-      throwPersistUserException("Another user has the same email.", user);
+    if (emailToUserMap.containsKey(clonedUser.getEmail())) {
+      throwPersistUserException("Another user has the same email.", clonedUser);
     }
-    usernameToUserMap.put(user.getUsername(), user);
-    emailToUserMap.put(user.getEmail(), user);
-    return idToUserMap.put(user.getId(), user);
+    usernameToUserMap.put(clonedUser.getUsername(), clonedUser);
+    emailToUserMap.put(clonedUser.getEmail(), clonedUser);
+    return idToUserMap.put(clonedUser.getId(), clonedUser);
   }
 
   private PlessUser removeUser(PlessUser user) {

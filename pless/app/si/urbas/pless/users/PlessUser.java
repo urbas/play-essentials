@@ -5,7 +5,7 @@ import si.urbas.pless.sessions.SessionIdGenerator;
 
 import java.util.Date;
 
-public class PlessUser {
+public class PlessUser implements Cloneable {
 
   protected long id;
   protected String email;
@@ -131,5 +131,15 @@ public class PlessUser {
    */
   public String validateForPersist() {
     return null;
+  }
+
+  @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+  @Override
+  public PlessUser clone() {
+    try {
+      return (PlessUser) super.clone();
+    } catch (CloneNotSupportedException ex) {
+      throw new Error("Cloning of PlessUser failed.", ex);
+    }
   }
 }
