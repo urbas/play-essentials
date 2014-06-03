@@ -5,6 +5,7 @@ import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
+import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.PlessTest;
 
@@ -16,6 +17,7 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 import static play.test.Helpers.status;
+import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
@@ -209,13 +211,19 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void updateUserAccount_MUST_change_user_details() {
-    PlessUser existingUser = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+    PlessUser existingUser = loginAndChangeJohnSmithToJaneSmith();
     assertThat(
       getUserRepository().findUserById(existingUser.getId()),
       is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))
     );
     verify(getUserRepository()).mergeUser((PlessUser) argThat(is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))));
+  }
+
+  @Test
+  public void updateUserAccount_MUST_update_the_currently_logged_in_user_info() {
+    loginAndChangeJohnSmithToJaneSmith();
+    LoggedInUserInfo loggedInUserInfo = getAuthenticationService().getLoggedInUserInfo();
+    assertEquals(JANE_SMITH_EMAIL, loggedInUserInfo.email);
   }
 
   @Test
@@ -249,7 +257,13 @@ public class UserControllerTest extends PlessTest {
     }
   }
 
-  public static Result callStatus() {
+  private static Result callStatus() {
     return AuthenticationController.status();
+  }
+
+  private PlessUser loginAndChangeJohnSmithToJaneSmith() {
+    PlessUser existingUser = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+    return existingUser;
   }
 }

@@ -29,9 +29,9 @@ public abstract class UserRepository {
 
   public abstract boolean activateUser(String userEmail, String activationCode);
 
-  public abstract boolean delete(String userEmail);
+  public abstract void mergeUser(PlessUser updatedUser);
 
-  public abstract boolean setUsername(long userId, String username);
+  public abstract boolean delete(String userEmail);
 
   protected void throwPersistUserException(String message, PlessUser user) {
     StringBuilder exceptionMessage = new StringBuilder("Cannot persist the user '" + user + "'.");
@@ -44,8 +44,6 @@ public abstract class UserRepository {
   public static UserRepository getUserRepository() {
     return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
   }
-
-  public abstract void mergeUser(PlessUser updatedUser);
 
   static class UserRepositorySingleton {
     private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());

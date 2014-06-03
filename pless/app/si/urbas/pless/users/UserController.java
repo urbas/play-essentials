@@ -43,18 +43,14 @@ public final class UserController extends PlessController {
   }
 
   public static Result updateUserAccount() {
-    // TODO: Update currently logged in user info.
     Form<?> accountUpdateForm = getUserAccountService().getAccountUpdateForm();
     return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
+  // TODO: Remove `setUsername`. 'updateUserAccount' should be used instead.
+  @Deprecated
   public static Result setUsername(String username) {
-    if (auth().isLoggedIn()) {
-      users().setUsername(auth().getLoggedInUserId(), username);
-      return ok();
-    } else {
-      return badRequest();
-    }
+    return updateUserAccount(null, username, null);
   }
 
   public static Result delete() throws Throwable {
@@ -92,6 +88,7 @@ public final class UserController extends PlessController {
   private static Result updateUserAccount(PlessUser updatedUser) {
     try {
       users().mergeUser(updatedUser);
+      auth().logIn(updatedUser);
       return ok();
     } catch (Exception ex) {
       Logger.info("User account update error.", ex);

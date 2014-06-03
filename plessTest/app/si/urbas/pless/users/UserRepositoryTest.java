@@ -12,7 +12,6 @@ import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.*;
 
 public abstract class UserRepositoryTest {
-  protected static final long NON_EXISTENT_USER_ID = 198;
   protected static final String USER_EMAIL = "user email";
   protected static final String USER_USERNAME = "John the User";
   protected static final String USER_PASSWORD = "user password";
@@ -214,32 +213,20 @@ public abstract class UserRepositoryTest {
     );
   }
 
-  @Test
-  public void setUsername_MUST_return_false_WHEN_user_with_the_given_id_does_not_exist() {
-    assertFalse(userRepository.setUsername(NON_EXISTENT_USER_ID, USER_USERNAME));
-  }
-
-  @Test
-  public void setUsername_MUST_return_true_WHEN_user_with_the_given_id_exists() {
-    final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    assertTrue(userRepository.setUsername(user.getId(), USER_2_USERNAME));
-  }
-
-  @Test
-  public void setUsername_MUST_change_the_username_of_the_user_with_the_given_id() {
-    long userId = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD).getId();
-    userRepository.setUsername(userId, USER_2_USERNAME);
-    assertThat(
-      fetchUser(userId),
-      is(userWith(USER_EMAIL, USER_2_USERNAME, USER_PASSWORD))
-    );
+  @Test(expected = RuntimeException.class)
+  public void mergeUser_MUST_throw_an_exception_WHEN_the_new_username_is_already_taken() {
+    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser secondUser = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    secondUser.setUsername(USER_USERNAME);
+    userRepository.mergeUser(secondUser);
   }
 
   @Test(expected = RuntimeException.class)
-  public void setUsername_MUST_throw_an_exception_WHEN_the_new_username_is_already_taken() {
+  public void mergeUser_MUST_throw_an_exception_WHEN_the_new_email_is_already_taken() {
     persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    long userId = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD).getId();
-    userRepository.setUsername(userId, USER_USERNAME);
+    PlessUser secondUser = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    secondUser.setEmail(USER_EMAIL);
+    userRepository.mergeUser(secondUser);
   }
 
   @Test(expected = RuntimeException.class)

@@ -74,17 +74,6 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
-  public synchronized boolean setUsername(long userId, String username) {
-    PlessUser user = idToUserMap.get(userId);
-    if (user == null) {
-      return false;
-    }
-    assertNoOtherUserHasGivenUsername(username, user);
-    user.setUsername(username);
-    return true;
-  }
-
-  @Override
   public synchronized void mergeUser(PlessUser userWithUpdatedFields) {
     PlessUser persistedUser = getUserById(userWithUpdatedFields.getId());
     if (persistedUser == null) {
@@ -130,10 +119,4 @@ public class HashMapUserRepository extends UserRepository {
     return idToUserMap.remove(user.getId());
   }
 
-  private void assertNoOtherUserHasGivenUsername(String username, PlessUser user) {
-    PlessUser userWithSameUsername = usernameToUserMap.get(username);
-    if (userWithSameUsername != null && userWithSameUsername != user) {
-      throw new RuntimeException("Could not set the new username. Another user already has the given username.");
-    }
-  }
 }
