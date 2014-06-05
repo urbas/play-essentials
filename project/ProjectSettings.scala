@@ -18,7 +18,8 @@ object ProjectSettings {
       Seq(
         pomExtra := pomExtraSettings,
         sources in doc in Compile := Nil,
-        publishArtifact in(Compile, packageDoc) := false,
+        // NOTE: We have to package documentation to conform to Sonatype's Repo policy
+        publishArtifact in(Compile, packageDoc) := true,
         publishArtifact in(Compile, packageSrc) := true,
         publishArtifact in(Test, packageSrc) := false,
         parallelExecution in jacoco.Config := false,
