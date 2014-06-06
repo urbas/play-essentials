@@ -14,7 +14,6 @@ POST  /api/user/signup     si.urbas.pless.users.UserController.signUp()
 GET   /api/user/info       si.urbas.pless.users.UserController.info()
 POST  /api/user/info       si.urbas.pless.users.UserController.updateUserAccount()
 POST  /api/user/delete     si.urbas.pless.users.UserController.delete()
-POST  /api/user/username   si.urbas.pless.users.UserController.setUsername(username)
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file    controllers.Assets.at(path="/public", file)

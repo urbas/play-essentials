@@ -47,12 +47,6 @@ public final class UserController extends PlessController {
     return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
-  // TODO: Remove `setUsername`. 'updateUserAccount' should be used instead.
-  @Deprecated
-  public static Result setUsername(String username) {
-    return updateUserAccount(null, username, null);
-  }
-
   public static Result delete() throws Throwable {
     if (auth().isLoggedIn()) {
       users().delete(auth().getLoggedInUserEmail());

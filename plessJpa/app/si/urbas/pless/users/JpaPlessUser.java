@@ -12,7 +12,6 @@ import java.util.Date;
   @NamedQuery(name = JpaPlessUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM PlessUser u WHERE u.email = :email"),
   @NamedQuery(name = JpaPlessUser.QUERY_ACTIVATE_USER, query = "UPDATE PlessUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
   @NamedQuery(name = JpaPlessUser.QUERY_DELETE_USER, query = "DELETE FROM PlessUser u WHERE u.email = :email"),
-  @NamedQuery(name = JpaPlessUser.QUERY_SET_USERNAME, query = "UPDATE PlessUser u SET u.username = :username WHERE u.id = :id"),
   @NamedQuery(name = JpaPlessUser.QUERY_GET_ALL, query = "SELECT u FROM PlessUser u")
 })
 public class JpaPlessUser extends PlessUser {
@@ -20,7 +19,6 @@ public class JpaPlessUser extends PlessUser {
   public static final String QUERY_GET_ALL = "PlessUser.getAll";
   public static final String QUERY_ACTIVATE_USER = "PlessUser.activate";
   public static final String QUERY_DELETE_USER = "PlessUser.delete";
-  public static final String QUERY_SET_USERNAME = "PlessUser.setUsername";
 
   @SuppressWarnings("UnusedDeclaration")
   public JpaPlessUser() {}
