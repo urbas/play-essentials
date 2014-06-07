@@ -19,7 +19,7 @@ public class RequireLoginTest extends PlessTest {
   public void setUp() {
     super.setUp();
     requireLogin = new RequireLogin();
-    plessTestApplication.addTemporaryService(new TemporaryHttpContext());
+    plessTestApplication.with(new TemporaryHttpContext());
   }
 
   @Test

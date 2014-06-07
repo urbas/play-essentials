@@ -1,9 +1,10 @@
 package si.urbas.pless.users;
 
 import si.urbas.pless.authentication.SaltedHashedPassword;
-import si.urbas.pless.sessions.SessionIdGenerator;
 
 import java.util.Date;
+
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public class PlessUser implements Cloneable {
 
@@ -15,6 +16,8 @@ public class PlessUser implements Cloneable {
   protected Date creationDate;
   protected boolean activated;
   protected String activationCode;
+  protected String passwordResetCode;
+  protected Date passwordResetTimestamp;
 
   public PlessUser() {}
 
@@ -34,7 +37,7 @@ public class PlessUser implements Cloneable {
   }
 
   public PlessUser(long id, String email, String username, SaltedHashedPassword password) {
-    this(id, email, username, password.getHashedPassword(), password.getSalt(), new Date(), false, new SessionIdGenerator().createSessionId());
+    this(id, email, username, password.getHashedPassword(), password.getSalt(), new Date(), false, urlSafeHash());
   }
 
   public PlessUser(long id, String email, String username, String password) {
@@ -116,6 +119,22 @@ public class PlessUser implements Cloneable {
   @SuppressWarnings("UnusedDeclaration")
   public void setActivationCode(String activationCode) {
     this.activationCode = activationCode;
+  }
+
+  public String getPasswordResetCode() {
+    return passwordResetCode;
+  }
+
+  public void setPasswordResetCode(String passwordResetCode) {
+    this.passwordResetCode = passwordResetCode;
+  }
+
+  public Date getPasswordResetTimestamp() {
+    return passwordResetTimestamp;
+  }
+
+  public void setPasswordResetTimestamp(Date passwordResetTimestamp) {
+    this.passwordResetTimestamp = passwordResetTimestamp;
   }
 
   @Override

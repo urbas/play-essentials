@@ -2,8 +2,11 @@ package si.urbas.pless.users;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import play.api.templates.Html;
 import play.data.Form;
+import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.util.TemporaryService;
 
@@ -11,11 +14,15 @@ import java.util.HashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
-import static si.urbas.pless.users.UserAccountService.getUserAccountService;
+import static si.urbas.pless.users.UserAccountService.*;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.param;
 import static si.urbas.pless.util.RequestParameters.params;
 
@@ -43,6 +50,12 @@ public class UserAccountServiceTest extends PlessTest {
       param(PASSWORD_PARAMETER, JOHN_SMITH_PASSWORD)
     );
     janeSmithUser = getUserRepository().createUser(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+  }
+
+  @Override
+  protected TestApplication createTestApplication() {
+    return super.createTestApplication()
+      .with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
   }
 
   @Test
@@ -81,11 +94,20 @@ public class UserAccountServiceTest extends PlessTest {
     assertUpdatedUserIs(is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
   }
 
+  @Ignore
   @Test
   public void getUserAccountService_MUST_return_the_configured_implementation() {
     try (TemporaryService userAccountService = new TemporaryService(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE, this.userAccountService)) {
       assertEquals(userAccountService.serviceInstance, getUserAccountService());
     }
+  }
+
+  @Ignore
+  @Test
+  public void sendPasswordResetEmail_MUST_send_an_email_through_the_email_service() {
+    String passowordResetCode = urlSafeHash();
+    userAccountService.sendPasswordResetEmail(JANE_SMITH_EMAIL, passowordResetCode);
+    verify(getEmailProvider()).sendEmail(eq(JANE_SMITH_EMAIL), any(String.class), any(Html.class));
   }
 
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {

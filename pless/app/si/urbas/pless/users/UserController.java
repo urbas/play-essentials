@@ -8,14 +8,18 @@ import si.urbas.pless.PlessController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
+import si.urbas.pless.util.ApiResponses;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static play.api.i18n.Lang.defaultLang;
+import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.*;
 
 public final class UserController extends PlessController {
@@ -55,6 +59,23 @@ public final class UserController extends PlessController {
     } else {
       return badRequest();
     }
+  }
+
+  public static Result requestPasswordReset(String email) {
+    try {
+      PlessUser user = users().findUserByEmail(email);
+      user.setPasswordResetCode(urlSafeHash());
+      user.setPasswordResetTimestamp(new Date());
+      users().mergeUser(user);
+      getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
+    } catch (Exception ignored) {
+      Logger.info("Tried to reset password for email '" + email + "'. However, the user does not exist.");
+    }
+    return okJson(passwordResetResponseMessage(email));
+  }
+
+  public static Result resetPassword(String newPassword, String resetPasswordToken) {
+    throw new UnsupportedOperationException();
   }
 
   @SafeVarargs
@@ -123,4 +144,6 @@ public final class UserController extends PlessController {
   }
 
   private static Result formErrorAsJson(Form<?> formWithErrors) {return badRequest(formWithErrors.errorsAsJson(new Lang(defaultLang())));}
+
+  static play.api.libs.json.JsObject passwordResetResponseMessage(String email) {return ApiResponses.message("An email containing further instructions will be sent to '" + email + "'.");}
 }

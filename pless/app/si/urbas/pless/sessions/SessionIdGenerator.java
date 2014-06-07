@@ -1,17 +1,13 @@
 package si.urbas.pless.sessions;
 
-import java.security.SecureRandom;
-
-import org.apache.commons.codec.binary.Base64;
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public class SessionIdGenerator {
 
   public String createSessionId() {
     // NOTE: The length of the session id was inspired by OWASP:
     // https://www.owasp.org/index.php/Session_Management_Cheat_Sheet#Session_ID_Length
-    byte[] randomBytes = new byte[18];
-    new SecureRandom().nextBytes(randomBytes);
-    return Base64.encodeBase64URLSafeString(randomBytes);
+    return urlSafeHash();
   }
 
 }

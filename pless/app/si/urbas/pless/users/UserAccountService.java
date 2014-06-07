@@ -1,5 +1,6 @@
 package si.urbas.pless.users;
 
+import play.api.templates.Html;
 import play.data.Form;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.util.ServiceLoader;
@@ -42,6 +43,12 @@ public class UserAccountService implements PlessService {
       userToUpdate.setEmail(updateAccountData.getEmail());
     }
   }
+
+  public void sendPasswordResetEmail(String email, String resetCode) {
+    throw new UnsupportedOperationException();
+  }
+
+  public Html getPasswordResetEmailContent(String email, String resetCode) {throw new UnsupportedOperationException();}
 
   static class UserAccountServiceLoader {
     public static final ServiceLoader<UserAccountService> INSTANCE = new ServiceLoader<>(CONFIG_USER_ACCOUNT_SERVICE, new UserAccountService());

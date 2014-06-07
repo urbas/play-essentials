@@ -1,10 +1,11 @@
 package si.urbas.pless.users;
 
 import si.urbas.pless.authentication.SaltedHashedPassword;
-import si.urbas.pless.sessions.SessionIdGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 @Entity(name = "PlessUser")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -28,7 +29,7 @@ public class JpaPlessUser extends PlessUser {
   }
 
   public JpaPlessUser(String email, String username, byte[] hashedPassword, byte[] salt) {
-    super(0, email, username, hashedPassword, salt, null, false, new SessionIdGenerator().createSessionId());
+    super(0, email, username, hashedPassword, salt, null, false, urlSafeHash());
   }
 
   public JpaPlessUser(long id) {
@@ -99,5 +100,17 @@ public class JpaPlessUser extends PlessUser {
   @Override
   public String getActivationCode() {
     return super.getActivationCode();
+  }
+
+  @Column
+  @Override
+  public String getPasswordResetCode() {
+    return super.getPasswordResetCode();
+  }
+
+  @Column
+  @Override
+  public Date getPasswordResetTimestamp() {
+    return super.getPasswordResetTimestamp();
   }
 }

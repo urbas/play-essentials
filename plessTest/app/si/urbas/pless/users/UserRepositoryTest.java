@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.*;
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public abstract class UserRepositoryTest {
   protected static final String USER_EMAIL = "user email";
@@ -265,6 +266,36 @@ public abstract class UserRepositoryTest {
     user.setCreationDate(new Date(12345));
     userRepository.mergeUser(user);
     assertEquals(oldCreationDate, fetchUser(user.getId()).getCreationDate());
+  }
+
+  @Test
+  public void getPasswordResetCode_MUST_initially_be_null() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertNull(user.getPasswordResetCode());
+  }
+
+  @Test
+  public void getPasswordResetCode_MUST_return_the_set_password_reset_code() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    String passwordResetCode = urlSafeHash();
+    user.setPasswordResetCode(passwordResetCode);
+    userRepository.mergeUser(user);
+    assertEquals(passwordResetCode, fetchUser(USER_EMAIL).getPasswordResetCode());
+  }
+
+  @Test
+  public void getPasswordResetTimestamp_MUST_initially_return_null() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertNull(user.getPasswordResetTimestamp());
+  }
+
+  @Test
+  public void getPasswordResetTimestamp_MUST_return_the_set_password_reset_code_timestamp() {
+    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    Date passwordResetTimestamp = new Date();
+    user.setPasswordResetTimestamp(passwordResetTimestamp);
+    userRepository.mergeUser(user);
+    assertEquals(passwordResetTimestamp, fetchUser(USER_EMAIL).getPasswordResetTimestamp());
   }
 
   private PlessUser createUser(String email, String username, String password) {return userRepository.createUser(email, username, password);}

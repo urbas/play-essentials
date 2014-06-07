@@ -2,6 +2,8 @@ package si.urbas.pless.users;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.api.libs.json.JsValue;
+import play.api.libs.json.Json;
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
@@ -21,8 +23,10 @@ import static si.urbas.pless.authentication.AuthenticationService.getAuthenticat
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
+import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.SignupService.getSignupService;
+import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
@@ -228,6 +232,41 @@ public class UserControllerTest extends PlessTest {
     assertEquals(JANE_SMITH_EMAIL, loggedInUserInfo.email);
   }
 
+  @Test
+  public void requestPasswordReset_MUST_return_ok_with_a_message_that_explains_an_email_will_be_sent_if_the_user_exists_WHEN_the_user_with_the_given_email_does_not_exist() {
+    assertEquals(OK, status(requestPasswordReset(JOHN_SMITH_EMAIL)));
+  }
+
+  @Test
+  public void requestPasswordReset_MUST_return_a_message_that_explains_an_email_will_be_sent_if_the_user_exists_WHEN_the_user_with_the_given_email_does_not_exist() {
+    JsValue result = Json.parse(contentAsString(requestPasswordReset(JOHN_SMITH_EMAIL)));
+    assertEquals(passwordResetResponseMessage(JOHN_SMITH_EMAIL), result);
+  }
+
+  @Test
+  public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
+    requestPasswordReset(JOHN_SMITH_EMAIL);
+    verify(getUserAccountService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+  }
+
+  @Test
+  public void requestPasswordReset_MUST_create_a_password_reset_code_and_assign_it_to_the_user() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    assertNotNull(user.getPasswordResetCode());
+  }
+
+  @Test
+  public void requestPasswordReset_MUST_create_a_recent_password_reset_code_date() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    assertThat(user.getPasswordResetTimestamp(), is(dateWithin(500)));
+  }
+
+  @Test
+  public void requestPasswordReset_MUST_send_an_email_through_the_UserAccountService() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    verify(getUserAccountService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
+  }
+
   private PlessUser userMatchesJohnSmith() {
     return (PlessUser) argThat(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD));
   }
@@ -248,5 +287,11 @@ public class UserControllerTest extends PlessTest {
     PlessUser existingUser = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
     return existingUser;
+  }
+
+  private static PlessUser createUserAndRequestPasswordReset() {
+    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    requestPasswordReset(JOHN_SMITH_EMAIL);
+    return fetchUser(JOHN_SMITH_EMAIL);
   }
 }

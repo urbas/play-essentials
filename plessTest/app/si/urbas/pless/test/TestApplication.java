@@ -32,8 +32,9 @@ public class TestApplication implements AutoCloseable {
     temporaryServices.clear();
   }
 
-  public void addTemporaryService(AutoCloseable temporaryService) {
+  public TestApplication with(AutoCloseable temporaryService) {
     temporaryServices.add(temporaryService);
+    return this;
   }
 
   protected void doInitialisation(Body initialisationMethod) {
