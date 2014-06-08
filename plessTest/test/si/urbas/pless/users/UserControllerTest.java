@@ -11,6 +11,8 @@ import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.util.PlessTest;
 
+import java.util.Calendar;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.any;
@@ -32,6 +34,7 @@ import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public class UserControllerTest extends PlessTest {
 
@@ -50,6 +53,7 @@ public class UserControllerTest extends PlessTest {
   @Before
   public void setUp() {
     super.setUp();
+    setDefaultPasswordResetValidityDuration();
     user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
   }
 
@@ -267,6 +271,42 @@ public class UserControllerTest extends PlessTest {
     verify(getUserAccountService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
   }
 
+  @Test
+  public void resetPassword_MUST_return_badRequest_WHEN_no_password_reset_request_was_made() {
+    assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, urlSafeHash(), JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_return_ok_WHEN_a_password_reset_request_was_made() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    assertEquals(OK, status(resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_return_badRequest_WHEN_the_password_reset_code_does_not_match() {
+    createUserAndRequestPasswordReset();
+    assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, "invalid request code", JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_return_badRequest_WHEN_the_password_reset_code_timed_out() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    movePasswordResetCodeTimestampIntoDistantPast(user);
+    assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_reset_the_password() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    assertThat(fetchUser(JOHN_SMITH_EMAIL), is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
+  }
+
+  private static void setDefaultPasswordResetValidityDuration() {
+    when(getConfigurationSource().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
+      .thenReturn(DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);
+  }
+
   private PlessUser userMatchesJohnSmith() {
     return (PlessUser) argThat(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD));
   }
@@ -293,5 +333,13 @@ public class UserControllerTest extends PlessTest {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     requestPasswordReset(JOHN_SMITH_EMAIL);
     return fetchUser(JOHN_SMITH_EMAIL);
+  }
+
+  private static void movePasswordResetCodeTimestampIntoDistantPast(PlessUser user) {
+    Calendar passwordResetTimestamp = Calendar.getInstance();
+    passwordResetTimestamp.setTime(user.getPasswordResetTimestamp());
+    passwordResetTimestamp.add(Calendar.SECOND, -DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS - 10);
+    user.setPasswordResetTimestamp(passwordResetTimestamp.getTime());
+    getUserRepository().mergeUser(user);
   }
 }

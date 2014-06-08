@@ -8,8 +8,10 @@ import si.urbas.pless.PlessController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
+import si.urbas.pless.users.views.html.PasswordResetView;
 import si.urbas.pless.util.ApiResponses;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,8 @@ public final class UserController extends PlessController {
   public static final String USERNAME_PARAMETER = "username";
   public static final String EMAIL_PARAMETER = "email";
   public static final String PASSWORD_PARAMETER = "password";
+  public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
+  public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
 
   public static Result signUp() {
     return signUp(getSignupService().getSignupForm().bindFromRequest());
@@ -69,13 +73,27 @@ public final class UserController extends PlessController {
       users().mergeUser(user);
       getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
     } catch (Exception ignored) {
-      Logger.info("Tried to reset password for email '" + email + "'. However, the user does not exist.");
+      Logger.info("Password reset requested for email '" + email + "'. However, the user does not exist.");
     }
     return okJson(passwordResetResponseMessage(email));
   }
 
-  public static Result resetPassword(String newPassword, String resetPasswordToken) {
-    throw new UnsupportedOperationException();
+  public static Result resetPasswordPage(String email, String resetPasswordToken) {
+    return ok(PasswordResetView.apply(email));
+  }
+
+  public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
+    try {
+      PlessUser user = users().findUserByEmail(email);
+      if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
+        user.setPassword(newPassword);
+        users().mergeUser(user);
+        return ok();
+      }
+    } catch (Exception e) {
+      Logger.info("A password reset was attempted for non-existing user '" + email + "'.");
+    }
+    return badRequest();
   }
 
   @SafeVarargs
@@ -146,4 +164,20 @@ public final class UserController extends PlessController {
   private static Result formErrorAsJson(Form<?> formWithErrors) {return badRequest(formWithErrors.errorsAsJson(new Lang(defaultLang())));}
 
   static play.api.libs.json.JsObject passwordResetResponseMessage(String email) {return ApiResponses.message("An email containing further instructions will be sent to '" + email + "'.");}
+
+  private static boolean isPasswordResetTokenValid(String resetPasswordToken, PlessUser user) {return resetPasswordToken != null && resetPasswordToken.equals(user.getPasswordResetCode());}
+
+  private static boolean isPasswordResetTimestampValid(PlessUser user) {
+    Date passwordResetTimestamp = user.getPasswordResetTimestamp();
+    if (passwordResetTimestamp != null) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(passwordResetTimestamp);
+      int passwordResetValiditySeconds = getPasswordResetValiditySeconds();
+      calendar.add(Calendar.SECOND, passwordResetValiditySeconds);
+      return new Date().before(calendar.getTime());
+    }
+    return false;
+  }
+
+  private static int getPasswordResetValiditySeconds() {return config().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);}
 }

@@ -2,16 +2,17 @@ package si.urbas.pless.users;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.api.mvc.Call;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.util.TemporaryService;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.users.SignupService.*;
 import static si.urbas.pless.users.UserControllerTest.*;
 import static si.urbas.pless.users.routes.UserController;
@@ -48,9 +49,10 @@ public class SignupServiceTest extends PlessTest {
   @Test
   public void signupEmailContent_MUST_contain_the_activation_url() throws Exception {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
+      Call activationPageCall = UserController.activationPage(user.getEmail(), user.getActivationCode());
       assertThat(
         signupService.signupEmailContent(user).body(),
-        containsString(escapeHtml4(UserController.activationPage(user.getEmail(), user.getActivationCode()).absoluteURL(httpContext.request, false)))
+        containsString(escapedAbsoluteUrl(httpContext, activationPageCall))
       );
     }
   }

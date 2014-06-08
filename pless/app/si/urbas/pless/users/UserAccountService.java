@@ -3,9 +3,11 @@ package si.urbas.pless.users;
 import play.api.templates.Html;
 import play.data.Form;
 import si.urbas.pless.PlessService;
+import si.urbas.pless.users.emails.html.PasswordResetEmail;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
+import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 
 public class UserAccountService implements PlessService {
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
@@ -45,10 +47,14 @@ public class UserAccountService implements PlessService {
   }
 
   public void sendPasswordResetEmail(String email, String resetCode) {
-    throw new UnsupportedOperationException();
+    getEmailProvider().sendEmail(email, getPasswordResetEmailSubject(), getPasswordResetEmailContent(email, resetCode));
   }
 
-  public Html getPasswordResetEmailContent(String email, String resetCode) {throw new UnsupportedOperationException();}
+  public String getPasswordResetEmailSubject() {return "Password Reset Request";}
+
+  public Html getPasswordResetEmailContent(String email, String resetCode) {
+    return PasswordResetEmail.apply(email, resetCode);
+  }
 
   static class UserAccountServiceLoader {
     public static final ServiceLoader<UserAccountService> INSTANCE = new ServiceLoader<>(CONFIG_USER_ACCOUNT_SERVICE, new UserAccountService());
