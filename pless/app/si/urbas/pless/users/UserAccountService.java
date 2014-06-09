@@ -3,6 +3,7 @@ package si.urbas.pless.users;
 import play.api.templates.Html;
 import play.data.Form;
 import si.urbas.pless.PlessService;
+import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;
 import si.urbas.pless.users.emails.html.PasswordResetEmail;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -28,6 +29,30 @@ public class UserAccountService implements PlessService {
     return userToUpdate;
   }
 
+  public void sendPasswordResetEmail(String email, String resetCode) {
+    String emailSubject = passwordResetEmailSubject();
+    Html emailContent = passwordResetEmailContent(email, resetCode);
+    getEmailProvider().sendEmail(email, emailSubject, emailContent);
+  }
+
+  public void sendPasswordResetConfirmationEmail(String email) {
+    getEmailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
+  }
+
+  protected String passwordResetEmailSubject() {return "Password Reset Request";}
+
+  protected Html passwordResetEmailContent(String email, String resetCode) {
+    return PasswordResetEmail.apply(email, resetCode);
+  }
+
+  protected Html passwordResetConfirmationEmailContent(String email) {
+    return PasswordResetConfirmationEmail.apply(email);
+  }
+
+  protected String passwordResetConfirmationEmailSubject() {
+    return "Password reset";
+  }
+
   private void updatePassword(PlessUser userToUpdate, UpdateAccountData updateAccountData) {
     if (updateAccountData.getPassword() != null) {
       userToUpdate.setPassword(updateAccountData.getPassword());
@@ -44,16 +69,6 @@ public class UserAccountService implements PlessService {
     if (updateAccountData.getEmail() != null) {
       userToUpdate.setEmail(updateAccountData.getEmail());
     }
-  }
-
-  public void sendPasswordResetEmail(String email, String resetCode) {
-    getEmailProvider().sendEmail(email, getPasswordResetEmailSubject(), getPasswordResetEmailContent(email, resetCode));
-  }
-
-  public String getPasswordResetEmailSubject() {return "Password Reset Request";}
-
-  public Html getPasswordResetEmailContent(String email, String resetCode) {
-    return PasswordResetEmail.apply(email, resetCode);
   }
 
   static class UserAccountServiceLoader {

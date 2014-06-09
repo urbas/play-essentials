@@ -302,6 +302,13 @@ public class UserControllerTest extends PlessTest {
     assertThat(fetchUser(JOHN_SMITH_EMAIL), is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
   }
 
+  @Test
+  public void resetPassword_MUST_send_a_confirmation_email_after_the_password_was_reset() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    verify(getUserAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
+  }
+
   private static void setDefaultPasswordResetValidityDuration() {
     when(getConfigurationSource().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
       .thenReturn(DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);

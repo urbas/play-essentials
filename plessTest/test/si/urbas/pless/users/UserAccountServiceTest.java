@@ -120,15 +120,23 @@ public class UserAccountServiceTest extends PlessTest {
   }
 
   @Test
-  public void getPasswordResetEmailContent_MUST_contain_the_link_to_the_password_reset_page() {
+  public void passwordResetEmailContent_MUST_contain_the_link_to_the_password_reset_page() {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
-      Html passwordResetEmailContent = userAccountService.getPasswordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
+      Html passwordResetEmailContent = userAccountService.passwordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
       Call resetPasswordPage = UserController.resetPasswordPage(JANE_SMITH_EMAIL, passwordResetCode);
       assertThat(
         passwordResetEmailContent.body(),
         containsString(escapedAbsoluteUrl(httpContext, resetPasswordPage))
       );
+    }
+  }
+
+  @Test
+  public void sendPasswordResetConfirmationEmail_MUST_send_an_email_through_the_email_service() {
+    try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
+      userAccountService.sendPasswordResetConfirmationEmail(JANE_SMITH_EMAIL);
+      verify(getEmailProvider()).sendEmail(eq(JANE_SMITH_EMAIL), any(String.class), any(Html.class));
     }
   }
 

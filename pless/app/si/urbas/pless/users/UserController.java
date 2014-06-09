@@ -88,6 +88,7 @@ public final class UserController extends PlessController {
       if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
         user.setPassword(newPassword);
         users().mergeUser(user);
+        getUserAccountService().sendPasswordResetConfirmationEmail(email);
         return ok();
       }
     } catch (Exception e) {
