@@ -1,6 +1,7 @@
 package si.urbas.pless.users;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import play.api.libs.json.JsValue;
 import play.api.libs.json.Json;
@@ -9,6 +10,7 @@ import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryFactory;
+import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
 
 import java.util.Calendar;
@@ -35,6 +37,8 @@ import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
+import static si.urbas.pless.util.RequestParameters.param;
+import static si.urbas.pless.util.RequestParameters.params;
 
 public class UserControllerTest extends PlessTest {
 
@@ -307,6 +311,37 @@ public class UserControllerTest extends PlessTest {
     PlessUser user = createUserAndRequestPasswordReset();
     resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
     verify(getUserAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
+  }
+
+  @Test
+  public void resetPasswordForm_MUST_return_a_form_with_two_password_input_fields() {
+    try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
+      Result result = UserController.resetPasswordForm(JOHN_SMITH_EMAIL, "");
+      assertThat(
+        contentAsString(result),
+        containsString("input type=\"password\"")
+      );
+    }
+  }
+
+  @Ignore
+  @Test
+  public void submitResetPassword_MUST_change_the_password() {
+//    ;
+    try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
+      when(httpContext.request.queryString()).thenReturn(
+        params(
+          param(UserController.EMAIL_PARAMETER, JOHN_SMITH_EMAIL),
+          param(UserController.PASSWORD_RESET_TOKEN_PARAMETER, JOHN_SMITH_EMAIL)
+        )
+      );
+
+      Result result = UserController.submitResetPassword();
+      assertThat(
+        contentAsString(result),
+        containsString("input type=\"password\"")
+      );
+    }
   }
 
   private static void setDefaultPasswordResetValidityDuration() {

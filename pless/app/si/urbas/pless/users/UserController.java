@@ -8,6 +8,7 @@ import si.urbas.pless.PlessController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
+import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
 import si.urbas.pless.users.views.html.PasswordResetView;
 import si.urbas.pless.util.ApiResponses;
 
@@ -31,6 +32,7 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_PARAMETER = "password";
   public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
   public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
+  public static final String PASSWORD_RESET_TOKEN_PARAMETER = "resetPasswordToken";
 
   public static Result signUp() {
     return signUp(getSignupService().getSignupForm().bindFromRequest());
@@ -78,23 +80,43 @@ public final class UserController extends PlessController {
     return okJson(passwordResetResponseMessage(email));
   }
 
-  public static Result resetPasswordPage(String email, String resetPasswordToken) {
-    return ok(PasswordResetView.apply(email));
+  public static Result resetPasswordForm(String email, String resetPasswordToken) {
+    Form<PasswordResetData> form = new Form<>(PasswordResetData.class);
+    form.fill(new PasswordResetData(email, resetPasswordToken));
+    return ok(PasswordResetView.apply(form));
+  }
+
+  public static Result submitResetPassword() {
+    Form<PasswordResetData> form = new Form<>(PasswordResetData.class).bindFromRequest();
+    if (!form.hasErrors() && form.get().passwordsMatch()) {
+      PasswordResetData passwordResetData = form.get();
+      if (resetPasswordImpl(passwordResetData.email, passwordResetData.resetPasswordToken, passwordResetData.password)) {
+        return ok(PasswordResetSuccessfulView.apply(passwordResetData.email));
+      }
+      flash("error", "The password could not be reset. Please submit another password reset request.");
+    }
+    return ok(PasswordResetView.apply(form));
   }
 
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
     try {
-      PlessUser user = users().findUserByEmail(email);
-      if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
-        user.setPassword(newPassword);
-        users().mergeUser(user);
-        getUserAccountService().sendPasswordResetConfirmationEmail(email);
+      if (resetPasswordImpl(email, resetPasswordToken, newPassword)) {
         return ok();
       }
     } catch (Exception e) {
       Logger.info("A password reset was attempted for non-existing user '" + email + "'.");
     }
     return badRequest();
+  }
+
+  private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {PlessUser user = users().findUserByEmail(email);
+    if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
+      user.setPassword(newPassword);
+      users().mergeUser(user);
+      getUserAccountService().sendPasswordResetConfirmationEmail(email);
+      return true;
+    }
+    return false;
   }
 
   @SafeVarargs

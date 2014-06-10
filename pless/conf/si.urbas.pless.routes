@@ -15,7 +15,8 @@ GET   /api/user/info       si.urbas.pless.users.UserController.info()
 POST  /api/user/info       si.urbas.pless.users.UserController.updateUserAccount()
 POST  /api/user/delete     si.urbas.pless.users.UserController.delete()
 POST  /api/user/requestPasswordReset  si.urbas.pless.users.UserController.requestPasswordReset(email)
-GET   /api/user/resetPassword         si.urbas.pless.users.UserController.resetPasswordPage(email, resetPasswordToken)
+GET   /user/resetPassword             si.urbas.pless.users.UserController.resetPasswordForm(email, resetPasswordToken)
+GET   /user/submitResetPassword       si.urbas.pless.users.UserController.submitResetPassword()
 POST  /api/user/resetPassword         si.urbas.pless.users.UserController.resetPassword(email, resetPasswordToken, newPassword)
 
 # Map static resources from the /public folder to the /assets URL path
