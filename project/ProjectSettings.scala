@@ -11,7 +11,7 @@ object ProjectSettings {
 
   lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in 'project/plugins.sbt'.")
 
-  lazy val plessCommonSettings: Seq[Setting[_]] = {
+  lazy val plessCommonSettings = {
     Seq(organization := "si.urbas") ++
       Sonatype.sonatypeSettings ++
       jacoco.settings ++
@@ -36,9 +36,13 @@ object ProjectSettings {
       si.urbas.sbtutils.docs.tasks
   }
 
-  lazy val plessProjectWithPlaySettings = ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+  lazy val plessProjectWithPlaySettings = {
+    ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+  }
 
-  lazy val rootSettings = ReleasePlugin.releaseSettings ++ plessProjectWithPlaySettings
+  lazy val rootSettings = {
+    ReleasePlugin.releaseSettings ++ ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+  }
 
   val pomExtraSettings = {
     <url>
