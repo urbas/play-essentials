@@ -9,13 +9,12 @@ resolvers ++= Seq(
 
 addSbtPlugin("si.urbas" % "sbt-pless" % "0.0.9")
 
-addSbtPlugin("de.johoop" % "jacoco4sbt" % "2.1.5")
-
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "0.8.3")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.3")
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "0.2.1")
 
-// Use the Play sbt plugin for Play projects
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.2")
+
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")

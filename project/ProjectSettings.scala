@@ -1,4 +1,3 @@
-import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 import ProjectInfo._
 import sbt._
 import sbt.Keys._
@@ -14,7 +13,6 @@ object ProjectSettings {
   lazy val plessCommonSettings = {
     Seq(organization := "si.urbas") ++
       Sonatype.sonatypeSettings ++
-      jacoco.settings ++
       Seq(
         pomExtra := pomExtraSettings,
         sources in doc in Compile := Nil,
@@ -22,7 +20,6 @@ object ProjectSettings {
         publishArtifact in(Compile, packageDoc) := true,
         publishArtifact in(Compile, packageSrc) := true,
         publishArtifact in(Test, packageSrc) := false,
-        parallelExecution in jacoco.Config := false,
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
         publishMavenStyle := true,
         SonatypeKeys.profileName := "org.xerial",
