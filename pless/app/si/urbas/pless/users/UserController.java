@@ -81,8 +81,8 @@ public final class UserController extends PlessController {
   }
 
   public static Result resetPasswordForm(String email, String resetPasswordToken) {
-    Form<PasswordResetData> form = new Form<>(PasswordResetData.class);
-    form.fill(new PasswordResetData(email, resetPasswordToken));
+    Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
+      .fill(new PasswordResetData(email, resetPasswordToken));
     return ok(PasswordResetView.apply(form));
   }
 
@@ -112,6 +112,8 @@ public final class UserController extends PlessController {
   private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {PlessUser user = users().findUserByEmail(email);
     if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
       user.setPassword(newPassword);
+      user.setPasswordResetCode(null);
+      user.setPasswordResetTimestamp(null);
       users().mergeUser(user);
       getUserAccountService().sendPasswordResetConfirmationEmail(email);
       return true;

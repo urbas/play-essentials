@@ -287,6 +287,21 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
+  public void resetPassword_MUST_return_badRequest_WHEN_called_a_second_time() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JOHN_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_not_reset_the_password_WHEN_called_a_second_time() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JOHN_SMITH_PASSWORD);
+    assertThat(fetchUser(JOHN_SMITH_EMAIL), is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
   public void resetPassword_MUST_return_badRequest_WHEN_the_password_reset_code_does_not_match() {
     createUserAndRequestPasswordReset();
     assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, "invalid request code", JANE_SMITH_PASSWORD)));
@@ -297,6 +312,20 @@ public class UserControllerTest extends PlessTest {
     PlessUser user = createUserAndRequestPasswordReset();
     movePasswordResetCodeTimestampIntoDistantPast(user);
     assertEquals(BAD_REQUEST, status(resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD)));
+  }
+
+  @Test
+  public void resetPassword_MUST_clear_the_password_reset_token_to() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    assertNull(fetchUser(JOHN_SMITH_EMAIL).getPasswordResetCode());
+  }
+
+  @Test
+  public void resetPassword_MUST_clear_the_password_reset_timestamp() {
+    PlessUser user = createUserAndRequestPasswordReset();
+    resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
+    assertNull(fetchUser(JOHN_SMITH_EMAIL).getPasswordResetTimestamp());
   }
 
   @Test
@@ -316,9 +345,10 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void resetPasswordForm_MUST_return_a_form_with_two_password_input_fields() {
     try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
-      Result result = UserController.resetPasswordForm(JOHN_SMITH_EMAIL, "");
+      Result result = UserController.resetPasswordForm(JOHN_SMITH_EMAIL, "password reset token");
+      String contentAsString = contentAsString(result);
       assertThat(
-        contentAsString(result),
+        contentAsString,
         containsString("input type=\"password\"")
       );
     }
@@ -327,7 +357,6 @@ public class UserControllerTest extends PlessTest {
   @Ignore
   @Test
   public void submitResetPassword_MUST_change_the_password() {
-//    ;
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
       when(httpContext.request.queryString()).thenReturn(
         params(
