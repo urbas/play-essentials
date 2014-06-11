@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.users.SignupService.CONFIG_SIGNUP_SERVICE;
+import static si.urbas.pless.users.UserAccountService.CONFIG_USER_ACCOUNT_SERVICE;
 
 public class MockedPlayApplication extends MockedApplication {
 
@@ -23,7 +23,7 @@ public class MockedPlayApplication extends MockedApplication {
       @Override
       public void invoke() {
         mockedApplication.temporaryServices.add(temporaryPlayApplication);
-        mockedApplication.temporaryServices.add(new TemporaryService(CONFIG_SIGNUP_SERVICE, null));
+        mockedApplication.temporaryServices.add(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
       }
     });
   }

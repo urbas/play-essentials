@@ -9,10 +9,8 @@ import si.urbas.pless.test.emailing.SingleEmailProvider;
 import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.test.users.HashMapUserRepository;
-import si.urbas.pless.test.users.TestSignupService;
 import si.urbas.pless.test.users.TestUserAccountService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.users.SignupService;
 import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.Body;
@@ -25,7 +23,6 @@ import static si.urbas.pless.emailing.EmailProvider.CONFIG_EMAIL_PROVIDER;
 import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
-import static si.urbas.pless.users.SignupService.CONFIG_SIGNUP_SERVICE;
 import static si.urbas.pless.users.UserAccountService.CONFIG_USER_ACCOUNT_SERVICE;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 
@@ -52,7 +49,6 @@ public class MockedApplication extends TestApplication {
         with(setSingletonForFactory(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
         with(setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
         with(setSingletonForFactory(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
-        with(new TemporaryService(CONFIG_SIGNUP_SERVICE, createSpiedSignupService()));
         with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, createSpiedUserAccountService()));
       }
     });
@@ -63,8 +59,6 @@ public class MockedApplication extends TestApplication {
   protected static ClientSessionStorage createSpiedHashMapClientSessionStorage() {return spy(new HashMapClientSessionStorage());}
 
   protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
-
-  protected static SignupService createSpiedSignupService() {return spy(new TestSignupService());}
 
   protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
 

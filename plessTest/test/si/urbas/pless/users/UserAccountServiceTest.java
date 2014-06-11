@@ -43,6 +43,7 @@ public class UserAccountServiceTest extends PlessTest {
   private final UserAccountService userAccountService = new UserAccountService();
   private HashMap<String, String[]> updateAccountParams;
   private PlessUser janeSmithUser;
+  private final PlessUser user = new PlessUser(0, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
 
   @Override
   @Before
@@ -56,15 +57,29 @@ public class UserAccountServiceTest extends PlessTest {
     janeSmithUser = getUserRepository().createUser(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
   }
 
-  @Override
-  protected TestApplication createTestApplication() {
-    return super.createTestApplication()
-      .with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
+  @Test
+  public void signupEmailContent_MUST_contain_the_activation_code_AND_the_username_AND_the_email_of_the_user() throws Exception {
+    try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
+      assertThat(
+        userAccountService.signupEmailContent(user).body(),
+        allOf(
+          containsString(user.getActivationCode()),
+          containsString(JOHN_SMITH_USERNAME),
+          containsString(JOHN_SMITH_EMAIL)
+        )
+      );
+    }
   }
 
   @Test
-  public void getUserAccountService_MUST_return_the_default_implementation_WHEN_not_configured() {
-    assertEquals(UserAccountService.class, getUserAccountService().getClass());
+  public void signupEmailContent_MUST_contain_the_activation_url() throws Exception {
+    try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
+      Call activationPageCall = UserController.activationPage(user.getEmail(), user.getActivationCode());
+      assertThat(
+        userAccountService.signupEmailContent(user).body(),
+        containsString(escapedAbsoluteUrl(httpContext, activationPageCall))
+      );
+    }
   }
 
   @Test
@@ -96,13 +111,6 @@ public class UserAccountServiceTest extends PlessTest {
   public void updateUser_MUST_not_update_the_password_when_it_is_not_given() {
     updateAccountParams.remove(PASSWORD_PARAMETER);
     assertUpdatedUserIs(is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
-  }
-
-  @Test
-  public void getUserAccountService_MUST_return_the_configured_implementation() {
-    try (TemporaryService userAccountService = new TemporaryService(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE, this.userAccountService)) {
-      assertEquals(userAccountService.serviceInstance, getUserAccountService());
-    }
   }
 
   @Test
@@ -140,6 +148,18 @@ public class UserAccountServiceTest extends PlessTest {
     }
   }
 
+  @Test
+  public void getUserAccountService_MUST_return_the_default_implementation_WHEN_not_configured() {
+    assertEquals(UserAccountService.class, getUserAccountService().getClass());
+  }
+
+  @Test
+  public void getUserAccountService_MUST_return_the_configured_implementation() {
+    try (TemporaryService userAccountService = new TemporaryService(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE, this.userAccountService)) {
+      assertEquals(userAccountService.serviceInstance, getUserAccountService());
+    }
+  }
+
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {
     assertThat(
       userAccountService.updateUser(getFromFromParams(), janeSmithUser),
@@ -148,5 +168,11 @@ public class UserAccountServiceTest extends PlessTest {
   }
 
   private Form<?> getFromFromParams() {return userAccountService.getAccountUpdateForm().bindFromRequest(updateAccountParams);}
+
+  @Override
+  protected TestApplication createTestApplication() {
+    return super.createTestApplication()
+      .with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
+  }
 
 }

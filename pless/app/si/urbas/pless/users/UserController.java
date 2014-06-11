@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.json.JsonResults.okJson;
-import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
@@ -35,7 +34,7 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_RESET_TOKEN_PARAMETER = "resetPasswordToken";
 
   public static Result signUp() {
-    return signUp(getSignupService().getSignupForm().bindFromRequest());
+    return signUp(getUserAccountService().getSignupForm().bindFromRequest());
   }
 
   public static Result activationPage(final String email, final String activationCode) {
@@ -123,7 +122,7 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   public static Result signUp(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    return signUp(getSignupService().getSignupForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+    return signUp(getUserAccountService().getSignupForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
   }
 
   @SafeVarargs
@@ -159,14 +158,14 @@ public final class UserController extends PlessController {
     if (signupForm.hasErrors()) {
       return formErrorAsJson(signupForm);
     }
-    return signUp(getSignupService().createUser(signupForm));
+    return signUp(getUserAccountService().createUser(signupForm));
   }
 
   public static Result signUp(PlessUser newUser) {
     try {
       users().persistUser(newUser);
-      getSignupService().afterUserPersisted(newUser);
-      getSignupService().sendSignupEmail(newUser);
+      getUserAccountService().afterUserPersisted(newUser);
+      getUserAccountService().sendSignupEmail(newUser);
       return ok();
     } catch (Exception ex) {
       Logger.info("Sign up error.", ex);

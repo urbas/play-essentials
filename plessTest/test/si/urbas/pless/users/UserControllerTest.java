@@ -29,7 +29,6 @@ import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.users.SignupService.getSignupService;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
@@ -74,24 +73,24 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void signUp_MUST_call_afterUserPersisted_of_SignupService() {
+  public void signUp_MUST_call_afterUserPersisted_of_UserAccountService() {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getSignupService()).afterUserPersisted(userMatchesJohnSmith());
+    verify(getUserAccountService()).afterUserPersisted(userMatchesJohnSmith());
   }
 
   @Test
-  public void signUp_MUST_not_call_afterUserPersisted_of_SignupService_WHEN_user_not_persisted() {
+  public void signUp_MUST_not_call_afterUserPersisted_of_UserAccountService_WHEN_user_not_persisted() {
     UserRepository userRepository = getUserRepository();
     doThrow(EXCEPTION_FOR_TESTING).when(userRepository).persistUser(userMatchesJohnSmith());
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getSignupService(), never()).afterUserPersisted(userMatchesJohnSmith());
+    verify(getUserAccountService(), never()).afterUserPersisted(userMatchesJohnSmith());
   }
 
   @Test
   public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
     Form<SignupData> signupForm = spy(Form.form(SignupData.class));
-    SignupService signupService = getSignupService();
-    doReturn(signupForm).when(signupService).getSignupForm();
+    UserAccountService userAccountService = getUserAccountService();
+    doReturn(signupForm).when(userAccountService).getSignupForm();
     doReturn(true).when(signupForm).hasErrors();
     doReturn(signupForm).when(signupForm).bindFromRequest();
     signUp();
@@ -99,9 +98,9 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void signUp_MUST_ask_the_SignupService_to_create_the_user() throws Exception {
+  public void signUp_MUST_ask_the_UserAccountService_to_create_the_user() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getSignupService()).createUser(any(Form.class));
+    verify(getUserAccountService()).createUser(any(Form.class));
   }
 
   @Test
