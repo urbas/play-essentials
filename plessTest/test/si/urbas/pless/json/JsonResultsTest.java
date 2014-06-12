@@ -14,7 +14,7 @@ import static si.urbas.pless.json.JsonResults.asContent;
 public class JsonResultsTest {
 
   private final JsString fooJsString = new JsString("foo");
-  private final ResponseHeader responseHeader = JsonResults.okJson(fooJsString).getWrappedSimpleResult().header();
+  private final ResponseHeader responseHeader = JsonResults.okJson(fooJsString).toScala().header();
   @SuppressWarnings("UnusedDeclaration")
   private final JsonResults jsonResults = new JsonResults();
 

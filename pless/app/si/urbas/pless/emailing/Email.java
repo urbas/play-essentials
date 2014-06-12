@@ -1,6 +1,6 @@
 package si.urbas.pless.emailing;
 
-import play.api.templates.Html;
+import play.twirl.api.Html;
 
 public interface Email {
   Email setFrom(String sender);

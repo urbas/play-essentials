@@ -34,11 +34,11 @@ object ProjectSettings {
   }
 
   lazy val plessProjectWithPlaySettings = {
-    ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+    ProjectSettings.plessCommonSettings
   }
 
   lazy val rootSettings = {
-    ReleasePlugin.releaseSettings ++ ProjectSettings.plessCommonSettings ++ play.Project.playJavaSettings
+    ReleasePlugin.releaseSettings ++ ProjectSettings.plessCommonSettings
   }
 
   val pomExtraSettings = {

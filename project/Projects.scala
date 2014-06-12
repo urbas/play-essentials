@@ -1,5 +1,6 @@
 import com.typesafe.sbt.pgp.PgpKeys._
-import play.Project._
+import play.PlayImport._
+import play._
 import sbt.Keys._
 import sbt._
 import sbtrelease.ReleasePlugin.ReleaseKeys._
@@ -12,29 +13,38 @@ import xerial.sbt.Sonatype.SonatypeKeys._
 object Projects {
 
   def root(project: Project, aggregatedProjects: ProjectReference*): Project = {
-    project.settings(rootProjectSettings: _*).aggregate(aggregatedProjects: _*)
+    project.settings(rootProjectSettings: _*)
+      .aggregate(aggregatedProjects: _*)
+      .enablePlugins(PlayJava)
   }
 
   def pless(project: Project): Project = {
     project.settings(plessProjectSettings: _*)
+      .enablePlugins(PlayJava)
   }
 
   def plessTest(project: Project, pless: Project): Project = {
-    project.settings(plessTestProjectSettings: _*).dependsOn(pless)
+    project.settings(plessTestProjectSettings: _*)
+      .dependsOn(pless)
+      .enablePlugins(PlayJava)
   }
 
   def plessJpa(project: Project, pless: Project): Project = {
-    project.settings(plessJpaProjectSettings: _*).dependsOn(pless)
+    project.settings(plessJpaProjectSettings: _*)
+      .dependsOn(pless)
+      .enablePlugins(PlayJava)
   }
 
   def plessJpaTest(project: Project, pless: Project, plessJpa: Project, plessTest: Project): Project = {
     project.settings(plessJpaTestProjectSettings: _*)
       .dependsOn(pless, plessJpa, plessTest)
+      .enablePlugins(PlayJava)
   }
 
   def plessJpaSample(project: Project, pless: Project, plessJpa: Project, plessTest: Project, plessJpaTest: Project): Project = {
     project.settings(plessJpaSampleProjectSettings: _*)
       .dependsOn(pless, plessJpa, plessTest, plessJpaTest)
+      .enablePlugins(PlayJava)
   }
 
   private def commonSettings(projectName: String) = Seq(

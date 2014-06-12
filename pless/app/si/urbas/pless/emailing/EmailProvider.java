@@ -1,6 +1,6 @@
 package si.urbas.pless.emailing;
 
-import play.api.templates.Html;
+import play.twirl.api.Html;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.SingletonFactory;
 

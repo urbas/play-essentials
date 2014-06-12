@@ -3,7 +3,7 @@ package si.urbas.pless.test.matchers;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import play.api.templates.Html;
+import play.twirl.api.Html;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;

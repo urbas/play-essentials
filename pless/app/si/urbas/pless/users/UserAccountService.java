@@ -1,6 +1,6 @@
 package si.urbas.pless.users;
 
-import play.api.templates.Html;
+import play.twirl.api.Html;
 import play.data.Form;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;

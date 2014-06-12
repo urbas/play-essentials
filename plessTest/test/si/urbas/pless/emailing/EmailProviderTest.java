@@ -1,8 +1,7 @@
 package si.urbas.pless.emailing;
 
 import org.junit.Test;
-import play.api.templates.Html;
-import scala.collection.mutable.StringBuilder;
+import play.twirl.api.Html;
 import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.emailing.SingleEmailProvider;
 import si.urbas.pless.test.util.PlessTest;
@@ -15,7 +14,7 @@ import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 public class EmailProviderTest extends PlessTest {
   private static final String EMAIL_RECIPIENT = "Jane Doe <jane.doe@example.com>";
   private static final String EMAIL_SUBJECT = "An email subject";
-  private static final Html EMAIL_HTML_BODY = new Html(new StringBuilder("Some html content..."));
+  private static final Html EMAIL_HTML_BODY = new Html("Some html content...");
   @SuppressWarnings("UnusedDeclaration")
   private final EmailingSingletons emailingSingletons = new EmailingSingletons();
 

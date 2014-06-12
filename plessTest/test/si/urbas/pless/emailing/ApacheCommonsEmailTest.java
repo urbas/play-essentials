@@ -1,14 +1,12 @@
 package si.urbas.pless.emailing;
 
-import static org.mockito.Mockito.*;
-
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.junit.Before;
 import org.junit.Test;
+import play.twirl.api.Html;
 
-import play.api.templates.Html;
-import scala.collection.mutable.StringBuilder;
+import static org.mockito.Mockito.*;
 
 public class ApacheCommonsEmailTest {
 
@@ -21,7 +19,7 @@ public class ApacheCommonsEmailTest {
   private static final String SMTP_PASSWORD = "smtp.password";
   private HtmlEmail wrappedEmail;
   private ApacheCommonsEmail apacheCommonsEmail;
-  final Html emptyHtmlBody = new Html(new StringBuilder());
+  final Html emptyHtmlBody = new Html("");
 
   @Before
   public void setUp() {
@@ -48,7 +46,7 @@ public class ApacheCommonsEmailTest {
     apacheCommonsEmail.setFrom(FOO);
     verify(wrappedEmail).setFrom(FOO);
   }
-  
+
   @SuppressWarnings("unchecked")
   @Test(expected = IllegalArgumentException.class)
   public void testSetFrom_throws() throws Exception {
@@ -61,7 +59,7 @@ public class ApacheCommonsEmailTest {
     apacheCommonsEmail.setRecipient(FOO);
     verify(wrappedEmail).addTo(FOO);
   }
-  
+
   @SuppressWarnings("unchecked")
   @Test(expected = IllegalArgumentException.class)
   public void testSetRecipient_throws() throws Exception {
@@ -80,7 +78,7 @@ public class ApacheCommonsEmailTest {
     apacheCommonsEmail.setBody(emptyHtmlBody);
     verify(wrappedEmail).setHtmlMsg("");
   }
-  
+
   @SuppressWarnings("unchecked")
   @Test(expected = IllegalArgumentException.class)
   public void testSetBody_throws() throws Exception {
@@ -93,7 +91,7 @@ public class ApacheCommonsEmailTest {
     apacheCommonsEmail.send();
     verify(wrappedEmail).send();
   }
-  
+
   @SuppressWarnings("unchecked")
   @Test(expected = IllegalStateException.class)
   public void testSend_throws() throws Exception {

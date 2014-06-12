@@ -1,10 +1,10 @@
 package si.urbas.pless.emailing;
 
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
+import play.twirl.api.Html;
+
 import static si.urbas.pless.util.StringUtils.isNullOrEmpty;
-
-import org.apache.commons.mail.*;
-
-import play.api.templates.Html;
 
 public class ApacheCommonsEmail implements Email {
   private final HtmlEmail wrappedEmail;

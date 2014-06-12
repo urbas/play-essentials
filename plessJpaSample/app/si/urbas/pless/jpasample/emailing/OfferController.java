@@ -1,7 +1,7 @@
 package si.urbas.pless.jpasample.emailing;
 
-import play.api.templates.Html;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.emailing.Email;
 import si.urbas.pless.jpasample.emailing.html.OfferUpdateEmail;
@@ -28,7 +28,7 @@ public class OfferController extends PlessController {
     emailing().sendEmail(userToNotify.getEmail(), subject, emailBody);
     // ENDSNIPPET: sendEmail
     String email = "";
-    Html htmlBody = new Html(null);
+    Html htmlBody = new Html("");
     // SNIPPET: simpleSendEmail
     emailing().sendEmail(email, subject, htmlBody);
     // ENDSNIPPET: simpleSendEmail
@@ -38,7 +38,7 @@ public class OfferController extends PlessController {
     String recipient = "";
     String sender = "";
     String subject = "";
-    Html body = new Html(null);
+    Html body = new Html("");
     // SNIPPET: complexSendEmail
     Email email = emailing().createEmail();
     email.setSubject(subject);
