@@ -1,14 +1,13 @@
 import ProjectInfo._
-import sbt._
 import sbt.Keys._
+import sbt._
 import sbtrelease.ReleasePlugin
-import si.urbas.sbtutils.textfiles.TextFileManipulation._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
 
 object ProjectSettings {
 
-  lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in 'project/plugins.sbt'.")
+  lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in the 'README.md' file.")
 
   lazy val plessCommonSettings = {
     Seq(organization := "si.urbas") ++
@@ -23,11 +22,7 @@ object ProjectSettings {
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
         publishMavenStyle := true,
         SonatypeKeys.profileName := "org.xerial",
-        javacOptions += "-Xlint:unchecked",
-        bumpPlessVersionsInReadmeMdFile := {
-          bumpVersionInFile(readmeMdFile, organization.value, "pless", version.value)
-          bumpVersionInFile(readmeMdFile, organization.value, "pless-test", version.value)
-        }
+        javacOptions += "-Xlint:unchecked"
       ) ++
       si.urbas.sbtutils.textfiles.tasks ++
       si.urbas.sbtutils.docs.tasks
@@ -76,7 +71,5 @@ object ProjectSettings {
         </developer>
       </developers>
   }
-
-  lazy val readmeMdFile = file("README.md")
 
 }

@@ -7,6 +7,7 @@ import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleaseStateTransformations._
 import si.urbas.sbtutils.docs._
 import si.urbas.sbtutils.releases.ReleaseProcessTransformation
+import si.urbas.sbtutils.textfiles.TextFileManipulation._
 import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype.SonatypeKeys._
 
@@ -55,6 +56,12 @@ object Projects {
     commonSettings("pless-root") ++ ProjectSettings.rootSettings ++
       Seq(
         docsOutputDir := file("."),
+        readmeMdFile := file("README.md"),
+        ProjectSettings.bumpPlessVersionsInReadmeMdFile := {
+          streams.value.log.error(s"What the fuck: ${readmeMdFile.value.getCanonicalPath}")
+          bumpVersionInFile(readmeMdFile.value, organization.value, "pless", version.value)
+          bumpVersionInFile(readmeMdFile.value, organization.value, "pless-test", version.value)
+        },
         releaseProcess := ReleaseProcessTransformation
           .insertTasks(ProjectSettings.bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
           .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
