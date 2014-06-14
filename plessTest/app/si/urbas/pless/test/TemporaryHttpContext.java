@@ -16,7 +16,7 @@ public class TemporaryHttpContext implements AutoCloseable {
   public final Http.Request request;
 
   public TemporaryHttpContext() {
-    this(new HashMap<String, String>());
+    this(new HashMap<>());
   }
 
   public TemporaryHttpContext(Map<String, String> flashData) {

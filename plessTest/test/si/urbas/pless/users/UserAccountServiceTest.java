@@ -155,9 +155,7 @@ public class UserAccountServiceTest extends PlessTest {
 
   @Test
   public void getUserAccountService_MUST_return_the_configured_implementation() {
-    try (TemporaryService userAccountService = new TemporaryService(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE, this.userAccountService)) {
-      assertEquals(userAccountService.serviceInstance, getUserAccountService());
-    }
+    withService(CONFIG_USER_ACCOUNT_SERVICE, userAccountService, service -> assertEquals(userAccountService, getUserAccountService()));
   }
 
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {
