@@ -1,11 +1,12 @@
 package si.urbas.pless.users;
 
-import play.twirl.api.Html;
 import play.data.Form;
+import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;
 import si.urbas.pless.users.emails.html.PasswordResetEmail;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
+import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
@@ -17,6 +18,7 @@ import static si.urbas.pless.users.UserRepository.getUserRepository;
  * the configuration key {@link si.urbas.pless.users.UserAccountService#CONFIG_USER_ACCOUNT_SERVICE} (see the README
  * file for more detailed instructions).
  */
+@PlessServiceConfigKey(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE)
 public class UserAccountService implements PlessService {
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
 
@@ -101,6 +103,6 @@ public class UserAccountService implements PlessService {
   }
 
   static class UserAccountServiceLoader {
-    public static final ServiceLoader<UserAccountService> INSTANCE = new ServiceLoader<>(CONFIG_USER_ACCOUNT_SERVICE, new UserAccountService());
+    public static final ServiceLoader<UserAccountService> INSTANCE = new ServiceLoader<>(new UserAccountService());
   }
 }

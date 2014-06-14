@@ -1,16 +1,15 @@
 package si.urbas.pless.users;
 
 import si.urbas.pless.ConfigurationException;
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
-import si.urbas.pless.util.SingletonFactory;
+import si.urbas.pless.PlessService;
+import si.urbas.pless.util.PlessServiceConfigKey;
+import si.urbas.pless.util.ServiceLoader;
 import si.urbas.pless.util.StringUtils;
 
 import java.util.List;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
-
-public abstract class UserRepository {
+@PlessServiceConfigKey(UserRepository.CONFIG_USER_REPOSITORY)
+public abstract class UserRepository implements PlessService {
 
   public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
 
@@ -42,17 +41,13 @@ public abstract class UserRepository {
   }
 
   public static UserRepository getUserRepository() {
-    return UserRepositorySingleton.INSTANCE.createInstance(getConfigurationSource());
+    return UserRepositoryServiceLoader.INSTANCE.getService();
   }
 
-  static class UserRepositorySingleton {
-    private static final SingletonFactory<UserRepository> INSTANCE = new SingletonFactory<>(CONFIG_USER_REPOSITORY, new DefaultUserRepositoryCreator());
-  }
-
-  public static class DefaultUserRepositoryCreator implements Factory<UserRepository> {
-    @Override
-    public UserRepository createInstance(ConfigurationSource configurationSource) {
+  static class UserRepositoryServiceLoader {
+    private static final ServiceLoader<UserRepository> INSTANCE = new ServiceLoader<UserRepository>(CONFIG_USER_REPOSITORY, () -> {
       throw new ConfigurationException("No user repository configured. Please select an implementation of the user repository and add it to your configuration. " + ConfigurationException.getFactoryConfigurationInstruction(CONFIG_USER_REPOSITORY, UserRepository.class));
-    }
+    });
   }
+
 }

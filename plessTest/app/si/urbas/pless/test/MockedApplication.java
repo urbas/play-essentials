@@ -13,7 +13,6 @@ import si.urbas.pless.test.users.TestUserAccountService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.users.UserRepository;
-import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
 
@@ -46,7 +45,7 @@ public class MockedApplication extends TestApplication {
       with(setSingletonForFactory(CONFIG_EMAIL_PROVIDER, emailProvider == null ? createSpiedEmailProvider() : emailProvider));
       with(setSingletonForFactory(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
       with(setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
-      with(setSingletonForFactory(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
+      with(new TemporaryService(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
       with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, createSpiedUserAccountService()));
     });
   }

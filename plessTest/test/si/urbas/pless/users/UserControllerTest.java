@@ -12,6 +12,7 @@ import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.util.Body;
 
 import java.util.Calendar;
 
@@ -152,12 +153,12 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
-    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_USER_REPOSITORY, mock(UserRepository.class))) {
+    withService(mock(UserRepository.class), () -> {
       UserRepository scopedUserRepository = getUserRepository();
       doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);
       verify(getEmailProvider(), never()).createEmail(getConfigurationSource());
-    }
+    });
   }
 
 
