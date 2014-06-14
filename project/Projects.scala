@@ -58,7 +58,6 @@ object Projects {
         docsOutputDir := file("."),
         readmeMdFile := file("README.md"),
         ProjectSettings.bumpPlessVersionsInReadmeMdFile := {
-          streams.value.log.error(s"What the fuck: ${readmeMdFile.value.getCanonicalPath}")
           bumpVersionInFile(readmeMdFile.value, organization.value, "pless", version.value)
           bumpVersionInFile(readmeMdFile.value, organization.value, "pless-test", version.value)
         },
