@@ -22,6 +22,7 @@ import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.*;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;

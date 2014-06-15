@@ -2,16 +2,16 @@ package si.urbas.pless.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import si.urbas.pless.sessions.SessionIdGenerator;
 import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
-import si.urbas.pless.sessions.SessionIdGenerator;
-import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.PlessUser;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
+import static si.urbas.pless.test.util.ScopedConfiguration.withMockConfig;
 import static si.urbas.pless.users.UserControllerTest.*;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
@@ -104,23 +104,23 @@ public class AuthenticationServiceTest {
 
   @Test
   public void getAuthenticationService_MUST_always_return_the_same_instance_WHEN_in_production_mode() throws Exception {
-    try (TemporaryConfiguration ignored = new TemporaryConfiguration()) {
+    withMockConfig(() -> {
       when(getConfigurationSource().isProduction()).thenReturn(true);
       assertThat(
         getAuthenticationService(),
         is(sameInstance(getAuthenticationService()))
       );
-    }
+    });
   }
 
   @Test
   public void getAuthenticationService_MUST_always_return_a_new_instance_WHEN_not_in_production_mode() throws Exception {
-    try (TemporaryConfiguration ignored = new TemporaryConfiguration()) {
-      assertThat(
-        getAuthenticationService(),
-        is(not(sameInstance(getAuthenticationService())))
-      );
-    }
+    withMockConfig(() ->
+        assertThat(
+          getAuthenticationService(),
+          is(not(sameInstance(getAuthenticationService())))
+        )
+    );
   }
 
 

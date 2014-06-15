@@ -9,7 +9,7 @@ import si.urbas.pless.users.PlessUser;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 
-public abstract class PlessTest implements ScopedServices {
+public abstract class PlessTest {
 
   protected TestApplication plessTestApplication;
 

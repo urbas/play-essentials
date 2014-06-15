@@ -42,7 +42,7 @@ public class MockedApplication extends TestApplication {
                            final UserRepository userRepository) {
     doInitialisation(() -> {
       with(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
-      with(setSingletonForFactory(CONFIG_EMAIL_PROVIDER, emailProvider == null ? createSpiedEmailProvider() : emailProvider));
+      with(new TemporaryService(CONFIG_EMAIL_PROVIDER, emailProvider == null ? createSpiedEmailProvider() : emailProvider));
       with(setSingletonForFactory(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
       with(setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
       with(new TemporaryService(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
@@ -50,15 +50,15 @@ public class MockedApplication extends TestApplication {
     });
   }
 
-  protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
+  public static EmailProvider createSpiedEmailProvider() {return createSpiedEmailProvider(mock(Email.class));}
 
   protected static ClientSessionStorage createSpiedHashMapClientSessionStorage() {return spy(new HashMapClientSessionStorage());}
 
   protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
 
-  protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
+  protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
-  public static EmailProvider createSpiedEmailProvider() {return createSpiedEmailProvider(mock(Email.class));}
+  protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
 
   public static EmailProvider createSpiedEmailProvider(Email emailToProvide) {
     EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));

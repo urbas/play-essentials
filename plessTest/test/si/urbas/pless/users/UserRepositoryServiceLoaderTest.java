@@ -7,6 +7,7 @@ import si.urbas.pless.test.util.PlessTest;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;

@@ -9,10 +9,8 @@ import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
-import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
-import si.urbas.pless.util.Body;
 
 import java.util.Calendar;
 
@@ -27,12 +25,11 @@ import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
-import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
-import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;

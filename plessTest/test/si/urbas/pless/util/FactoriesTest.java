@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.test.TemporaryFactory;
+import si.urbas.pless.test.util.ScopedConfiguration;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
@@ -12,6 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.test.util.ScopedConfiguration.withConfig;
 import static si.urbas.pless.util.Factories.*;
 
 public class FactoriesTest {
@@ -69,10 +71,10 @@ public class FactoriesTest {
 
   @Test
   public void getInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
-    try (TemporaryConfiguration ignored = new TemporaryConfiguration(configurationSource)) {
+    withConfig(configurationSource, () -> {
       when(configurationSource.isDevelopment()).thenReturn(true);
       assertThat(getDefaultInstanceCreator(), is(instanceOf(PlayApplicationInstanceCreator.class)));
-    }
+    });
   }
 
   @Test(expected = RuntimeException.class)

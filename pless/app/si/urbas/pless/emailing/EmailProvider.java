@@ -1,15 +1,18 @@
 package si.urbas.pless.emailing;
 
 import play.twirl.api.Html;
+import si.urbas.pless.PlessService;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.SingletonFactory;
+import si.urbas.pless.util.PlessServiceConfigKey;
+import si.urbas.pless.util.ServiceLoader;
 
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public abstract class EmailProvider {
+@PlessServiceConfigKey(EmailProvider.CONFIG_EMAIL_PROVIDER)
+public abstract class EmailProvider implements PlessService {
   /**
    * The Application Configuration entry that specifies the 'from' address.
-   * <p/>
+   * <p>
    * This address will appear in the email of the addressees.
    */
   public static final String CONFIG_SMTP_FROM = "smtp.from";
@@ -32,13 +35,12 @@ public abstract class EmailProvider {
   }
 
   public static EmailProvider getEmailProvider() {
-    return EmailingSingletons.EMAIL_PROVIDER_FACTORY
-      .createInstance(getConfigurationSource());
+    return EmailProviderServiceLoader.INSTANCE.getService();
   }
 
   public abstract Email createEmail(ConfigurationSource configurationSource);
 
-  static class EmailingSingletons {
-    static final SingletonFactory<EmailProvider> EMAIL_PROVIDER_FACTORY = new SingletonFactory<>(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());
+  static class EmailProviderServiceLoader {
+    static final ServiceLoader<EmailProvider> INSTANCE = new ServiceLoader<>(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());
   }
 }

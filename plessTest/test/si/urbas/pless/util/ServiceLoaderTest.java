@@ -13,10 +13,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAME;
 
-public class ServiceLoaderTest implements ScopedServices {
+public class ServiceLoaderTest {
 
   private static final TestPlessServiceA DEFAULT_SERVICE_INSTANCE = mock(TestPlessServiceA.class);
   private static final TestPlessServiceB DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION = mock(TestPlessServiceB.class);

@@ -1,12 +1,13 @@
 package si.urbas.pless.emailing;
 
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
+import si.urbas.pless.util.Supplier;
 
-public class DefaultEmailProviderFactory implements Factory<EmailProvider> {
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+
+public class DefaultEmailProviderFactory implements Supplier<EmailProvider> {
   @Override
-  public EmailProvider createInstance(ConfigurationSource configurationSource) {
-    if (configurationSource.isProduction()) {
+  public EmailProvider get() {
+    if (getConfigurationSource().isProduction()) {
       return new ApacheCommonsEmailProvider();
     } else {
       return new LoggingNoOpEmailProvider();

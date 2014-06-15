@@ -1,50 +1,57 @@
 package si.urbas.pless.emailing;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import si.urbas.pless.test.util.TemporaryConfiguration;
+import si.urbas.pless.util.ConfigurationSource;
+
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import si.urbas.pless.util.ConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 
 public class DefaultEmailProviderFactoryTest {
 
-  private ConfigurationSource configurationSource;
   private DefaultEmailProviderFactory defaultEmailProviderCreator;
-  
+  private TemporaryConfiguration temporaryConfiguration;
+
   @Before
   public void setUp() {
-    configurationSource = mock(ConfigurationSource.class);
     defaultEmailProviderCreator = new DefaultEmailProviderFactory();
+    temporaryConfiguration = new TemporaryConfiguration(mock(ConfigurationSource.class));
+  }
+
+  @After
+  public void tearDown() {
+      temporaryConfiguration.close();
   }
 
   @Test
   public void create_MUST_return_ApacheEmailProvider_WHEN_in_production_mode() throws Exception {
-    when(configurationSource.isProduction()).thenReturn(true);
+    when(getConfigurationSource().isProduction()).thenReturn(true);
     assertThat(
-      defaultEmailProviderCreator.createInstance(configurationSource),
+      defaultEmailProviderCreator.get(),
       is(instanceOf(ApacheCommonsEmailProvider.class))
     );
   }
-  
+
   @Test
   public void create_MUST_return_a_logging_mailer_WHEN_in_development_mode() throws Exception {
-    when(configurationSource.isDevelopment()).thenReturn(true);
+    when(getConfigurationSource().isDevelopment()).thenReturn(true);
     assertThat(
-      defaultEmailProviderCreator.createInstance(configurationSource),
+      defaultEmailProviderCreator.get(),
       is(instanceOf(LoggingNoOpEmailProvider.class))
     );
   }
-  
+
   @Test
   public void create_MUST_return_a_logging_mailer_WHEN_in_test_mode() throws Exception {
     assertThat(
-      defaultEmailProviderCreator.createInstance(configurationSource),
+      defaultEmailProviderCreator.get(),
       is(instanceOf(LoggingNoOpEmailProvider.class))
     );
   }

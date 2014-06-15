@@ -6,7 +6,6 @@ import si.urbas.pless.db.TransactionCallback;
 import si.urbas.pless.db.TransactionFunction;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.test.JpaApplication;
-import si.urbas.pless.test.TemporaryFactory;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.util.PlessTest;
 
@@ -15,8 +14,7 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.PlessController.emailing;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
-import static si.urbas.pless.emailing.EmailProvider.CONFIG_EMAIL_PROVIDER;
-import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 
 public class PlessJpaControllerTest extends PlessTest {
 
@@ -44,9 +42,7 @@ public class PlessJpaControllerTest extends PlessTest {
   @Test
   public void emailing_MUST_return_the_configured_emailing_service() throws Exception {
     EmailProvider emailProvider = mock(EmailProvider.class);
-    try (TemporaryFactory ignored = setSingletonForFactory(CONFIG_EMAIL_PROVIDER, emailProvider)) {
-      assertEquals(emailProvider, emailing());
-    }
+    withService(emailProvider, () -> assertEquals(emailProvider, emailing()));
   }
 
   @Test
