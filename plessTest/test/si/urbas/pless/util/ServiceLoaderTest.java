@@ -1,17 +1,12 @@
 package si.urbas.pless.util;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.test.PlessMockConfigurationTest;
 import si.urbas.pless.test.TemporaryPlayApplication;
-import si.urbas.pless.test.util.ScopedServices;
-import si.urbas.pless.test.util.TemporaryConfiguration;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;

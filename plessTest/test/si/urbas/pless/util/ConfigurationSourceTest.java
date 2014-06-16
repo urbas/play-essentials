@@ -1,18 +1,14 @@
 package si.urbas.pless.util;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static si.urbas.pless.util.ConfigurationSource.ConfigurationSourceSingleton;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
-import static si.urbas.pless.util.ConfigurationSource.loadPlayConfiguration;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
+import si.urbas.pless.test.util.TemporaryConfiguration;
+
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static si.urbas.pless.util.ConfigurationSource.*;
 
 public class ConfigurationSourceTest {
 
@@ -51,7 +47,7 @@ public class ConfigurationSourceTest {
   @Test
   public void loadPlayConfigurationSource_MUST_return_a_play_configuration_source_WHEN_the_play_application_is_started() throws Exception {
     try (TemporaryPlayApplication ignored = new TemporaryPlayApplication()) {
-     assertThat(loadPlayConfiguration(), is(instanceOf(PlayApplicationConfigurationSource.class)));
+      assertThat(loadPlayConfiguration(), is(instanceOf(PlayApplicationConfigurationSource.class)));
     }
   }
 

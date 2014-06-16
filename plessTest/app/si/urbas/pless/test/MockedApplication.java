@@ -18,8 +18,6 @@ import si.urbas.pless.util.TemporaryService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.sessions.ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
-import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 
 public class MockedApplication extends TestApplication {
 
