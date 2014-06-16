@@ -18,12 +18,8 @@ import si.urbas.pless.util.TemporaryService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.emailing.EmailProvider.CONFIG_EMAIL_PROVIDER;
-import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
-import static si.urbas.pless.users.UserAccountService.CONFIG_USER_ACCOUNT_SERVICE;
-import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 
 public class MockedApplication extends TestApplication {
 
@@ -42,11 +38,11 @@ public class MockedApplication extends TestApplication {
                            final UserRepository userRepository) {
     doInitialisation(() -> {
       with(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
-      with(new TemporaryService(CONFIG_EMAIL_PROVIDER, emailProvider == null ? createSpiedEmailProvider() : emailProvider));
-      with(new TemporaryService(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
+      with(new TemporaryService(emailProvider == null ? createSpiedEmailProvider() : emailProvider));
+      with(new TemporaryService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
       with(setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
-      with(new TemporaryService(CONFIG_USER_REPOSITORY, userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
-      with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, createSpiedUserAccountService()));
+      with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
+      with(new TemporaryService(createSpiedUserAccountService()));
     });
   }
 

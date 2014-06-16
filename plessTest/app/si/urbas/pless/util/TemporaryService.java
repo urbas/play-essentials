@@ -1,8 +1,10 @@
 package si.urbas.pless.util;
 
 import si.urbas.pless.PlessService;
+import si.urbas.pless.emailing.EmailProvider;
 
 import static si.urbas.pless.util.ServiceLoader.getOverriddenService;
+import static si.urbas.pless.util.ServiceLoader.getServiceConfigKey;
 import static si.urbas.pless.util.ServiceLoader.overrideService;
 
 public class TemporaryService implements AutoCloseable {
@@ -15,6 +17,10 @@ public class TemporaryService implements AutoCloseable {
     this.serviceInstance = serviceInstance;
     oldOverriddenService = getOverriddenService(serviceConfigKey);
     overrideService(serviceConfigKey, serviceInstance);
+  }
+
+  public TemporaryService(PlessService plessService) {
+    this(getServiceConfigKey(plessService), plessService);
   }
 
   @Override
