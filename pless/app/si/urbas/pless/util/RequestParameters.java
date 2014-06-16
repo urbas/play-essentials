@@ -11,7 +11,7 @@ public class RequestParameters {
 
   @SafeVarargs
   public static HashMap<String, String[]> params(Map.Entry<String, String[]>... parameterList) {
-    return addParams(new HashMap<String, String[]>(), parameterList);
+    return addParams(new HashMap<>(), parameterList);
   }
 
   @SafeVarargs

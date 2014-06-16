@@ -18,8 +18,7 @@ public abstract class ConfigurationSource {
   }
 
   static ConfigurationSource loadPlayConfiguration() {
-    ConfigurationSource configurationSource;
-    configurationSource = new PlayApplicationConfigurationSource();
+    ConfigurationSource configurationSource = new PlayApplicationConfigurationSource();
     // NOTE: The following call throws if there is no Play application. We assume that we are in test mode when this
     // fails.
     configurationSource.isProduction();

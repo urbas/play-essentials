@@ -45,7 +45,7 @@ public abstract class UserRepository implements PlessService {
   }
 
   static class UserRepositoryServiceLoader {
-    private static final ServiceLoader<UserRepository> INSTANCE = new ServiceLoader<UserRepository>(CONFIG_USER_REPOSITORY, () -> {
+    private static final ServiceLoader<UserRepository> INSTANCE = new ServiceLoader<>(CONFIG_USER_REPOSITORY, () -> {
       throw new ConfigurationException("No user repository configured. Please select an implementation of the user repository and add it to your configuration. " + ConfigurationException.getFactoryConfigurationInstruction(CONFIG_USER_REPOSITORY, UserRepository.class));
     });
   }

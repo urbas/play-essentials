@@ -1,14 +1,19 @@
 package si.urbas.pless.util;
 
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static si.urbas.pless.util.ConfigurationSource.ConfigurationSourceSingleton;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.loadPlayConfiguration;
+
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.TemporaryPlayApplication;
-import si.urbas.pless.test.util.TemporaryConfiguration;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static si.urbas.pless.util.ConfigurationSource.*;
+import si.urbas.pless.test.util.TemporaryConfiguration;
+import si.urbas.pless.test.TemporaryPlayApplication;
 
 public class ConfigurationSourceTest {
 
@@ -24,19 +29,13 @@ public class ConfigurationSourceTest {
   @Test
   public void getInstance_MUST_return_the_scoped_configuration() throws Exception {
     try (TemporaryConfiguration scopedConfiguration = new TemporaryConfiguration()) {
-      assertEquals(
-        scopedConfiguration.currentConfigurationSource,
-        getConfigurationSource()
-      );
+      assertSame(scopedConfiguration.currentConfigurationSource, getConfigurationSource());
     }
   }
 
   @Test
   public void getInstance_MUST_always_return_the_same_instance_of_the_default_configuration_source() throws Exception {
-    assertEquals(
-      defaultPlayConfigurationSource,
-      getConfigurationSource()
-    );
+    assertSame(defaultPlayConfigurationSource, getConfigurationSource());
   }
 
   @Test(expected = Exception.class)
