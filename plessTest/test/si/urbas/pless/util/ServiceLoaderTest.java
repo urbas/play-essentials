@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.PlessService;
+import si.urbas.pless.test.PlessMockConfigurationTest;
 import si.urbas.pless.test.TemporaryPlayApplication;
 import si.urbas.pless.test.util.ScopedServices;
 import si.urbas.pless.test.util.TemporaryConfiguration;
@@ -17,24 +18,19 @@ import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAME;
 
-public class ServiceLoaderTest {
+public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   private static final TestPlessServiceA DEFAULT_SERVICE_INSTANCE = mock(TestPlessServiceA.class);
   private static final TestPlessServiceB DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION = mock(TestPlessServiceB.class);
   private final Class<DerivedTestPlessServiceA> CUSTOM_SERVICE_CLASS = DerivedTestPlessServiceA.class;
   private ServiceLoader<TestPlessServiceA> serviceLoader;
-  private TemporaryConfiguration temporaryConfiguration;
 
   @Before
-  public void setUp() throws Exception {
-    temporaryConfiguration = new TemporaryConfiguration();
+  @Override
+  public void setUp() {
+    super.setUp();
     configureServiceClass(CUSTOM_SERVICE_CLASS);
     serviceLoader = new ServiceLoader<>(DEFAULT_SERVICE_INSTANCE);
-  }
-
-  @After
-  public void tearDown() {
-    temporaryConfiguration.close();
   }
 
   @Test

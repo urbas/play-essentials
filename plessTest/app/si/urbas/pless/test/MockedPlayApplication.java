@@ -1,5 +1,6 @@
 package si.urbas.pless.test;
 
+import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
@@ -8,7 +9,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static si.urbas.pless.users.UserAccountService.CONFIG_USER_ACCOUNT_SERVICE;
 
 public class MockedPlayApplication extends MockedApplication {
 
@@ -20,7 +20,7 @@ public class MockedPlayApplication extends MockedApplication {
   public static void startTemporaryPlayApplication(final MockedApplication mockedApplication, final TemporaryPlayApplication temporaryPlayApplication) {
     mockedApplication.doInitialisation(() -> {
       mockedApplication.temporaryServices.add(temporaryPlayApplication);
-      mockedApplication.temporaryServices.add(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
+      mockedApplication.temporaryServices.add(new TemporaryService(UserAccountService.class, null));
     });
   }
 

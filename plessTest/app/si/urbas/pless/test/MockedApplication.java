@@ -40,7 +40,7 @@ public class MockedApplication extends TestApplication {
       with(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
       with(new TemporaryService(emailProvider == null ? createSpiedEmailProvider() : emailProvider));
       with(new TemporaryService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
-      with(setSingletonForFactory(CONFIG_SERVER_SESSION_STORAGE_FACTORY, serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
+      with(new TemporaryService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
       with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
       with(new TemporaryService(createSpiedUserAccountService()));
     });

@@ -1,10 +1,8 @@
 package si.urbas.pless.sessions;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import si.urbas.pless.test.PlessMockConfigurationTest;
 import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
-import si.urbas.pless.test.util.TemporaryConfiguration;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertSame;
@@ -16,21 +14,10 @@ import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStora
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
-public class ClientSessionStorageTest {
+public class ClientSessionStorageTest extends PlessMockConfigurationTest {
 
   @SuppressWarnings("UnusedDeclaration")
   private final ClientSessionStorage.ClientSessionStorageServiceLoader clientSessionStorageServiceLoader = new ClientSessionStorage.ClientSessionStorageServiceLoader();
-  private TemporaryConfiguration temporaryConfiguration;
-
-  @Before
-  public void setUp() {
-    temporaryConfiguration = new TemporaryConfiguration();
-  }
-
-  @After
-  public void tearDown() {
-    temporaryConfiguration.close();
-  }
 
   @Test
   public void getClientSessionStorage_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {

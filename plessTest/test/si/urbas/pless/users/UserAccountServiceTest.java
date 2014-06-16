@@ -171,7 +171,7 @@ public class UserAccountServiceTest extends PlessTest {
   @Override
   protected TestApplication createTestApplication() {
     return super.createTestApplication()
-      .with(new TemporaryService(CONFIG_USER_ACCOUNT_SERVICE, null));
+      .with(new TemporaryService(UserAccountService.class, null));
   }
 
 }

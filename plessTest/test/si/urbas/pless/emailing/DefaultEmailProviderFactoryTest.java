@@ -1,33 +1,25 @@
 package si.urbas.pless.emailing;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.test.PlessMockConfigurationTest;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 
-public class DefaultEmailProviderFactoryTest {
+public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest {
 
   private DefaultEmailProviderFactory defaultEmailProviderCreator;
-  private TemporaryConfiguration temporaryConfiguration;
 
   @Before
+  @Override
   public void setUp() {
+    super.setUp();
     defaultEmailProviderCreator = new DefaultEmailProviderFactory();
-    temporaryConfiguration = new TemporaryConfiguration(mock(ConfigurationSource.class));
-  }
-
-  @After
-  public void tearDown() {
-      temporaryConfiguration.close();
   }
 
   @Test

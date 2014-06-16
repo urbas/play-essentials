@@ -1,19 +1,12 @@
 package si.urbas.pless.sessions;
 
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
-import si.urbas.pless.util.SingletonFactory;
+import si.urbas.pless.PlessService;
+import si.urbas.pless.util.*;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
-
-public abstract class ServerSessionStorage {
+@PlessServiceConfigKey(ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY)
+public abstract class ServerSessionStorage implements PlessService {
 
   public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorageFactory";
-
-  public static ServerSessionStorage getServerSessionStorage() {
-    return ServerSessionStorageSingleton.INSTANCE
-      .createInstance(getConfigurationSource());
-  }
 
   public abstract void put(String key, String value, int expirationMillis);
 
@@ -21,15 +14,12 @@ public abstract class ServerSessionStorage {
 
   public abstract void remove(String key);
 
-  static class ServerSessionStorageSingleton {
-    private static final SingletonFactory<ServerSessionStorage> INSTANCE = new SingletonFactory<>(CONFIG_SERVER_SESSION_STORAGE_FACTORY, new DefaultSessionStorageFactory());
+  public static ServerSessionStorage getServerSessionStorage() {
+    return ServerSessionStorageServiceLoader.INSTANCE.getService();
   }
 
-  static final class DefaultSessionStorageFactory implements Factory<ServerSessionStorage> {
-    @Override
-    public ServerSessionStorage createInstance(ConfigurationSource configurationSource) {
-      return new PlayCacheServerSessionStorage();
-    }
+  static class ServerSessionStorageServiceLoader {
+    private static final ServiceLoader<ServerSessionStorage> INSTANCE = new ServiceLoader<>(CONFIG_SERVER_SESSION_STORAGE_FACTORY, PlayCacheServerSessionStorage::new);
   }
 
 }

@@ -8,14 +8,8 @@ import static si.urbas.pless.test.TemporaryFactory.setSingletonForFactory;
 
 public class ScopedServices {
   public static <T> T withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Supplier<T> body) {
-    try (TemporaryService ignored = new TemporaryService(ServiceLoader.getServiceConfigKey(serviceClass), serviceInstance)) {
+    try (TemporaryService ignored = new TemporaryService(serviceClass, serviceInstance)) {
       return body.get();
-    }
-  }
-
-  public static void withFactory(String configKeyFactory, Object singleTonInstance, Body body) {
-    try (TemporaryFactory ignored = setSingletonForFactory(configKeyFactory, singleTonInstance)) {
-      body.invoke();
     }
   }
 

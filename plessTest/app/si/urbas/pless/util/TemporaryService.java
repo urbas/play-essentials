@@ -1,26 +1,23 @@
 package si.urbas.pless.util;
 
 import si.urbas.pless.PlessService;
-import si.urbas.pless.emailing.EmailProvider;
 
-import static si.urbas.pless.util.ServiceLoader.getOverriddenService;
-import static si.urbas.pless.util.ServiceLoader.getServiceConfigKey;
-import static si.urbas.pless.util.ServiceLoader.overrideService;
+import static si.urbas.pless.util.ServiceLoader.*;
 
 public class TemporaryService implements AutoCloseable {
   private final Object oldOverriddenService;
   private final String configKeyServiceClassName;
   public final Object serviceInstance;
 
-  public TemporaryService(String serviceConfigKey, PlessService serviceInstance) {
-    this.configKeyServiceClassName = serviceConfigKey;
-    this.serviceInstance = serviceInstance;
-    oldOverriddenService = getOverriddenService(serviceConfigKey);
-    overrideService(serviceConfigKey, serviceInstance);
+  public TemporaryService(PlessService plessService) {
+    this(plessService.getClass(), plessService);
   }
 
-  public TemporaryService(PlessService plessService) {
-    this(getServiceConfigKey(plessService), plessService);
+  public TemporaryService(Class<? extends PlessService> serviceType, PlessService serviceInstance) {
+    this.configKeyServiceClassName = getServiceConfigKey(serviceType);
+    this.serviceInstance = serviceInstance;
+    oldOverriddenService = getOverriddenService(configKeyServiceClassName);
+    overrideService(configKeyServiceClassName, serviceInstance);
   }
 
   @Override
