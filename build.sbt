@@ -1,6 +1,6 @@
 import si.urbas.sbtutils.docs._
 
-scalaVersion := "2.11.1"
+scalaVersion in ThisBuild := "2.11.1"
 
 lazy val root = Projects.root(project.in(file(".")), pless, plessTest, plessJpa, plessJpaTest, plessJpaSample)
 
