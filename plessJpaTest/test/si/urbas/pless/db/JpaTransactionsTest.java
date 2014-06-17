@@ -3,17 +3,19 @@ package si.urbas.pless.db;
 import org.junit.Test;
 import si.urbas.pless.test.JpaApplication;
 import si.urbas.pless.test.TestApplication;
-import si.urbas.pless.test.db.TemporaryJpaTransactions;
-import si.urbas.pless.test.db.TestJpaTransactionsFactory;
+import si.urbas.pless.test.db.RawJpaTransactions;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.util.Body;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.db.JpaTransactions.*;
+import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
@@ -22,7 +24,7 @@ public class JpaTransactionsTest extends PlessTest {
   private TransactionFunction<Object> transactionFunction;
 
   @SuppressWarnings("UnusedDeclaration")
-  private final JpaTransactionsFactory jpaTransactionsFactory = new JpaTransactionsFactory();
+  private final JpaTransactionsServiceLoader jpaTransactionsServiceLoader = new JpaTransactionsServiceLoader();
 
   @SuppressWarnings("unchecked")
   @Override
@@ -79,43 +81,48 @@ public class JpaTransactionsTest extends PlessTest {
   }
 
   @Test
-  public void getJpaTransactions_MUST_return_the_configured_transaction_provider() throws Exception {
-    assertThat(
-      getJpaTransactions(),
-      is(sameInstance(TestJpaTransactionsFactory.currentJpaTransactions))
-    );
+  public void getJpaTransactions_MUST_return_play_jpa_transactions_WHEN_no_configuration_is_given() throws Exception {
+    withUnconfiguredJpaTransactions(() -> {
+      assertThat(
+        getJpaTransactions(),
+        is(instanceOf(PlayJpaTransactions.class))
+      );
+    });
+  }
+
+  @Test
+  public void getJpaTransactions_MUST_return_the_configured_jpa_transactions() throws Exception {
+    withService(JpaTransactions.class, null, () -> {
+      configureJpaTransactions(RawJpaTransactions.class.getCanonicalName());
+      assertThat(
+        getJpaTransactions(),
+        is(instanceOf(RawJpaTransactions.class))
+      );
+    });
   }
 
   @Test
   public void getJpaTransactions_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
-    assertThat(
-      getJpaTransactions(),
-      is(sameInstance(getScopedJpaTransactions()))
-    );
+    withUnconfiguredJpaTransactions(() -> {
+      when(getConfigurationSource().isProduction()).thenReturn(true);
+      assertSame(getJpaTransactions(), getJpaTransactions());
+    });
   }
 
   @Test
   public void getJpaTransactions_MUST_return_a_new_instance_all_the_time_WHEN_not_in_production_mode() throws Exception {
-    assertThat(
-      getJpaTransactions(),
-      is(not(sameInstance(getScopedJpaTransactions())))
-    );
+    withUnconfiguredJpaTransactions(() -> assertNotSame(getJpaTransactions(), getJpaTransactions()));
   }
 
-  @Test
-  public void getJpaTransactions_MUST_return_a_play_jpa_transaction_provider_WHEN_no_transaction_provider_is_configured() throws Exception {
-    when(getConfigurationSource().getString(CONFIG_JPA_TRANSACTIONS)).thenReturn(null);
-    assertThat(
-      getJpaTransactions(),
-      is(instanceOf(PlayJpaTransactions.class))
-    );
+  private static void withUnconfiguredJpaTransactions(Body body) {
+    withService(JpaTransactions.class, null, () -> {
+      configureJpaTransactions(null);
+      body.invoke();
+    });
   }
 
-  private JpaTransactions getScopedJpaTransactions() throws Exception {
-    try (TemporaryJpaTransactions ignored = new TemporaryJpaTransactions()) {
-      return getJpaTransactions();
-    }
+  private static void configureJpaTransactions(String jpaTransactionsCanonicalClassName) {
+    when(getConfigurationSource().getString(CONFIG_JPA_TRANSACTIONS)).thenReturn(jpaTransactionsCanonicalClassName);
   }
 
   private static class TestableJpaTransactions extends JpaTransactions {

@@ -9,6 +9,7 @@ import play.twirl.api.Html;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.test.util.ScopedServices;
 import si.urbas.pless.util.TemporaryService;
 
 import java.util.HashMap;
@@ -156,7 +157,7 @@ public class UserAccountServiceTest extends PlessTest {
 
   @Test
   public void getUserAccountService_MUST_return_the_configured_implementation() {
-    withService(userAccountService, () -> assertEquals(userAccountService, getUserAccountService()));
+    ScopedServices.withService(userAccountService, () -> assertEquals(userAccountService, getUserAccountService()));
   }
 
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {

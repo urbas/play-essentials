@@ -4,9 +4,9 @@ import si.urbas.pless.db.JpaTransactions;
 import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.JpaServerSessionStorage;
 import si.urbas.pless.test.db.RawJpaTransactions;
-import si.urbas.pless.test.db.TemporaryJpaTransactions;
 import si.urbas.pless.users.JpaUserRepository;
 import si.urbas.pless.util.ConfigurationSource;
+import si.urbas.pless.util.TemporaryService;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -35,7 +35,9 @@ public class JpaApplication extends MockedApplication {
       spy(new JpaUserRepository())
     );
 
-    doInitialisation(() -> temporaryServices.add(new TemporaryJpaTransactions(jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction)));
+    doInitialisation(() ->
+        with(new TemporaryService(jpaTransaction == null ? createSpiedRawJpaTransactions() : jpaTransaction))
+    );
 
     setConfigurationString(APP_CONFIG_JPA_DEFAULT, testPersistenceUnit);
   }
