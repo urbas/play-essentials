@@ -54,68 +54,54 @@ public class CachingFactoryTest {
 
   @Test
   public void createInstance_MUST_call_the_configured_factory() throws Exception {
-    withScopedTestFactory(new Body() {
-      @Override
-      public void invoke() {
-        assertEquals(
-          THE_FIRST_CONFIGURED_INSTANCE,
-          cachingFactory.createInstance(configurationSource)
-        );
-        verify(configuredFactory).createInstance(configurationSource);
-      }
+    withScopedTestFactory(() -> {
+      assertEquals(
+        THE_FIRST_CONFIGURED_INSTANCE,
+        cachingFactory.createInstance(configurationSource)
+      );
+      verify(configuredFactory).createInstance(configurationSource);
     });
   }
 
   @Test
   public void createInstance_MUST_call_the_configured_factory_each_time() throws Exception {
-    withScopedTestFactory(new Body() {
-      @Override
-      public void invoke() {
-        cachingFactory.createInstance(configurationSource);
-        assertEquals(
-          THE_SECOND_CONFIGURED_INSTANCE,
-          cachingFactory.createInstance(configurationSource)
-        );
-        verify(configuredFactory, times(2)).createInstance(configurationSource);
-      }
+    withScopedTestFactory(() -> {
+      cachingFactory.createInstance(configurationSource);
+      assertEquals(
+        THE_SECOND_CONFIGURED_INSTANCE,
+        cachingFactory.createInstance(configurationSource)
+      );
+      verify(configuredFactory, times(2)).createInstance(configurationSource);
     });
   }
 
   @Test
   public void createInstance_MUST_construct_multiple_factories_WHEN_in_test_mode() throws Exception {
-    withScopedTestFactory(new Body() {
-      @Override
-      public void invoke() {
-        cachingFactory.createInstance(configurationSource);
-        cachingFactory.createInstance(configurationSource);
-        assertEquals(2, ScopedTestFactory.getConstructorInvokations());
-      }
+    withScopedTestFactory(() -> {
+      cachingFactory.createInstance(configurationSource);
+      cachingFactory.createInstance(configurationSource);
+      assertEquals(2, ScopedTestFactory.getConstructorInvokations());
     });
   }
 
   @Test
   public void createInstance_MUST_construct_only_one_factory_WHEN_in_production() throws Exception {
     makeProduction();
-    withScopedTestFactory(new Body() {
-      @Override
-      public void invoke() {
-        cachingFactory.createInstance(configurationSource);
-        cachingFactory.createInstance(configurationSource);
-        assertEquals(1, ScopedTestFactory.getConstructorInvokations());
-      }
+    withScopedTestFactory(() -> {
+      cachingFactory.createInstance(configurationSource);
+      cachingFactory.createInstance(configurationSource);
+      assertEquals(1, ScopedTestFactory.getConstructorInvokations());
     });
   }
 
   @Test
   public void clearCache_MUST_lead_to_instantiating_the_factory_again() throws Exception {
     makeProduction();
-    withScopedTestFactory(new Body() {
-      public void invoke() {
-        cachingFactory.createInstance(configurationSource);
-        cachingFactory.clearCache();
-        cachingFactory.createInstance(configurationSource);
-        assertEquals(2, ScopedTestFactory.getConstructorInvokations());
-      }
+    withScopedTestFactory(() -> {
+      cachingFactory.createInstance(configurationSource);
+      cachingFactory.clearCache();
+      cachingFactory.createInstance(configurationSource);
+      assertEquals(2, ScopedTestFactory.getConstructorInvokations());
     });
   }
 

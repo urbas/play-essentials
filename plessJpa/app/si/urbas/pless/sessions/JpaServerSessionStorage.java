@@ -12,12 +12,9 @@ public class JpaServerSessionStorage extends ServerSessionStorage {
 
   @Override
   public void put(final String key, final String value, final int expirationMillis) {
-    getJpaTransactions().withTransaction(new TransactionCallback() {
-      @Override
-      public void invoke(EntityManager entityManager) {
-        JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
-        entityManager.persist(jpaServerSessionKeyValue);
-      }
+    getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+      JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
+      entityManager.persist(jpaServerSessionKeyValue);
     });
   }
 
@@ -46,24 +43,16 @@ public class JpaServerSessionStorage extends ServerSessionStorage {
   }
 
   private JpaServerSessionKeyValue fetchSessionValue(final String key) {
-    return getJpaTransactions().usingDb(new TransactionFunction<JpaServerSessionKeyValue>() {
-      @Override
-      public JpaServerSessionKeyValue invoke(EntityManager entityManager) {
-        return entityManager.find(JpaServerSessionKeyValue.class, key);
-      }
-    });
+    return getJpaTransactions().usingDb(entityManager -> entityManager.find(JpaServerSessionKeyValue.class, key));
   }
 
   private boolean removeSessionValue(final String key) {
-    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
-      @Override
-      public Boolean invoke(EntityManager entityManager) {
-        Query deleteSessionKeyQuery = entityManager
-          .createNamedQuery(JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY);
-        deleteSessionKeyQuery.setParameter("key", key);
-        int deletedRows = deleteSessionKeyQuery.executeUpdate();
-        return deletedRows > 0;
-      }
+    return getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+      Query deleteSessionKeyQuery = entityManager
+        .createNamedQuery(JpaServerSessionKeyValue.QUERY_DELETE_BY_KEY);
+      deleteSessionKeyQuery.setParameter("key", key);
+      int deletedRows = deleteSessionKeyQuery.executeUpdate();
+      return deletedRows > 0;
     });
   }
 

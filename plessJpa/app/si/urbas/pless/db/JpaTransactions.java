@@ -18,12 +18,9 @@ public abstract class JpaTransactions {
   }
 
   public void withTransaction(final TransactionCallback callback) {
-    withTransaction(new TransactionFunction<Void>() {
-      @Override
-      public Void invoke(EntityManager entityManager) {
-        callback.invoke(entityManager);
-        return null;
-      }
+    withTransaction((EntityManager entityManager) -> {
+      callback.invoke(entityManager);
+      return null;
     });
   }
 
