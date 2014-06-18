@@ -11,3 +11,5 @@
 /logs/
 /.settings/
 README.html
+
+*.log

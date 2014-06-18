@@ -115,6 +115,6 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   public static class DefaultInstanceCreator {
-    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
+    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(ServiceLoader.class.getClassLoader());
   }
 }
