@@ -9,9 +9,7 @@ public class PasswordResetData {
   protected String email;
   @Required
   protected String resetPasswordToken;
-  @Required
   protected String password;
-  @Required
   protected String passwordConfirmation;
 
   @SuppressWarnings("UnusedDeclaration")

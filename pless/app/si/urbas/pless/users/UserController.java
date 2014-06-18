@@ -32,6 +32,7 @@ public final class UserController extends PlessController {
   public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
   public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
   public static final String PASSWORD_RESET_TOKEN_PARAMETER = "resetPasswordToken";
+  private static final String PASSWORD_RESET_ERROR = "The password could not be reset. Please submit another password reset request.";
 
   public static Result signUp() {
     return signUp(getUserAccountService().getSignupForm().bindFromRequest());
@@ -92,7 +93,7 @@ public final class UserController extends PlessController {
       if (resetPasswordImpl(passwordResetData.email, passwordResetData.resetPasswordToken, passwordResetData.password)) {
         return ok(PasswordResetSuccessfulView.apply(passwordResetData.email));
       }
-      flash("error", "The password could not be reset. Please submit another password reset request.");
+      flash("error", PASSWORD_RESET_ERROR);
     }
     return ok(PasswordResetView.apply(form));
   }
@@ -105,10 +106,11 @@ public final class UserController extends PlessController {
     } catch (Exception e) {
       Logger.info("A password reset was attempted for non-existing user '" + email + "'.");
     }
-    return badRequest();
+    return badRequest(PASSWORD_RESET_ERROR);
   }
 
-  private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {PlessUser user = users().findUserByEmail(email);
+  private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {
+    PlessUser user = users().findUserByEmail(email);
     if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
       user.setPassword(newPassword);
       user.setPasswordResetCode(null);
