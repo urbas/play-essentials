@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ServiceLoader<T extends PlessService> {
 
   private static HashMap<String, Object> overriddenServices;
-  private final String serviceClassNameConfigKey;
+  private final String serviceConfigKey;
   private final ConfigurationSource configurationSource;
   private final Supplier<T> defaultService;
   private T cachedService;
@@ -24,12 +24,12 @@ public class ServiceLoader<T extends PlessService> {
     this(serviceConfigKey, null, defaultServiceCreator);
   }
 
-  public ServiceLoader(String serviceClassNameConfigKey, ConfigurationSource configurationSource, T defaultService) {
-    this(serviceClassNameConfigKey, configurationSource, () -> defaultService);
+  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, T defaultService) {
+    this(serviceConfigKey, configurationSource, () -> defaultService);
   }
 
-  public ServiceLoader(String serviceClassNameConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultService) {
-    this.serviceClassNameConfigKey = serviceClassNameConfigKey;
+  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultService) {
+    this.serviceConfigKey = serviceConfigKey;
     this.configurationSource = configurationSource;
     this.defaultService = defaultService;
   }
@@ -52,25 +52,21 @@ public class ServiceLoader<T extends PlessService> {
     return cachedService;
   }
 
-  static Object overrideService(String serviceClassNameConfigKey, Object service) {
+  static Object overrideService(String serviceConfigKey, Object service) {
     Object oldService = null;
     if (service == null) {
       if (overriddenServices != null) {
-        oldService = overriddenServices.remove(serviceClassNameConfigKey);
+        oldService = overriddenServices.remove(serviceConfigKey);
       }
     } else {
       createOverriddenServicesMap();
-      oldService = overriddenServices.put(serviceClassNameConfigKey, service);
+      oldService = overriddenServices.put(serviceConfigKey, service);
     }
     return oldService;
   }
 
   static Object getOverriddenService(String serviceClassName) {
-    Object overriddenService = null;
-    if (overriddenServices != null) {
-      overriddenService = overriddenServices.get(serviceClassName);
-    }
-    return overriddenService;
+    return overriddenServices == null ? null : overriddenServices.get(serviceClassName);
   }
 
   private void resetCacheIfTestMode() {
@@ -85,9 +81,9 @@ public class ServiceLoader<T extends PlessService> {
 
   @SuppressWarnings("unchecked")
   private T createService() {
-    Object overriddenService = getOverriddenService(serviceClassNameConfigKey);
+    Object overriddenService = getOverriddenService(serviceConfigKey);
     if (overriddenService != null) { return (T) overriddenService; }
-    String serviceClassName = getConfigurationSource().getString(serviceClassNameConfigKey);
+    String serviceClassName = getConfigurationSource().getString(serviceConfigKey);
     return serviceClassName == null ? defaultService.get() : createService(serviceClassName);
   }
 
