@@ -18,7 +18,7 @@ public abstract class JpaTransactions implements PlessService {
 
   public void withTransaction(final TransactionCallback callback) {
     withTransaction((EntityManager entityManager) -> {
-      callback.invoke(entityManager);
+      callback.accept(entityManager);
       return null;
     });
   }

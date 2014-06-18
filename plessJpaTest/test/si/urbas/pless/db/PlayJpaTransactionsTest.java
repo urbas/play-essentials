@@ -39,7 +39,7 @@ public class PlayJpaTransactionsTest extends PlayJpaControllerTest {
   @Test
   public void withTransaction_MUST_call_the_callback() throws Throwable {
     playJpaTransactions.withTransaction(transactionCallback);
-    verify(transactionCallback).invoke(any(EntityManager.class));
+    verify(transactionCallback).accept(any(EntityManager.class));
   }
 
   @Override
