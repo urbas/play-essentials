@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import si.urbas.pless.ConfigurationException;
 import si.urbas.pless.test.TemporaryFactory;
-import si.urbas.pless.test.util.ScopedConfiguration;
-import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
 import static org.hamcrest.Matchers.instanceOf;
@@ -14,6 +12,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedConfiguration.withConfig;
+import static si.urbas.pless.test.util.ScopedConfiguration.withMockConfig;
+import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static si.urbas.pless.util.Factories.*;
 
 public class FactoriesTest {
@@ -30,7 +30,7 @@ public class FactoriesTest {
   @SuppressWarnings("UnusedDeclaration")
   private final Factories factories = new Factories();
   @SuppressWarnings("UnusedDeclaration")
-  private final DefaultFactoryCreator defaultFactoryCreator = new DefaultFactoryCreator();
+  private final ServiceLoader.DefaultInstanceCreator defaultInstanceCreator = new ServiceLoader.DefaultInstanceCreator();
 
   @SuppressWarnings("unchecked")
   @Before
@@ -67,14 +67,6 @@ public class FactoriesTest {
   public void createInstance_MUST_throw_an_exception_WHEN_the_factory_could_not_be_constructed() throws Exception {
     when(configurationSource.isProduction()).thenReturn(true);
     createInstance(CONFIG_KEY_WRONG_CLASSNAME, defaultFactory, configurationSource);
-  }
-
-  @Test
-  public void getInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
-    withConfig(configurationSource, () -> {
-      when(configurationSource.isDevelopment()).thenReturn(true);
-      assertThat(getDefaultInstanceCreator(), is(instanceOf(PlayApplicationInstanceCreator.class)));
-    });
   }
 
   @Test(expected = RuntimeException.class)

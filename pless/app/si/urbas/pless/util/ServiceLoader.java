@@ -4,8 +4,6 @@ import si.urbas.pless.PlessService;
 
 import java.util.HashMap;
 
-import static si.urbas.pless.util.Factories.getDefaultInstanceCreator;
-
 public class ServiceLoader<T extends PlessService> {
 
   private static HashMap<String, Object> overriddenServices;
@@ -34,6 +32,16 @@ public class ServiceLoader<T extends PlessService> {
     this.serviceClassNameConfigKey = serviceClassNameConfigKey;
     this.configurationSource = configurationSource;
     this.defaultService = defaultService;
+  }
+
+  public static Function<String, Object> getDefaultInstanceCreator() {
+    // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
+    // that was running in development mode.
+    if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
+      return PlayApplicationInstanceCreator.getInstance();
+    } else {
+      return DefaultInstanceCreator.INSTANCE;
+    }
   }
 
   public T getService() {
@@ -104,5 +112,9 @@ public class ServiceLoader<T extends PlessService> {
       throw new IllegalArgumentException("The class '" + plessServiceClass + "' is not a Pless service. Custom Pless services must inherit from default Pless services (see implementations of '" + PlessService.class + "').");
     }
     return configKeyAnnotation.value();
+  }
+
+  public static class DefaultInstanceCreator {
+    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
   }
 }

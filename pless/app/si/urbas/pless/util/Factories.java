@@ -4,8 +4,6 @@ import si.urbas.pless.ConfigurationException;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
-
 public class Factories {
 
   private static ConcurrentHashMap<String, Factory<Object>> factories = new ConcurrentHashMap<>();
@@ -53,20 +51,10 @@ public class Factories {
   private static <T> Factory<T> createFactoryFromClassName(final String factoryClassName) {
     try {
       Factory<Object> overriddenFactory = getOverriddenFactory(factoryClassName);
-      return (Factory<T>) (overriddenFactory == null ? getDefaultInstanceCreator().invoke(factoryClassName) : overriddenFactory);
+      return (Factory<T>) (overriddenFactory == null ? ServiceLoader.getDefaultInstanceCreator().invoke(factoryClassName) : overriddenFactory);
     } catch (Exception ex) {
       throw new ConfigurationException("Could not create an instance via factory '"
         + factoryClassName + "'.", ex);
-    }
-  }
-
-  static Function<String, Object> getDefaultInstanceCreator() {
-    // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
-    // that was running in development mode.
-    if (getConfigurationSource().isDevelopment()) {
-      return PlayApplicationInstanceCreator.getInstance();
-    } else {
-      return DefaultFactoryCreator.INSTANCE;
     }
   }
 
@@ -76,10 +64,6 @@ public class Factories {
 
   public static Factory<Object> overrideFactory(String factoryClassName, Factory<Object> factory) {
     return factory == null ? factories.remove(factoryClassName) : factories.put(factoryClassName, factory);
-  }
-
-  static class DefaultFactoryCreator {
-    private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(Factories.class.getClassLoader());
   }
 
 }

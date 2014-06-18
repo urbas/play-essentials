@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ServiceLoader.getDefaultInstanceCreator;
 import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAME;
 
 public class ServiceLoaderTest extends PlessMockConfigurationTest {
@@ -97,6 +98,23 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
     when(configurationSource.getString(TestPlessServiceB.CONFIG_KEY_SERVICE_CLASS_NAME)).thenReturn(null);
     ServiceLoader<TestPlessServiceB> serviceLoaderWithConfiguration = new ServiceLoader<>(configurationSource, DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION);
     assertThat(serviceLoaderWithConfiguration.getService(), is(sameInstance(DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION)));
+  }
+
+  @Test
+  public void getDefaultInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
+    when(getConfigurationSource().isDevelopment()).thenReturn(true);
+    assertThat(getDefaultInstanceCreator(), is(instanceOf(PlayApplicationInstanceCreator.class)));
+  }
+
+  @Test
+  public void getDefaultInstanceCreator_MUST_return_the_default_class_loader_WHEN_in_production_mode() throws Exception {
+    when(getConfigurationSource().isProduction()).thenReturn(true);
+    assertThat(getDefaultInstanceCreator(), is(instanceOf(ClassLoaderInstanceCreator.class)));
+  }
+
+  @Test
+  public void getDefaultInstanceCreator_MUST_return_the_default_class_loader_WHEN_test_mode() throws Exception {
+    assertThat(getDefaultInstanceCreator(), is(instanceOf(ClassLoaderInstanceCreator.class)));
   }
 
   private String configureServiceClass(Class<? extends PlessService> serviceInstance) {
