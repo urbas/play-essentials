@@ -29,7 +29,7 @@ public abstract class JpaTransactions implements PlessService {
     try {
       entityManager = getEntityManager();
       tx = beginTransaction(entityManager);
-      T result = transactionFunction.invoke(entityManager);
+      T result = transactionFunction.apply(entityManager);
       commitTransaction(tx);
       return result;
     } catch (Exception ex) {
@@ -52,7 +52,7 @@ public abstract class JpaTransactions implements PlessService {
     EntityManager entityManager = null;
     try {
       entityManager = getEntityManager();
-      return databaseQueryFunction.invoke(entityManager);
+      return databaseQueryFunction.apply(entityManager);
     } finally {
       closeEntityManager(entityManager);
     }

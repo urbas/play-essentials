@@ -37,19 +37,19 @@ public class JpaTransactionsTest extends PlessTest {
   @Test
   public void withTransaction_MUST_call_the_transaction_function_with_the_entity_manager() {
     jpaTransactions.withTransaction(transactionFunction);
-    verify(transactionFunction).invoke(jpaTransactions.entityManager);
+    verify(transactionFunction).apply(jpaTransactions.entityManager);
   }
 
   @Test(expected = IllegalStateException.class)
   public void withTransaction_MUST_rethrow_exception() {
-    doThrow(new IllegalStateException()).when(transactionFunction).invoke(jpaTransactions.entityManager);
+    doThrow(new IllegalStateException()).when(transactionFunction).apply(jpaTransactions.entityManager);
     jpaTransactions.withTransaction(transactionFunction);
-    verify(transactionFunction).invoke(jpaTransactions.entityManager);
+    verify(transactionFunction).apply(jpaTransactions.entityManager);
   }
 
   @Test
   public void withTransaction_MUST_rollback_WHEN_the_transaction_function_throws() {
-    doThrow(new IllegalArgumentException()).when(transactionFunction).invoke(jpaTransactions.entityManager);
+    doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
     try {
       jpaTransactions.withTransaction(transactionFunction);
     } catch (Exception ignored) {
@@ -59,7 +59,7 @@ public class JpaTransactionsTest extends PlessTest {
 
   @Test
   public void withTransaction_MUST_not_commit_WHEN_the_transaction_function_throws() {
-    doThrow(new IllegalArgumentException()).when(transactionFunction).invoke(jpaTransactions.entityManager);
+    doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
     try {
       jpaTransactions.withTransaction(transactionFunction);
     } catch (Exception ignored) {

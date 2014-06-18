@@ -27,7 +27,7 @@ public class PlayJpaTransactionsTest extends PlayJpaControllerTest {
     playJpaTransactions = new PlayJpaTransactions();
     transactionCallback = mock(TransactionCallback.class);
     transactionFunction = mock(TransactionFunction.class);
-    when(transactionFunction.invoke(any(EntityManager.class))).thenReturn(TRANSACTION_RESULT);
+    when(transactionFunction.apply(any(EntityManager.class))).thenReturn(TRANSACTION_RESULT);
   }
 
   @Test
