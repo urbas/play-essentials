@@ -19,12 +19,4 @@ public class LoggingNoOpEmailProviderTest extends PlessTest {
       is(instanceOf(LoggingNoOpEmail.class))
     );
   }
-
-  @Test
-  public void createInstance_MUST_create_a_logging_email_provider_instance() throws Exception {
-    assertThat(
-      loggingNoOpEmailProvider.createInstance(getConfigurationSource()),
-      is(instanceOf(LoggingNoOpEmailProvider.class))
-    );
-  }
 }
