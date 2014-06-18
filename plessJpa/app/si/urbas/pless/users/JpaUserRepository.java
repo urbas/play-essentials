@@ -1,9 +1,5 @@
 package si.urbas.pless.users;
 
-import si.urbas.pless.db.TransactionCallback;
-import si.urbas.pless.db.TransactionFunction;
-import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Factory;
 import si.urbas.pless.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -15,89 +11,69 @@ import java.util.List;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
 import static si.urbas.pless.users.JpaPlessUser.*;
 
-public class JpaUserRepository extends UserRepository implements Factory<UserRepository> {
+public class JpaUserRepository extends UserRepository {
 
   @Override
   public PlessUser findUserByEmail(final String email) {
-    return getJpaTransactions().usingDb(new TransactionFunction<PlessUser>() {
-      @Override
-      public PlessUser invoke(EntityManager entityManager) {
-        TypedQuery<JpaPlessUser> usersByEmailQuery = entityManager
-          .createNamedQuery(QUERY_GET_BY_EMAIL, JpaPlessUser.class);
-        usersByEmailQuery.setParameter("email", email);
-        return usersByEmailQuery.getSingleResult();
-      }
+    return getJpaTransactions().usingDb(entityManager -> {
+      TypedQuery<JpaPlessUser> usersByEmailQuery = entityManager
+        .createNamedQuery(QUERY_GET_BY_EMAIL, JpaPlessUser.class);
+      usersByEmailQuery.setParameter("email", email);
+      return usersByEmailQuery.getSingleResult();
     });
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<PlessUser> getAllUsers() {
-    return getJpaTransactions().usingDb(new TransactionFunction<List<PlessUser>>() {
-      @Override
-      public List<PlessUser> invoke(EntityManager entityManager) {
-        return entityManager
-          .createNamedQuery(QUERY_GET_ALL)
-          .getResultList();
-      }
-    });
+    return getJpaTransactions().usingDb(entityManager -> entityManager
+      .createNamedQuery(QUERY_GET_ALL)
+      .getResultList());
   }
 
   @Override
   public void persistUser(final PlessUser user) {
     assertUserPreconditionsForPersist(user);
-    getJpaTransactions().withTransaction(new TransactionCallback() {
-      @Override
-      public void invoke(EntityManager entityManager) {
-        String validationError = user.validateForPersist();
-        if (validationError == null) {
-          entityManager.persist(user);
-        } else {
-          throwPersistUserException("Validation error: " + validationError, user);
-        }
+    getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+      String validationError = user.validateForPersist();
+      if (validationError == null) {
+        entityManager.persist(user);
+      } else {
+        throwPersistUserException("Validation error: " + validationError, user);
       }
     });
   }
 
   @Override
   public boolean activateUser(final String userEmail, final String activationCode) {
-    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
-      @Override
-      public Boolean invoke(EntityManager entityManager) {
-        Query usersByEmailQuery = entityManager
-          .createNamedQuery(QUERY_ACTIVATE_USER);
-        usersByEmailQuery.setParameter("email", userEmail);
-        usersByEmailQuery.setParameter("activationCode", activationCode);
-        return usersByEmailQuery.executeUpdate() > 0;
-      }
+    return getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+      Query usersByEmailQuery = entityManager
+        .createNamedQuery(QUERY_ACTIVATE_USER);
+      usersByEmailQuery.setParameter("email", userEmail);
+      usersByEmailQuery.setParameter("activationCode", activationCode);
+      return usersByEmailQuery.executeUpdate() > 0;
     });
   }
 
   @Override
   public boolean delete(final String userEmail) {
-    return getJpaTransactions().withTransaction(new TransactionFunction<Boolean>() {
-      @Override
-      public Boolean invoke(EntityManager entityManager) {
-        Query deleteUserQuery = entityManager
-          .createNamedQuery(QUERY_DELETE_USER);
-        deleteUserQuery.setParameter("email", userEmail);
-        int deletedRows = deleteUserQuery.executeUpdate();
-        return deletedRows > 0;
-      }
+    return getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+      Query deleteUserQuery = entityManager
+        .createNamedQuery(QUERY_DELETE_USER);
+      deleteUserQuery.setParameter("email", userEmail);
+      int deletedRows = deleteUserQuery.executeUpdate();
+      return deletedRows > 0;
     });
   }
 
   @Override
   public PlessUser findUserById(final long userId) {
-    return getJpaTransactions().usingDb(new TransactionFunction<PlessUser>() {
-      @Override
-      public PlessUser invoke(EntityManager entityManager) {
-        final JpaPlessUser foundUser = entityManager.find(JpaPlessUser.class, userId);
-        if (foundUser == null) {
-          throw new NoResultException("Could not find the user with the id " + userId);
-        }
-        return foundUser;
+    return getJpaTransactions().usingDb(entityManager -> {
+      final JpaPlessUser foundUser = entityManager.find(JpaPlessUser.class, userId);
+      if (foundUser == null) {
+        throw new NoResultException("Could not find the user with the id " + userId);
       }
+      return foundUser;
     });
   }
 
@@ -106,22 +82,12 @@ public class JpaUserRepository extends UserRepository implements Factory<UserRep
     if (updatedUser.getId() <= 0) {
       throw new RuntimeException("Could not apply changes to the user. The user with the ID '" + updatedUser.getId() + "' was not persisted in this user repository.");
     }
-    getJpaTransactions().withTransaction(new TransactionCallback() {
-      @Override
-      public void invoke(EntityManager entityManager) {
-        entityManager.merge(updatedUser);
-      }
-    });
+    getJpaTransactions().withTransaction((EntityManager entityManager) -> entityManager.merge(updatedUser));
   }
 
   @Override
   public PlessUser createUser(String email, String username, String password) {
     return new JpaPlessUser(email, username, password);
-  }
-
-  @Override
-  public UserRepository createInstance(ConfigurationSource configurationSource) {
-    return new JpaUserRepository();
   }
 
   private void assertUserPreconditionsForPersist(PlessUser user) {

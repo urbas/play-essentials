@@ -2,11 +2,11 @@ package si.urbas.pless.util;
 
 import play.Play;
 
-class PlayApplicationInstanceCreator implements Function<String, Object> {
+class PlayApplicationInstanceCreator implements java.util.function.Function<String, Object> {
   public static final PlayApplicationInstanceCreator INSTANCE = new PlayApplicationInstanceCreator();
 
   @Override
-  public Object invoke(String s) {
+  public Object apply(String s) {
     try {
       return Play.application().classloader().loadClass(s).newInstance();
     } catch (Exception e) {
@@ -15,7 +15,7 @@ class PlayApplicationInstanceCreator implements Function<String, Object> {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> Function<String, T> getInstance() {
-    return (Function<String, T>) INSTANCE;
+  public static <T> java.util.function.Function<String, T> getInstance() {
+    return (java.util.function.Function<String, T>) INSTANCE;
   }
 }

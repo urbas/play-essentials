@@ -34,7 +34,7 @@ public class ServiceLoader<T extends PlessService> {
     this.defaultService = defaultService;
   }
 
-  public static Function<String, Object> getDefaultInstanceCreator() {
+  public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode.
     if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
@@ -89,7 +89,7 @@ public class ServiceLoader<T extends PlessService> {
 
   @SuppressWarnings("unchecked")
   private T createService(String serviceClassName) {
-    return (T) (getDefaultInstanceCreator().invoke(serviceClassName));
+    return (T) (getDefaultInstanceCreator().apply(serviceClassName));
   }
 
   private static void createOverriddenServicesMap() {
