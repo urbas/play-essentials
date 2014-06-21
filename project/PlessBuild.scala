@@ -99,8 +99,8 @@ object PlessBuild extends Build {
     commonSettings("pless-root") ++
       ReleasePlugin.releaseSettings ++
       Seq(
-        docsOutputDir := file("."),
-        readmeMdFile := file("README.md"),
+        docsOutputDir := baseDirectory.value,
+        readmeMdFile := baseDirectory.value / "README.md",
         bumpPlessVersionsInReadmeMdFile := {
           bumpVersionInFile(readmeMdFile.value, organization.value, "pless", version.value)
           bumpVersionInFile(readmeMdFile.value, organization.value, "pless-test", version.value)
@@ -109,7 +109,10 @@ object PlessBuild extends Build {
           .insertTasks(bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
           .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
           .in(releaseProcess.value),
-        docsSnippetDirs ++= Seq("app/si/urbas/pless", "test/si/urbas/pless", "conf").map(plessJpaSample.base / _)
+        docsSnippetDirs ++= {
+          Seq("app/si/urbas/pless", "test/si/urbas/pless", "conf")
+            .map(baseDirectory.in(plessJpaSample).value / _)
+        }
       )
   }
 
