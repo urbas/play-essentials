@@ -1,4 +1,5 @@
 import com.typesafe.sbt.pgp.PgpKeys._
+import org.fusesource.scalate.Binding
 import play.PlayImport._
 import play._
 import sbt.Keys._
@@ -21,8 +22,6 @@ object PlessBuild extends Build {
   val projectScmUrl = "git@github.com:urbas/play-essentials.git"
   val ownerName = "urbas"
   val ownerUrl = "https://github.com/urbas"
-
-  lazy val bumpPlessVersionsInReadmeMdFile = taskKey[Unit]("Replaces any references to the version of this project in the 'README.md' file.")
 
   override def settings: Seq[Def.Setting[_]] = {
     super.settings ++
@@ -57,36 +56,36 @@ object PlessBuild extends Build {
     .enablePlugins(PlayJava)
 
   lazy val plessTest = Project(
-      id = "plessTest",
-      base = file("plessTest"),
-      settings = plessTestProjectSettings,
-      dependencies = Seq(pless)
-    )
-      .enablePlugins(PlayJava)
+    id = "plessTest",
+    base = file("plessTest"),
+    settings = plessTestProjectSettings,
+    dependencies = Seq(pless)
+  )
+    .enablePlugins(PlayJava)
 
   lazy val plessJpa = Project(
-      id = "plessJpa",
-      base = file("plessJpa"),
-      settings = plessJpaProjectSettings,
-      dependencies = Seq(pless)
-    )
-      .enablePlugins(PlayJava)
+    id = "plessJpa",
+    base = file("plessJpa"),
+    settings = plessJpaProjectSettings,
+    dependencies = Seq(pless)
+  )
+    .enablePlugins(PlayJava)
 
   lazy val plessJpaTest = Project(
-      id = "plessJpaTest",
-      base = file("plessJpaTest"),
-      settings = commonSettings("pless-jpa-test"),
-      dependencies = Seq(pless, plessJpa, plessTest)
-    )
-      .enablePlugins(PlayJava)
+    id = "plessJpaTest",
+    base = file("plessJpaTest"),
+    settings = commonSettings("pless-jpa-test"),
+    dependencies = Seq(pless, plessJpa, plessTest)
+  )
+    .enablePlugins(PlayJava)
 
   lazy val plessJpaSample = Project(
-      id = "plessJpaSample",
-      base = file("plessJpaSample"),
-      settings = plessJpaSampleProjectSettings,
-      dependencies = Seq(pless, plessJpa, plessTest, plessJpaTest)
-    )
-      .enablePlugins(PlayJava)
+    id = "plessJpaSample",
+    base = file("plessJpaSample"),
+    settings = plessJpaSampleProjectSettings,
+    dependencies = Seq(pless, plessJpa, plessTest, plessJpaTest)
+  )
+    .enablePlugins(PlayJava)
 
   private def commonSettings(projectName: String) = Seq(
     name := projectName
@@ -101,18 +100,26 @@ object PlessBuild extends Build {
       Seq(
         docsOutputDir := baseDirectory.value,
         readmeMdFile := baseDirectory.value / "README.md",
-        bumpPlessVersionsInReadmeMdFile := {
-          bumpVersionInFile(readmeMdFile.value, organization.value, "pless", version.value)
-          bumpVersionInFile(readmeMdFile.value, organization.value, "pless-test", version.value)
-        },
         releaseProcess := ReleaseProcessTransformation
-          .insertTasks(bumpPlessVersionsInReadmeMdFile, generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
+          .insertTasks(generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
           .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
           .in(releaseProcess.value),
         docsSnippetDirs ++= {
           Seq("app/si/urbas/pless", "test/si/urbas/pless", "conf")
             .map(baseDirectory.in(plessJpaSample).value / _)
-        }
+        },
+        docsClassLoader := Some(getClass.getClassLoader),
+        docTemplateBindings ++= Seq(
+          new TemplateBindingProvider {
+            override def bindingInfo: Binding = {
+              Binding("plessProjectInfo", classOf[PlessProjectInfo].getCanonicalName)
+            }
+
+            override def bindingInstance(docFile: File): Any = {
+              PlessProjectInfo(version.value)
+            }
+          }
+        )
       )
   }
 
@@ -198,3 +205,5 @@ object PlessBuild extends Build {
       </developers>
   }
 }
+
+case class PlessProjectInfo(version: String)
