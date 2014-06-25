@@ -1,5 +1,4 @@
 import com.typesafe.sbt.pgp.PgpKeys._
-import org.fusesource.scalate.Binding
 import play.PlayImport._
 import play._
 import sbt.Keys._
@@ -9,7 +8,6 @@ import sbtrelease.ReleasePlugin.ReleaseKeys._
 import sbtrelease.ReleaseStateTransformations._
 import si.urbas.sbtutils.docs._
 import si.urbas.sbtutils.releases.ReleaseProcessTransformation
-import si.urbas.sbtutils.textfiles.TextFileManipulation._
 import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
@@ -109,17 +107,7 @@ object PlessBuild extends Build {
             .map(baseDirectory.in(plessJpaSample).value / _)
         },
         docsClassLoader := Some(getClass.getClassLoader),
-        docTemplateBindings ++= Seq(
-          new TemplateBindingProvider {
-            override def bindingInfo: Binding = {
-              Binding("plessProjectInfo", classOf[PlessProjectInfo].getCanonicalName)
-            }
-
-            override def bindingInstance(docFile: File): Any = {
-              PlessProjectInfo(version.value)
-            }
-          }
-        )
+        docTemplateBindings += TemplateBinding("plessProjectInfo", PlessProjectInfo(version.value))
       )
   }
 
