@@ -27,11 +27,11 @@ object PlessBuild extends Build {
         organization := "si.urbas",
         scalaVersion := "2.11.1",
         pomExtra := pomExtraSettings,
-        sources in doc in Compile := Nil,
         // NOTE: We have to package documentation to conform to Sonatype's Repo policy
         publishArtifact in(Compile, packageDoc) := true,
         publishArtifact in(Compile, packageSrc) := true,
         publishArtifact in(Test, packageSrc) := false,
+        publishArtifact in(Test, packageDoc) := false,
         credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
         publishMavenStyle := true,
         SonatypeKeys.profileName := "org.xerial",
@@ -86,7 +86,8 @@ object PlessBuild extends Build {
     .enablePlugins(PlayJava)
 
   private def commonSettings(projectName: String) = Seq(
-    name := projectName
+    name := projectName,
+    sources in(Compile, doc) := Nil
   ) ++
     Sonatype.sonatypeSettings ++
     si.urbas.sbtutils.textfiles.tasks ++
