@@ -21,6 +21,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  */
 @PlessServiceConfigKey(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE)
 public class UserAccountService implements PlessService {
+
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
 
   public Form<?> getSignupForm() {return form(SignupData.class);}
@@ -39,9 +40,7 @@ public class UserAccountService implements PlessService {
     getEmailProvider().sendEmail(recipient, emailSubject, emailContent);
   }
 
-  public Form<?> getAccountUpdateForm() {
-    return form(UpdateAccountData.class);
-  }
+  public Form<?> getAccountUpdateForm() {return form(UpdateAccountData.class);}
 
   public PlessUser updateUser(Form<?> updateAccountForm, PlessUser userToUpdate) {
     UpdateAccountData updateAccountData = (UpdateAccountData) updateAccountForm.get();
@@ -61,25 +60,17 @@ public class UserAccountService implements PlessService {
     getEmailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
   }
 
-  protected Html signupEmailContent(PlessUser userDetails) {
-    return SignupEmailTemplate.apply(userDetails);
-  }
+  protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}
 
   protected String getSignupEmailSubject() {return "Pless Signup";}
 
   protected String passwordResetEmailSubject() {return "Password Reset Request";}
 
-  protected Html passwordResetEmailContent(String email, String resetCode) {
-    return PasswordResetEmail.apply(email, resetCode);
-  }
+  protected Html passwordResetEmailContent(String email, String resetCode) {return PasswordResetEmail.apply(email, resetCode);}
 
-  protected Html passwordResetConfirmationEmailContent(String email) {
-    return PasswordResetConfirmationEmail.apply(email);
-  }
+  protected Html passwordResetConfirmationEmailContent(String email) {return PasswordResetConfirmationEmail.apply(email);}
 
-  protected String passwordResetConfirmationEmailSubject() {
-    return "Password reset";
-  }
+  protected String passwordResetConfirmationEmailSubject() {return "Password reset";}
 
   private void updatePassword(PlessUser userToUpdate, UpdateAccountData updateAccountData) {
     if (updateAccountData.getPassword() != null) {
