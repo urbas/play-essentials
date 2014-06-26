@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 import static si.urbas.pless.util.ServiceLoader.getDefaultInstanceCreator;
 import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAME;
 
@@ -26,7 +27,7 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   public void setUp() {
     super.setUp();
     configureServiceClass(CUSTOM_SERVICE_CLASS);
-    serviceLoader = new ServiceLoader<>(DEFAULT_SERVICE_INSTANCE);
+    serviceLoader = createServiceLoader(DEFAULT_SERVICE_INSTANCE);
   }
 
   @Test

@@ -4,6 +4,8 @@ import si.urbas.pless.PlessService;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
+import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
+
 @PlessServiceConfigKey(ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY)
 public abstract class ClientSessionStorage implements PlessService {
 
@@ -20,7 +22,7 @@ public abstract class ClientSessionStorage implements PlessService {
   public abstract String get(String key);
 
   static final class ClientSessionStorageServiceLoader {
-    public static final ServiceLoader<ClientSessionStorage> INSTANCE = new ServiceLoader<>(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, PlayHttpContextClientSessionStorage::new);
+    public static final ServiceLoader<ClientSessionStorage> INSTANCE = createServiceLoader(CONFIG_CLIENT_SESSION_STORAGE_FACTORY, PlayHttpContextClientSessionStorage::new);
   }
 
 }

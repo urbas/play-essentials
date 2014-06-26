@@ -7,6 +7,8 @@ import si.urbas.pless.util.ServiceLoader;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
+
 @PlessServiceConfigKey(JpaTransactions.CONFIG_JPA_TRANSACTIONS)
 public abstract class JpaTransactions implements PlessService {
 
@@ -84,7 +86,7 @@ public abstract class JpaTransactions implements PlessService {
   }
 
   static class JpaTransactionsServiceLoader {
-    public static final ServiceLoader<JpaTransactions> INSTANCE = new ServiceLoader<>(CONFIG_JPA_TRANSACTIONS, PlayJpaTransactions::new);
+    public static final ServiceLoader<JpaTransactions> INSTANCE = createServiceLoader(CONFIG_JPA_TRANSACTIONS, PlayJpaTransactions::new);
   }
 
 }

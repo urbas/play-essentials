@@ -29,15 +29,8 @@ public class AuthenticationService {
     if (getConfigurationSource().isProduction()) {
       return AuthenticationServiceSingleton.INSTANCE;
     } else {
-      return createAuthenticationSession();
+      return createAuthenticationService();
     }
-  }
-
-  private static AuthenticationService createAuthenticationSession() {
-    return new AuthenticationService(
-      getClientSessionStorage(),
-      getServerSessionStorage(),
-      new SessionIdGenerator());
   }
 
   public void logIn(PlessUser user) {
@@ -93,7 +86,11 @@ public class AuthenticationService {
     return sessionIdFromClient == null ? null : serverSessionStorage.get(sessionIdFromClient);
   }
 
+  private static AuthenticationService createAuthenticationService() {
+    return new AuthenticationService(getClientSessionStorage(), getServerSessionStorage(), new SessionIdGenerator());
+  }
+
   static final class AuthenticationServiceSingleton {
-    public static final AuthenticationService INSTANCE = createAuthenticationSession();
+    public static final AuthenticationService INSTANCE = createAuthenticationService();
   }
 }

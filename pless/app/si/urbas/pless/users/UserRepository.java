@@ -8,6 +8,8 @@ import si.urbas.pless.util.StringUtils;
 
 import java.util.List;
 
+import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
+
 @PlessServiceConfigKey(UserRepository.CONFIG_USER_REPOSITORY)
 public abstract class UserRepository implements PlessService {
 
@@ -45,7 +47,7 @@ public abstract class UserRepository implements PlessService {
   }
 
   static class UserRepositoryServiceLoader {
-    private static final ServiceLoader<UserRepository> INSTANCE = new ServiceLoader<>(CONFIG_USER_REPOSITORY, () -> {
+    private static final ServiceLoader<UserRepository> INSTANCE = createServiceLoader(CONFIG_USER_REPOSITORY, () -> {
       throw new ConfigurationException("No user repository configured. Please select an implementation of the user repository and add it to your configuration. " + ConfigurationException.getServiceConfigurationInstruction(CONFIG_USER_REPOSITORY, UserRepository.class));
     });
   }

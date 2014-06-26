@@ -7,6 +7,7 @@ import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(EmailProvider.CONFIG_EMAIL_PROVIDER)
 public abstract class EmailProvider implements PlessService {
@@ -41,6 +42,6 @@ public abstract class EmailProvider implements PlessService {
   public abstract Email createEmail(ConfigurationSource configurationSource);
 
   static class EmailProviderServiceLoader {
-    static final ServiceLoader<EmailProvider> INSTANCE = new ServiceLoader<>(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());
+    static final ServiceLoader<EmailProvider> INSTANCE = createServiceLoader(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());
   }
 }

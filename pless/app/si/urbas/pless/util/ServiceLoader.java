@@ -12,10 +12,6 @@ public class ServiceLoader<T extends PlessService> {
   private final Supplier<T> defaultService;
   private T cachedService;
 
-  public ServiceLoader(T defaultService) {
-    this(getServiceConfigKey(defaultService), null, defaultService);
-  }
-
   public ServiceLoader(ConfigurationSource configurationSource, T defaultService) {
     this(getServiceConfigKey(defaultService), configurationSource, defaultService);
   }
@@ -36,7 +32,7 @@ public class ServiceLoader<T extends PlessService> {
 
   public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
-    // that was running in development mode.
+    // that was running in development mode (it used SBT's class loader).
     if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
       return PlayApplicationInstanceCreator.getInstance();
     } else {
@@ -50,6 +46,22 @@ public class ServiceLoader<T extends PlessService> {
       cachedService = createService();
     }
     return cachedService;
+  }
+
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(T defaultServiceInstance) {
+    return createServiceLoader(getServiceConfigKey(defaultServiceInstance), null, () -> defaultServiceInstance);
+  }
+
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, Supplier<T> defaultServiceCreator) {
+    return createServiceLoader(serviceConfigKey, null, defaultServiceCreator);
+  }
+
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultServiceCreator) {
+    ServiceLoader<T> tServiceLoader = new ServiceLoader<T>(serviceConfigKey, configurationSource, defaultServiceCreator);
+    // NOTE: We load the initial instance in the constructor to ensure that only a single instance is created in
+    // the "inner static class field" singleton pattern.
+    tServiceLoader.getService();
+    return tServiceLoader;
   }
 
   static Object overrideService(String serviceConfigKey, Object service) {
