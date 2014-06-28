@@ -5,7 +5,7 @@ resolvers ++= Seq(
   "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 )
 
-addSbtPlugin("si.urbas" % "sbt-pless" % "0.0.10-SNAPSHOT")
+addSbtPlugin("si.urbas" % "sbt-pless" % "0.0.10")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "0.8.3")
 
