@@ -9,6 +9,7 @@ import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 
 public class PlessController extends Controller {
+
   protected static UserRepository users() {
     return UserRepository.getUserRepository();
   }

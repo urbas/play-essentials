@@ -6,6 +6,10 @@ import play.mvc.Results.Status;
 
 public class JsonResults {
 
+  public static Status badRequestJson(JsValue json) {
+    return new play.mvc.Results.Status(play.core.j.JavaResults.BadRequest(), asContent(json), Codec.utf_8());
+  }
+
   public static Status okJson(JsValue json) {
     return new play.mvc.Results.Status(play.core.j.JavaResults.Ok(), asContent(json), Codec.utf_8());
   }
