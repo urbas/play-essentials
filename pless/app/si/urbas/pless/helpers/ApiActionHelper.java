@@ -5,6 +5,7 @@ import play.mvc.Result;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.util.ApiResponses;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
@@ -21,6 +22,13 @@ public class ApiActionHelper {
       return badRequestJson(USER_NOT_LOGGED_IN_ERROR_JSON);
     }
     return actionBody.apply(loggedInUserInfo);
+  }
+
+  public static void requireAuthenticatedUser(Consumer<LoggedInUserInfo> actionBody) {
+    withAuthenticatedUser((LoggedInUserInfo loggedInUser) -> {
+      actionBody.accept(loggedInUser);
+      return null;
+    });
   }
 
 }
