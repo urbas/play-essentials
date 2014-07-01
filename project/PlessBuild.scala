@@ -101,7 +101,7 @@ object PlessBuild extends Build {
         readmeMdFile := baseDirectory.value / "README.md",
         releaseProcess := ReleaseProcessTransformation
           .insertTasks(generateAndStageDocs, addReadmeFileToVcs).after(setReleaseVersion)
-          .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned, sonatypeReleaseAll)
+          .replaceStep(publishArtifacts).withAggregatedTasks(publishSigned)
           .in(releaseProcess.value),
         docsSnippetDirs ++= {
           Seq("app/si/urbas/pless", "test/si/urbas/pless", "conf")
