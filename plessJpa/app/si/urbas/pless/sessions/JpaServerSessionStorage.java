@@ -1,8 +1,5 @@
 package si.urbas.pless.sessions;
 
-import si.urbas.pless.db.TransactionCallback;
-import si.urbas.pless.db.TransactionFunction;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -12,7 +9,7 @@ public class JpaServerSessionStorage extends ServerSessionStorage {
 
   @Override
   public void put(final String key, final String value, final int expirationMillis) {
-    getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+    getJpaTransactions().doTransaction((EntityManager entityManager) -> {
       JpaServerSessionKeyValue jpaServerSessionKeyValue = new JpaServerSessionKeyValue(key, value, expirationMillis);
       entityManager.persist(jpaServerSessionKeyValue);
     });
@@ -43,7 +40,7 @@ public class JpaServerSessionStorage extends ServerSessionStorage {
   }
 
   private JpaServerSessionKeyValue fetchSessionValue(final String key) {
-    return getJpaTransactions().usingDb(entityManager -> entityManager.find(JpaServerSessionKeyValue.class, key));
+    return getJpaTransactions().withDb(entityManager -> entityManager.find(JpaServerSessionKeyValue.class, key));
   }
 
   private boolean removeSessionValue(final String key) {

@@ -14,15 +14,42 @@ public class PlessJpaController extends PlessController {
     return getJpaTransactions().getEntityManager();
   }
 
-  protected static void withTransaction(TransactionCallback callback) {
-    getJpaTransactions().withTransaction(callback);
+  /**
+   * Starts a JPA transaction and executes the given callback with an entity manager (the source of the transaction).
+   * You can perform read-write queries in your callback (using the given entity manager).
+   * @param transactionCallback this function will be called with an entity manager.
+   */
+  protected static void doTransaction(TransactionCallback transactionCallback) {
+    getJpaTransactions().doTransaction(transactionCallback);
   }
 
+  /**
+   * Starts a JPA transaction and executes the given callback with an entity manager (the source of the transaction).
+   * You can perform read-write queries in your callback (using the given entity manager).
+   * @param transactionFunction this function will be called with an entity manager.
+   * @param <T> the return type of the callback transaction function.
+   * @return the thing returned by your callback transaction function.
+   */
   protected static <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     return getJpaTransactions().withTransaction(transactionFunction);
   }
 
-  protected static <T> T usingDb(TransactionFunction<T> transactionFunction) {
-    return getJpaTransactions().usingDb(transactionFunction);
+  /**
+   * Executes the given callback with an entity manager (without starting a transaction).
+   * @param transactionCallback this function will be called with an entity manager.
+   */
+  protected static void doDb(TransactionCallback transactionCallback) {
+    getJpaTransactions().doDb(transactionCallback);
+  }
+
+  /**
+   * Executes the given callback with an entity manager (without starting a transaction). You can perform read-only
+   * queries in your callback (using the given entity manager).
+   * @param transactionFunction this function will be called with an entity manager.
+   * @param <T> the return type of the callback transaction function.
+   * @return the thing returned by your callback transaction function.
+   */
+  protected static <T> T withDb(TransactionFunction<T> transactionFunction) {
+    return getJpaTransactions().withDb(transactionFunction);
   }
 }

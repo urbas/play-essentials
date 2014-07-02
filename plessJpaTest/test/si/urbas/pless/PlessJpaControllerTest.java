@@ -35,8 +35,8 @@ public class PlessJpaControllerTest extends PlessTest {
   public void withTransaction_MUST_pass_the_callback_to_jpa_transactions() {
     JpaTransactions jpaTransactions = getJpaTransactions();
     TransactionCallback callback = mock(TransactionCallback.class);
-    PlessJpaController.withTransaction(callback);
-    verify(jpaTransactions).withTransaction(callback);
+    PlessJpaController.doTransaction(callback);
+    verify(jpaTransactions).doTransaction(callback);
   }
 
   @Test
@@ -47,15 +47,15 @@ public class PlessJpaControllerTest extends PlessTest {
 
   @Test
   public void usingDb_MUST_pass_the_callback_to_jpa_transactions() {
-    PlessJpaController.usingDb(transactionFunction);
-    verify(getJpaTransactions()).usingDb(transactionFunction);
+    PlessJpaController.withDb(transactionFunction);
+    verify(getJpaTransactions()).withDb(transactionFunction);
   }
 
   @Test
   public void usingDb_MUST_return_the_result_of_the_transaction() {
-    when(getJpaTransactions().usingDb(transactionFunction))
+    when(getJpaTransactions().withDb(transactionFunction))
       .thenReturn(transactionReturnValue);
-    Object actualReturnValue = PlessJpaController.usingDb(transactionFunction);
+    Object actualReturnValue = PlessJpaController.withDb(transactionFunction);
     assertSame(actualReturnValue, transactionReturnValue);
   }
 

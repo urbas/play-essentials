@@ -15,7 +15,7 @@ public class JpaUserRepository extends UserRepository {
 
   @Override
   public PlessUser findUserByEmail(final String email) {
-    return getJpaTransactions().usingDb(entityManager -> {
+    return getJpaTransactions().withDb(entityManager -> {
       TypedQuery<JpaPlessUser> usersByEmailQuery = entityManager
         .createNamedQuery(QUERY_GET_BY_EMAIL, JpaPlessUser.class);
       usersByEmailQuery.setParameter("email", email);
@@ -26,7 +26,7 @@ public class JpaUserRepository extends UserRepository {
   @SuppressWarnings("unchecked")
   @Override
   public List<PlessUser> getAllUsers() {
-    return getJpaTransactions().usingDb(entityManager -> entityManager
+    return getJpaTransactions().withDb(entityManager -> entityManager
       .createNamedQuery(QUERY_GET_ALL)
       .getResultList());
   }
@@ -34,7 +34,7 @@ public class JpaUserRepository extends UserRepository {
   @Override
   public void persistUser(final PlessUser user) {
     assertUserPreconditionsForPersist(user);
-    getJpaTransactions().withTransaction((EntityManager entityManager) -> {
+    getJpaTransactions().doTransaction((EntityManager entityManager) -> {
       String validationError = user.validateForPersist();
       if (validationError == null) {
         entityManager.persist(user);
@@ -68,7 +68,7 @@ public class JpaUserRepository extends UserRepository {
 
   @Override
   public PlessUser findUserById(final long userId) {
-    return getJpaTransactions().usingDb(entityManager -> {
+    return getJpaTransactions().withDb(entityManager -> {
       final JpaPlessUser foundUser = entityManager.find(JpaPlessUser.class, userId);
       if (foundUser == null) {
         throw new NoResultException("Could not find the user with the id " + userId);

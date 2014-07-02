@@ -18,13 +18,25 @@ public abstract class JpaTransactions implements PlessService {
     return JpaTransactionsServiceLoader.INSTANCE.getService();
   }
 
-  public void withTransaction(final TransactionCallback callback) {
+  /**
+   * Starts a JPA transaction and executes the given callback with an entity manager (the source of the transaction).
+   * You can perform read-write queries in your callback (using the given entity manager).
+   * @param transactionCallback this function will be called with an entity manager.
+   */
+  public void doTransaction(final TransactionCallback transactionCallback) {
     withTransaction((EntityManager entityManager) -> {
-      callback.accept(entityManager);
+      transactionCallback.accept(entityManager);
       return null;
     });
   }
 
+  /**
+   * Starts a JPA transaction and executes the given callback with an entity manager (the source of the transaction).
+   * You can perform read-write queries in your callback (using the given entity manager).
+   * @param transactionFunction this function will be called with an entity manager.
+   * @param <T> the return type of the callback transaction function.
+   * @return the thing returned by your callback transaction function.
+   */
   public <T> T withTransaction(TransactionFunction<T> transactionFunction) {
     EntityManager entityManager = null;
     EntityTransaction tx = null;
@@ -43,14 +55,27 @@ public abstract class JpaTransactions implements PlessService {
   }
 
   /**
-   * Retrieves a connection to pass on to the given query function.
+   * Creates an entity manager and calls the given callback with it.
    * This method does not start a transaction and should be used for read-only operations.
    *
-   * @param databaseQueryFunction the callback that will be invoked with a database connection.
+   * @param databaseQueryFunction the callback that will be invoked with the entity manager.
+   */
+  public void doDb(TransactionCallback databaseQueryFunction) {
+    withDb(entityManager -> {
+      databaseQueryFunction.accept(entityManager);
+      return null;
+    });
+  }
+
+  /**
+   * Creates an entity manager and calls the given function with it.
+   * This method does not start a transaction and should be used for read-only operations.
+   *
+   * @param databaseQueryFunction the callback that will be invoked with the entity manager.
    * @param <T>                   the type of the result of the callback function.
    * @return the same return value that is returned by the database query function.
    */
-  public <T> T usingDb(TransactionFunction<T> databaseQueryFunction) {
+  public <T> T withDb(TransactionFunction<T> databaseQueryFunction) {
     EntityManager entityManager = null;
     try {
       entityManager = getEntityManager();
