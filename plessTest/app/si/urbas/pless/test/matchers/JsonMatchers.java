@@ -13,6 +13,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
 
 public class JsonMatchers {
+
   public static Matcher<JsonNode> jsonObjectWithFields(JsonFieldMatcher... jsonFieldMatchers) {
     return new JsonObjectWithFieldsMatcher(jsonFieldMatchers);
   }
@@ -21,7 +22,7 @@ public class JsonMatchers {
     return new JsonFieldMatcher(fieldName, fieldValue);
   }
 
-  public static JsonFieldMatcher jsonField(String fieldName, String fieldValue) {
+  public static JsonFieldMatcher jsonField(String fieldName, Object fieldValue) {
     return jsonField(fieldName, new JsonValueNodeMatcher(fieldValue));
   }
 
