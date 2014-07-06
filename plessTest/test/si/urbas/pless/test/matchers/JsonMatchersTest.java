@@ -3,8 +3,11 @@ package si.urbas.pless.test.matchers;
 import org.junit.Test;
 import play.libs.Json;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+import static si.urbas.pless.test.matchers.JsonMatchers.jsonArray;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonObjectWithFields;
 
@@ -15,6 +18,7 @@ public class JsonMatchersTest {
 
   private static final String FIELD_NAME_2 = "fieldName2";
   private static final String FIELD_VALUE_2 = "fieldValue2";
+  private static final String STRING_VALUE = "string value";
 
   @Test
   public void jsonObjectWithFields_MUST_not_match_an_empty_json_object_WHEN_some_fields_are_provided() {
@@ -43,6 +47,14 @@ public class JsonMatchersTest {
       Json.newObject().put(FIELD_NAME, FIELD_VALUE),
       not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE), jsonField(FIELD_NAME_2, FIELD_VALUE_2)))
     );
+  }
+
+  @Test
+  public void jsonArray_MUST_match_a_json_array_with_the_given_elements() {
+      assertThat(
+        Json.toJson(Arrays.asList(STRING_VALUE, 9001, 42L, 3.14)),
+        jsonArray(STRING_VALUE, 9001, 42L, 3.14)
+      );
   }
 
 }

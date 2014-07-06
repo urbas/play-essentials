@@ -1,13 +1,19 @@
 package si.urbas.pless.test.matchers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import play.libs.Json;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
@@ -24,6 +30,27 @@ public class JsonMatchers {
 
   public static JsonFieldMatcher jsonField(String fieldName, Object fieldValue) {
     return jsonField(fieldName, new JsonValueNodeMatcher(fieldValue));
+  }
+
+  public static Matcher<JsonNode> jsonArray(Object... values) {
+    return new JsonArrayMatcher(Arrays
+        .asList(values).stream()
+        .map(JsonValueNodeMatcher::new)
+        .toArray(JsonValueNodeMatcher[]::new)
+    );
+  }
+
+  private static void appendElementDescriptions(Description description, List<Matcher<?>> valueMatchers) {
+    if (valueMatchers.size() > 0) {
+      addElementDescription(description, 0, valueMatchers);
+      for (int i = 1; i < valueMatchers.size(); i++) {
+        addElementDescription(description.appendText(", "), i, valueMatchers);
+      }
+    }
+  }
+
+  private static Description addElementDescription(Description description, int fieldIndex, List<Matcher<?>> matchers) {
+    return description.appendDescriptionOf(matchers.get(fieldIndex));
   }
 
   private static class JsonObjectWithFieldsMatcher extends JsonNodeMatcher {
@@ -46,16 +73,9 @@ public class JsonMatchers {
     @Override
     public void describeTo(Description description) {
       description.appendText("{");
-      if (jsonFieldMatchers.length > 0) {
-        addFieldDescription(description, 0);
-        for (int i = 1; i < jsonFieldMatchers.length; i++) {
-          addFieldDescription(description, i).appendText(", ");
-        }
-      }
+      appendElementDescriptions(description, Arrays.asList(jsonFieldMatchers));
       description.appendText("}");
     }
-
-    private Description addFieldDescription(Description description, int fieldIndex) {return description.appendText(jsonFieldMatchers[fieldIndex].toString());}
 
   }
 
@@ -122,5 +142,32 @@ public class JsonMatchers {
     public void describeTo(Description description) {
       description.appendText(jsonNodeToMatch.toString());
     }
+  }
+
+  private static class JsonArrayMatcher extends JsonNodeMatcher {
+
+    private final JsonValueNodeMatcher[] jsonValueMatchers;
+
+    public JsonArrayMatcher(JsonValueNodeMatcher[] jsonValueMatchers) {
+      this.jsonValueMatchers = jsonValueMatchers;
+    }
+
+    @Override
+    protected boolean jsonNodeMatches(JsonNode jsonNode) {
+      return jsonNode instanceof ArrayNode && jsonArrayMatches((ArrayNode) jsonNode);
+    }
+
+    private boolean jsonArrayMatches(ArrayNode jsonArray) {
+      ArrayList<JsonNode> actualArrayElements = Lists.newArrayList(jsonArray.elements());
+      return contains(jsonValueMatchers).matches(actualArrayElements);
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("[");
+      appendElementDescriptions(description, Arrays.asList(jsonValueMatchers));
+      description.appendText("]");
+    }
+
   }
 }
