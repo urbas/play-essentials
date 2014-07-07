@@ -6,6 +6,7 @@ import org.hamcrest.Matcher;
 import java.util.List;
 
 public class MatcherDescriptions {
+
   public static void appendElementDescriptions(Description description, List<Matcher<?>> valueMatchers) {
     if (valueMatchers.size() > 0) {
       addElementDescription(description, 0, valueMatchers);

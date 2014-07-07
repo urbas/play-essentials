@@ -29,7 +29,7 @@ public class JsonMatchers {
     return jsonField(fieldName, new JsonValueNodeMatcher(fieldValue));
   }
 
-  private static JsonFieldMatcher jsonField(Object fieldName, JsonNodeMatcher fieldValue) {
+  public static JsonFieldMatcher jsonField(Object fieldName, JsonNodeMatcher fieldValue) {
     return new JsonFieldMatcher(fieldName.toString(), fieldValue);
   }
 
