@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import play.mvc.Result;
-import si.urbas.pless.util.ApiResponses;
 
 import static org.hamcrest.Matchers.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.status;
 import static si.urbas.pless.helpers.ApiActionHelper.ERROR_MESSAGE_USER_NOT_LOGGED_IN;
 
 public class ApiResponseMatchers {
@@ -34,7 +32,7 @@ public class ApiResponseMatchers {
   }
 
   public static Matcher<Result> jsonError(Matcher<String> errorMessageMatcher) {
-    return new JsonErrorMatcher(errorMessageMatcher);
+    return new JsonErrorApiResultMatcher(errorMessageMatcher);
   }
 
   public static Matcher<Result> okEmptyJson() {
@@ -49,47 +47,8 @@ public class ApiResponseMatchers {
     return new ResultStatusMatcher(resultStatus);
   }
 
-  private static class JsonErrorMatcher extends JsonResultMatcher {
-
-    private Matcher<String> errorMessageMatcher;
-
-    private JsonErrorMatcher(Matcher<String> errorMessageMatcher) {
-      this.errorMessageMatcher = errorMessageMatcher;
-    }
-
-    @Override
-    protected boolean jsonResultMatches(JsonNode jsonResult) {
-      JsonNode errorField = jsonResult.get(ApiResponses.RESPONSE_FIELD_ERROR());
-      return errorField != null && errorMessageMatcher.matches(errorField.asText());
-    }
-
-    @Override
-    public void describeTo(Description description) {
-      description.appendText("a JSON object with field '" + ApiResponses.RESPONSE_FIELD_ERROR() + "' that is ");
-      description.appendDescriptionOf(errorMessageMatcher);
-    }
-  }
-
-  private static class ResultStatusMatcher extends ResultMatcher {
-
-    private final int wantedResultStatus;
-
-    public ResultStatusMatcher(int resultStatus) {
-      wantedResultStatus = resultStatus;
-    }
-
-    @Override
-    protected boolean resultMatches(Result result) {
-      return equalTo(wantedResultStatus).matches(status(result));
-    }
-
-    @Override
-    public void describeTo(Description description) {
-      description.appendText("result status '" + wantedResultStatus + "'");
-    }
-  }
-
   private static class EmptyJsonResultMatcher extends JsonResultMatcher {
+
     @Override
     protected boolean jsonResultMatches(JsonNode jsonResult) {
       return jsonResult != null && jsonResult.isObject() && jsonResult.size() == 0;

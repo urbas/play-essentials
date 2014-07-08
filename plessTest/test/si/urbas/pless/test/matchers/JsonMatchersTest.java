@@ -1,15 +1,15 @@
 package si.urbas.pless.test.matchers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 import play.libs.Json;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.test.matchers.JsonMatchers.jsonArray;
-import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
-import static si.urbas.pless.test.matchers.JsonMatchers.jsonObjectWithFields;
+import static si.urbas.pless.test.matchers.JsonMatchers.*;
 
 public class JsonMatchersTest {
 
@@ -22,14 +22,18 @@ public class JsonMatchersTest {
 
   @Test
   public void jsonObjectWithFields_MUST_not_match_an_empty_json_object_WHEN_some_fields_are_provided() {
-    assertThat(Json.newObject(), not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))));
+    assertThat(
+      Json.newObject(),
+      is(not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))))
+    );
   }
 
   @Test
   public void jsonObjectWithFields_MUST_match_a_json_object_with_a_given_field() {
+    ObjectNode objectWithOneField = Json.newObject().put(FIELD_NAME, FIELD_VALUE);
     assertThat(
-      Json.newObject().put(FIELD_NAME, FIELD_VALUE),
-      jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))
+      objectWithOneField,
+      is(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE)))
     );
   }
 
@@ -51,10 +55,10 @@ public class JsonMatchersTest {
 
   @Test
   public void jsonArray_MUST_match_a_json_array_with_the_given_elements() {
-      assertThat(
-        Json.toJson(Arrays.asList(STRING_VALUE, 9001, 42L, 3.14)),
-        jsonArray(STRING_VALUE, 9001, 42L, 3.14)
-      );
+    assertThat(
+      Json.toJson(Arrays.asList(STRING_VALUE, 9001, 42L, 3.14)),
+      jsonArray(STRING_VALUE, 9001, 42L, 3.14)
+    );
   }
 
 }
