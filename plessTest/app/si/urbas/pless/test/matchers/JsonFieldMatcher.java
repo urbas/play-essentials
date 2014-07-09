@@ -21,7 +21,9 @@ public class JsonFieldMatcher extends BaseMatcher<Map.Entry<String, JsonNode>> {
   public boolean matches(Object item) {
     if (item instanceof Map.Entry) {
       @SuppressWarnings("unchecked") Map.Entry<String, JsonNode> fieldNameAndValuePair = (Map.Entry<String, JsonNode>) item;
-      return fieldNameAndValuePair.getKey().equals(fieldName) && fieldValueMatcher.matches(fieldNameAndValuePair.getValue());
+      boolean fieldNameEquals = fieldNameAndValuePair.getKey().equals(fieldName);
+      boolean valueEquals = fieldValueMatcher.matches(fieldNameAndValuePair.getValue());
+      return fieldNameEquals && valueEquals;
     }
     return false;
   }

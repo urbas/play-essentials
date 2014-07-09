@@ -1,5 +1,7 @@
 package si.urbas.pless.test.matchers;
 
+import org.hamcrest.Matcher;
+
 import java.util.Arrays;
 
 public class JsonMatchers {
@@ -27,6 +29,10 @@ public class JsonMatchers {
 
   public static JsonFieldMatcher jsonField(Object fieldName, Object fieldValue) {
     return jsonField(fieldName, new JsonValueNodeMatcher(fieldValue));
+  }
+
+  public static JsonFieldMatcher jsonField(Object fieldName, Matcher<? super String> fieldValue) {
+    return jsonField(fieldName, new JsonStringNodeMatcher(fieldValue));
   }
 
   public static JsonFieldMatcher jsonField(Object fieldName, JsonNodeMatcher fieldValue) {
