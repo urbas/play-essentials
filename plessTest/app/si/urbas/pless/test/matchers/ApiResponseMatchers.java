@@ -2,7 +2,6 @@ package si.urbas.pless.test.matchers;
 
 import org.hamcrest.Matcher;
 import play.mvc.Result;
-import play.mvc.Results;
 import si.urbas.pless.util.ApiResponses;
 
 import static org.hamcrest.Matchers.*;

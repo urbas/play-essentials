@@ -1,8 +1,9 @@
 package si.urbas.pless.util
 
-import play.api.libs.json.{JsString, Json, JsObject}
+import play.api.libs.json.{JsObject, JsString}
 
 object ApiResponses {
+
   val RESPONSE_FIELD_MESSAGE = "message"
   val RESPONSE_FIELD_ERROR = "error"
 

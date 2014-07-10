@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static play.libs.Json.toJson;
 import static si.urbas.pless.test.matchers.JsonMatchers.*;
 
 public class JsonMatchersTest {
@@ -64,7 +65,7 @@ public class JsonMatchersTest {
   @Test
   public void jsonArray_MUST_match_a_json_array_with_the_given_elements() {
     assertThat(
-      Json.toJson(Arrays.asList(STRING_VALUE, 9001, 42L, 3.14)),
+      toJson(Arrays.asList(STRING_VALUE, 9001, 42L, 3.14)),
       jsonArray(STRING_VALUE, 9001, 42L, 3.14)
     );
   }

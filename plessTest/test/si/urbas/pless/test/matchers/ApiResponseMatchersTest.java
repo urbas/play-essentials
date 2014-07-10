@@ -13,8 +13,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static si.urbas.pless.helpers.ApiActionHelper.USER_NOT_LOGGED_IN_ERROR_JSON;
-import static si.urbas.pless.json.JsonResults.badRequestJson;
+import static si.urbas.pless.helpers.ApiActionHelper.USER_NOT_LOGGED_IN_RESULT;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonObjectWithFields;
@@ -92,10 +91,7 @@ public class ApiResponseMatchersTest {
 
   @Test
   public void userNotAuthenticatedError_MUST_match_the_standard_api_response_for_unauthenticated_users() {
-    assertThat(
-      badRequestJson(USER_NOT_LOGGED_IN_ERROR_JSON),
-      userNotAuthenticatedError()
-    );
+    assertThat(USER_NOT_LOGGED_IN_RESULT, userNotAuthenticatedError());
   }
 
   @Test
