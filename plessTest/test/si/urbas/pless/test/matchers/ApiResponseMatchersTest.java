@@ -98,6 +98,14 @@ public class ApiResponseMatchersTest {
     );
   }
 
+  @Test
+  public void okJsonResult_MUST_match_a_json_object_with_the_given_field() {
+    assertThat(
+      createJsonOkResult(jsonObjectWithAField),
+      okJsonResult(jsonField(FIELD_NAME, FIELD_VALUE))
+    );
+  }
+
   private Results.Status createJsonOkResult(JsonNode jsonNode) {return createJsonResult(okStatus(), jsonNode);}
 
   private Results.Status createJsonResult(play.api.mvc.Results.Status status, JsonNode json) {return createResult(status, json.toString());}

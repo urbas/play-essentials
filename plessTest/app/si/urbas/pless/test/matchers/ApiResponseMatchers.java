@@ -2,6 +2,7 @@ package si.urbas.pless.test.matchers;
 
 import org.hamcrest.Matcher;
 import play.mvc.Result;
+import play.mvc.Results;
 import si.urbas.pless.util.ApiResponses;
 
 import static org.hamcrest.Matchers.*;
@@ -17,6 +18,14 @@ public class ApiResponseMatchers {
     return both(resultStatus(OK)).and(jsonResult(jsonObjectWithFields()));
   }
 
+  public static Matcher<Result> badRequestJsonError() {
+    return jsonError(not(isEmptyOrNullString()));
+  }
+
+  public static Matcher<Result> okJsonResult(JsonFieldMatcher... jsonFieldMatchers) {
+    return jsonResult(OK, jsonObjectWithFields(jsonFieldMatchers));
+  }
+
   public static Matcher<Result> jsonResult(int resultStatus, JsonNodeMatcher jsonNodeMatcher) {
     return both(resultStatus(resultStatus)).and(jsonResult(jsonNodeMatcher));
   }
@@ -24,10 +33,6 @@ public class ApiResponseMatchers {
   public static Matcher<Result> jsonError(Matcher<? super String> errorMessageMatcher) {
     return both(resultStatus(BAD_REQUEST))
       .and(jsonResult(jsonObjectWithFields(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher))));
-  }
-
-  public static Matcher<Result> badRequestJsonError() {
-    return jsonError(not(isEmptyOrNullString()));
   }
 
   public static Matcher<Result> userNotAuthenticatedError() {
@@ -41,5 +46,4 @@ public class ApiResponseMatchers {
   private static Matcher<Result> resultStatus(final int resultStatus) {
     return new ResultStatusMatcher(resultStatus);
   }
-
 }
