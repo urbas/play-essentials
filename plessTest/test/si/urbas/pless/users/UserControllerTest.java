@@ -8,7 +8,6 @@ import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryHttpContext;
-import si.urbas.pless.test.matchers.ApiResponseMatchers;
 import si.urbas.pless.test.util.PlessTest;
 
 import java.util.Calendar;
@@ -24,9 +23,7 @@ import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
-import static si.urbas.pless.test.matchers.ApiResponseMatchers.apiMessageResult;
-import static si.urbas.pless.test.matchers.ApiResponseMatchers.okEmptyJson;
-import static si.urbas.pless.test.matchers.ApiResponseMatchers.userNotAuthenticatedError;
+import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
@@ -163,10 +160,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void delete_MUST_return_badRequest_WHEN_not_logged_in() throws Exception {
-    assertThat(
-      status(callDelete()),
-      is(equalTo(BAD_REQUEST))
-    );
+    assertThat(callDelete(), userNotAuthenticatedError());
   }
 
   @Test

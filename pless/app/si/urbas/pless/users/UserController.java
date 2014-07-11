@@ -19,8 +19,7 @@ import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
-import static si.urbas.pless.util.ApiResponses.message;
-import static si.urbas.pless.util.ApiResponses.success;
+import static si.urbas.pless.util.ApiResponses.*;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -55,13 +54,11 @@ public final class UserController extends PlessController {
   }
 
   public static Result delete() throws Throwable {
-    if (auth().isLoggedIn()) {
-      users().delete(auth().getLoggedInUserEmail());
+    return withAuthenticatedUser(loggedInUser -> {
+      users().delete(loggedInUser.email);
       auth().logOut();
       return success();
-    } else {
-      return badRequest();
-    }
+    });
   }
 
   public static Result requestPasswordReset(String email) {
@@ -144,10 +141,10 @@ public final class UserController extends PlessController {
     try {
       users().mergeUser(updatedUser);
       auth().logIn(updatedUser);
-      return ok();
+      return success();
     } catch (Exception ex) {
       Logger.info("User account update error.", ex);
-      return badRequest();
+      return error("Could not update user account details due to an unexpected error.");
     }
 
   }
@@ -164,10 +161,10 @@ public final class UserController extends PlessController {
       users().persistUser(newUser);
       getUserAccountService().afterUserPersisted(newUser);
       getUserAccountService().sendSignupEmail(newUser);
-      return ok();
+      return success();
     } catch (Exception ex) {
       Logger.info("Sign up error.", ex);
-      return badRequest();
+      return error();
     }
   }
 
