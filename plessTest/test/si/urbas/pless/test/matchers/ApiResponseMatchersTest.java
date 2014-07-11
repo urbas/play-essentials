@@ -75,18 +75,12 @@ public class ApiResponseMatchersTest {
 
   @Test
   public void badRequestJsonError_MUST_match_a_standard_api_error_response() {
-    assertThat(
-      createResult(badRequestStatus(), ApiResponses.error(NON_EMPTY_MESSAGE).toString()),
-      badRequestJsonError()
-    );
+    assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), apiErrorResult());
   }
 
   @Test
   public void badRequestJsonError_MUST_not_match_a_standard_message_json_response() {
-    assertThat(
-      createResult(badRequestStatus(), ApiResponses.message(NON_EMPTY_MESSAGE).toString()),
-      not(badRequestJsonError())
-    );
+    assertThat(ApiResponses.message(NON_EMPTY_MESSAGE), not(apiErrorResult()));
   }
 
   @Test
@@ -100,6 +94,16 @@ public class ApiResponseMatchersTest {
       createJsonOkResult(jsonObjectWithAField),
       okJsonResult(jsonField(FIELD_NAME, FIELD_VALUE))
     );
+  }
+
+  @Test
+  public void apiMessage_MUST_match_a_message_api_response_with_the_given_string_contents() {
+    assertThat(ApiResponses.message(NON_EMPTY_MESSAGE), apiMessageResult(NON_EMPTY_MESSAGE));
+  }
+
+  @Test
+  public void apiMessage_MUST_not_match_an_erro_api_response() {
+    assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), not(apiMessageResult(NON_EMPTY_MESSAGE)));
   }
 
   private Results.Status createJsonOkResult(JsonNode jsonNode) {return createJsonResult(okStatus(), jsonNode);}

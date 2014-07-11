@@ -10,7 +10,6 @@ import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
 import si.urbas.pless.users.views.html.PasswordResetView;
-import si.urbas.pless.util.ApiResponses;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +20,7 @@ import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
+import static si.urbas.pless.util.ApiResponses.*;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -61,7 +61,7 @@ public final class UserController extends PlessController {
     if (auth().isLoggedIn()) {
       users().delete(auth().getLoggedInUserEmail());
       auth().logOut();
-      return ok();
+      return success();
     } else {
       return badRequest();
     }
@@ -77,7 +77,7 @@ public final class UserController extends PlessController {
     } catch (Exception ignored) {
       Logger.info("Password reset requested for email '" + email + "'. However, the user does not exist.");
     }
-    return okJson(passwordResetResponseMessage(email));
+    return passwordResetResponseMessage(email);
   }
 
   public static Result resetPasswordForm(String email, String resetPasswordToken) {
@@ -189,7 +189,7 @@ public final class UserController extends PlessController {
 
   private static Result formErrorAsJson(Form<?> formWithErrors) {return badRequest(formWithErrors.errorsAsJson(new Lang(defaultLang())));}
 
-  static play.api.libs.json.JsObject passwordResetResponseMessage(String email) {return ApiResponses.message("An email containing further instructions will be sent to '" + email + "'.");}
+  static Status passwordResetResponseMessage(String email) {return message("An email containing further instructions will be sent to '" + email + "'.");}
 
   private static boolean isPasswordResetTokenValid(String resetPasswordToken, PlessUser user) {return resetPasswordToken != null && resetPasswordToken.equals(user.getPasswordResetCode());}
 

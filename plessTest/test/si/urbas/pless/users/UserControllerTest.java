@@ -3,13 +3,12 @@ package si.urbas.pless.users;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import play.api.libs.json.JsValue;
-import play.api.libs.json.Json;
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryHttpContext;
+import si.urbas.pless.test.matchers.ApiResponseMatchers;
 import si.urbas.pless.test.util.PlessTest;
 
 import java.util.Calendar;
@@ -25,6 +24,8 @@ import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
+import static si.urbas.pless.test.matchers.ApiResponseMatchers.apiMessageResult;
+import static si.urbas.pless.test.matchers.ApiResponseMatchers.okEmptyJson;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
@@ -168,12 +169,9 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void delete_MUST_return_ok_WHEN_user_is_logged_in() throws Exception {
+  public void delete_MUST_return_standard_empty_ok_json_WHEN_user_is_logged_in() throws Exception {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    assertThat(
-      status(callDelete()),
-      is(equalTo(OK))
-    );
+    assertThat(callDelete(), is(okEmptyJson()));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -244,8 +242,10 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void requestPasswordReset_MUST_return_a_message_that_explains_an_email_will_be_sent_if_the_user_exists_WHEN_the_user_with_the_given_email_does_not_exist() {
-    JsValue result = Json.parse(contentAsString(requestPasswordReset(JOHN_SMITH_EMAIL)));
-    assertEquals(passwordResetResponseMessage(JOHN_SMITH_EMAIL), result);
+    assertThat(
+      requestPasswordReset(JOHN_SMITH_EMAIL),
+      apiMessageResult(containsString(JOHN_SMITH_EMAIL))
+    );
   }
 
   @Test
