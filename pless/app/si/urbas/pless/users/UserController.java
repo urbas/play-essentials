@@ -5,8 +5,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.authentication.LoggedInUserInfo;
-import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
 import si.urbas.pless.users.views.html.PasswordResetView;
@@ -17,10 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static play.api.i18n.Lang.defaultLang;
+import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
-import static si.urbas.pless.util.ApiResponses.*;
+import static si.urbas.pless.util.ApiResponses.message;
+import static si.urbas.pless.util.ApiResponses.success;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -44,12 +44,9 @@ public final class UserController extends PlessController {
   }
 
   public static Result info() {
-    if (auth().isLoggedIn()) {
-      PlessUser loggedInUser = users().findUserById(auth().getLoggedInUserId());
-      return ok(JsonResults.asContent(publicUserInfo(loggedInUser)));
-    } else {
-      return badRequest();
-    }
+    return withAuthenticatedUser(loggedInUser ->
+        okJson(publicUserInfo(users().findUserById(loggedInUser.userId)))
+    );
   }
 
   public static Result updateUserAccount() {
@@ -133,15 +130,14 @@ public final class UserController extends PlessController {
   }
 
   private static Result updateUserAccount(Form<?> updateAccountForm) {
-    LoggedInUserInfo loggedInUserInfo = auth().getLoggedInUserInfo();
-    if (loggedInUserInfo == null) {
-      return badRequest();
-    }
-    if (updateAccountForm.hasErrors()) {
-      return formErrorAsJson(updateAccountForm);
-    }
-    PlessUser loggedInUser = users().findUserById(loggedInUserInfo.userId);
-    return updateUserAccount(getUserAccountService().updateUser(updateAccountForm, loggedInUser));
+    return withAuthenticatedUser(loggedInUser -> {
+        if (updateAccountForm.hasErrors()) {
+          return formErrorAsJson(updateAccountForm);
+        }
+        PlessUser user = users().findUserById(loggedInUser.userId);
+        return updateUserAccount(getUserAccountService().updateUser(updateAccountForm, user));
+      }
+    );
   }
 
   private static Result updateUserAccount(PlessUser updatedUser) {

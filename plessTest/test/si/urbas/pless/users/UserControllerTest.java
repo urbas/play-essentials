@@ -26,6 +26,7 @@ import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.apiMessageResult;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.okEmptyJson;
+import static si.urbas.pless.test.matchers.ApiResponseMatchers.userNotAuthenticatedError;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
@@ -188,7 +189,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void info_MUST_return_badRequest_WHEN_not_logged_in() {
-    assertEquals(BAD_REQUEST, status(UserController.info()));
+    assertThat(UserController.info(), userNotAuthenticatedError());
   }
 
   @Test
@@ -209,7 +210,8 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void updateUserAccount_MUST_return_badRequest_WHEN_not_logged_in() {
-    assertEquals(BAD_REQUEST, status(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
+//    assertEquals(BAD_REQUEST, status(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
+    assertThat(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD), userNotAuthenticatedError());
   }
 
   @Test

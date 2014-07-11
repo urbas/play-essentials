@@ -18,8 +18,11 @@ class JsonResultMatcher extends ResultMatcher {
 
   @Override
   protected boolean resultMatches(Result result) {
-    JsonNode jsonResult = Json.parse(Helpers.contentAsString(result));
-    return jsonResultMatches(jsonResult);
+    try {
+      return jsonResultMatches(Json.parse(Helpers.contentAsString(result)));
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   @Override
