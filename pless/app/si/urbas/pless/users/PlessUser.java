@@ -8,6 +8,11 @@ import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public class PlessUser implements Cloneable {
 
+  public static final String ID_FIELD = "id";
+  public static final String EMAIL_FIELD = "email";
+  public static final String USERNAME_FIELD = "username";
+  public static final String CREATION_DATE_FIELD = "creationDate";
+
   protected long id;
   protected String email;
   protected String username;

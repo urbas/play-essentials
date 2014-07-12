@@ -16,20 +16,20 @@ object PlessUserJsonViews {
   }
 
   private lazy val publicUserInfoWriter: Writes[PlessUser] = {
-    ((JsPath \ "id").write[Long] and
-      (JsPath \ "email").write[String] and
-      (JsPath \ "username").write[String] and
-      (JsPath \ "creationDate").write[Date])(
+    ((JsPath \ PlessUser.ID_FIELD).write[Long] and
+      (JsPath \ PlessUser.EMAIL_FIELD).write[String] and
+      (JsPath \ PlessUser.USERNAME_FIELD).write[String] and
+      (JsPath \ PlessUser.CREATION_DATE_FIELD).write[Date])(
         (user) =>
           (user.getId, user.getEmail, user.getUsername, user.getCreationDate)
       )
   }
 
   private lazy val publicUserInfoReader: Reads[PlessUser] = {
-    ((JsPath \ "id").read[Long] and
-      (JsPath \ "email").read[String] and
-      (JsPath \ "username").read[String] and
-      (JsPath \ "creationDate").read[Date])(
+    ((JsPath \ PlessUser.ID_FIELD).read[Long] and
+      (JsPath \ PlessUser.EMAIL_FIELD).read[String] and
+      (JsPath \ PlessUser.USERNAME_FIELD).read[String] and
+      (JsPath \ PlessUser.CREATION_DATE_FIELD).read[Date])(
         (id, email, username, creationDate) =>
           new PlessUser(id, email, username, null, null, creationDate, false, null)
       )

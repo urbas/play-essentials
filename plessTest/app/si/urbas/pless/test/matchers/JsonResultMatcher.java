@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.Description;
 import play.libs.Json;
 import play.mvc.Result;
-import play.test.Helpers;
+
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.contentType;
+import static si.urbas.pless.json.JsonResults.jsonContentType;
 
 class JsonResultMatcher extends ResultMatcher {
 
@@ -12,17 +15,18 @@ class JsonResultMatcher extends ResultMatcher {
 
   public JsonResultMatcher(JsonNodeMatcher jsonNodeMatcher) {this.jsonNodeMatcher = jsonNodeMatcher;}
 
-  protected boolean jsonResultMatches(JsonNode jsonResult) {
-    return jsonNodeMatcher.matches(jsonResult);
-  }
-
   @Override
   protected boolean resultMatches(Result result) {
     try {
-      return jsonResultMatches(Json.parse(Helpers.contentAsString(result)));
+      return jsonContentType().equals(contentType(result)) &&
+        jsonResultMatches(Json.parse(contentAsString(result)));
     } catch (Exception e) {
       return false;
     }
+  }
+
+  protected boolean jsonResultMatches(JsonNode jsonResult) {
+    return jsonNodeMatcher.matches(jsonResult);
   }
 
   @Override

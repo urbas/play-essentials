@@ -12,9 +12,9 @@ import si.urbas.pless.test.util.PlessTest;
 
 import java.util.Calendar;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
@@ -204,14 +204,19 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void updateUserAccount_MUST_return_badRequest_WHEN_not_logged_in() {
-//    assertEquals(BAD_REQUEST, status(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
-    assertThat(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD), userNotAuthenticatedError());
+    assertThat(
+      updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
+      userNotAuthenticatedError()
+    );
   }
 
   @Test
   public void updateUserAccount_MUST_return_ok_WHEN_logged_in() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    assertEquals(OK, status(updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD)));
+    assertThat(
+      updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
+      okEmptyJson()
+    );
   }
 
   @Test

@@ -1,12 +1,9 @@
 package si.urbas.pless.test.matchers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
-import play.api.mvc.Codec;
-import play.api.mvc.Results$;
 import play.libs.Json;
-import play.mvc.Results;
+import si.urbas.pless.json.JsonResults;
 import si.urbas.pless.util.ApiResponses;
 
 import static org.hamcrest.Matchers.not;
@@ -28,23 +25,23 @@ public class ApiResponseMatchersTest {
 
   @Test
   public void okEmptyJson_MUST_match_a_response_with_an_empty_json_object() {
-    assertThat(createJsonOkResult(emptyJsonObject), okEmptyJson());
+    assertThat(JsonResults.okJson(emptyJsonObject), okEmptyJson());
   }
 
   @Test
   public void okEmptyJson_MUST_not_match_a_response_with_the_badRequest_status() {
-    assertThat(createJsonResult(badRequestStatus(), emptyJsonObject), not(okEmptyJson()));
+    assertThat(JsonResults.badRequestJson(emptyJsonObject), not(okEmptyJson()));
   }
 
   @Test
   public void okEmptyJson_MUST_not_match_a_response_with_a_non_empty_json_object() {
-    assertThat(createJsonOkResult(jsonObjectWithAField), not(okEmptyJson()));
+    assertThat(JsonResults.okJson(jsonObjectWithAField), not(okEmptyJson()));
   }
 
   @Test
   public void jsonResult_MUST_match_a_response_with_the_expected_json_object() {
     assertThat(
-      createJsonOkResult(jsonObjectWithAField),
+      JsonResults.okJson(jsonObjectWithAField),
       jsonResult(OK, jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE)))
     );
   }
@@ -52,7 +49,7 @@ public class ApiResponseMatchersTest {
   @Test
   public void jsonResult_MUST_not_match_a_response_with_badRequest_status() {
     assertThat(
-      createJsonResult(badRequestStatus(), jsonObjectWithAField),
+      JsonResults.badRequestJson(jsonObjectWithAField),
       not(jsonResult(OK, jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))))
     );
   }
@@ -60,7 +57,7 @@ public class ApiResponseMatchersTest {
   @Test
   public void jsonResult_MUST_match_a_response_with_badRequest_status() {
     assertThat(
-      createJsonResult(badRequestStatus(), jsonObjectWithAField),
+      JsonResults.badRequestJson(jsonObjectWithAField),
       jsonResult(BAD_REQUEST, jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE)))
     );
   }
@@ -68,7 +65,7 @@ public class ApiResponseMatchersTest {
   @Test
   public void jsonResult_MUST_not_match_a_response_with_an_unexpected_json_content() {
     assertThat(
-      createJsonResult(badRequestStatus(), emptyJsonObject),
+      JsonResults.badRequestJson(emptyJsonObject),
       not(jsonResult(OK, jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))))
     );
   }
@@ -91,8 +88,8 @@ public class ApiResponseMatchersTest {
   @Test
   public void okJsonResult_MUST_match_a_json_object_with_the_given_field() {
     assertThat(
-      createJsonOkResult(jsonObjectWithAField),
-      okJsonResult(jsonField(FIELD_NAME, FIELD_VALUE))
+      JsonResults.okJson(jsonObjectWithAField),
+      okJson(jsonField(FIELD_NAME, FIELD_VALUE))
     );
   }
 
@@ -105,15 +102,5 @@ public class ApiResponseMatchersTest {
   public void apiMessage_MUST_not_match_an_erro_api_response() {
     assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), not(apiMessageResult(NON_EMPTY_MESSAGE)));
   }
-
-  private Results.Status createJsonOkResult(JsonNode jsonNode) {return createJsonResult(okStatus(), jsonNode);}
-
-  private Results.Status createJsonResult(play.api.mvc.Results.Status status, JsonNode json) {return createResult(status, json.toString());}
-
-  private static Results.Status createResult(play.api.mvc.Results.Status status, String content) {return new Results.Status(status, content, Codec.utf_8());}
-
-  private play.api.mvc.Results.Status okStatus() {return Results$.MODULE$.Ok();}
-
-  private play.api.mvc.Results.Status badRequestStatus() {return Results$.MODULE$.BadRequest();}
 
 }

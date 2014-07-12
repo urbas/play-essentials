@@ -17,7 +17,7 @@ public class ApiResponseMatchers {
     return both(resultStatus(OK)).and(jsonResult(jsonObjectWithFields()));
   }
 
-  public static Matcher<Result> okJsonResult(JsonFieldMatcher... jsonFieldMatchers) {
+  public static Matcher<Result> okJson(JsonFieldMatcher... jsonFieldMatchers) {
     return jsonResult(OK, jsonObjectWithFields(jsonFieldMatchers));
   }
 

@@ -1,14 +1,18 @@
 package si.urbas.pless.json;
 
-import play.api.http.MimeTypes$;
+import com.fasterxml.jackson.databind.JsonNode;
 import play.api.libs.json.JsValue;
-import play.mvc.Content;
+import play.twirl.api.Content;
 
 public class JsonContent implements Content {
 
-  private final JsValue jsonContent;
+  private final Object jsonContent;
 
   public JsonContent(JsValue jsonContent) {
+    this.jsonContent = jsonContent;
+  }
+
+  public JsonContent(JsonNode jsonContent) {
     this.jsonContent = jsonContent;
   }
 
@@ -19,6 +23,7 @@ public class JsonContent implements Content {
 
   @Override
   public String contentType() {
-    return MimeTypes$.MODULE$.JSON();
+    return JsonResults.jsonContentType();
   }
+
 }
