@@ -2,13 +2,14 @@ package si.urbas.pless.test.matchers;
 
 import org.hamcrest.Matcher;
 import play.mvc.Result;
-import si.urbas.pless.util.ApiResponses;
 
 import static org.hamcrest.Matchers.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static si.urbas.pless.helpers.ApiActionHelper.ERROR_MESSAGE_USER_NOT_LOGGED_IN;
 import static si.urbas.pless.test.matchers.JsonMatchers.*;
+import static si.urbas.pless.util.ApiResults.RESPONSE_FIELD_ERROR;
+import static si.urbas.pless.util.ApiResults.RESPONSE_FIELD_MESSAGE;
 
 public class ApiResponseMatchers {
 
@@ -45,11 +46,11 @@ public class ApiResponseMatchers {
   }
 
   public static Matcher<Result> apiErrorResult(Matcher<? super String> errorMessageMatcher) {
-    return jsonResult(BAD_REQUEST, jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher)));
+    return jsonResult(BAD_REQUEST, jsonObjectWith(jsonField(RESPONSE_FIELD_ERROR, errorMessageMatcher)));
   }
 
   public static Matcher<Result> apiMessageResult(Matcher<? super String> messageContentMatcher) {
-    return jsonResult(OK, jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), messageContentMatcher)));
+    return jsonResult(OK, jsonObjectWith(jsonField(RESPONSE_FIELD_MESSAGE, messageContentMatcher)));
   }
 
   public static Matcher<Result> jsonResult(int resultStatus, JsonNodeMatcher jsonNodeMatcher) {

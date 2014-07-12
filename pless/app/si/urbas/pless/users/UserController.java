@@ -21,7 +21,7 @@ import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
-import static si.urbas.pless.util.ApiResponses.*;
+import static si.urbas.pless.util.ApiResults.*;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -59,7 +59,7 @@ public final class UserController extends PlessController {
     return withAuthenticatedUser(loggedInUser -> {
       users().delete(loggedInUser.email);
       auth().logOut();
-      return success();
+      return SUCCESS;
     });
   }
 
@@ -97,12 +97,12 @@ public final class UserController extends PlessController {
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
     try {
       if (resetPasswordImpl(email, resetPasswordToken, newPassword)) {
-        return ok();
+        return SUCCESS;
       }
     } catch (Exception e) {
       Logger.info("A password reset was attempted for non-existing user '" + email + "'.");
     }
-    return badRequest(PASSWORD_RESET_ERROR);
+    return error(PASSWORD_RESET_ERROR);
   }
 
   private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {
@@ -143,7 +143,7 @@ public final class UserController extends PlessController {
     try {
       users().mergeUser(updatedUser);
       auth().logIn(updatedUser);
-      return success();
+      return SUCCESS;
     } catch (Exception ex) {
       Logger.info("User account update error.", ex);
       return error("Could not update user account details due to an unexpected error.");
@@ -164,10 +164,10 @@ public final class UserController extends PlessController {
       users().persistUser(newUser);
       getUserAccountService().afterUserPersisted(newUser);
       getUserAccountService().sendSignupEmail(newUser);
-      return success();
+      return SUCCESS;
     } catch (Exception ex) {
       Logger.info("Sign up error.", ex);
-      return error();
+      return ERROR;
     }
   }
 

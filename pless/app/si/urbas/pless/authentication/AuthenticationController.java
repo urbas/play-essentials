@@ -4,11 +4,13 @@ import play.libs.Json;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
 
+import static si.urbas.pless.util.ApiResults.SUCCESS;
+
 public final class AuthenticationController extends PlessController {
 
   public static Result logOut() {
     auth().logOut();
-    return ok();
+    return SUCCESS;
   }
 
   public static Result status() {

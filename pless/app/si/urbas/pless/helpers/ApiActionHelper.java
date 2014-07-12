@@ -3,7 +3,7 @@ package si.urbas.pless.helpers;
 import play.mvc.Result;
 import play.mvc.Results;
 import si.urbas.pless.authentication.LoggedInUserInfo;
-import si.urbas.pless.util.ApiResponses;
+import si.urbas.pless.util.ApiResults;
 import si.urbas.pless.util.Supplier;
 
 import java.util.function.Function;
@@ -13,7 +13,7 @@ import static si.urbas.pless.authentication.AuthenticationService.getAuthenticat
 public class ApiActionHelper {
 
   public static final String ERROR_MESSAGE_USER_NOT_LOGGED_IN = "Could not process request. Authentication required.";
-  public static final Results.Status USER_NOT_LOGGED_IN_RESULT = ApiResponses.error(ERROR_MESSAGE_USER_NOT_LOGGED_IN);
+  public static final Results.Status USER_NOT_LOGGED_IN_RESULT = ApiResults.error(ERROR_MESSAGE_USER_NOT_LOGGED_IN);
 
   /**
    * @param actionBody this callback will be called if a user is logged in.

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 import play.libs.Json;
 import si.urbas.pless.json.JsonResults;
-import si.urbas.pless.util.ApiResponses;
+import si.urbas.pless.util.ApiResults;
 
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -14,6 +14,8 @@ import static si.urbas.pless.helpers.ApiActionHelper.USER_NOT_LOGGED_IN_RESULT;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonObjectWith;
+import static si.urbas.pless.util.ApiResults.ERROR;
+import static si.urbas.pless.util.ApiResults.RESPONSE_FIELD_MESSAGE;
 
 public class ApiResponseMatchersTest {
 
@@ -72,12 +74,12 @@ public class ApiResponseMatchersTest {
 
   @Test
   public void badRequestJsonError_MUST_match_a_standard_api_error_response() {
-    assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), nonEmptyError());
+    assertThat(ApiResults.error(NON_EMPTY_MESSAGE), nonEmptyError());
   }
 
   @Test
   public void badRequestJsonError_MUST_not_match_a_standard_message_json_response() {
-    assertThat(ApiResponses.message(NON_EMPTY_MESSAGE), not(nonEmptyError()));
+    assertThat(ApiResults.message(NON_EMPTY_MESSAGE), not(nonEmptyError()));
   }
 
   @Test
@@ -95,28 +97,28 @@ public class ApiResponseMatchersTest {
 
   @Test
   public void apiMessage_MUST_match_a_message_api_response_with_the_given_string_contents() {
-    assertThat(ApiResponses.message(NON_EMPTY_MESSAGE), apiMessageResult(NON_EMPTY_MESSAGE));
+    assertThat(ApiResults.message(NON_EMPTY_MESSAGE), apiMessageResult(NON_EMPTY_MESSAGE));
   }
 
   @Test
   public void apiMessage_MUST_not_match_an_erro_api_response() {
-    assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), not(apiMessageResult(NON_EMPTY_MESSAGE)));
+    assertThat(ApiResults.error(NON_EMPTY_MESSAGE), not(apiMessageResult(NON_EMPTY_MESSAGE)));
   }
 
   @Test
   public void error_MUST_match_an_empty_error_api_response() {
-    assertThat(ApiResponses.error(), emptyError());
+    assertThat(ERROR, emptyError());
   }
 
   @Test
   public void error_MUST_not_match_a_non_empty_error_api_response() {
-    assertThat(ApiResponses.error(NON_EMPTY_MESSAGE), not(emptyError()));
+    assertThat(ApiResults.error(NON_EMPTY_MESSAGE), not(emptyError()));
   }
 
   @Test
   public void nonEmptyBadRequestJson_MUST_not_match_an_empty_api_error() {
     assertThat(
-      ApiResponses.error(),
+      ERROR,
       not(nonEmptyBadRequestJson())
     );
   }
@@ -124,7 +126,7 @@ public class ApiResponseMatchersTest {
   @Test
   public void nonEmptyBadRequestJson_MUST_match_a_non_empty_api_error() {
     assertThat(
-      ApiResponses.error(NON_EMPTY_MESSAGE),
+      ApiResults.error(NON_EMPTY_MESSAGE),
       nonEmptyBadRequestJson()
     );
   }
@@ -148,7 +150,7 @@ public class ApiResponseMatchersTest {
   @Test
   public void nonEmptyBadRequestJson_MUST_not_match_an_ok_response() {
     assertThat(
-      ApiResponses.message(NON_EMPTY_MESSAGE),
+      ApiResults.message(NON_EMPTY_MESSAGE),
       not(nonEmptyBadRequestJson())
     );
   }
@@ -156,8 +158,8 @@ public class ApiResponseMatchersTest {
   @Test
   public void okJson_MUST_match_a_non_empty_message() {
       assertThat(
-        ApiResponses.message(NON_EMPTY_MESSAGE),
-        okJson(jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), NON_EMPTY_MESSAGE)))
+        ApiResults.message(NON_EMPTY_MESSAGE),
+        okJson(jsonObjectWith(jsonField(RESPONSE_FIELD_MESSAGE, NON_EMPTY_MESSAGE)))
       );
   }
 
