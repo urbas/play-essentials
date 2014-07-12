@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MatcherDescriptions {
 
-  public static void appendElementDescriptions(Description description, List<Matcher<?>> valueMatchers) {
+  public static void appendElementDescriptions(Description description, List<? extends Matcher<?>> valueMatchers) {
     if (valueMatchers.size() > 0) {
       addElementDescription(description, 0, valueMatchers);
       for (int i = 1; i < valueMatchers.size(); i++) {
@@ -16,7 +16,7 @@ public class MatcherDescriptions {
     }
   }
 
-  private static Description addElementDescription(Description description, int fieldIndex, List<Matcher<?>> matchers) {
+  private static Description addElementDescription(Description description, int fieldIndex, List<? extends Matcher<?>> matchers) {
     return description.appendDescriptionOf(matchers.get(fieldIndex));
   }
 }

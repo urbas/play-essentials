@@ -19,7 +19,7 @@ public class JsonArrayMatcher extends JsonNodeMatcher {
   }
 
   @Override
-  protected boolean jsonNodeMatches(JsonNode jsonNode) {
+  protected boolean matches(JsonNode jsonNode) {
     return jsonNode instanceof ArrayNode && jsonArrayMatches((ArrayNode) jsonNode);
   }
 

@@ -14,7 +14,7 @@ public class JsonStringNodeMatcher extends JsonNodeMatcher {
   }
 
   @Override
-  protected boolean jsonNodeMatches(JsonNode jsonNode) {
+  protected boolean matches(JsonNode jsonNode) {
     return jsonNode instanceof TextNode && fieldValueMatcher.matches(jsonNode.asText());
   }
 

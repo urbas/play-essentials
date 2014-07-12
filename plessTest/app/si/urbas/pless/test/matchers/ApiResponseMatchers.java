@@ -28,16 +28,16 @@ public class ApiResponseMatchers {
     return jsonResult(OK, jsonObjectContaining(jsonFieldMatchers));
   }
 
+  public static Matcher<Result> okJson(JsonObjectMatcher jsonObjectMatcher) {
+    return jsonResult(OK, jsonObjectMatcher);
+  }
+
   public static Matcher<Result> nonEmptyBadRequestJson() {
     return jsonResult(BAD_REQUEST, jsonObjectContaining(jsonField(anything(), new JsonNodeMatcher())));
   }
 
-  public static Matcher<Result> jsonResult(int resultStatus, JsonNodeMatcher jsonNodeMatcher) {
-    return both(resultStatus(resultStatus)).and(jsonResult(jsonNodeMatcher));
-  }
-
   public static Matcher<Result> emptyJsonResult(int status) {
-    return both(resultStatus(status)).and(jsonResult(jsonObjectWith()));
+    return jsonResult(status, jsonObjectWith());
   }
 
   public static Matcher<Result> userNotAuthenticatedError() {
@@ -45,12 +45,15 @@ public class ApiResponseMatchers {
   }
 
   public static Matcher<Result> apiErrorResult(Matcher<? super String> errorMessageMatcher) {
-    return both(resultStatus(BAD_REQUEST))
-      .and(jsonResult(jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher))));
+    return jsonResult(BAD_REQUEST, jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher)));
   }
 
   public static Matcher<Result> apiMessageResult(Matcher<? super String> messageContentMatcher) {
     return jsonResult(OK, jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), messageContentMatcher)));
+  }
+
+  public static Matcher<Result> jsonResult(int resultStatus, JsonNodeMatcher jsonNodeMatcher) {
+    return both(resultStatus(resultStatus)).and(jsonResult(jsonNodeMatcher));
   }
 
   public static Matcher<Result> apiMessageResult(String messageContent) {

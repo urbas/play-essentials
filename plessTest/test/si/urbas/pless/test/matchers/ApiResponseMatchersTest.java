@@ -153,4 +153,12 @@ public class ApiResponseMatchersTest {
     );
   }
 
+  @Test
+  public void okJson_MUST_match_a_non_empty_message() {
+      assertThat(
+        ApiResponses.message(NON_EMPTY_MESSAGE),
+        okJson(jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), NON_EMPTY_MESSAGE)))
+      );
+  }
+
 }

@@ -15,7 +15,7 @@ public class JsonValueNodeMatcher extends JsonNodeMatcher {
   }
 
   @Override
-  protected boolean jsonNodeMatches(JsonNode jsonNode) {
+  protected boolean matches(JsonNode jsonNode) {
     return jsonNode.equals(jsonNodeToMatch);
   }
 

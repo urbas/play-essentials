@@ -8,10 +8,10 @@ public class JsonNodeMatcher extends BaseMatcher<JsonNode> {
 
   @Override
   public boolean matches(Object item) {
-    return item instanceof JsonNode && jsonNodeMatches((JsonNode) item);
+    return item instanceof JsonNode && matches((JsonNode) item);
   }
 
-  protected boolean jsonNodeMatches(JsonNode jsonNode) {
+  protected boolean matches(JsonNode jsonNode) {
     return true;
   }
 

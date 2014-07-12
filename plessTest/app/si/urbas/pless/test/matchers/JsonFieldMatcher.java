@@ -31,9 +31,8 @@ public class JsonFieldMatcher extends BaseMatcher<Map.Entry<String, JsonNode>> {
   @Override
   public void describeTo(Description description) {
     description
-      .appendText("\"")
       .appendDescriptionOf(fieldNameMatcher)
-      .appendText("\": ")
+      .appendText(": ")
       .appendDescriptionOf(fieldValueMatcher);
   }
 

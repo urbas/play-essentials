@@ -12,7 +12,7 @@ public class JsonMatchers {
    * @return a matcher that matches a JSON object which contains all of the given fields. The order of the fields
    * does not matter and the JSON object could have more fields.
    */
-  public static JsonNodeMatcher jsonObjectContaining(JsonFieldMatcher... jsonFieldMatchers) {
+  public static JsonObjectContainingFieldsMatcher jsonObjectContaining(JsonFieldMatcher... jsonFieldMatchers) {
     return JsonObjectMatcher.containingFields(jsonFieldMatchers);
   }
 
@@ -20,7 +20,7 @@ public class JsonMatchers {
    * @return a matcher that matches a JSON object with exactly the given fields. The order of the fields doesn't
    * matter.
    */
-  public static JsonNodeMatcher jsonObjectWith(JsonFieldMatcher... jsonFieldMatchers) {
+  public static JsonObjectWithExactFieldsMatcher jsonObjectWith(JsonFieldMatcher... jsonFieldMatchers) {
     return JsonObjectMatcher.withExactFields(jsonFieldMatchers);
   }
 
@@ -43,6 +43,10 @@ public class JsonMatchers {
 
   public static JsonFieldMatcher jsonField(Object fieldName, Matcher<? super String> fieldStringValue) {
     return jsonField(equalTo(fieldName.toString()), new JsonStringNodeMatcher(fieldStringValue));
+  }
+
+  public static JsonFieldMatcher jsonField(Object fieldName, JsonNodeMatcher fieldValueMatcher) {
+    return jsonField(equalTo(fieldName.toString()), fieldValueMatcher);
   }
 
   public static JsonFieldMatcher jsonField(Matcher<? super String> fieldNameMatcher, Matcher<? super String> fieldStringValue) {

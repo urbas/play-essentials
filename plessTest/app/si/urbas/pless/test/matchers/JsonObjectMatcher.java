@@ -2,44 +2,42 @@ package si.urbas.pless.test.matchers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItems;
+public abstract class JsonObjectMatcher extends JsonNodeMatcher {
+  protected final JsonFieldMatcher[] fieldMatchers;
 
-public class JsonObjectMatcher extends JsonNodeMatcher {
+  public JsonObjectMatcher(JsonFieldMatcher... fieldMatchers) {this.fieldMatchers = fieldMatchers;}
 
-  private final Matcher<? super Iterable<Map.Entry<String, JsonNode>>> fieldsMatcher;
+  public static JsonObjectContainingFieldsMatcher containingFields(JsonFieldMatcher... jsonFieldMatchers) {
+    return new JsonObjectContainingFieldsMatcher(jsonFieldMatchers);
+  }
 
-  private JsonObjectMatcher(Matcher<? super Iterable<Map.Entry<String, JsonNode>>> fieldsMatcher) {
-    this.fieldsMatcher = fieldsMatcher;
+  public static JsonObjectWithExactFieldsMatcher withExactFields(JsonFieldMatcher... jsonFieldMatchers) {
+    return new JsonObjectWithExactFieldsMatcher(jsonFieldMatchers);
   }
 
   @Override
-  protected boolean jsonNodeMatches(JsonNode jsonNode) {
-    return jsonNode instanceof ObjectNode && hasFields((ObjectNode) jsonNode);
+  protected boolean matches(JsonNode jsonNode) {
+    return jsonNode instanceof ObjectNode && matches(Lists.newArrayList(jsonNode.fields()));
   }
 
-  private boolean hasFields(ObjectNode item) {
-    return fieldsMatcher.matches(newArrayList(item.fields()));
-  }
+  protected abstract boolean matches(ArrayList<Map.Entry<String, JsonNode>> fields);
 
   @Override
   public void describeTo(Description description) {
     description.appendText("{");
-    description.appendDescriptionOf(fieldsMatcher);
+    MatcherDescriptions.appendElementDescriptions(description, Arrays.asList(fieldMatchers));
     description.appendText("}");
   }
 
-  public static JsonObjectMatcher containingFields(JsonFieldMatcher... jsonFieldMatchers) {
-    return new JsonObjectMatcher(hasItems(jsonFieldMatchers));
-  }
+  public abstract JsonObjectMatcher with(JsonFieldMatcher jsonFieldMatcher);
 
-  public static JsonObjectMatcher withExactFields(JsonFieldMatcher... jsonFieldMatchers) {
-    return new JsonObjectMatcher(containsInAnyOrder(jsonFieldMatchers));
-  }
+  protected JsonFieldMatcher[] combineFieldMatchers(JsonFieldMatcher additionalFieldMatcher) {return Lists.asList(additionalFieldMatcher, fieldMatchers).stream().toArray(JsonFieldMatcher[]::new);}
+
 }
