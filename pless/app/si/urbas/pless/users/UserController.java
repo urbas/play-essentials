@@ -9,11 +9,13 @@ import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
 import si.urbas.pless.users.views.html.PasswordResetView;
 
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.time.Instant.now;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
@@ -152,8 +154,9 @@ public final class UserController extends PlessController {
   public static Result signUp(Form<?> signupForm) {
     if (signupForm.hasErrors()) {
       return formErrorAsJson(signupForm);
+    } else {
+      return signUp(getUserAccountService().createUser(signupForm));
     }
-    return signUp(getUserAccountService().createUser(signupForm));
   }
 
   public static Result signUp(PlessUser newUser) {
@@ -188,14 +191,12 @@ public final class UserController extends PlessController {
 
   private static boolean isPasswordResetTimestampValid(PlessUser user) {
     Date passwordResetTimestamp = user.getPasswordResetTimestamp();
-    if (passwordResetTimestamp != null) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(passwordResetTimestamp);
-      int passwordResetValiditySeconds = getPasswordResetValiditySeconds();
-      calendar.add(Calendar.SECOND, passwordResetValiditySeconds);
-      return new Date().before(calendar.getTime());
-    }
-    return false;
+    return passwordResetTimestamp != null && isTimestampValid(passwordResetTimestamp, getPasswordResetValiditySeconds());
+  }
+
+  private static boolean isTimestampValid(Date timestamp, int timestampValiditySeconds) {
+    Instant endOfTimestampValidity = timestamp.toInstant().plus(timestampValiditySeconds, ChronoUnit.SECONDS);
+    return endOfTimestampValidity.isAfter(now());
   }
 
   private static int getPasswordResetValiditySeconds() {return config().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);}

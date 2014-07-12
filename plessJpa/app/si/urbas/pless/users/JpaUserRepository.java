@@ -47,8 +47,7 @@ public class JpaUserRepository extends UserRepository {
   @Override
   public boolean activateUser(final String userEmail, final String activationCode) {
     return getJpaTransactions().withTransaction((EntityManager entityManager) -> {
-      Query usersByEmailQuery = entityManager
-        .createNamedQuery(QUERY_ACTIVATE_USER);
+      Query usersByEmailQuery = entityManager.createNamedQuery(QUERY_ACTIVATE_USER);
       usersByEmailQuery.setParameter("email", userEmail);
       usersByEmailQuery.setParameter("activationCode", activationCode);
       return usersByEmailQuery.executeUpdate() > 0;
