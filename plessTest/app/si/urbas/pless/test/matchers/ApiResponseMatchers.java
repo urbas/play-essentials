@@ -8,38 +8,49 @@ import static org.hamcrest.Matchers.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static si.urbas.pless.helpers.ApiActionHelper.ERROR_MESSAGE_USER_NOT_LOGGED_IN;
-import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
-import static si.urbas.pless.test.matchers.JsonMatchers.jsonObjectWithFields;
+import static si.urbas.pless.test.matchers.JsonMatchers.*;
 
 public class ApiResponseMatchers {
 
-  public static Matcher<Result> okEmptyJson() {
-    return both(resultStatus(OK)).and(jsonResult(jsonObjectWithFields()));
+  public static Matcher<Result> success() {
+    return emptyJsonResult(OK);
+  }
+
+  public static Matcher<Result> emptyError() {
+    return emptyJsonResult(BAD_REQUEST);
+  }
+
+  public static Matcher<Result> nonEmptyError() {
+    return apiErrorResult(not(isEmptyOrNullString()));
   }
 
   public static Matcher<Result> okJson(JsonFieldMatcher... jsonFieldMatchers) {
-    return jsonResult(OK, jsonObjectWithFields(jsonFieldMatchers));
+    return jsonResult(OK, jsonObjectContaining(jsonFieldMatchers));
+  }
+
+  public static Matcher<Result> nonEmptyBadRequestJson() {
+    return jsonResult(BAD_REQUEST, jsonObjectContaining(jsonField(anything(), new JsonNodeMatcher())));
   }
 
   public static Matcher<Result> jsonResult(int resultStatus, JsonNodeMatcher jsonNodeMatcher) {
     return both(resultStatus(resultStatus)).and(jsonResult(jsonNodeMatcher));
   }
 
+  public static Matcher<Result> emptyJsonResult(int status) {
+    return both(resultStatus(status)).and(jsonResult(jsonObjectWith()));
+  }
+
   public static Matcher<Result> userNotAuthenticatedError() {
     return apiErrorResult(equalTo(ERROR_MESSAGE_USER_NOT_LOGGED_IN));
   }
 
-  public static Matcher<Result> apiErrorResult() {
-    return apiErrorResult(not(isEmptyOrNullString()));
-  }
-
   public static Matcher<Result> apiErrorResult(Matcher<? super String> errorMessageMatcher) {
     return both(resultStatus(BAD_REQUEST))
-      .and(jsonResult(jsonObjectWithFields(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher))));
+      .and(jsonResult(jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_ERROR(), errorMessageMatcher))));
   }
 
   public static Matcher<Result> apiMessageResult(Matcher<? super String> messageContentMatcher) {
-    return jsonResult(OK, jsonObjectWithFields(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), messageContentMatcher)));
+    return jsonResult(OK, jsonObjectWith(jsonField(ApiResponses.RESPONSE_FIELD_MESSAGE(), messageContentMatcher)));
   }
 
   public static Matcher<Result> apiMessageResult(String messageContent) {

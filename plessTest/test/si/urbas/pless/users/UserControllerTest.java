@@ -1,7 +1,6 @@
 package si.urbas.pless.users;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
@@ -18,23 +17,21 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
+import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
+import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
-import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
-import static si.urbas.pless.util.RequestParameters.param;
-import static si.urbas.pless.util.RequestParameters.params;
 
 public class UserControllerTest extends PlessTest {
 
@@ -59,14 +56,14 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_result_in_badRequest_WHEN_any_of_the_credential_parameters_are_empty() throws Exception {
-    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, "")));
-    assertEquals(BAD_REQUEST, status(signUp("", JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)));
-    assertEquals(BAD_REQUEST, status(signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, "")));
+    assertThat(signUp("", JOHN_SMITH_USERNAME, ""), nonEmptyBadRequestJson());
+    assertThat(signUp("", JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD), nonEmptyBadRequestJson());
+    assertThat(signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, ""), nonEmptyBadRequestJson());
   }
 
   @Test
   public void signUp_MUST_result_in_ok_WHEN_the_username_is_null() {
-    assertEquals(OK, status(signUp(JOHN_SMITH_EMAIL, null, JOHN_SMITH_PASSWORD)));
+    assertThat(signUp(JOHN_SMITH_EMAIL, null, JOHN_SMITH_PASSWORD), success());
   }
 
   @Test
@@ -111,7 +108,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
-    assertEquals(OK, status(signUp(user)));
+    assertThat(signUp(user), success());
   }
 
   @Test
@@ -166,7 +163,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void delete_MUST_return_standard_empty_ok_json_WHEN_user_is_logged_in() throws Exception {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    assertThat(callDelete(), is(okEmptyJson()));
+    assertThat(callDelete(), is(success()));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -187,19 +184,15 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void info_MUST_return_ok_json_content_type_WHEN_logged_in() {
-    signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    Result infoResult = UserController.info();
-    assertEquals(OK, status(infoResult));
-    assertEquals("application/json", contentType(infoResult));
-  }
-
-  @Test
   public void info_MUST_return_a_json_serialized_user_WHEN_logged_in() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    PlessUser user = publicUserInfo(contentAsString(UserController.info()));
-    assertEquals(JOHN_SMITH_EMAIL, user.getEmail());
-    assertEquals(JOHN_SMITH_USERNAME, user.getUsername());
+    assertThat(
+      UserController.info(),
+      okJson(
+        jsonField(PlessUser.EMAIL_FIELD, JOHN_SMITH_EMAIL),
+        jsonField(PlessUser.USERNAME_FIELD, JOHN_SMITH_USERNAME)
+      )
+    );
   }
 
   @Test
@@ -215,7 +208,7 @@ public class UserControllerTest extends PlessTest {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
       updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
-      okEmptyJson()
+      success()
     );
   }
 
@@ -347,25 +340,6 @@ public class UserControllerTest extends PlessTest {
       String contentAsString = contentAsString(result);
       assertThat(
         contentAsString,
-        containsString("input type=\"password\"")
-      );
-    }
-  }
-
-  @Ignore
-  @Test
-  public void submitResetPassword_MUST_change_the_password() {
-    try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
-      when(httpContext.request.queryString()).thenReturn(
-        params(
-          param(UserController.EMAIL_PARAMETER, JOHN_SMITH_EMAIL),
-          param(UserController.PASSWORD_RESET_TOKEN_PARAMETER, JOHN_SMITH_EMAIL)
-        )
-      );
-
-      Result result = UserController.submitResetPassword();
-      assertThat(
-        contentAsString(result),
         containsString("input type=\"password\"")
       );
     }

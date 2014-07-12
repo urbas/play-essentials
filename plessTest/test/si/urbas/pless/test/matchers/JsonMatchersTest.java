@@ -22,43 +22,43 @@ public class JsonMatchersTest {
   private final ObjectNode jsonObjectWithTwoFields = Json.newObject().put(FIELD_NAME, FIELD_VALUE).put(FIELD_NAME_2, FIELD_VALUE_2);
 
   @Test
-  public void jsonObjectWithFields_MUST_match_an_empty_json_object_WHEN_no_fields_are_provided() {
+  public void jsonObjectWith_MUST_match_an_empty_json_object_WHEN_no_fields_are_provided() {
     assertThat(
       Json.newObject(),
-      is(jsonObjectWithFields())
+      is(jsonObjectWith())
     );
   }
 
   @Test
-  public void jsonObjectWithFields_MUST_not_match_an_empty_json_object_WHEN_some_fields_are_provided() {
+  public void jsonObjectWith_MUST_not_match_an_empty_json_object_WHEN_some_fields_are_provided() {
     assertThat(
       Json.newObject(),
-      is(not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE))))
+      is(not(jsonObjectWith(jsonField(FIELD_NAME, FIELD_VALUE))))
     );
   }
 
   @Test
-  public void jsonObjectWithFields_MUST_match_a_json_object_with_a_given_field() {
+  public void jsonObjectWith_MUST_match_a_json_object_with_a_given_field() {
     ObjectNode objectWithOneField = jsonObjectWithAField;
     assertThat(
       objectWithOneField,
-      is(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE)))
+      is(jsonObjectWith(jsonField(FIELD_NAME, FIELD_VALUE)))
     );
   }
 
   @Test
-  public void jsonObjectWithFields_MUST_not_match_a_json_object_WHEN_it_has_more_fields_than_specified() {
+  public void jsonObjectWith_MUST_not_match_a_json_object_WHEN_it_has_more_fields_than_specified() {
     assertThat(
       jsonObjectWithTwoFields,
-      not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE)))
+      not(jsonObjectWith(jsonField(FIELD_NAME, FIELD_VALUE)))
     );
   }
 
   @Test
-  public void jsonObjectWithFields_MUST_not_match_a_json_object_WHEN_it_is_missing_some_fields() {
+  public void jsonObjectWith_MUST_not_match_a_json_object_WHEN_it_is_missing_some_fields() {
     assertThat(
       jsonObjectWithAField,
-      not(jsonObjectWithFields(jsonField(FIELD_NAME, FIELD_VALUE), jsonField(FIELD_NAME_2, FIELD_VALUE_2)))
+      not(jsonObjectWith(jsonField(FIELD_NAME, FIELD_VALUE), jsonField(FIELD_NAME_2, FIELD_VALUE_2)))
     );
   }
 
@@ -71,10 +71,50 @@ public class JsonMatchersTest {
   }
 
   @Test
+  public void jsonArray_MUST_not_match_a_json_array_with_the_given_elements_in_the_wrong_order() {
+    assertThat(
+      toJson(Arrays.asList(STRING_VALUE, 9001, 3.14, 42L)),
+      not(jsonArray(STRING_VALUE, 9001, 42L, 3.14))
+    );
+  }
+
+  @Test
   public void jsonField_MUST_match_a_field_whose_value_matches_a_custom_matcher() {
     assertThat(
       jsonObjectWithAField,
-      jsonObjectWithFields(jsonField(FIELD_NAME, containsString(FIELD_VALUE.substring(3))))
+      jsonObjectWith(jsonField(FIELD_NAME, containsString(FIELD_VALUE.substring(3))))
+    );
+  }
+
+  @Test
+  public void jsonObjectContaining_MUST_match_a_json_object_that_has_the_exact_fields() {
+    assertThat(
+      jsonObjectWithAField,
+      jsonObjectContaining(jsonField(FIELD_NAME, FIELD_VALUE))
+    );
+  }
+
+  @Test
+  public void jsonObjectContaining_MUST_match_a_json_object_that_has_more_fields_than_asked_for() {
+    assertThat(
+      jsonObjectWithTwoFields,
+      jsonObjectContaining(jsonField(FIELD_NAME, FIELD_VALUE))
+    );
+  }
+
+  @Test
+  public void jsonObjectContaining_MUST_not_match_a_json_object_which_is_missing_a_field() {
+    assertThat(
+      jsonObjectWithAField,
+      not(jsonObjectContaining(jsonField(FIELD_NAME, FIELD_VALUE), jsonField(FIELD_NAME_2, FIELD_VALUE_2)))
+    );
+  }
+
+  @Test
+  public void jsonObjectContaining_MUST_match_any_non_empty_object_WHEN_given_a_field_matcher_that_matches_anything() {
+    assertThat(
+      Json.parse("{\"password\":[\"error.required\"],\"email\":[\"error.required\"]}"),
+      jsonObjectContaining(jsonField(anything(), new JsonNodeMatcher()))
     );
   }
 

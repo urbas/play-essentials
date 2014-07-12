@@ -4,14 +4,24 @@ import org.hamcrest.Matcher;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.equalTo;
+
 public class JsonMatchers {
+
+  /**
+   * @return a matcher that matches a JSON object which contains all of the given fields. The order of the fields
+   * does not matter and the JSON object could have more fields.
+   */
+  public static JsonNodeMatcher jsonObjectContaining(JsonFieldMatcher... jsonFieldMatchers) {
+    return JsonObjectMatcher.containingFields(jsonFieldMatchers);
+  }
 
   /**
    * @return a matcher that matches a JSON object with exactly the given fields. The order of the fields doesn't
    * matter.
    */
-  public static JsonNodeMatcher jsonObjectWithFields(JsonFieldMatcher... jsonFieldMatchers) {
-    return new JsonObjectWithFieldsMatcher(jsonFieldMatchers);
+  public static JsonNodeMatcher jsonObjectWith(JsonFieldMatcher... jsonFieldMatchers) {
+    return JsonObjectMatcher.withExactFields(jsonFieldMatchers);
   }
 
   /**
@@ -28,15 +38,18 @@ public class JsonMatchers {
   }
 
   public static JsonFieldMatcher jsonField(Object fieldName, Object fieldValue) {
-    return jsonField(fieldName, new JsonValueNodeMatcher(fieldValue));
+    return jsonField(equalTo(fieldName.toString()), new JsonValueNodeMatcher(fieldValue));
   }
 
-  public static JsonFieldMatcher jsonField(Object fieldName, Matcher<? super String> fieldValue) {
-    return jsonField(fieldName, new JsonStringNodeMatcher(fieldValue));
+  public static JsonFieldMatcher jsonField(Object fieldName, Matcher<? super String> fieldStringValue) {
+    return jsonField(equalTo(fieldName.toString()), new JsonStringNodeMatcher(fieldStringValue));
   }
 
-  public static JsonFieldMatcher jsonField(Object fieldName, JsonNodeMatcher fieldValue) {
-    return new JsonFieldMatcher(fieldName.toString(), fieldValue);
+  public static JsonFieldMatcher jsonField(Matcher<? super String> fieldNameMatcher, Matcher<? super String> fieldStringValue) {
+    return jsonField(fieldNameMatcher, new JsonStringNodeMatcher(fieldStringValue));
   }
 
+  public static JsonFieldMatcher jsonField(Matcher<? super String> fieldNameMatcher, JsonNodeMatcher fieldValue) {
+    return new JsonFieldMatcher(fieldNameMatcher, fieldValue);
+  }
 }

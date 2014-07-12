@@ -3,17 +3,17 @@ package si.urbas.pless.test.matchers;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
 import java.util.Map;
 
 public class JsonFieldMatcher extends BaseMatcher<Map.Entry<String, JsonNode>> {
 
-  private final String fieldName;
-
+  private final Matcher<? super String> fieldNameMatcher;
   private final JsonNodeMatcher fieldValueMatcher;
 
-  public JsonFieldMatcher(String fieldName, JsonNodeMatcher fieldValueMatcher) {
-    this.fieldName = fieldName;
+  public JsonFieldMatcher(Matcher<? super String> fieldNameMatcher, JsonNodeMatcher fieldValueMatcher) {
+    this.fieldNameMatcher = fieldNameMatcher;
     this.fieldValueMatcher = fieldValueMatcher;
   }
 
@@ -21,7 +21,7 @@ public class JsonFieldMatcher extends BaseMatcher<Map.Entry<String, JsonNode>> {
   public boolean matches(Object item) {
     if (item instanceof Map.Entry) {
       @SuppressWarnings("unchecked") Map.Entry<String, JsonNode> fieldNameAndValuePair = (Map.Entry<String, JsonNode>) item;
-      boolean fieldNameEquals = fieldNameAndValuePair.getKey().equals(fieldName);
+      boolean fieldNameEquals = fieldNameMatcher.matches(fieldNameAndValuePair.getKey());
       boolean valueEquals = fieldValueMatcher.matches(fieldNameAndValuePair.getValue());
       return fieldNameEquals && valueEquals;
     }
@@ -32,7 +32,7 @@ public class JsonFieldMatcher extends BaseMatcher<Map.Entry<String, JsonNode>> {
   public void describeTo(Description description) {
     description
       .appendText("\"")
-      .appendText(fieldName)
+      .appendDescriptionOf(fieldNameMatcher)
       .appendText("\": ")
       .appendDescriptionOf(fieldValueMatcher);
   }
