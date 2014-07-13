@@ -1,18 +1,13 @@
 package si.urbas.pless.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import play.api.libs.json.JsValue;
 import play.twirl.api.Content;
 
 public class JsonContent implements Content {
 
-  private final Object jsonContent;
+  private final JsValue jsonContent;
 
   public JsonContent(JsValue jsonContent) {
-    this.jsonContent = jsonContent;
-  }
-
-  public JsonContent(JsonNode jsonContent) {
     this.jsonContent = jsonContent;
   }
 

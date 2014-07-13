@@ -29,7 +29,7 @@ public class JsonResults {
   }
 
   public static Status jsonResult(Results.Status status, JsonNode json) {
-    return new Status(status, asContent(json), Codec.utf_8());
+    return new Status(status, json, Codec.utf_8());
   }
 
   public static Status jsonResult(Results.Status status, JsValue json) {
@@ -37,10 +37,6 @@ public class JsonResults {
   }
 
   public static JsonContent asContent(JsValue json) {
-    return new JsonContent(json);
-  }
-
-  public static JsonContent asContent(JsonNode json) {
     return new JsonContent(json);
   }
 

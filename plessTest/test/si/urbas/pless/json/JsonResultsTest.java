@@ -27,7 +27,7 @@ public class JsonResultsTest {
   public void okJson_MUST_return_json_content_type_result() throws Exception {
     assertThat(
       responseHeader.headers().get(CONTENT_TYPE).get(),
-      startsWith(asContent(fooJsString).contentType())
+      startsWith(JsonResults.jsonContentType())
     );
   }
 
