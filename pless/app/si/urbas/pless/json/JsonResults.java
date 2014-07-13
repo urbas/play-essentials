@@ -33,11 +33,7 @@ public class JsonResults {
   }
 
   public static Status jsonResult(Results.Status status, JsValue json) {
-    return new Status(status, asContent(json), Codec.utf_8());
-  }
-
-  public static JsonContent asContent(JsValue json) {
-    return new JsonContent(json);
+    return new Status(status, new JsonContent(json), Codec.utf_8());
   }
 
   public static String jsonContentType() {return MimeTypes$.MODULE$.JSON();}

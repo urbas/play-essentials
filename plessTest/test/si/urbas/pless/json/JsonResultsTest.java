@@ -9,7 +9,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static play.mvc.Http.HeaderNames.CONTENT_TYPE;
 import static play.mvc.Http.Status.OK;
-import static si.urbas.pless.json.JsonResults.asContent;
 
 public class JsonResultsTest {
 
@@ -28,14 +27,6 @@ public class JsonResultsTest {
     assertThat(
       responseHeader.headers().get(CONTENT_TYPE).get(),
       startsWith(JsonResults.jsonContentType())
-    );
-  }
-
-  @Test
-  public void asContent_MUST_return_a_json_content_instance() throws Exception {
-    assertThat(
-      asContent(fooJsString),
-      is(instanceOf(JsonContent.class))
     );
   }
 
