@@ -1,9 +1,9 @@
 package si.urbas.pless.jpasample;
 
+// SNIPPET: testPersistenceUnit
 import si.urbas.pless.test.PlayJpaControllerTest;
 
 @SuppressWarnings("UnusedDeclaration")
-// SNIPPET: testPersistenceUnit
 public class MyControllerTest extends PlayJpaControllerTest {
 
   @Override

@@ -5,24 +5,24 @@
 
 > Play Essentials is in development. Do not use it in production until release `1.0.0`.
 
-Play Essentials (Pless) is a library that helps you develop Play Framework applications super quickly. Just follow the
-Quickstart instructions below, and you'll get a working application with authentication, user management, emailing
-support and all that other jazz.
+Play Essentials (Pless) is a library that helps you develop Play Framework applications in Java super quickly. Just
+follow the Quickstart instructions below, and you'll get a working application with authentication, user management,
+emailing support and all that other jazz.
 
 Pless takes away the worry of having to develop all the silly login, email-sending, and user-management boilerplate. It
 lets you focus on what matters to your business.
 
-Why Pless? Because it provides a Java 8-friendly API and focuses on testability, it's easy to use (for casual users),
-and it's super configurable (for power-users).
+Pless provides a Java 8 API and focuses on testability. It's easy to use (for casual users), and it's super configurable
+(for power-users).
 
 Some features (not exhaustive):
 
--   User management (sign up, sign up emails, account activation, deletion)
--   Authentication management (login, logout, secure authentication sessions)
+-   User management (sign up, sign up emails, account activation, deletion, password reset, account detail modification)
+-   Authentication management (login, logout, secure authentication sessions, authentication session timeout)
 -   Emailing support
 -   JUnit test support with completely mocked applications or with an in-memory JPA database.
 
-NOTE: most of the features above are otherwise available through [Play Modules](http://www.playframework.com/modules).
+NOTE: some of the features above are otherwise available through [Play Modules](http://www.playframework.com/modules).
 Pless packages these modules where appropriate. However, Pless also implements its own Java APIs wherever the Scala API
 of Play modules impedes reusability from Java, testability from JUnit, and general configurability.
 
@@ -30,16 +30,14 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
 
 1.  Install [Play Framework](http://www.playframework.com/download).
 
-2.  Create a new Play application:
-
-        play new myplessapp
+2.  Create a new Play application.
 
 3.  Add these lines into `build.sbt`:
 
     ```scala
     resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 
-    libraryDependencies += "si.urbas" %% "pless" % "<%= plessProjectInfo.version %>"
+    libraryDependencies += "si.urbas" %% "plessJpa" % "<%= plessProjectInfo.version %>"
     ```
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
@@ -54,17 +52,11 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
 
 That's it. Start developing!
 
-You can run your application in the usual Play way:
-
-    play run
-
-Open your browser and navigate to: [http://localhost:9000/](http://localhost:9000/)
-
->   TODO: make Quickstart simpler by providing a seedling.
+>   TODO: make Quickstart easier by providing an Activator template.
 
 # Usage
 
-## JPA applications
+## JPA-based applications
 
 Make sure your controllers look like this:
 
@@ -75,6 +67,32 @@ Make sure your controllers look like this:
 Now you can use any of the below examples from within your controllers.
 
 ## Authentication
+
+Executing an action with an authenticated user:
+
+```java
+<%= snippet("jpasample/auth/WithAuthenticatedUserController.java", "withAuthenticatedUser") %>
+```
+
+### Authentication p2ages
+
+>   TODO: Web pages for authentication have not been created yet.
+
+### Authentication REST API
+
+Consumers of your application can log-in through the following REST API:
+
+```scala
+<%= snippet("pless/conf/si.urbas.pless.routes", "passwordLogin") %>
+```
+
+### Lower-level authentication API
+
+You can get access to the entire authentication API like this (from within your controller):
+
+```java
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "theAuthApi", snippetTransformer = stripIndentation) %>
+```
 
 Check that a user is currently logged in:
 
@@ -88,22 +106,16 @@ To get the email of the currently logged-in user:
 <%= snippet("jpasample/auth/AuthenticationSamples.java", "loggedInEmail", _ trim) %>
 ```
 
+You can log-in a user directly from your controller. Here's an example of password authentication:
+
+```java
+<%= snippet("jpasample/auth/AuthenticationSamples.java", "passwordAuthentication", _ trim) %>
+```
+
 To log the user out:
 
 ```java
 <%= snippet("jpasample/auth/AuthenticationSamples.java", "logOut", _ trim) %>
-```
-
-Here's a REST path to the password login controller:
-
-```scala
-<%= snippet("pless/conf/si.urbas.pless.routes", "passwordLogin") %>
-```
-
-You can log a user in directly from your controller. Here's an example of password authentication:
-
-```java
-<%= snippet("jpasample/auth/AuthenticationSamples.java", "passwordAuthentication", _ trim) %>
 ```
 
 >   TODO: Implement authentication through Play's authenticator mechanism.
@@ -116,7 +128,8 @@ You can introduce a custom authentication procedure through the generic login me
 <%= snippet("jpasample/auth/AuthenticationSamples.java", "genericAuthentication", _ trim) %>
 ```
 
-The above method starts an authentication session for the given user (even if the user does not exist in the user repository).
+The above method starts an authentication session for the given user (even if the user does not exist in the user
+repository).
 
 ## Emailing
 
@@ -135,13 +148,13 @@ email like this:
 <%= snippet("jpasample/emailing/OfferController.java", "sendEmail", _ trim) %>
 ```
 
-### Advanced usage
+### Advanced emailing
 
 ```java
 <%= snippet("jpasample/emailing/OfferController.java", "complexSendEmail", _ trim) %>
 ```
 
-### Configuration
+### Emailing configuration
 
 You can put these configuration settings into `conf/application.conf`:
 
