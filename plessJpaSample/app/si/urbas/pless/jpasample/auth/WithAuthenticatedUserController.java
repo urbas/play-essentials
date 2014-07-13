@@ -2,11 +2,12 @@ package si.urbas.pless.jpasample.auth;
 
 // SNIPPET: withAuthenticatedUser
 import play.mvc.Result;
+import si.urbas.pless.PlessJpaController;
 
 import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
 import static si.urbas.pless.util.ApiResults.SUCCESS;
 
-public class WithAuthenticatedUserController {
+public class WithAuthenticatedUserController extends PlessJpaController {
 
   public static Result myAction() {
     return withAuthenticatedUser(loggedInUserInfo -> {

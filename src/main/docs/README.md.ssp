@@ -74,7 +74,7 @@ Executing an action with an authenticated user:
 <%= snippet("jpasample/auth/WithAuthenticatedUserController.java", "withAuthenticatedUser") %>
 ```
 
-### Authentication p2ages
+### Authentication pages
 
 >   TODO: Web pages for authentication have not been created yet.
 
