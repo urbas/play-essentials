@@ -6,6 +6,8 @@ import si.urbas.pless.PlessService;
 import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;
 import si.urbas.pless.users.emails.html.PasswordResetEmail;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
+import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
+import si.urbas.pless.users.views.html.PasswordResetView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -36,9 +38,12 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * user and, upon success, generates a password reset code for that user and calls
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetEmail(String, String)}.</li>
  * <li>The user has to visit the {@link si.urbas.pless.users.UserController#resetPasswordForm(String, String)}
- * page and must submit the new password with the correct reset code and email.</li>
+ * page and must submit the new password with the correct reset code and email. The page is rendered via
+ * {@link si.urbas.pless.users.UserAccountService#passwordResetPage(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetConfirmationEmail(String)} is called.</li>
+ * <li>Finally, the password reset success page is displayed via
+ * {@link si.urbas.pless.users.UserAccountService#passwordResetSuccessfulPage(String)}.</li>
  * </ul>
  */
 @PlessServiceConfigKey(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE)
@@ -82,8 +87,16 @@ public class UserAccountService implements PlessService {
     getEmailProvider().sendEmail(email, emailSubject, emailContent);
   }
 
+  public Html passwordResetPage(Form<PasswordResetData> form) {
+    return PasswordResetView.apply(form);
+  }
+
   public void sendPasswordResetConfirmationEmail(String email) {
     getEmailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
+  }
+
+  public Html passwordResetSuccessfulPage(String userEmail) {
+    return PasswordResetSuccessfulView.apply(userEmail);
   }
 
   protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}

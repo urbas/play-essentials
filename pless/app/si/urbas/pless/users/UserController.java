@@ -6,8 +6,6 @@ import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.users.views.html.ActivationView;
-import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
-import si.urbas.pless.users.views.html.PasswordResetView;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -32,7 +30,6 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_PARAMETER = "password";
   public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
   public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
-  public static final String PASSWORD_RESET_TOKEN_PARAMETER = "resetPasswordToken";
   private static final String PASSWORD_RESET_ERROR = "The password could not be reset. Please submit another password reset request.";
 
   public static Result signUp() {
@@ -71,7 +68,7 @@ public final class UserController extends PlessController {
       users().mergeUser(user);
       getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
     } catch (Exception ignored) {
-      Logger.info("Password reset requested for email '" + email + "'. However, the user does not exist.");
+      Logger.info("Password reset requested for email '" + email + "'. However, a user with this email does not exist.");
     }
     return passwordResetResponseMessage(email);
   }
@@ -79,7 +76,7 @@ public final class UserController extends PlessController {
   public static Result resetPasswordForm(String email, String resetPasswordToken) {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
       .fill(new PasswordResetData(email, resetPasswordToken));
-    return ok(PasswordResetView.apply(form));
+    return ok(getUserAccountService().passwordResetPage(form));
   }
 
   public static Result submitResetPassword() {
@@ -87,11 +84,12 @@ public final class UserController extends PlessController {
     if (!form.hasErrors() && form.get().passwordsMatch()) {
       PasswordResetData passwordResetData = form.get();
       if (resetPasswordImpl(passwordResetData.email, passwordResetData.resetPasswordToken, passwordResetData.password)) {
-        return ok(PasswordResetSuccessfulView.apply(passwordResetData.email));
+        String email = passwordResetData.email;
+        return ok(getUserAccountService().passwordResetSuccessfulPage(email));
       }
       flash("error", PASSWORD_RESET_ERROR);
     }
-    return ok(PasswordResetView.apply(form));
+    return ok(getUserAccountService().passwordResetPage(form));
   }
 
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
@@ -100,7 +98,7 @@ public final class UserController extends PlessController {
         return SUCCESS;
       }
     } catch (Exception e) {
-      Logger.info("A password reset was attempted for non-existing user '" + email + "'.");
+      Logger.info("A failed password reset was attempted for user '" + email + "'.");
     }
     return error(PASSWORD_RESET_ERROR);
   }
