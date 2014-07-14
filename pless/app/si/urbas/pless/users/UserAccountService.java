@@ -45,6 +45,17 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <li>Finally, the password reset success page is displayed via
  * {@link si.urbas.pless.users.UserAccountService#passwordResetSuccessfulPage(String)}.</li>
  * </ul>
+ * <p>
+ * <h2>User account update</h2>
+ * E.g.: the user wants to change the password, username, or email (or any other detail).
+ * <ul>
+ * <li>User calls {@link UserController#updateUserAccount()} which passes POST parameters
+ * to the form returned by {@link UserAccountService#getAccountUpdateForm()}.</li>
+ * <li>If the form is without errors, then the
+ * {@link si.urbas.pless.users.UserAccountService#updateUser(play.data.Form, PlessUser)} method is called, with the
+ * form and the currently logged-in user. This function should returned the updated user, which is finally
+ * {@link si.urbas.pless.users.UserRepository#mergeUser(PlessUser) merged} into the user repository.</li>
+ * </ul>
  */
 @PlessServiceConfigKey(UserAccountService.CONFIG_USER_ACCOUNT_SERVICE)
 public class UserAccountService implements PlessService {
