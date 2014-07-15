@@ -2,11 +2,10 @@ package si.urbas.pless.authentication;
 
 import play.mvc.Result;
 import play.mvc.Results;
-import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.util.ApiResults;
-import si.urbas.pless.util.Supplier;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 

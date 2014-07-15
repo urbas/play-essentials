@@ -3,12 +3,11 @@ package si.urbas.pless.authentication;
 import org.junit.Before;
 import org.junit.Test;
 import play.mvc.Result;
-import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
-import si.urbas.pless.util.Supplier;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
@@ -24,7 +23,6 @@ public class AuthenticationHelpersTest extends PlessTest {
   private Supplier<Object> notAuthenticatedCallback;
   private Function<LoggedInUserInfo, Object> authenticatedCallback;
   private Function<LoggedInUserInfo, Result> authenticatedResultCallback;
-  private TemporaryHttpContext temporaryHttpContext;
 
   @Override
   @SuppressWarnings("unchecked")

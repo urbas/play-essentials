@@ -1,6 +1,6 @@
 package si.urbas.pless.emailing;
 
-import si.urbas.pless.util.Supplier;
+import java.util.function.Supplier;
 
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 

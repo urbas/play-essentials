@@ -2,8 +2,9 @@ package si.urbas.pless.test.util;
 
 import si.urbas.pless.PlessService;
 import si.urbas.pless.util.Body;
-import si.urbas.pless.util.Supplier;
 import si.urbas.pless.util.TemporaryService;
+
+import java.util.function.Supplier;
 
 public class ScopedServices {
   public static <T> T withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Supplier<T> body) {

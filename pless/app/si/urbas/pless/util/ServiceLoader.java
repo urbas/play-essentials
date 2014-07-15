@@ -3,6 +3,7 @@ package si.urbas.pless.util;
 import si.urbas.pless.PlessService;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class ServiceLoader<T extends PlessService> {
 

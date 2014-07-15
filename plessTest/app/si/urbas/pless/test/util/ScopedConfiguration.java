@@ -2,9 +2,11 @@ package si.urbas.pless.test.util;
 
 import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.Supplier;
+
+import java.util.function.Supplier;
 
 public class ScopedConfiguration {
+
   public static <T> T withConfig(ConfigurationSource configurationSource, Supplier<T> body) {
     try (TemporaryConfiguration ignored = new TemporaryConfiguration(configurationSource)) {
       return body.get();
