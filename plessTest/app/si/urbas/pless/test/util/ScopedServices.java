@@ -1,7 +1,6 @@
 package si.urbas.pless.test.util;
 
 import si.urbas.pless.PlessService;
-import si.urbas.pless.util.Body;
 import si.urbas.pless.util.TemporaryService;
 
 import java.util.function.Supplier;
@@ -13,16 +12,16 @@ public class ScopedServices {
     }
   }
 
-  public static void withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Body body) {
+  public static void withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Runnable body) {
     withService(serviceClass, serviceInstance, () -> {
-      body.invoke();
+      body.run();
       return null;
     });
   }
 
-  public static void withService(PlessService serviceInstance, Body body) {
+  public static void withService(PlessService serviceInstance, Runnable body) {
     withService(serviceInstance.getClass(), serviceInstance, () -> {
-      body.invoke();
+      body.run();
       return null;
     });
   }

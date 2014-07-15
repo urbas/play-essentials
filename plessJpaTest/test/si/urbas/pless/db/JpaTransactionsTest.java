@@ -5,7 +5,6 @@ import si.urbas.pless.test.JpaApplication;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.db.RawJpaTransactions;
 import si.urbas.pless.test.util.PlessTest;
-import si.urbas.pless.util.Body;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -114,10 +113,10 @@ public class JpaTransactionsTest extends PlessTest {
     withUnconfiguredJpaTransactions(() -> assertNotSame(getJpaTransactions(), getJpaTransactions()));
   }
 
-  private static void withUnconfiguredJpaTransactions(Body body) {
+  private static void withUnconfiguredJpaTransactions(Runnable body) {
     withService(JpaTransactions.class, null, () -> {
       configureJpaTransactions(null);
-      body.invoke();
+      body.run();
     });
   }
 

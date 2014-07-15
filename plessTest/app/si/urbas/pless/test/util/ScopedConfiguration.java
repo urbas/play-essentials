@@ -1,6 +1,5 @@
 package si.urbas.pless.test.util;
 
-import si.urbas.pless.util.Body;
 import si.urbas.pless.util.ConfigurationSource;
 
 import java.util.function.Supplier;
@@ -13,9 +12,9 @@ public class ScopedConfiguration {
     }
   }
 
-  public static void withConfig(ConfigurationSource configurationSource, Body body) {
+  public static void withConfig(ConfigurationSource configurationSource, Runnable body) {
     withConfig(configurationSource, () -> {
-      body.invoke();
+      body.run();
       return null;
     });
   }
@@ -26,9 +25,9 @@ public class ScopedConfiguration {
     }
   }
 
-  public static void withMockConfig(Body body) {
+  public static void withMockConfig(Runnable body) {
     withMockConfig(() -> {
-      body.invoke();
+      body.run();
       return null;
     });
   }
