@@ -1,4 +1,4 @@
-package si.urbas.pless.helpers;
+package si.urbas.pless.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +13,10 @@ import java.util.function.Function;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.helpers.ApiActionHelper.USER_NOT_LOGGED_IN_RESULT;
-import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
+import static si.urbas.pless.authentication.AuthenticationHelpers.USER_NOT_LOGGED_IN_RESULT;
+import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 
-public class ApiActionHelperTest extends PlessTest {
+public class AuthenticationHelpersTest extends PlessTest {
 
   private static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
   private static final String JOHN_SMITH_USERNAME = "john smith username";

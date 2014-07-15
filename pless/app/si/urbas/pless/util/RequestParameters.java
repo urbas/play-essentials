@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestParameters {
+
   public static Map.Entry<String, String[]> param(String parameterName, String... parameterValues) {
     return new AbstractMap.SimpleEntry<>(parameterName, parameterValues);
   }

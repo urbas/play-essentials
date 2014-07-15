@@ -3,6 +3,7 @@ package si.urbas.pless.util;
 import play.Play;
 
 class PlayApplicationInstanceCreator implements java.util.function.Function<String, Object> {
+
   public static final PlayApplicationInstanceCreator INSTANCE = new PlayApplicationInstanceCreator();
 
   @Override

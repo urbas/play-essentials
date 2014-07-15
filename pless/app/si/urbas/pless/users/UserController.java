@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.time.Instant.now;
 import static play.api.i18n.Lang.defaultLang;
-import static si.urbas.pless.helpers.ApiActionHelper.withAuthenticatedUser;
+import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;

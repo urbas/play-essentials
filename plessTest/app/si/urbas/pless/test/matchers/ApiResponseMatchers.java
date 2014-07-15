@@ -6,7 +6,7 @@ import play.mvc.Result;
 import static org.hamcrest.Matchers.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static si.urbas.pless.helpers.ApiActionHelper.ERROR_MESSAGE_USER_NOT_LOGGED_IN;
+import static si.urbas.pless.authentication.AuthenticationHelpers.ERROR_MESSAGE_USER_NOT_LOGGED_IN;
 import static si.urbas.pless.test.matchers.JsonMatchers.*;
 import static si.urbas.pless.util.ApiResults.RESPONSE_FIELD_ERROR;
 import static si.urbas.pless.util.ApiResults.RESPONSE_FIELD_MESSAGE;

@@ -1,4 +1,4 @@
-package si.urbas.pless.helpers;
+package si.urbas.pless.authentication;
 
 import play.mvc.Result;
 import play.mvc.Results;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
 
-public class ApiActionHelper {
+public class AuthenticationHelpers {
 
   public static final String ERROR_MESSAGE_USER_NOT_LOGGED_IN = "Could not process request. Authentication required.";
   public static final Results.Status USER_NOT_LOGGED_IN_RESULT = ApiResults.error(ERROR_MESSAGE_USER_NOT_LOGGED_IN);
