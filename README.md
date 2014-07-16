@@ -37,7 +37,7 @@ of Play modules impedes reusability from Java, testability from JUnit, and gener
     ```scala
     resolvers += "Sonatype Public Repository" at "https://oss.sonatype.org/content/groups/public"
 
-    libraryDependencies += "si.urbas" %% "pless-jpa" % "0.0.15-SNAPSHOT"
+    libraryDependencies += "si.urbas" %% "pless-jpa" % "0.0.15"
     ```
 
 4.  Put the following route into `conf/routes` (just after `GET /`)
@@ -78,7 +78,7 @@ Executing an action with an authenticated user:
 import play.mvc.Result;
 import si.urbas.pless.PlessJpaController;
 
-import static si.urbas.pless.authentication.ApiActionHelper.withAuthenticatedUser;
+import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.util.ApiResults.SUCCESS;
 
 public class WithAuthenticatedUserController extends PlessJpaController {
@@ -200,7 +200,7 @@ smtp.password=test1234
 Pless comes with classes that make tests in JUnit easier. To use them, just add this dependency:
 
 ```scala
-libraryDependencies += "si.urbas" %% "pless-jpa-test" % "0.0.15-SNAPSHOT" % "test"
+libraryDependencies += "si.urbas" %% "pless-jpa-test" % "0.0.15" % "test"
 ```
 
 ### Testing with an in-memory JPA database
