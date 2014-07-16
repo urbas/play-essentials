@@ -29,7 +29,8 @@ public class PlessController extends Controller {
   /**
    * Fetches the logged in user from the user repository.
    *
-   * <p><b>Note</b>: use the {@link si.urbas.pless.authentication.AuthenticationService#getLoggedInUserInfo()} method in {@link PlessController#auth()} if you simply want to check whether any user is logged in.</p>
+   * <p><b>Note</b>: use the {@link si.urbas.pless.authentication.AuthenticationService#getLoggedInUserInfo()} method in
+   * {@link PlessController#auth()} if you simply want to check whether any user is logged in.</p>
    *
    * @return {@code null} if no user is logged in.
    */

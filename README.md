@@ -78,7 +78,7 @@ Executing an action with an authenticated user:
 import play.mvc.Result;
 import si.urbas.pless.PlessJpaController;
 
-import static si.urbas.pless.authentication.ApiActionHelper.withAuthenticatedUser;
+import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.util.ApiResults.SUCCESS;
 
 public class WithAuthenticatedUserController extends PlessJpaController {

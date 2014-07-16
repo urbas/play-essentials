@@ -83,7 +83,7 @@ Executing an action with an authenticated user:
 Consumers of your application can log-in through the following REST API:
 
 ```scala
-<%= snippet("pless/conf/si.urbas.pless.routes", "passwordLogin") %>
+<%= snippet("plessJpaSample/conf/si.urbas.pless.jpasample.routes", "passwordLogin") %>
 ```
 
 ### Lower-level authentication API
