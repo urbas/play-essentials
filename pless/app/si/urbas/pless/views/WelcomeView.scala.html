@@ -1,5 +1,27 @@
+@import si.urbas.pless
+@import pless.authentication.AuthenticationService.{getAuthenticationService => auth}
+@import pless.users.routes.UserController
+@import pless.authentication.routes.PasswordAuthenticationController
+@import pless.pages.SignupPages.{getSignupPages => pages}
+@import pless.pages.routes._
+
 @MasterContainerView("Pless - Welcome") {
+  @if(flash.get("message") != null) {
+  <div>Some flash message: @{flash.get("message")}</div>
+  }
 <div>
-  Welcome to Pless.
+  Current user: @{if (auth.isLoggedIn) auth.getLoggedInUserEmail else "Not logged in"}
+</div>
+<div>
+  <a href="@{SignupController.signUp()}">Signup</a>
+</div>
+<div>
+  <a href="@{PasswordAuthenticationController.logIn()}">Login</a>
+</div>
+<div>
+  <a href="@{UserController.requestPasswordReset(auth.getLoggedInUserEmail)}">Reset password</a>
+</div>
+<div>
+  <a href="@{UserController.updateUserAccount()}">Update user account</a>
 </div>
 }

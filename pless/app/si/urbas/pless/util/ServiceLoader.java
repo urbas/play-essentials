@@ -31,16 +31,6 @@ public class ServiceLoader<T extends PlessService> {
     this.defaultService = defaultService;
   }
 
-  public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
-    // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
-    // that was running in development mode (it used SBT's class loader).
-    if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
-      return PlayApplicationInstanceCreator.getInstance();
-    } else {
-      return DefaultInstanceCreator.INSTANCE;
-    }
-  }
-
   public T getService() {
     resetCacheIfTestMode();
     if (cachedService == null) {
@@ -121,6 +111,16 @@ public class ServiceLoader<T extends PlessService> {
       throw new IllegalArgumentException("The class '" + plessServiceClass + "' is not a Pless service. Custom Pless services must inherit from default Pless services (see implementations of '" + PlessService.class + "').");
     }
     return configKeyAnnotation.value();
+  }
+
+  public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
+    // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
+    // that was running in development mode (it used SBT's class loader).
+    if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
+      return PlayApplicationInstanceCreator.getInstance();
+    } else {
+      return DefaultInstanceCreator.INSTANCE;
+    }
   }
 
   public static class DefaultInstanceCreator {

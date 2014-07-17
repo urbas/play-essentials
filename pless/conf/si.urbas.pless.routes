@@ -1,6 +1,10 @@
 # Home page
 GET   /                    si.urbas.pless.WelcomeController.welcome()
 
+# User Management Pages
+GET   /user/signup         si.urbas.pless.pages.SignupController.signUp()
+POST  /user/submitSignup   si.urbas.pless.pages.SignupController.submitSignUp()
+
 # Authentication API
 POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn()
 POST  /api/auth/logout     si.urbas.pless.authentication.AuthenticationController.logOut()

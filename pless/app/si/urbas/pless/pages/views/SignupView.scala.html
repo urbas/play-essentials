@@ -1,0 +1,12 @@
+@(signUpForm: Form[_])
+@import si.urbas.pless._
+@import pages.routes._
+<div class="pless-signUp-form">
+  @helper.form(action = SignupController.submitSignUp()) {
+    @helper.inputText(signUpForm("email"))
+    @helper.inputText(signUpForm("username"))
+    @helper.inputPassword(signUpForm("password"))
+    @helper.inputPassword(signUpForm("passwordConfirmation"))
+    <input type="submit" value="Submit"/>
+  }
+</div>

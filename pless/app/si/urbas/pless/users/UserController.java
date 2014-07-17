@@ -153,8 +153,13 @@ public final class UserController extends PlessController {
     if (signupForm.hasErrors()) {
       return formErrorAsJson(signupForm);
     } else {
-      return signUp(getUserAccountService().createUser(signupForm));
+      return signUpAndPersistUser(signupForm);
     }
+  }
+
+  public static Result signUpAndPersistUser(Form<?> signupForm) {
+    PlessUser newUser = getUserAccountService().createUser(signupForm);
+    return signUp(newUser);
   }
 
   public static Result signUp(PlessUser newUser) {
