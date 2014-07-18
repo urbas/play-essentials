@@ -3,11 +3,14 @@
 @import pless.users.routes.UserController
 @import pless.authentication.routes.PasswordAuthenticationController
 @import pless.pages.SignupPages.{getSignupPages => pages}
+@import pless.pages.SignupPages
 @import pless.pages.routes._
 
 @MasterContainerView("Pless - Welcome") {
-  @if(flash.get("message") != null) {
-  <div>Some flash message: @{flash.get("message")}</div>
+  @if(flash.get(SignupPages.FLASH_SUCCESSFUL_SIGN_UP) != null) {
+  <div class="pless-flash-success">
+    @{flash.get(SignupPages.FLASH_SUCCESSFUL_SIGN_UP)}
+  </div>
   }
 <div>
   Current user: @{if (auth.isLoggedIn) auth.getLoggedInUserEmail else "Not logged in"}

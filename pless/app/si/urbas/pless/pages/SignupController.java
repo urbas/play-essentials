@@ -18,13 +18,17 @@ public class SignupController extends PlessController {
 
   public static Result submitSignUp() {
     Form<?> signUpForm = getUserAccountService().getSignupForm().bindFromRequest();
-    if (signUpForm.hasErrors()) {
-      return badRequest(getSignupPages().submitSignUpForm(signUpForm));
-    } else if (signUpAndPersistUser(signUpForm) == ApiResults.ERROR) {
-      return badRequest(getSignupPages().signUpForm(signUpForm));
+    if (wasSignUpSuccessful(signUpForm)) {
+      return getSignupPages().signUpSuccessfulPage(signUpForm);
     } else {
-      return getSignupPages().signUpSuccessfulPage();
+      return badRequest(getSignupPages().submitSignUpForm(signUpForm));
     }
+  }
+
+  private static boolean wasSignUpSuccessful(Form<?> signUpForm) {
+    return !signUpForm.hasErrors() &&
+      getSignupPages().isSignUpFormValid(signUpForm) &&
+      signUpAndPersistUser(signUpForm) == ApiResults.SUCCESS;
   }
 
 }

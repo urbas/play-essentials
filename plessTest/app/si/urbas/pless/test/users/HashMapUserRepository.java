@@ -26,6 +26,15 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
+  public PlessUser findUserByUsername(String username) {
+    PlessUser plessUser = getUserByUsername(username);
+    if (plessUser == null) {
+      throw new IllegalArgumentException("Could not find user with the username '" + username + "'.");
+    }
+    return plessUser;
+  }
+
+  @Override
   public synchronized List<PlessUser> getAllUsers() {
     ArrayList<PlessUser> plessUsers = new ArrayList<>();
     for (PlessUser plessUser : emailToUserMap.values()) {
@@ -93,6 +102,8 @@ public class HashMapUserRepository extends UserRepository {
   private synchronized PlessUser getUserById(long updatedUserId) {return idToUserMap.get(updatedUserId);}
 
   private synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
+
+  private PlessUser getUserByUsername(String username) {return usernameToUserMap.get(username);}
 
   private PlessUser addUser(PlessUser newUser) {
     PlessUser clonedUser = newUser.clone();

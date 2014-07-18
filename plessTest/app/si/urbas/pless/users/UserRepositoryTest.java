@@ -13,6 +13,7 @@ import static si.urbas.pless.test.matchers.UserMatchers.*;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public abstract class UserRepositoryTest {
+
   protected static final String USER_EMAIL = "user email";
   protected static final String USER_USERNAME = "John the User";
   protected static final String USER_PASSWORD = "user password";
@@ -24,13 +25,27 @@ public abstract class UserRepositoryTest {
 
   @Test(expected = RuntimeException.class)
   public void findUserByEmail_MUST_throw_an_exception_WHEN_the_user_is_not_present() {
-    fetchUser(USER_EMAIL);
+    fetchUserByEmail(USER_EMAIL);
   }
 
   @Test
-  public void findUserWithEmail_MUST_return_the_persisted_user() {
+  public void findUserByEmail_MUST_return_the_persisted_user() {
     assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
+      persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
+      is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD))
+    );
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void findUserByUsername_MUST_throw_an_exception_WHEN_the_user_is_not_present() {
+    userRepository.findUserByUsername(USER_EMAIL);
+  }
+
+  @Test
+  public void findUserByUsername_MUST_return_the_persisted_user() {
+    persistNewUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    assertThat(
+      userRepository.findUserByUsername(USER_USERNAME),
       is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD))
     );
   }
@@ -57,7 +72,7 @@ public abstract class UserRepositoryTest {
   @Test
   public void persistUser_MUST_store_an_initially_inactive_user() {
     assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
+      persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
       is(not(activeUser()))
     );
   }
@@ -72,7 +87,7 @@ public abstract class UserRepositoryTest {
   @Test
   public void persistUser_MUST_initialise_the_user_with_a_long_activation_code() {
     assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
+      persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD),
       is(userWithLongActivationCode())
     );
   }
@@ -80,7 +95,7 @@ public abstract class UserRepositoryTest {
   @Test
   public void persistUser_MUST_initialise_the_user_with_a_recent_creationDate() {
     assertThat(
-      persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD).getCreationDate(),
+      persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD).getCreationDate(),
       is(dateWithin(CREATE_DATE_THRESHOLD_MILLISECONDS))
     );
   }
@@ -109,7 +124,7 @@ public abstract class UserRepositoryTest {
   public void activateUser_MUST_activate_a_persisted_user() {
     persistAndActivateUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertThat(
-      fetchUser(USER_EMAIL),
+      fetchUserByEmail(USER_EMAIL),
       is(activeUser())
     );
   }
@@ -126,22 +141,22 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void persistUser_MUST_assign_incremental_ids() {
-    PlessUser user1 = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    PlessUser user2 = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    PlessUser user1 = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user2 = persistAndFetchUserByEmail(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
     assertThat(user1.getId(), is(greaterThan(0L)));
     assertThat(user2.getId(), is(greaterThan(user1.getId())));
   }
 
   @Test(expected = RuntimeException.class)
   public void persistUser_MUST_throw_an_exception_WHEN_username_is_already_taken() {
-    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    persistAndFetchUser(USER_2_EMAIL, USER_USERNAME, USER_2_PASSWORD);
+    persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    persistAndFetchUserByEmail(USER_2_EMAIL, USER_USERNAME, USER_2_PASSWORD);
   }
 
   @Test(expected = RuntimeException.class)
   public void persistUser_MUST_throw_an_exception_WHEN_email_is_already_taken() {
-    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    persistAndFetchUser(USER_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    persistAndFetchUserByEmail(USER_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
   }
 
   @Test
@@ -151,28 +166,28 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void activate_MUST_not_change_the_creation_date() throws Exception {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     userRepository.activateUser(user.getEmail(), user.getActivationCode());
     assertThat(
       user.getCreationDate(),
-      is(equalTo(fetchUser(USER_EMAIL).getCreationDate()))
+      is(equalTo(fetchUserByEmail(USER_EMAIL).getCreationDate()))
     );
   }
 
   @Test
   public void activateUser_MUST_return_false_WHEN_activation_code_does_not_match() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     String wrongActivationCode = user.getActivationCode() + "wrong";
     assertFalse(userRepository.activateUser(user.getEmail(), wrongActivationCode));
   }
 
   @Test
   public void activateUser_MUST_not_activate_the_user_WHEN_activation_code_does_not_match() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     String wrongActivationCode = user.getActivationCode() + "wrong";
     userRepository.activateUser(user.getEmail(), wrongActivationCode);
     assertThat(
-      fetchUser(USER_EMAIL),
+      fetchUserByEmail(USER_EMAIL),
       is(not(activeUser()))
     );
   }
@@ -189,14 +204,14 @@ public abstract class UserRepositoryTest {
 
   @Test(expected = RuntimeException.class)
   public void delete_MUST_remove_the_persisted_user() throws Exception {
-    final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    final PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     delete(user.getEmail());
-    fetchUser(user.getEmail());
+    fetchUserByEmail(user.getEmail());
   }
 
   @Test
   public void delete_MUST_return_true_WHEN_the_user_exists() throws Exception {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertTrue(delete(user.getEmail()));
   }
 
@@ -207,7 +222,7 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void findUserById_MUST_return_the_persisted_user() throws Exception {
-    final PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    final PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertThat(
       fetchUser(user.getId()),
       is(userWith(USER_EMAIL, USER_USERNAME, USER_PASSWORD))
@@ -216,16 +231,16 @@ public abstract class UserRepositoryTest {
 
   @Test(expected = RuntimeException.class)
   public void mergeUser_MUST_throw_an_exception_WHEN_the_new_username_is_already_taken() {
-    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    PlessUser secondUser = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser secondUser = persistAndFetchUserByEmail(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
     secondUser.setUsername(USER_USERNAME);
     userRepository.mergeUser(secondUser);
   }
 
   @Test(expected = RuntimeException.class)
   public void mergeUser_MUST_throw_an_exception_WHEN_the_new_email_is_already_taken() {
-    persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
-    PlessUser secondUser = persistAndFetchUser(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
+    persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser secondUser = persistAndFetchUserByEmail(USER_2_EMAIL, USER_2_USERNAME, USER_2_PASSWORD);
     secondUser.setEmail(USER_EMAIL);
     userRepository.mergeUser(secondUser);
   }
@@ -237,7 +252,7 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void mergeUser_MUST_update_the_username() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     user.setUsername(USER_2_USERNAME);
     userRepository.mergeUser(user);
     assertThat(fetchUser(user.getId()), is(userWith(USER_EMAIL, USER_2_USERNAME, USER_PASSWORD)));
@@ -245,7 +260,7 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void mergeUser_MUST_update_the_email() {
-    PlessUser user = persistAndFetchUser(USER_2_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_2_EMAIL, USER_USERNAME, USER_PASSWORD);
     user.setEmail(USER_2_EMAIL);
     userRepository.mergeUser(user);
     assertThat(fetchUser(user.getId()), is(userWith(USER_2_EMAIL, USER_USERNAME, USER_PASSWORD)));
@@ -253,7 +268,7 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void mergeUser_MUST_update_the_password() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_2_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_2_PASSWORD);
     user.setPassword(USER_2_PASSWORD);
     userRepository.mergeUser(user);
     assertThat(fetchUser(user.getId()), is(userWith(USER_EMAIL, USER_USERNAME, USER_2_PASSWORD)));
@@ -261,7 +276,7 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void mergeUser_MUST_not_update_the_creation_date() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     Date oldCreationDate = user.getCreationDate();
     user.setCreationDate(new Date(12345));
     userRepository.mergeUser(user);
@@ -270,32 +285,32 @@ public abstract class UserRepositoryTest {
 
   @Test
   public void getPasswordResetCode_MUST_initially_be_null() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertNull(user.getPasswordResetCode());
   }
 
   @Test
   public void getPasswordResetCode_MUST_return_the_set_password_reset_code() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     String passwordResetCode = urlSafeHash();
     user.setPasswordResetCode(passwordResetCode);
     userRepository.mergeUser(user);
-    assertEquals(passwordResetCode, fetchUser(USER_EMAIL).getPasswordResetCode());
+    assertEquals(passwordResetCode, fetchUserByEmail(USER_EMAIL).getPasswordResetCode());
   }
 
   @Test
   public void getPasswordResetTimestamp_MUST_initially_return_null() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     assertNull(user.getPasswordResetTimestamp());
   }
 
   @Test
   public void getPasswordResetTimestamp_MUST_return_the_set_password_reset_code_timestamp() {
-    PlessUser user = persistAndFetchUser(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
+    PlessUser user = persistAndFetchUserByEmail(USER_EMAIL, USER_USERNAME, USER_PASSWORD);
     Date passwordResetTimestamp = new Date();
     user.setPasswordResetTimestamp(passwordResetTimestamp);
     userRepository.mergeUser(user);
-    assertEquals(passwordResetTimestamp, fetchUser(USER_EMAIL).getPasswordResetTimestamp());
+    assertEquals(passwordResetTimestamp, fetchUserByEmail(USER_EMAIL).getPasswordResetTimestamp());
   }
 
   private PlessUser createUser(String email, String username, String password) {return userRepository.createUser(email, username, password);}
@@ -304,17 +319,17 @@ public abstract class UserRepositoryTest {
 
   private PlessUser fetchUser(long userId) {return userRepository.findUserById(userId);}
 
-  private PlessUser fetchUser(String userEmail) {return userRepository.findUserByEmail(userEmail);}
+  private PlessUser fetchUserByEmail(String userEmail) {return userRepository.findUserByEmail(userEmail);}
 
   private boolean delete(String userEmail) {return userRepository.delete(userEmail);}
 
-  private PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
+  private PlessUser persistAndFetchUserByEmail(String userEmail, String username, String userPassword) {
     persistNewUser(userEmail, username, userPassword);
-    return fetchUser(userEmail);
+    return fetchUserByEmail(userEmail);
   }
 
   public boolean persistAndActivateUser(String userEmail, String username, String userPassword) {
-    PlessUser user = persistAndFetchUser(userEmail, username, userPassword);
+    PlessUser user = persistAndFetchUserByEmail(userEmail, username, userPassword);
     return userRepository.activateUser(user.getEmail(), user.getActivationCode());
   }
 }

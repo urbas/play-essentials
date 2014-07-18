@@ -11,12 +11,14 @@ import static si.urbas.pless.util.Hashes.urlSafeHash;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
   @NamedQuery(name = JpaPlessUser.QUERY_GET_BY_EMAIL, query = "SELECT u FROM PlessUser u WHERE u.email = :email"),
+  @NamedQuery(name = JpaPlessUser.QUERY_GET_BY_USERNAME, query = "SELECT u FROM PlessUser u WHERE u.username = :username"),
   @NamedQuery(name = JpaPlessUser.QUERY_ACTIVATE_USER, query = "UPDATE PlessUser u SET u.activated = TRUE WHERE u.email = :email AND u.activationCode = :activationCode"),
   @NamedQuery(name = JpaPlessUser.QUERY_DELETE_USER, query = "DELETE FROM PlessUser u WHERE u.email = :email"),
   @NamedQuery(name = JpaPlessUser.QUERY_GET_ALL, query = "SELECT u FROM PlessUser u")
 })
 public class JpaPlessUser extends PlessUser {
   public static final String QUERY_GET_BY_EMAIL = "PlessUser.getByEmail";
+  public static final String QUERY_GET_BY_USERNAME = "PlessUser.getByUsername";
   public static final String QUERY_GET_ALL = "PlessUser.getAll";
   public static final String QUERY_ACTIVATE_USER = "PlessUser.activate";
   public static final String QUERY_DELETE_USER = "PlessUser.delete";

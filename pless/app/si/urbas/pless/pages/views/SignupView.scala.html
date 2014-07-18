@@ -1,12 +1,19 @@
 @(signUpForm: Form[_])
 @import si.urbas.pless._
+@import users.SignupData
 @import pages.routes._
+@import pages.SignupPages
 <div class="pless-signUp-form">
   @helper.form(action = SignupController.submitSignUp()) {
-    @helper.inputText(signUpForm("email"))
-    @helper.inputText(signUpForm("username"))
-    @helper.inputPassword(signUpForm("password"))
-    @helper.inputPassword(signUpForm("passwordConfirmation"))
+    @helper.inputText(signUpForm(SignupData.EMAIL_FIELD))
+    @helper.inputText(signUpForm(SignupData.USERNAME_FIELD))
+    @helper.inputPassword(signUpForm(SignupData.PASSWORD_FIELD))
+    @helper.inputPassword(signUpForm(SignupData.PASSWORD_CONFIRMATION_FIELD))
+    @if(flash.get(SignupPages.FLASH_PASSWORD_MISMATCH) != null) {
+    <div class="pless-flash-input-error">
+      Password mismatch.
+    </div>
+    }
     <input type="submit" value="Submit"/>
   }
 </div>

@@ -34,6 +34,8 @@ public abstract class UserRepository implements PlessService {
 
   public abstract boolean delete(String userEmail);
 
+  public abstract PlessUser findUserByUsername(String username);
+
   protected void throwPersistUserException(String message, PlessUser user) {
     StringBuilder exceptionMessage = new StringBuilder("Cannot persist the user '" + user + "'.");
     if (!StringUtils.isNullOrEmpty(message)) {

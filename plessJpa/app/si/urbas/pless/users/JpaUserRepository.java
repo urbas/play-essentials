@@ -23,6 +23,16 @@ public class JpaUserRepository extends UserRepository {
     });
   }
 
+  @Override
+  public PlessUser findUserByUsername(String username) {
+    return getJpaTransactions().withDb(entityManager -> {
+      TypedQuery<JpaPlessUser> usersByUsernameQuery = entityManager
+        .createNamedQuery(QUERY_GET_BY_USERNAME, JpaPlessUser.class);
+      usersByUsernameQuery.setParameter("username", username);
+      return usersByUsernameQuery.getSingleResult();
+    });
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public List<PlessUser> getAllUsers() {
