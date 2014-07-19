@@ -62,14 +62,14 @@ public final class UserController extends PlessController {
 
   public static Result requestPasswordReset(String email) {
     PlessUser user = users().findUserByEmail(email);
-    if (user == null) {
+    if (user != null) {
+      user.setPasswordResetCode(urlSafeHash());
+      user.setPasswordResetTimestamp(new Date());
+      users().mergeUser(user);
+      getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
+    } else {
       Logger.info("Password reset requested for email '" + email + "'. However, a user with this email does not exist.");
-      return ERROR;
     }
-    user.setPasswordResetCode(urlSafeHash());
-    user.setPasswordResetTimestamp(new Date());
-    users().mergeUser(user);
-    getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
     return passwordResetResponseMessage(email);
   }
 
