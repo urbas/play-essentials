@@ -17,22 +17,23 @@ public class HashMapUserRepository extends UserRepository {
   private long maxId = 0;
 
   @Override
+  public synchronized PlessUser findUserById(long userId) {
+    PlessUser user = idToUserMap.get(userId);
+    return user == null ? null : user.clone();
+  }
+
+  @Override
   public synchronized PlessUser findUserByEmail(String email) {
     PlessUser user = getUser(email);
-    if (user == null) {
-      throw new IllegalArgumentException("Could not find user with the email '" + email + "'");
-    }
-    return user.clone();
+    return user == null ? null : user.clone();
   }
 
   @Override
   public PlessUser findUserByUsername(String username) {
-    PlessUser plessUser = getUserByUsername(username);
-    if (plessUser == null) {
-      throw new IllegalArgumentException("Could not find user with the username '" + username + "'.");
-    }
-    return plessUser;
+    PlessUser user = usernameToUserMap.get(username);
+    return user == null ? null : user.clone();
   }
+
 
   @Override
   public synchronized List<PlessUser> getAllUsers() {
@@ -42,7 +43,6 @@ public class HashMapUserRepository extends UserRepository {
     }
     return plessUsers;
   }
-
 
   @Override
   public synchronized void persistUser(PlessUser user) {
@@ -74,15 +74,6 @@ public class HashMapUserRepository extends UserRepository {
   }
 
   @Override
-  public synchronized PlessUser findUserById(long userId) {
-    PlessUser user = idToUserMap.get(userId);
-    if (user == null) {
-      throw new IllegalArgumentException("Could not find user with the id '" + userId + "'");
-    }
-    return user.clone();
-  }
-
-  @Override
   public synchronized void mergeUser(PlessUser userWithUpdatedFields) {
     PlessUser persistedUser = getUserById(userWithUpdatedFields.getId());
     if (persistedUser == null) {
@@ -102,8 +93,6 @@ public class HashMapUserRepository extends UserRepository {
   private synchronized PlessUser getUserById(long updatedUserId) {return idToUserMap.get(updatedUserId);}
 
   private synchronized PlessUser getUser(String email) {return emailToUserMap.get(email);}
-
-  private PlessUser getUserByUsername(String username) {return usernameToUserMap.get(username);}
 
   private PlessUser addUser(PlessUser newUser) {
     PlessUser clonedUser = newUser.clone();

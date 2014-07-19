@@ -166,11 +166,11 @@ public class UserControllerTest extends PlessTest {
     assertThat(callDelete(), is(success()));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callDelete();
-    getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL);
+    assertNull(getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL));
   }
 
   @Test

@@ -3,7 +3,6 @@ package si.urbas.pless.users;
 import si.urbas.pless.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -14,12 +13,21 @@ import static si.urbas.pless.users.JpaPlessUser.*;
 public class JpaUserRepository extends UserRepository {
 
   @Override
+  public PlessUser findUserById(final long userId) {
+    return getJpaTransactions().withDb(entityManager -> entityManager.find(JpaPlessUser.class, userId));
+  }
+
+  @Override
   public PlessUser findUserByEmail(final String email) {
     return getJpaTransactions().withDb(entityManager -> {
       TypedQuery<JpaPlessUser> usersByEmailQuery = entityManager
         .createNamedQuery(QUERY_GET_BY_EMAIL, JpaPlessUser.class);
       usersByEmailQuery.setParameter("email", email);
-      return usersByEmailQuery.getSingleResult();
+      try {
+        return usersByEmailQuery.getSingleResult();
+      } catch (Exception e) {
+        return null;
+      }
     });
   }
 
@@ -29,7 +37,11 @@ public class JpaUserRepository extends UserRepository {
       TypedQuery<JpaPlessUser> usersByUsernameQuery = entityManager
         .createNamedQuery(QUERY_GET_BY_USERNAME, JpaPlessUser.class);
       usersByUsernameQuery.setParameter("username", username);
-      return usersByUsernameQuery.getSingleResult();
+      try {
+        return usersByUsernameQuery.getSingleResult();
+      } catch (Exception e) {
+        return null;
+      }
     });
   }
 
@@ -72,17 +84,6 @@ public class JpaUserRepository extends UserRepository {
       deleteUserQuery.setParameter("email", userEmail);
       int deletedRows = deleteUserQuery.executeUpdate();
       return deletedRows > 0;
-    });
-  }
-
-  @Override
-  public PlessUser findUserById(final long userId) {
-    return getJpaTransactions().withDb(entityManager -> {
-      final JpaPlessUser foundUser = entityManager.find(JpaPlessUser.class, userId);
-      if (foundUser == null) {
-        throw new NoResultException("Could not find the user with the id " + userId);
-      }
-      return foundUser;
     });
   }
 

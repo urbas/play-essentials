@@ -61,15 +61,15 @@ public final class UserController extends PlessController {
   }
 
   public static Result requestPasswordReset(String email) {
-    try {
-      PlessUser user = users().findUserByEmail(email);
-      user.setPasswordResetCode(urlSafeHash());
-      user.setPasswordResetTimestamp(new Date());
-      users().mergeUser(user);
-      getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
-    } catch (Exception ignored) {
+    PlessUser user = users().findUserByEmail(email);
+    if (user == null) {
       Logger.info("Password reset requested for email '" + email + "'. However, a user with this email does not exist.");
+      return ERROR;
     }
+    user.setPasswordResetCode(urlSafeHash());
+    user.setPasswordResetTimestamp(new Date());
+    users().mergeUser(user);
+    getUserAccountService().sendPasswordResetEmail(email, user.getPasswordResetCode());
     return passwordResetResponseMessage(email);
   }
 
@@ -105,7 +105,7 @@ public final class UserController extends PlessController {
 
   private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {
     PlessUser user = users().findUserByEmail(email);
-    if (isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
+    if (user != null && isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
       user.setPassword(newPassword);
       user.setPasswordResetCode(null);
       user.setPasswordResetTimestamp(null);
