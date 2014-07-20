@@ -117,6 +117,7 @@ object PlessBuild extends Build {
       Seq(
         libraryDependencies ++= Seq(
           cache,
+          filters,
           "commons-codec" % "commons-codec" % "1.9",
           "org.apache.commons" % "commons-email" % "1.3.2"
         )

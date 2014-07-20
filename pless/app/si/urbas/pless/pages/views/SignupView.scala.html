@@ -5,6 +5,7 @@
 @import pages.SignupPages
 <div class="pless-signUp-form">
   @helper.form(action = SignupController.submitSignUp()) {
+    @helper.CSRF.formField
     @helper.inputText(signUpForm(SignupData.EMAIL_FIELD))
     @helper.inputText(signUpForm(SignupData.USERNAME_FIELD))
     @helper.inputPassword(signUpForm(SignupData.PASSWORD_FIELD))
