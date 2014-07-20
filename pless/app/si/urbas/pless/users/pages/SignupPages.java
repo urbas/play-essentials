@@ -1,10 +1,10 @@
-package si.urbas.pless.pages;
+package si.urbas.pless.users.pages;
 
 import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.pages.views.html.SignupView;
+import si.urbas.pless.users.pages.views.html.SignupView;
 import si.urbas.pless.routes;
 import si.urbas.pless.users.SignupData;
 import si.urbas.pless.util.PlessServiceConfigKey;
@@ -25,14 +25,7 @@ public class SignupPages implements PlessService {
   /**
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
    */
-  public Html signUpForm(Form<?> signUpForm) {
-    return SignupView.apply(signUpForm);
-  }
-
-  /**
-   * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
-   */
-  public Html submitSignUpForm(Form<?> signUpForm) {
+  public Html signUpPanel(Form<?> signUpForm) {
     return SignupView.apply(signUpForm);
   }
 

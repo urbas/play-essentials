@@ -30,7 +30,7 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_PARAMETER = "password";
   public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
   public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
-  private static final String PASSWORD_RESET_ERROR = "The password could not be reset. Please submit another password reset request.";
+  public static final String PASSWORD_RESET_ERROR = "The password could not be reset. Please submit another password reset request.";
 
   public static Result signUp() {
     return signUp(getUserAccountService().getSignupForm().bindFromRequest());
@@ -73,25 +73,6 @@ public final class UserController extends PlessController {
     return passwordResetResponseMessage(email);
   }
 
-  public static Result resetPasswordForm(String email, String resetPasswordToken) {
-    Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
-      .fill(new PasswordResetData(email, resetPasswordToken));
-    return ok(getUserAccountService().passwordResetPage(form));
-  }
-
-  public static Result submitResetPassword() {
-    Form<PasswordResetData> form = new Form<>(PasswordResetData.class).bindFromRequest();
-    if (!form.hasErrors() && form.get().passwordsMatch()) {
-      PasswordResetData passwordResetData = form.get();
-      if (resetPasswordImpl(passwordResetData.email, passwordResetData.resetPasswordToken, passwordResetData.password)) {
-        String email = passwordResetData.email;
-        return ok(getUserAccountService().passwordResetSuccessfulPage(email));
-      }
-      flash("error", PASSWORD_RESET_ERROR);
-    }
-    return ok(getUserAccountService().passwordResetPage(form));
-  }
-
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
     try {
       if (resetPasswordImpl(email, resetPasswordToken, newPassword)) {
@@ -103,7 +84,7 @@ public final class UserController extends PlessController {
     return error(PASSWORD_RESET_ERROR);
   }
 
-  private static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {
+  public static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {
     PlessUser user = users().findUserByEmail(email);
     if (user != null && isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
       user.setPassword(newPassword);

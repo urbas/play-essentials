@@ -23,10 +23,11 @@ import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.users.UserAccountService.*;
+import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
+import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.pages.routes.PasswordResetController;
 import static si.urbas.pless.users.routes.UserController;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.param;
@@ -134,7 +135,7 @@ public class UserAccountServiceTest extends PlessTest {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
       Html passwordResetEmailContent = userAccountService.passwordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
-      Call resetPasswordForm = UserController.resetPasswordForm(JANE_SMITH_EMAIL, passwordResetCode);
+      Call resetPasswordForm = PasswordResetController.resetPasswordForm(JANE_SMITH_EMAIL, passwordResetCode);
       assertThat(
         passwordResetEmailContent.body(),
         containsString(escapedAbsoluteUrl(httpContext, resetPasswordForm))

@@ -6,7 +6,6 @@ import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
-import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
 
 import java.util.Calendar;
@@ -331,18 +330,6 @@ public class UserControllerTest extends PlessTest {
     PlessUser user = createUserAndRequestPasswordReset();
     resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
     verify(getUserAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
-  }
-
-  @Test
-  public void resetPasswordForm_MUST_return_a_form_with_two_password_input_fields() {
-    try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
-      Result result = UserController.resetPasswordForm(JOHN_SMITH_EMAIL, "password reset token");
-      String contentAsString = contentAsString(result);
-      assertThat(
-        contentAsString,
-        containsString("input type=\"password\"")
-      );
-    }
   }
 
   private static void setDefaultPasswordResetValidityDuration() {

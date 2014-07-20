@@ -6,8 +6,6 @@ import si.urbas.pless.PlessService;
 import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;
 import si.urbas.pless.users.emails.html.PasswordResetEmail;
 import si.urbas.pless.users.emails.html.SignupEmailTemplate;
-import si.urbas.pless.users.views.html.PasswordResetSuccessfulView;
-import si.urbas.pless.users.views.html.PasswordResetView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -37,13 +35,13 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <li>User calls {@link si.urbas.pless.users.UserController#requestPasswordReset(String)}, which tries to find the
  * user and, upon success, generates a password reset code for that user and calls
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetEmail(String, String)}.</li>
- * <li>The user has to visit the {@link si.urbas.pless.users.UserController#resetPasswordForm(String, String)}
+ * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPasswordForm(String, String)}
  * page and must submit the new password with the correct reset code and email. The page is rendered via
- * {@link si.urbas.pless.users.UserAccountService#passwordResetPage(play.data.Form)}.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPanel(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetConfirmationEmail(String)} is called.</li>
  * <li>Finally, the password reset success page is displayed via
- * {@link si.urbas.pless.users.UserAccountService#passwordResetSuccessfulPage(String)}.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetSuccessfulPanel(String)}.</li>
  * </ul>
  * <p>
  * <h2>User account update</h2>
@@ -98,16 +96,8 @@ public class UserAccountService implements PlessService {
     getEmailProvider().sendEmail(email, emailSubject, emailContent);
   }
 
-  public Html passwordResetPage(Form<PasswordResetData> form) {
-    return PasswordResetView.apply(form);
-  }
-
   public void sendPasswordResetConfirmationEmail(String email) {
     getEmailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
-  }
-
-  public Html passwordResetSuccessfulPage(String userEmail) {
-    return PasswordResetSuccessfulView.apply(userEmail);
   }
 
   protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}

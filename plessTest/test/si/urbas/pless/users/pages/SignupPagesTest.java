@@ -1,11 +1,11 @@
-package si.urbas.pless.pages;
+package si.urbas.pless.users.pages;
 
 import org.junit.Test;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static si.urbas.pless.pages.SignupPages.getSignupPages;
+import static si.urbas.pless.users.pages.SignupPages.getSignupPages;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 
 public class SignupPagesTest extends PlessTest {
