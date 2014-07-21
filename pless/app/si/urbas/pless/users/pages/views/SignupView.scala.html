@@ -10,11 +10,6 @@
     @helper.inputText(signUpForm(SignupData.USERNAME_FIELD))
     @helper.inputPassword(signUpForm(SignupData.PASSWORD_FIELD))
     @helper.inputPassword(signUpForm(SignupData.PASSWORD_CONFIRMATION_FIELD))
-    @if(flash.get(SignupPages.FLASH_PASSWORD_MISMATCH) != null) {
-    <div class="pless-flash-input-error">
-      Password mismatch.
-    </div>
-    }
     <input type="submit" value="Submit"/>
   }
 </div>

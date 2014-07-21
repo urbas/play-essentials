@@ -20,7 +20,6 @@ public class SignupPages implements PlessService {
 
   public static final String CONFIG_SIGNUP_PAGES = "pless.signupPages";
   public static final String FLASH_SUCCESSFUL_SIGN_UP = "flash.signUp.success";
-  public static final String FLASH_PASSWORD_MISMATCH = "flash.signUp.passwordMismatch";
 
   /**
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
