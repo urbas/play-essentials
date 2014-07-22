@@ -8,9 +8,6 @@ import play.Play;
  * 
  * It is therefore safe to share a single instance of this class across multiple
  * requests.
- * 
- * @author matej
- * 
  */
 public class PlayApplicationConfigurationSource extends ConfigurationSource {
 
@@ -26,20 +23,17 @@ public class PlayApplicationConfigurationSource extends ConfigurationSource {
 
   @Override
   public String getString(String configKey) {
-    return Play.application().configuration()
-      .getString(configKey);
+    return Play.application().configuration().getString(configKey);
   }
 
   @Override
   public int getInt(String configKey, int defaultValue) {
-    return Play.application().configuration()
-      .getInt(configKey, defaultValue);
+    return Play.application().configuration().getInt(configKey, defaultValue);
   }
 
   @Override
   public boolean getBoolean(String configKey, boolean defaultValue) {
-    return Play.application().configuration()
-      .getBoolean(configKey, defaultValue);
+    return Play.application().configuration().getBoolean(configKey, defaultValue);
   }
   
 }
