@@ -5,12 +5,14 @@ import play.mvc.Result;
 import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.users.pages.views.html.SignupView;
+import si.urbas.pless.users.pages.views.html.ActivationView;
 import si.urbas.pless.routes;
 import si.urbas.pless.users.SignupData;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.mvc.Controller.flash;
+import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
@@ -38,6 +40,10 @@ public class SignupPages implements PlessService {
   public Result signUpSuccessfulPage(Form<?> signUpForm) {
     flash(FLASH_SUCCESSFUL_SIGN_UP, "User activation email sent to '" + signUpForm.field(SignupData.EMAIL_FIELD).value() + "'.");
     return redirect(routes.WelcomeController.welcome());
+  }
+
+  public Result activationPage(boolean wasActivated, String email) {
+    return ok(ActivationView.apply(wasActivated));
   }
 
   protected static boolean isUsernameFree(Form<?> signUpForm) {
