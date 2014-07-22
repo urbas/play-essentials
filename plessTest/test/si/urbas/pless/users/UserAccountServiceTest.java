@@ -77,10 +77,10 @@ public class UserAccountServiceTest extends PlessTest {
   @Test
   public void signupEmailContent_MUST_contain_the_activation_url() throws Exception {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
-      Call activationPageCall = SignupController.activationPage(user.getEmail(), user.getActivationCode());
+      Call activateCall = SignupController.activate(user.getEmail(), user.getActivationCode());
       assertThat(
         userAccountService.signupEmailContent(user).body(),
-        containsString(escapedAbsoluteUrl(httpContext, activationPageCall))
+        containsString(escapedAbsoluteUrl(httpContext, activateCall))
       );
     }
   }

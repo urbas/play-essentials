@@ -21,8 +21,8 @@
   To complete your registration please visit the following link:
 
   <div>
-    <a href="@{SignupController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}">
-      @{SignupController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}
+    <a href="@{SignupController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}">
+      @{SignupController.activate(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}
     </a>
   </div>
   Visiting this link will activate your account.

@@ -29,7 +29,7 @@ public class SignupController extends PlessController {
     }
   }
 
-  public static Result activationPage(final String email, final String activationCode) {
+  public static Result activate(final String email, final String activationCode) {
     boolean wasActivated = users().activateUser(email, activationCode);
     return getSignupPages().activationPage(wasActivated, email);
   }
