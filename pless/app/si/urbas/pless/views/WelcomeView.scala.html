@@ -1,10 +1,10 @@
 @import si.urbas.pless
 @import pless.authentication.AuthenticationService.{getAuthenticationService => auth}
-@import pless.users.routes.UserController
 @import pless.authentication.routes.PasswordAuthenticationController
-@import pless.pages.SignupPages.{getSignupPages => pages}
-@import pless.pages.SignupPages
-@import pless.pages.routes._
+@import pless.users.routes.UserController
+@import pless.users.pages.SignupPages.{getSignupPages => pages}
+@import pless.users.pages.SignupPages
+@import pless.users.pages.routes._
 
 @MasterContainerView("Pless - Welcome") {
   @if(flash.get(SignupPages.FLASH_SUCCESSFUL_SIGN_UP) != null) {
