@@ -5,7 +5,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.users.views.html.ActivationView;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -34,11 +33,6 @@ public final class UserController extends PlessController {
 
   public static Result signUp() {
     return signUp(getUserAccountService().getSignupForm().bindFromRequest());
-  }
-
-  public static Result activationPage(final String email, final String activationCode) {
-    boolean wasActivated = users().activateUser(email, activationCode);
-    return ok(ActivationView.apply(wasActivated));
   }
 
   public static Result info() {

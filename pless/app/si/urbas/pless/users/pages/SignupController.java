@@ -5,6 +5,7 @@ import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.util.ApiResults;
 
 import static si.urbas.pless.users.pages.SignupPages.getSignupPages;
@@ -29,10 +30,14 @@ public class SignupController extends PlessController {
     }
   }
 
+  public static Result activationPage(final String email, final String activationCode) {
+    boolean wasActivated = users().activateUser(email, activationCode);
+    return ok(ActivationView.apply(wasActivated));
+  }
+
   private static boolean wasSignUpSuccessful(Form<?> signUpForm) {
     return !signUpForm.hasErrors() &&
       getSignupPages().isSignUpFormValid(signUpForm) &&
       signUpAndPersistUser(signUpForm) == ApiResults.SUCCESS;
   }
-
 }

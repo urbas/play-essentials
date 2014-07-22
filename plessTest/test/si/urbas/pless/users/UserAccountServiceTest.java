@@ -28,7 +28,7 @@ import static si.urbas.pless.users.UserAccountService.getUserAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.pages.routes.PasswordResetController;
-import static si.urbas.pless.users.routes.UserController;
+import static si.urbas.pless.users.pages.routes.SignupController;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 import static si.urbas.pless.util.RequestParameters.param;
 import static si.urbas.pless.util.RequestParameters.params;
@@ -77,7 +77,7 @@ public class UserAccountServiceTest extends PlessTest {
   @Test
   public void signupEmailContent_MUST_contain_the_activation_url() throws Exception {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
-      Call activationPageCall = UserController.activationPage(user.getEmail(), user.getActivationCode());
+      Call activationPageCall = SignupController.activationPage(user.getEmail(), user.getActivationCode());
       assertThat(
         userAccountService.signupEmailContent(user).body(),
         containsString(escapedAbsoluteUrl(httpContext, activationPageCall))

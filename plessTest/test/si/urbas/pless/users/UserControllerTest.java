@@ -7,6 +7,7 @@ import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.users.pages.SignupController;
 
 import java.util.Calendar;
 
@@ -113,7 +114,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
-      contentAsString(activationPage(JOHN_SMITH_EMAIL, null)),
+      contentAsString(SignupController.activationPage(JOHN_SMITH_EMAIL, null)),
       containsString("We could not activate your account")
     );
   }
@@ -122,7 +123,7 @@ public class UserControllerTest extends PlessTest {
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
     final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
-      contentAsString(activationPage(user.getEmail(), user.getActivationCode())),
+      contentAsString(SignupController.activationPage(user.getEmail(), user.getActivationCode())),
       containsString("Thank you very much for registering with us")
     );
   }

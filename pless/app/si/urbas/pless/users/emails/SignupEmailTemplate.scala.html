@@ -1,5 +1,5 @@
 @(loginDetails: si.urbas.pless.users.PlessUser)
-@import si.urbas.pless.users.routes.UserController
+@import si.urbas.pless.users.pages.routes.SignupController
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,8 +21,8 @@
   To complete your registration please visit the following link:
 
   <div>
-    <a href="@{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}">
-      @{UserController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}
+    <a href="@{SignupController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}">
+      @{SignupController.activationPage(loginDetails.getEmail, loginDetails.getActivationCode).absoluteURL(false)}
     </a>
   </div>
   Visiting this link will activate your account.

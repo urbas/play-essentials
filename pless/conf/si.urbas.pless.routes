@@ -4,6 +4,7 @@ GET   /                    si.urbas.pless.WelcomeController.welcome()
 # User Management Pages
 GET   /user/signup         si.urbas.pless.users.pages.SignupController.signUp()
 POST  /user/submitSignup   si.urbas.pless.users.pages.SignupController.submitSignUp()
+GET   /user/activate       si.urbas.pless.users.pages.SignupController.activationPage(email, activationCode)
 GET   /user/resetPassword             si.urbas.pless.users.pages.PasswordResetController.resetPasswordForm(email, resetPasswordToken)
 GET   /user/submitResetPassword       si.urbas.pless.users.pages.PasswordResetController.submitResetPassword()
 
@@ -13,7 +14,6 @@ POST  /api/auth/logout     si.urbas.pless.authentication.AuthenticationControlle
 GET   /api/auth/status     si.urbas.pless.authentication.AuthenticationController.status()
 
 # User Management API
-GET   /user/activate       si.urbas.pless.users.UserController.activationPage(email, activationCode)
 POST  /api/user/signup     si.urbas.pless.users.UserController.signUp()
 GET   /api/user/info       si.urbas.pless.users.UserController.info()
 POST  /api/user/info       si.urbas.pless.users.UserController.updateUserAccount()
