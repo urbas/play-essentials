@@ -73,7 +73,7 @@ public class SignupPages implements PlessService {
     return true;
   }
 
-  public static SignupPages getSignupPages() {
+  public static SignupPages signupPages() {
     return SignupPagesLoader.INSTANCE.getService();
   }
 

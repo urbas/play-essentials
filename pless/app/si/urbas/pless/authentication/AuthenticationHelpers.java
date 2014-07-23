@@ -7,7 +7,7 @@ import si.urbas.pless.util.ApiResults;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
+import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 
 public class AuthenticationHelpers {
 
@@ -25,7 +25,7 @@ public class AuthenticationHelpers {
 
   public static <T> T withAuthenticatedUser(Function<LoggedInUserInfo, T> authenticatedCallback,
                                             Supplier<T> notAuthenticatedCallback) {
-    LoggedInUserInfo loggedInUserInfo = getAuthenticationService().getLoggedInUserInfo();
+    LoggedInUserInfo loggedInUserInfo = authenticationService().getLoggedInUserInfo();
     if (loggedInUserInfo == null) {
       return notAuthenticatedCallback.get();
     }

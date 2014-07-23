@@ -24,7 +24,7 @@ public class PasswordResetPages implements PlessService {
     return PasswordResetSuccessfulView.apply(userEmail);
   }
 
-  public static PasswordResetPages getPasswordResetPages() {
+  public static PasswordResetPages passwordResetPages() {
     return PasswordResetPagesLoader.INSTANCE.getService();
   }
 

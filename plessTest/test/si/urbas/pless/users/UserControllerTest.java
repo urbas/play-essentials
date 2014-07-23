@@ -19,7 +19,7 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
-import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
+import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
@@ -225,7 +225,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void updateUserAccount_MUST_update_the_currently_logged_in_user_info() {
     loginAndChangeJohnSmithToJaneSmith();
-    LoggedInUserInfo loggedInUserInfo = getAuthenticationService().getLoggedInUserInfo();
+    LoggedInUserInfo loggedInUserInfo = authenticationService().getLoggedInUserInfo();
     assertEquals(JANE_SMITH_EMAIL, loggedInUserInfo.email);
   }
 

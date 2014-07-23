@@ -9,7 +9,7 @@ import si.urbas.pless.users.PasswordResetData;
 
 import static si.urbas.pless.users.UserController.PASSWORD_RESET_ERROR;
 import static si.urbas.pless.users.UserController.resetPasswordImpl;
-import static si.urbas.pless.users.pages.PasswordResetPages.getPasswordResetPages;
+import static si.urbas.pless.users.pages.PasswordResetPages.passwordResetPages;
 
 public class PasswordResetController extends Controller {
 
@@ -17,7 +17,7 @@ public class PasswordResetController extends Controller {
   public static Result resetPasswordForm(String email, String resetPasswordToken) {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
       .fill(new PasswordResetData(email, resetPasswordToken));
-    return ok(getPasswordResetPages().passwordResetPanel(form));
+    return ok(passwordResetPages().passwordResetPanel(form));
   }
 
   @RequireCSRFCheck
@@ -27,11 +27,11 @@ public class PasswordResetController extends Controller {
       PasswordResetData passwordResetData = form.get();
       if (resetPasswordImpl(passwordResetData.getEmail(), passwordResetData.getResetPasswordToken(), passwordResetData.getPassword())) {
         String email = passwordResetData.getEmail();
-        return ok(getPasswordResetPages().passwordResetSuccessfulPanel(email));
+        return ok(passwordResetPages().passwordResetSuccessfulPanel(email));
       }
       form.reject(PASSWORD_RESET_ERROR);
     }
-    return badRequest(getPasswordResetPages().passwordResetPanel(form));
+    return badRequest(passwordResetPages().passwordResetPanel(form));
   }
 
 }

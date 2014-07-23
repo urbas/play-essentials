@@ -25,7 +25,7 @@ public class AuthenticationService {
     this.sessionIdGenerator = sessionIdGenerator;
   }
 
-  public static AuthenticationService getAuthenticationService() {
+  public static AuthenticationService authenticationService() {
     if (getConfigurationSource().isProduction()) {
       return AuthenticationServiceSingleton.INSTANCE;
     } else {

@@ -8,7 +8,7 @@ import si.urbas.pless.test.util.PlessTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static play.mvc.Http.Context;
-import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
+import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.users.UserControllerTest.*;
 
 public class RequireLoginTest extends PlessTest {
@@ -36,7 +36,7 @@ public class RequireLoginTest extends PlessTest {
   @Test
   public void getUsername_MUST_return_null_AFTER_logout() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    getAuthenticationService().logOut();
+    authenticationService().logOut();
     assertNull(requireLogin.getUsername(Context.current()));
   }
 

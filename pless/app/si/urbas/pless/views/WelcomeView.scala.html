@@ -1,16 +1,16 @@
 @import si.urbas.pless
 @import pless.pages.FlashMessages.flashMessages
-@import pless.authentication.AuthenticationService.{getAuthenticationService => auth}
-@import pless.authentication.routes.PasswordAuthenticationController
-@import pless.users.routes.UserController
-@import pless.users.pages.SignupPages.{getSignupPages => pages}
-@import pless.users.pages.SignupPages
+@import pless.authentication.AuthenticationService.authenticationService
+@import pless.authentication.routes._
+@import pless.users.routes._
 @import pless.users.pages.routes._
 
 @MasterContainerView("Pless - Welcome") {
-  @flashMessages.flashPanel("pless-flash-panel", "pless-flash-panel")
+
+@flashMessages.flashPanel("pless-flash-panel", "pless-flash-panel")
+
 <div>
-  Current user: @{if (auth.isLoggedIn) auth.getLoggedInUserEmail else "Not logged in"}
+  Current user: @{if (authenticationService.isLoggedIn) authenticationService.getLoggedInUserEmail else "Not logged in"}
 </div>
 <div>
   <a href="@{SignupController.signUp()}">Signup</a>
@@ -19,7 +19,7 @@
   <a href="@{PasswordAuthenticationController.logIn()}">Login</a>
 </div>
 <div>
-  <a href="@{UserController.requestPasswordReset(auth.getLoggedInUserEmail)}">Reset password</a>
+  <a href="@{UserController.requestPasswordReset(authenticationService.getLoggedInUserEmail)}">Reset password</a>
 </div>
 <div>
   <a href="@{UserController.updateUserAccount()}">Update user account</a>

@@ -6,7 +6,7 @@ import si.urbas.pless.test.MockedApplication;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.users.PlessUser;
 
-import static si.urbas.pless.authentication.AuthenticationService.getAuthenticationService;
+import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 
 public abstract class PlessTest {
@@ -30,7 +30,7 @@ public abstract class PlessTest {
   public static PlessUser signUpAndLoginUser(String email, String username, String password) {
     activateUser(persistAndFetchUser(email, username, password));
     PlessUser activatedUser = fetchUser(email);
-    getAuthenticationService().logIn(activatedUser);
+    authenticationService().logIn(activatedUser);
     return activatedUser;
   }
 

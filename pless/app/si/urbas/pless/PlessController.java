@@ -15,7 +15,7 @@ public class PlessController extends Controller {
   }
 
   protected static AuthenticationService auth() {
-    return AuthenticationService.getAuthenticationService();
+    return AuthenticationService.authenticationService();
   }
 
   protected static ConfigurationSource config() {
