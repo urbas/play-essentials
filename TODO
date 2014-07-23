@@ -1,2 +1,4 @@
-TODO: Extract a component that displays standard flash messages (for example, the ones produced by SignupPages).
+TODO: Create a log-in page.
+TODO: Create a log-out page.
+TODO: Add a password-reset button to the log-in page.
 TODO: Integrate the panels (such as the ones from SignupPages, and PasswordResetPages) into pages.

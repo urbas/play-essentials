@@ -13,7 +13,7 @@ public class SignupPagesTest extends PlessTest {
   private final SignupPages signupPages = new SignupPages();
 
   @Test
-  public void signupPages_MUST_return_the_default_service_WHEN_not_configured() {
+  public void signupPages_MUST_return_the_default_instance_WHEN_not_configured() {
     assertSame(SignupPages.class, signupPages().getClass());
   }
 
