@@ -4,24 +4,23 @@ import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.users.pages.views.html.SignupView;
-import si.urbas.pless.users.pages.views.html.ActivationView;
 import si.urbas.pless.routes;
 import si.urbas.pless.users.SignupData;
+import si.urbas.pless.users.pages.views.html.ActivationView;
+import si.urbas.pless.users.pages.views.html.SignupView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
-import static play.mvc.Controller.flash;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.pages.FlashMessages.flashInfo;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(SignupPages.CONFIG_SIGNUP_PAGES)
 public class SignupPages implements PlessService {
 
   public static final String CONFIG_SIGNUP_PAGES = "pless.signupPages";
-  public static final String FLASH_SUCCESSFUL_SIGN_UP = "flash.signUp.success";
 
   /**
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
@@ -38,7 +37,7 @@ public class SignupPages implements PlessService {
   }
 
   public Result signUpSuccessfulPage(Form<?> signUpForm) {
-    flash(FLASH_SUCCESSFUL_SIGN_UP, "User activation email sent to '" + signUpForm.field(SignupData.EMAIL_FIELD).value() + "'.");
+    flashInfo("signUpSuccess", "User activation email sent to '" + signUpForm.field(SignupData.EMAIL_FIELD).value() + "'.");
     return redirect(routes.WelcomeController.welcome());
   }
 

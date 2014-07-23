@@ -1,4 +1,5 @@
 @import si.urbas.pless
+@import pless.pages.FlashMessages.flashMessages
 @import pless.authentication.AuthenticationService.{getAuthenticationService => auth}
 @import pless.authentication.routes.PasswordAuthenticationController
 @import pless.users.routes.UserController
@@ -7,11 +8,7 @@
 @import pless.users.pages.routes._
 
 @MasterContainerView("Pless - Welcome") {
-  @if(flash.get(SignupPages.FLASH_SUCCESSFUL_SIGN_UP) != null) {
-  <div class="pless-flash-success">
-    @{flash.get(SignupPages.FLASH_SUCCESSFUL_SIGN_UP)}
-  </div>
-  }
+  @flashMessages.flashPanel("pless-flash-panel", "pless-flash-panel")
 <div>
   Current user: @{if (auth.isLoggedIn) auth.getLoggedInUserEmail else "Not logged in"}
 </div>

@@ -1,0 +1,22 @@
+@(htmlTagId: String, htmlTagClass: String, infoMessages: java.util.List[String], errorMessages: java.util.List[String])
+
+@import scala.collection.JavaConversions._
+
+@messagesList(messages: List[String], tagClass: String) = {
+  @if(messages.nonEmpty) {
+  <div class="@tagClass">
+    <ul>
+      @for(message <- messages) {
+      <li>@message</li>
+      }
+    </ul>
+  </div>
+  }
+}
+
+@if(infoMessages.nonEmpty || errorMessages.nonEmpty) {
+  <div id="@htmlTagId" class="@htmlTagClass">
+    @messagesList(infoMessages, "pless-flash-info-messages")
+    @messagesList(errorMessages, "pless-flash-error-messages")
+  </div>
+}

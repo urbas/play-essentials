@@ -29,9 +29,9 @@ public class PasswordResetController extends Controller {
         String email = passwordResetData.getEmail();
         return ok(getPasswordResetPages().passwordResetSuccessfulPanel(email));
       }
-      flash("error", PASSWORD_RESET_ERROR);
+      form.reject(PASSWORD_RESET_ERROR);
     }
-    return ok(getPasswordResetPages().passwordResetPanel(form));
+    return badRequest(getPasswordResetPages().passwordResetPanel(form));
   }
 
 }
