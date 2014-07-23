@@ -13,7 +13,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 @PlessServiceConfigKey(UserRepository.CONFIG_USER_REPOSITORY)
 public abstract class UserRepository implements PlessService {
 
-  public static final String CONFIG_USER_REPOSITORY = "pless.userRepositoryFactory";
+  public static final String CONFIG_USER_REPOSITORY = "pless.userRepository";
 
   /**
    * @return a new user that is not yet persisted.

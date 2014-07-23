@@ -9,7 +9,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 @PlessServiceConfigKey(ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY)
 public abstract class ClientSessionStorage implements PlessService {
 
-  public static final String CONFIG_CLIENT_SESSION_STORAGE_FACTORY = "pless.clientSessionStorageFactory";
+  public static final String CONFIG_CLIENT_SESSION_STORAGE_FACTORY = "plsss.clientSessionStorage";
 
   public static ClientSessionStorage getClientSessionStorage() {
     return ClientSessionStorageServiceLoader.INSTANCE.getService();

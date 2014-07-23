@@ -8,7 +8,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 @PlessServiceConfigKey(ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY)
 public abstract class ServerSessionStorage implements PlessService {
 
-  public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorageFactory";
+  public static final String CONFIG_SERVER_SESSION_STORAGE_FACTORY = "pless.serverSessionStorage";
 
   public abstract void put(String key, String value, int expirationMillis);
 
