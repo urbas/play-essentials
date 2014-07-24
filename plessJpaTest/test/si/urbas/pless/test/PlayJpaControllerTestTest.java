@@ -6,7 +6,7 @@ import si.urbas.pless.users.PlessUser;
 
 import static org.junit.Assert.assertTrue;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
-import static si.urbas.pless.authentication.PasswordAuthenticationController.logIn;
+import static si.urbas.pless.authentication.AuthenticationController.logIn;
 import static si.urbas.pless.users.UserController.signUp;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 

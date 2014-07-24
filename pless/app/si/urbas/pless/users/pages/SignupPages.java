@@ -46,19 +46,19 @@ public class SignupPages implements PlessService {
     return ok(ActivationView.apply(wasActivated));
   }
 
-  protected static boolean isUsernameFree(Form<?> signUpForm) {
-    String username = signUpForm.field(SignupData.USERNAME_FIELD).value();
-    if (username != null && getUserRepository().findUserByUsername(username) != null) {
-      signUpForm.reject(SignupData.USERNAME_FIELD, "A user with the given username is already signed up.");
+  protected static boolean isEmailFree(Form<?> signUpForm) {
+    String email = signUpForm.field(SignupData.EMAIL_FIELD).value();
+    if (getUserRepository().findUserByEmail(email) != null) {
+      signUpForm.reject(SignupData.EMAIL_FIELD, "A user with the given email is already signed up.");
       return false;
     }
     return true;
   }
 
-  protected static boolean isEmailFree(Form<?> signUpForm) {
-    String email = signUpForm.field(SignupData.EMAIL_FIELD).value();
-    if (getUserRepository().findUserByEmail(email) != null) {
-      signUpForm.reject(SignupData.EMAIL_FIELD, "A user with the given email is already signed up.");
+  protected static boolean isUsernameFree(Form<?> signUpForm) {
+    String username = signUpForm.field(SignupData.USERNAME_FIELD).value();
+    if (username != null && getUserRepository().findUserByUsername(username) != null) {
+      signUpForm.reject(SignupData.USERNAME_FIELD, "A user with the given username is already signed up.");
       return false;
     }
     return true;

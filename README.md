@@ -103,7 +103,7 @@ public class WithAuthenticatedUserController extends PlessJpaController {
 Consumers of your application can log-in through the following REST API:
 
 ```scala
-POST  /api/auth/login      si.urbas.pless.authentication.PasswordAuthenticationController.logIn()
+POST  /api/auth/login      si.urbas.pless.authentication.AuthenticationController.logIn()
 ```
 
 ### Lower-level authentication API
@@ -129,7 +129,7 @@ auth().getLoggedInUserEmail();
 You can log-in a user directly from your controller. Here's an example of password authentication:
 
 ```java
-PasswordAuthenticationController.logIn(email, password);
+AuthenticationController.logIn(email, password);
 ```
 
 To log the user out:

@@ -1,8 +1,8 @@
 package si.urbas.pless.jpasample.auth;
 
 import si.urbas.pless.PlessJpaController;
+import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.AuthenticationService;
-import si.urbas.pless.authentication.PasswordAuthenticationController;
 import si.urbas.pless.users.PlessUser;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -10,7 +10,7 @@ public class AuthenticationSamples extends PlessJpaController {
 
   public static void passwordAuthentication(String email, String password) {
 // SNIPPET: passwordAuthentication
-    PasswordAuthenticationController.logIn(email, password);
+    AuthenticationController.logIn(email, password);
 // ENDSNIPPET: passwordAuthentication
   }
 
