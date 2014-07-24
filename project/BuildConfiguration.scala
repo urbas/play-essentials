@@ -80,7 +80,7 @@ object BuildConfiguration extends Build {
     id = "plessJpaSample",
     base = file("plessJpaSample"),
     settings = plessJpaSampleProjectSettings,
-    dependencies = Seq(pless, plessJpa, plessTest % "test->compile", plessJpaTest % "test->compile")
+    dependencies = Seq(pless, plessJpa, plessTest % "test", plessJpaTest % "test")
   )
     .enablePlugins(PlayJava)
 
