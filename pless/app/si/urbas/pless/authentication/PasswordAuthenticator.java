@@ -1,8 +1,8 @@
 package si.urbas.pless.authentication;
 
-import static si.urbas.pless.users.UserRepository.getUserRepository;
-
 import si.urbas.pless.users.PlessUser;
+
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 
 public class PasswordAuthenticator {
 
@@ -15,21 +15,28 @@ public class PasswordAuthenticator {
     if (!passwordLoginData.isValid()) {
       throw new IllegalArgumentException("Log-in credentials form is incomplete.");
     }
-    PlessUser user = getUserRepository().findUserByEmail(passwordLoginData.email);
-    if (user == null || !isPasswordCorrect(passwordLoginData.password, user)) {
+    PlessUser user = tryAuthenticateUser(passwordLoginData.email, passwordLoginData.password);
+    if (user == null) {
       throw new IllegalArgumentException("The credentials are not correct.");
     }
     return user;
+  }
+
+  public PlessUser tryAuthenticateUser(String email, String password) {
+    PlessUser user = getUserRepository().findUserByEmail(email);
+    if (user != null && isPasswordCorrect(password, user)) {
+      return user;
+    } else {
+      return null;
+    }
   }
 
   private boolean isPasswordCorrect(String password, PlessUser user) {
     SaltedHashedPassword saltedHashedPassword = new SaltedHashedPassword(password, user.getSalt());
     return saltedHashedPassword.matches(user.getHashedPassword());
   }
-  
-  public static PasswordAuthenticator passwordAuthenticator() {
-      return PasswordAuthenticatorSingleton.INSTANCE;
-  }
+
+  public static PasswordAuthenticator passwordAuthenticator() {return PasswordAuthenticatorSingleton.INSTANCE;}
 
   static final class PasswordAuthenticatorSingleton {
     public static final PasswordAuthenticator INSTANCE = new PasswordAuthenticator();

@@ -1,0 +1,13 @@
+@(logInForm: Form[_])
+@import si.urbas.pless._
+@import authentication.PasswordLoginData
+@import authentication.pages.routes._
+@import authentication.pages.LoginPages
+<div class="pless-logIn-form">
+  @helper.form(action = LoginController.submitLogIn()) {
+    @helper.CSRF.formField
+    @helper.inputText(logInForm(PasswordLoginData.EMAIL_FIELD))
+    @helper.inputPassword(logInForm(PasswordLoginData.PASSWORD_FIELD))
+    <input type="submit" value="Submit"/>
+  }
+</div>

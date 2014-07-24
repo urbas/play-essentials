@@ -4,6 +4,7 @@
 @import pless.authentication.routes._
 @import pless.users.routes._
 @import pless.users.pages.routes._
+@import pless.authentication.pages.routes._
 
 @MasterContainerView("Pless - Welcome") {
 
@@ -16,7 +17,7 @@
   <a href="@{SignupController.signUp()}">Signup</a>
 </div>
 <div>
-  <a href="@{AuthenticationController.logIn()}">Login</a>
+  <a href="@{LoginController.logIn()}">Login</a>
 </div>
 <div>
   <a href="@{UserController.requestPasswordReset(authenticationService.getLoggedInUserEmail)}">Reset password</a>

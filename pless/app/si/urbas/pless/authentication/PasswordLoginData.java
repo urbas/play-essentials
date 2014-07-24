@@ -4,6 +4,10 @@ import static play.data.validation.Constraints.Required;
 import static si.urbas.pless.util.StringUtils.isNullOrEmpty;
 
 public class PasswordLoginData {
+
+  public static final String EMAIL_FIELD = "email";
+  public static final String PASSWORD_FIELD = "password";
+
   @Required
   public String email;
   @Required

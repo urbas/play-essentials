@@ -8,6 +8,10 @@ GET   /user/activate                  si.urbas.pless.users.pages.SignupControlle
 GET   /user/resetPassword             si.urbas.pless.users.pages.PasswordResetController.resetPassword(email, resetPasswordToken)
 GET   /user/submitResetPassword       si.urbas.pless.users.pages.PasswordResetController.submitResetPassword()
 
+# Authentication pages
+GET   /auth/login                     si.urbas.pless.authentication.pages.LoginController.logIn()
+GET   /auth/submitLogin               si.urbas.pless.authentication.pages.LoginController.submitLogIn()
+
 # Authentication API
 POST  /api/auth/login                 si.urbas.pless.authentication.AuthenticationController.logIn()
 POST  /api/auth/logout                si.urbas.pless.authentication.AuthenticationController.logOut()
