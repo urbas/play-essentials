@@ -27,7 +27,7 @@ import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.users.UserAccountService.getUserAccountService;
+import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
@@ -69,7 +69,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_call_afterUserPersisted_of_UserAccountService() {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getUserAccountService()).afterUserPersisted(userMatchesJohnSmith());
+    verify(userAccountService()).afterUserPersisted(userMatchesJohnSmith());
   }
 
   @Test
@@ -77,13 +77,13 @@ public class UserControllerTest extends PlessTest {
     UserRepository userRepository = getUserRepository();
     doThrow(EXCEPTION_FOR_TESTING).when(userRepository).persistUser(userMatchesJohnSmith());
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getUserAccountService(), never()).afterUserPersisted(userMatchesJohnSmith());
+    verify(userAccountService(), never()).afterUserPersisted(userMatchesJohnSmith());
   }
 
   @Test
   public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
     Form<SignupData> signupForm = spy(Form.form(SignupData.class));
-    UserAccountService userAccountService = getUserAccountService();
+    UserAccountService userAccountService = userAccountService();
     doReturn(signupForm).when(userAccountService).getSignupForm();
     doReturn(true).when(signupForm).hasErrors();
     doReturn(signupForm).when(signupForm).bindFromRequest();
@@ -94,7 +94,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_ask_the_UserAccountService_to_create_the_user() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(getUserAccountService()).createUser(any(Form.class));
+    verify(userAccountService()).createUser(any(Form.class));
   }
 
   @Test
@@ -245,7 +245,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
     requestPasswordReset(JOHN_SMITH_EMAIL);
-    verify(getUserAccountService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+    verify(userAccountService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
   }
 
   @Test
@@ -263,7 +263,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_send_an_email_through_the_UserAccountService() {
     PlessUser user = createUserAndRequestPasswordReset();
-    verify(getUserAccountService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
+    verify(userAccountService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
   }
 
   @Test
@@ -330,7 +330,7 @@ public class UserControllerTest extends PlessTest {
   public void resetPassword_MUST_send_a_confirmation_email_after_the_password_was_reset() {
     PlessUser user = createUserAndRequestPasswordReset();
     resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
-    verify(getUserAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
+    verify(userAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
   }
 
   private static void setDefaultPasswordResetValidityDuration() {

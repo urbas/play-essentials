@@ -130,7 +130,7 @@ public class UserAccountService implements PlessService {
     }
   }
 
-  public static UserAccountService getUserAccountService() {
+  public static UserAccountService userAccountService() {
     return UserAccountServiceLoader.INSTANCE.getService();
   }
 

@@ -24,7 +24,7 @@ import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
-import static si.urbas.pless.users.UserAccountService.getUserAccountService;
+import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.users.pages.routes.PasswordResetController;
@@ -153,12 +153,12 @@ public class UserAccountServiceTest extends PlessTest {
 
   @Test
   public void getUserAccountService_MUST_return_the_default_implementation_WHEN_not_configured() {
-    assertEquals(UserAccountService.class, getUserAccountService().getClass());
+    assertEquals(UserAccountService.class, userAccountService().getClass());
   }
 
   @Test
   public void getUserAccountService_MUST_return_the_configured_implementation() {
-    ScopedServices.withService(userAccountService, () -> assertEquals(userAccountService, getUserAccountService()));
+    ScopedServices.withService(userAccountService, () -> assertEquals(userAccountService, userAccountService()));
   }
 
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {

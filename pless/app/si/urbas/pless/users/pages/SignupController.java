@@ -7,7 +7,7 @@ import play.mvc.Result;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.util.ApiResults;
 
-import static si.urbas.pless.users.UserAccountService.getUserAccountService;
+import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.signUpAndPersistUser;
 import static si.urbas.pless.users.pages.SignupPages.signupPages;
 
@@ -15,13 +15,13 @@ public class SignupController extends PlessController {
 
   @AddCSRFToken
   public static Result signUp() {
-    Form<?> signUpForm = getUserAccountService().getSignupForm();
+    Form<?> signUpForm = userAccountService().getSignupForm();
     return ok(signupPages().signUpPanel(signUpForm.bindFromRequest()));
   }
 
   @RequireCSRFCheck
   public static Result submitSignUp() {
-    Form<?> signUpForm = getUserAccountService().getSignupForm().bindFromRequest();
+    Form<?> signUpForm = userAccountService().getSignupForm().bindFromRequest();
     if (wasSignUpSuccessful(signUpForm)) {
       return signupPages().signUpSuccessfulPage(signUpForm);
     } else {
