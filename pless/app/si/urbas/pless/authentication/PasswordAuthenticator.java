@@ -8,12 +8,12 @@ public class PasswordAuthenticator {
 
   /**
    * @param passwordLoginForm contains the email (with which to find the user) and the password (with which to
-   *                          authenticate them).
+   *                          authenticate the user).
    * @return a user when the credentials match, otherwise this method throws an exception.
    */
   public PlessUser authenticateUser(PasswordLoginForm passwordLoginForm) {
     if (!passwordLoginForm.isValid()) {
-      throw new IllegalArgumentException("Log in credentials form is incomplete.");
+      throw new IllegalArgumentException("Log-in credentials form is incomplete.");
     }
     PlessUser user = getUserRepository().findUserByEmail(passwordLoginForm.email);
     if (user == null || !isPasswordCorrect(passwordLoginForm.password, user)) {
@@ -23,12 +23,11 @@ public class PasswordAuthenticator {
   }
 
   private boolean isPasswordCorrect(String password, PlessUser user) {
-    SaltedHashedPassword saltedHashedPassword = new SaltedHashedPassword(password, user
-      .getSalt());
+    SaltedHashedPassword saltedHashedPassword = new SaltedHashedPassword(password, user.getSalt());
     return saltedHashedPassword.matches(user.getHashedPassword());
   }
   
-  public static PasswordAuthenticator getPasswordAuthenticator() {
+  public static PasswordAuthenticator passwordAuthenticator() {
       return PasswordAuthenticatorSingleton.INSTANCE;
   }
 

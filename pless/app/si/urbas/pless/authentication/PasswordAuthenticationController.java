@@ -4,10 +4,13 @@ import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
 import si.urbas.pless.users.PlessUser;
+import si.urbas.pless.util.ApiResults;
 
-import static si.urbas.pless.authentication.PasswordAuthenticator.getPasswordAuthenticator;
+import static si.urbas.pless.authentication.PasswordAuthenticator.passwordAuthenticator;
 
 public final class PasswordAuthenticationController extends PlessController {
+
+  private static final Status ERROR_EMAIL_OR_PASSWORD_INVALID = ApiResults.error("Invalid email or password.");
 
   public static Result logIn() {
     Form<PasswordLoginForm> form = Form.form(PasswordLoginForm.class).bindFromRequest();
@@ -23,11 +26,11 @@ public final class PasswordAuthenticationController extends PlessController {
   public static Result logIn(final String email, final String password) {
     try {
       PasswordLoginForm passwordLoginForm = new PasswordLoginForm(email, password);
-      PlessUser authenticatedUser = getPasswordAuthenticator().authenticateUser(passwordLoginForm);
+      PlessUser authenticatedUser = passwordAuthenticator().authenticateUser(passwordLoginForm);
       auth().logIn(authenticatedUser);
-      return ok();
+      return ApiResults.SUCCESS;
     } catch (Exception e) {
-      return badRequest();
+      return ERROR_EMAIL_OR_PASSWORD_INVALID;
     }
   }
 }
