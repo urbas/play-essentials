@@ -3,15 +3,15 @@ package si.urbas.pless.authentication;
 import static play.data.validation.Constraints.Required;
 import static si.urbas.pless.util.StringUtils.isNullOrEmpty;
 
-public class PasswordLoginForm {
+public class PasswordLoginData {
   @Required
   public String email;
   @Required
   public String password;
 
-  public PasswordLoginForm() {}
+  public PasswordLoginData() {}
 
-  public PasswordLoginForm(String email, String password) {
+  public PasswordLoginData(String email, String password) {
     this.email = email;
     this.password = password;
   }

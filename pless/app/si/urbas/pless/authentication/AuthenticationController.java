@@ -15,19 +15,19 @@ public final class AuthenticationController extends PlessController {
   private static final Status ERROR_EMAIL_OR_PASSWORD_INVALID = ApiResults.error("Invalid email or password.");
 
   public static Result logIn() {
-    Form<PasswordLoginForm> form = Form.form(PasswordLoginForm.class).bindFromRequest();
+    Form<PasswordLoginData> form = Form.form(PasswordLoginData.class).bindFromRequest();
     if (form.hasErrors()) {
       return badRequest(form.errorsAsJson());
     } else {
-      PasswordLoginForm passwordLoginForm = form.get();
-      return logIn(passwordLoginForm.getEmail(), passwordLoginForm.getPassword());
+      PasswordLoginData passwordLoginData = form.get();
+      return logIn(passwordLoginData.getEmail(), passwordLoginData.getPassword());
     }
   }
 
   public static Result logIn(final String email, final String password) {
     try {
-      PasswordLoginForm passwordLoginForm = new PasswordLoginForm(email, password);
-      PlessUser authenticatedUser = passwordAuthenticator().authenticateUser(passwordLoginForm);
+      PasswordLoginData passwordLoginData = new PasswordLoginData(email, password);
+      PlessUser authenticatedUser = passwordAuthenticator().authenticateUser(passwordLoginData);
       auth().logIn(authenticatedUser);
       return SUCCESS;
     } catch (Exception e) {

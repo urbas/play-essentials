@@ -11,6 +11,7 @@ import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStora
 import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
 
 public class AuthenticationService {
+
   private static final int SESSION_EXPIRATION_MILLIS = 30 * 60 * 1000;
   static final String SESSION_ID_KEY = "pless.session";
   private final ClientSessionStorage clientSessionStorage;
