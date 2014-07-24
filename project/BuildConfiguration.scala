@@ -11,9 +11,8 @@ import si.urbas.sbtutils.releases.ReleaseProcessTransformation
 import si.urbas.sbtutils.textfiles._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys
-import xerial.sbt.Sonatype.SonatypeKeys._
 
-object PlessBuild extends Build {
+object BuildConfiguration extends Build {
 
   val projectName = "Play Essentials"
   val projectUrl = "https://github.com/urbas/play-essentials"
@@ -81,7 +80,7 @@ object PlessBuild extends Build {
     id = "plessJpaSample",
     base = file("plessJpaSample"),
     settings = plessJpaSampleProjectSettings,
-    dependencies = Seq(pless, plessJpa, plessTest, plessJpaTest)
+    dependencies = Seq(pless, plessJpa, plessTest % "test->compile", plessJpaTest % "test->compile")
   )
     .enablePlugins(PlayJava)
 
