@@ -15,8 +15,8 @@ public class PasswordResetControllerTest extends PlayControllerTest {
   public static final String JOHN_SMITH_EMAIL = "john.smith@email.com";
 
   @Test
-  public void resetPasswordForm_MUST_return_a_form_with_two_password_input_fields() {
-    Result result = callAction(PasswordResetController.resetPasswordForm(JOHN_SMITH_EMAIL, "password reset token"));
+  public void resetPassword_MUST_return_a_form_with_two_password_input_fields() {
+    Result result = callAction(PasswordResetController.resetPassword(JOHN_SMITH_EMAIL, "password reset token"));
     String contentAsString = contentAsString(result);
     assertThat(
       contentAsString,

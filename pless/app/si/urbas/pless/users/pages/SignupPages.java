@@ -21,6 +21,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class SignupPages implements PlessService {
 
   public static final String CONFIG_SIGNUP_PAGES = "pless.signupPages";
+  public static final String PASSWORDS_MISMATCH = "Passwords don't match.";
 
   /**
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
@@ -67,7 +68,7 @@ public class SignupPages implements PlessService {
     String password = signUpForm.field(SignupData.PASSWORD_FIELD).valueOr("");
     String passwordConfirmation = signUpForm.field(SignupData.PASSWORD_CONFIRMATION_FIELD).valueOr("");
     if (!password.equals(passwordConfirmation)) {
-      signUpForm.reject(SignupData.PASSWORD_CONFIRMATION_FIELD, "Passwords don't match.");
+      signUpForm.reject(SignupData.PASSWORD_CONFIRMATION_FIELD, PASSWORDS_MISMATCH);
       return false;
     }
     return true;

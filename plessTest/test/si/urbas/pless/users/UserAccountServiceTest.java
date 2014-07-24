@@ -135,10 +135,10 @@ public class UserAccountServiceTest extends PlessTest {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
       Html passwordResetEmailContent = userAccountService.passwordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
-      Call resetPasswordForm = PasswordResetController.resetPasswordForm(JANE_SMITH_EMAIL, passwordResetCode);
+      Call resetPassword = PasswordResetController.resetPassword(JANE_SMITH_EMAIL, passwordResetCode);
       assertThat(
         passwordResetEmailContent.body(),
-        containsString(escapedAbsoluteUrl(httpContext, resetPasswordForm))
+        containsString(escapedAbsoluteUrl(httpContext, resetPassword))
       );
     }
   }

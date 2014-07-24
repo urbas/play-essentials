@@ -5,6 +5,7 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.users.pages.PasswordResetController;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -29,7 +30,6 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_PARAMETER = "password";
   public static final String CONFIG_PASSWORD_RESET_VALIDITY_SECONDS = "pless.passwordResetValiditySeconds";
   public static final int DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS = 20 * 60;
-  public static final String PASSWORD_RESET_ERROR = "The password could not be reset. Please submit another password reset request.";
 
   public static Result signUp() {
     return signUp(getUserAccountService().getSignupForm().bindFromRequest());
@@ -75,7 +75,7 @@ public final class UserController extends PlessController {
     } catch (Exception e) {
       Logger.info("A failed password reset was attempted for user '" + email + "'.");
     }
-    return error(PASSWORD_RESET_ERROR);
+    return error(PasswordResetController.PASSWORD_RESET_ERROR);
   }
 
   public static boolean resetPasswordImpl(String email, String resetPasswordToken, String newPassword) {

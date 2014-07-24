@@ -35,7 +35,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <li>User calls {@link si.urbas.pless.users.UserController#requestPasswordReset(String)}, which tries to find the
  * user and, upon success, generates a password reset code for that user and calls
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetEmail(String, String)}.</li>
- * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPasswordForm(String, String)}
+ * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPassword(String, String)}
  * page and must submit the new password with the correct reset code and email. The page is rendered via
  * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPanel(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method

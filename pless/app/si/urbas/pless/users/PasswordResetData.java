@@ -5,6 +5,9 @@ import si.urbas.pless.util.StringUtils;
 import static play.data.validation.Constraints.Required;
 
 public class PasswordResetData {
+
+  public static final String PASSWORD_CONFIRMATION_FIELD = "passwordConfirmation";
+
   @Required
   protected String email;
   @Required
@@ -53,6 +56,6 @@ public class PasswordResetData {
   }
 
   public boolean passwordsMatch() {
-    return !StringUtils.isNullOrEmpty(password) && password.equals(passwordConfirmation);
+    return !StringUtils.isNullOrEmpty(getPassword()) && getPassword().equals(getPasswordConfirmation());
   }
 }
