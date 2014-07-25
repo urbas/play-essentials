@@ -7,6 +7,7 @@ import play.mvc.Result;
 import si.urbas.pless.PlessController;
 
 import static si.urbas.pless.authentication.pages.LoginPages.loginPages;
+import static si.urbas.pless.util.ApiResults.SUCCESS;
 
 public class LoginController extends PlessController {
 
@@ -23,6 +24,10 @@ public class LoginController extends PlessController {
     } else {
       return loginPages().logIn(loginForm);
     }
+  }
+  public static Result logOut() {
+    auth().logOut();
+    return loginPages().afterLogOut();
   }
 
 }

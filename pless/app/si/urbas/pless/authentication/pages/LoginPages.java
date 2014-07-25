@@ -47,6 +47,10 @@ public class LoginPages implements PlessService {
     return redirect(routes.WelcomeController.welcome());
   }
 
+  public Result afterLogOut() {
+    return redirect(routes.WelcomeController.welcome());
+  }
+
   public static LoginPages loginPages() {
     return LoginPagesLoader.INSTANCE.getService();
   }

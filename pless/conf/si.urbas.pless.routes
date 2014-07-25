@@ -11,6 +11,7 @@ GET   /user/submitResetPassword       si.urbas.pless.users.pages.PasswordResetCo
 # Authentication pages
 GET   /auth/login                     si.urbas.pless.authentication.pages.LoginController.logIn()
 GET   /auth/submitLogin               si.urbas.pless.authentication.pages.LoginController.submitLogIn()
+GET   /auth/logout                    si.urbas.pless.authentication.pages.LoginController.logOut()
 
 # Authentication API
 POST  /api/auth/login                 si.urbas.pless.authentication.AuthenticationController.logIn()
