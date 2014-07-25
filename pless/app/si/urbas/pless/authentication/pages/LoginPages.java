@@ -39,7 +39,7 @@ public class LoginPages implements PlessService {
       authenticationService().logIn(authenticatedUser);
       return true;
     }
-    loginForm.reject(EMAIL_FIELD, "Login failed. Email or password were not correct.");
+    loginForm.reject(EMAIL_FIELD, "Login failed due to an incorrect email or password.");
     return false;
   }
 
