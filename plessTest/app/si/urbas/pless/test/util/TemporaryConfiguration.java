@@ -1,6 +1,6 @@
 package si.urbas.pless.test.util;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.ConfigurationSource.setConfigurationSource;
 import static org.mockito.Mockito.mock;
 
@@ -9,7 +9,7 @@ import si.urbas.pless.util.ConfigurationSource;
 
 public class TemporaryConfiguration implements AutoCloseable {
 
-  private final ConfigurationSource oldConfiguration = getConfigurationSource();
+  private final ConfigurationSource oldConfiguration = configurationSource();
   public final ConfigurationSource currentConfigurationSource;
 
   public TemporaryConfiguration() {

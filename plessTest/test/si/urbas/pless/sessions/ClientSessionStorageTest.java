@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
 import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class ClientSessionStorageTest extends PlessMockConfigurationTest {
 
@@ -21,7 +21,7 @@ public class ClientSessionStorageTest extends PlessMockConfigurationTest {
 
   @Test
   public void getClientSessionStorage_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().isProduction()).thenReturn(true);
     assertThat(
       getClientSessionStorage(),
       is(sameInstance(getClientSessionStorage()))
@@ -46,7 +46,7 @@ public class ClientSessionStorageTest extends PlessMockConfigurationTest {
 
   @Test
   public void getClientSessionStorage_MUST_return_the_configured_client_session_storage() throws Exception {
-    when(getConfigurationSource().getString(CONFIG_CLIENT_SESSION_STORAGE_FACTORY))
+    when(configurationSource().getString(CONFIG_CLIENT_SESSION_STORAGE_FACTORY))
       .thenReturn(HashMapClientSessionStorage.class.getCanonicalName());
     assertThat(
       getClientSessionStorage(),

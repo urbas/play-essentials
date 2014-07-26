@@ -8,7 +8,7 @@ import si.urbas.pless.users.PlessUser;
 import static si.urbas.pless.authentication.LoggedInUserInfo.toRawLoginData;
 import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
 import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class AuthenticationService {
 
@@ -27,7 +27,7 @@ public class AuthenticationService {
   }
 
   public static AuthenticationService authenticationService() {
-    if (getConfigurationSource().isProduction()) {
+    if (configurationSource().isProduction()) {
       return AuthenticationServiceSingleton.INSTANCE;
     } else {
       return createAuthenticationService();

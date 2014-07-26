@@ -17,7 +17,7 @@ public abstract class ConfigurationSource {
 
   public abstract boolean getBoolean(String configKey, boolean defaultValue);
 
-  public static ConfigurationSource getConfigurationSource() {
+  public static ConfigurationSource configurationSource() {
     return configurationSource == null ? ConfigurationSourceSingleton.INSTANCE : configurationSource;
   }
 

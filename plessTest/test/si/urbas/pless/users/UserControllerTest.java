@@ -30,7 +30,7 @@ import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public class UserControllerTest extends PlessTest {
@@ -141,7 +141,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
     signUp(user);
-    verify(getEmailProvider()).createEmail(getConfigurationSource());
+    verify(getEmailProvider()).createEmail(configurationSource());
   }
 
   @Test
@@ -150,7 +150,7 @@ public class UserControllerTest extends PlessTest {
       UserRepository scopedUserRepository = getUserRepository();
       doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);
-      verify(getEmailProvider(), never()).createEmail(getConfigurationSource());
+      verify(getEmailProvider(), never()).createEmail(configurationSource());
     });
   }
 
@@ -334,7 +334,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   private static void setDefaultPasswordResetValidityDuration() {
-    when(getConfigurationSource().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
+    when(configurationSource().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
       .thenReturn(DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);
   }
 

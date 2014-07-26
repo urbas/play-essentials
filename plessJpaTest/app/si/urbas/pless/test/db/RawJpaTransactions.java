@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import static javax.persistence.Persistence.createEntityManagerFactory;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class RawJpaTransactions extends JpaTransactions {
 
@@ -25,7 +25,7 @@ public class RawJpaTransactions extends JpaTransactions {
 
   private EntityManagerFactory getEntityManagerFactory() {
     if (entityManagerFactory == null) {
-      entityManagerFactory = createEntityManagerFactory(getConfigurationSource().getString(PERSISTENCE_UNIT));
+      entityManagerFactory = createEntityManagerFactory(configurationSource().getString(PERSISTENCE_UNIT));
     }
     return entityManagerFactory;
   }

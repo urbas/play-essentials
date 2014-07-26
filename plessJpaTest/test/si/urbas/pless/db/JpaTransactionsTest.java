@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.db.JpaTransactions.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
 
@@ -103,7 +103,7 @@ public class JpaTransactionsTest extends PlessTest {
   @Test
   public void getJpaTransactions_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
     withUnconfiguredJpaTransactions(() -> {
-      when(getConfigurationSource().isProduction()).thenReturn(true);
+      when(configurationSource().isProduction()).thenReturn(true);
       assertSame(getJpaTransactions(), getJpaTransactions());
     });
   }
@@ -121,7 +121,7 @@ public class JpaTransactionsTest extends PlessTest {
   }
 
   private static void configureJpaTransactions(String jpaTransactionsCanonicalClassName) {
-    when(getConfigurationSource().getString(CONFIG_JPA_TRANSACTIONS)).thenReturn(jpaTransactionsCanonicalClassName);
+    when(configurationSource().getString(CONFIG_JPA_TRANSACTIONS)).thenReturn(jpaTransactionsCanonicalClassName);
   }
 
   private static class TestableJpaTransactions extends JpaTransactions {

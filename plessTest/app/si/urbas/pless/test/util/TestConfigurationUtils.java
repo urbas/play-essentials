@@ -1,6 +1,6 @@
 package si.urbas.pless.test.util;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static org.mockito.Mockito.doReturn;
 
 public class TestConfigurationUtils {
@@ -13,7 +13,7 @@ public class TestConfigurationUtils {
 
   public static void setConfigurationString(String configKey, String configValue) {
     doReturn(configValue)
-      .when(getConfigurationSource())
+      .when(configurationSource())
       .getString(configKey);
   }
 

@@ -6,7 +6,7 @@ import si.urbas.pless.test.util.PlessTest;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class LoggingNoOpEmailProviderTest extends PlessTest {
 
@@ -15,7 +15,7 @@ public class LoggingNoOpEmailProviderTest extends PlessTest {
   @Test
   public void createEmail_MUST_create_a_logging_email_instance() throws Exception {
     assertThat(
-      loggingNoOpEmailProvider.createEmail(getConfigurationSource()),
+      loggingNoOpEmailProvider.createEmail(configurationSource()),
       is(instanceOf(LoggingNoOpEmail.class))
     );
   }

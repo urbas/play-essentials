@@ -2,9 +2,7 @@ package si.urbas.pless.users.pages;
 
 import play.data.Form;
 import play.mvc.Result;
-import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.routes;
 import si.urbas.pless.users.SignupData;
 import si.urbas.pless.users.pages.views.html.ActivationView;
 import si.urbas.pless.users.pages.views.html.SignupView;
@@ -13,8 +11,10 @@ import si.urbas.pless.util.ServiceLoader;
 
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.pages.FlashMessages.flashInfo;
+import static si.urbas.pless.pages.Layout.layout;
+import static si.urbas.pless.pages.routes.WelcomeController;
+import static si.urbas.pless.users.UserRepository.getUserRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(SignupPages.CONFIG_SIGNUP_PAGES)
@@ -27,7 +27,7 @@ public class SignupPages implements PlessService {
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
    */
   public Result signUpPage(Form<?> signUpForm) {
-    return ok(SignupView.apply(signUpForm));
+    return ok(layout().main("Signup", SignupView.apply(signUpForm)));
   }
 
   public boolean isSignUpFormValid(Form<?> signUpForm) {
@@ -39,11 +39,11 @@ public class SignupPages implements PlessService {
 
   public Result signUpSuccessfulPage(Form<?> signUpForm) {
     flashInfo("signUpSuccess", "User activation email sent to '" + signUpForm.field(SignupData.EMAIL_FIELD).value() + "'.");
-    return redirect(routes.WelcomeController.welcome());
+    return redirect(WelcomeController.welcome());
   }
 
   public Result activationPage(boolean wasActivated, String email) {
-    return ok(ActivationView.apply(wasActivated));
+    return ok(layout().main("Account activation", ActivationView.apply(wasActivated)));
   }
 
   protected static boolean isEmailFree(Form<?> signUpForm) {

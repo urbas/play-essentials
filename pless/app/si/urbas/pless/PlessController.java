@@ -19,7 +19,7 @@ public class PlessController extends Controller {
   }
 
   protected static ConfigurationSource config() {
-    return ConfigurationSource.getConfigurationSource();
+    return ConfigurationSource.configurationSource();
   }
 
   protected static EmailProvider emailing() {

@@ -6,8 +6,6 @@
 @import pless.users.pages.routes._
 @import pless.authentication.pages.routes._
 
-@MasterContainerView("Pless - Welcome") {
-
 @flashMessages.flashPanel("pless-flash-panel", "pless-flash-panel")
 
 <div>
@@ -28,4 +26,3 @@
 <div>
   <a href="@{UserController.updateUserAccount()}">Update user account</a>
 </div>
-}

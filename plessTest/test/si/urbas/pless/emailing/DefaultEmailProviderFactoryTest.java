@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 
 public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest {
@@ -24,7 +24,7 @@ public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest 
 
   @Test
   public void create_MUST_return_ApacheEmailProvider_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().isProduction()).thenReturn(true);
     assertThat(
       defaultEmailProviderCreator.get(),
       is(instanceOf(ApacheCommonsEmailProvider.class))
@@ -33,7 +33,7 @@ public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest 
 
   @Test
   public void create_MUST_return_a_logging_mailer_WHEN_in_development_mode() throws Exception {
-    when(getConfigurationSource().isDevelopment()).thenReturn(true);
+    when(configurationSource().isDevelopment()).thenReturn(true);
     assertThat(
       defaultEmailProviderCreator.get(),
       is(instanceOf(LoggingNoOpEmailProvider.class))

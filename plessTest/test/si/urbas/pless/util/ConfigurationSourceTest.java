@@ -19,19 +19,19 @@ public class ConfigurationSourceTest {
 
   @Before
   public void setUp() {
-    defaultPlayConfigurationSource = getConfigurationSource();
+    defaultPlayConfigurationSource = configurationSource();
   }
 
   @Test
   public void getInstance_MUST_return_the_scoped_configuration() throws Exception {
     try (TemporaryConfiguration scopedConfiguration = new TemporaryConfiguration()) {
-      assertSame(scopedConfiguration.currentConfigurationSource, getConfigurationSource());
+      assertSame(scopedConfiguration.currentConfigurationSource, configurationSource());
     }
   }
 
   @Test
   public void getInstance_MUST_always_return_the_same_instance_of_the_default_configuration_source() throws Exception {
-    assertSame(defaultPlayConfigurationSource, getConfigurationSource());
+    assertSame(defaultPlayConfigurationSource, configurationSource());
   }
 
   @Test(expected = Exception.class)

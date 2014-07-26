@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.test.util.ScopedConfiguration.withMockConfig;
 import static si.urbas.pless.users.UserControllerTest.*;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class AuthenticationServiceTest {
 
@@ -105,7 +105,7 @@ public class AuthenticationServiceTest {
   @Test
   public void authenticationService_MUST_always_return_the_same_instance_WHEN_in_production_mode() throws Exception {
     withMockConfig(() -> {
-      when(getConfigurationSource().isProduction()).thenReturn(true);
+      when(configurationSource().isProduction()).thenReturn(true);
       assertThat(
         authenticationService(),
         is(sameInstance(authenticationService()))

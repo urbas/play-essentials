@@ -6,7 +6,7 @@ import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(EmailProvider.CONFIG_EMAIL_PROVIDER)
@@ -23,7 +23,7 @@ public abstract class EmailProvider implements PlessService {
                         String subject,
                         Html body) {
     Email email = createEmail();
-    String sender = getConfigurationSource().getString(CONFIG_SMTP_FROM);
+    String sender = configurationSource().getString(CONFIG_SMTP_FROM);
     email.setFrom(sender);
     email.setRecipient(recipient);
     email.setSubject(subject);
@@ -32,7 +32,7 @@ public abstract class EmailProvider implements PlessService {
   }
 
   public Email createEmail() {
-    return createEmail(getConfigurationSource());
+    return createEmail(configurationSource());
   }
 
   public static EmailProvider getEmailProvider() {

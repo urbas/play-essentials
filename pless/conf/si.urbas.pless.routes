@@ -1,5 +1,5 @@
 # Home page
-GET   /                    si.urbas.pless.WelcomeController.welcome()
+GET   /                               si.urbas.pless.pages.WelcomeController.welcome()
 
 # User management pages
 GET   /user/signup                    si.urbas.pless.users.pages.SignupController.signUp()

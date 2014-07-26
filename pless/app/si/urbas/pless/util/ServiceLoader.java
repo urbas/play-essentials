@@ -79,7 +79,7 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   private ConfigurationSource getConfigurationSource() {
-    return configurationSource == null ? ConfigurationSource.getConfigurationSource() : configurationSource;
+    return configurationSource == null ? ConfigurationSource.configurationSource() : configurationSource;
   }
 
   @SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public class ServiceLoader<T extends PlessService> {
   public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode (it used SBT's class loader).
-    if (ConfigurationSource.getConfigurationSource().isDevelopment()) {
+    if (ConfigurationSource.configurationSource().isDevelopment()) {
       return PlayApplicationInstanceCreator.getInstance();
     } else {
       return DefaultInstanceCreator.INSTANCE;

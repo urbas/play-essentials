@@ -1,5 +1,5 @@
 # Home page
-GET   /                    si.urbas.pless.WelcomeController.welcome()
+GET   /                    si.urbas.pless.pages.WelcomeController.welcome()
 
 POST  /offer               si.urbas.pless.jpasample.emailing.OfferController.offer(offerName: String, offerDescription: String, offerPrice: String)
 GET   /offer               si.urbas.pless.jpasample.emailing.OfferController.viewOffer(offerName: String)

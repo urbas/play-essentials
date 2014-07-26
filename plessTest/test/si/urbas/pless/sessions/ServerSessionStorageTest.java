@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.sessions.ServerSessionStorage.CONFIG_SERVER_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ServerSessionStorage.getServerSessionStorage;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class ServerSessionStorageTest extends PlessMockConfigurationTest {
 
@@ -37,7 +37,7 @@ public class ServerSessionStorageTest extends PlessMockConfigurationTest {
 
   @Test
   public void getServerSessionStorage_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().isProduction()).thenReturn(true);
     assertSame(getServerSessionStorage(), getServerSessionStorage());
   }
 
@@ -47,7 +47,7 @@ public class ServerSessionStorageTest extends PlessMockConfigurationTest {
   }
 
   private static void configureServerSessionStorage(String value) {
-    when(getConfigurationSource().getString(CONFIG_SERVER_SESSION_STORAGE_FACTORY)).thenReturn(value);
+    when(configurationSource().getString(CONFIG_SERVER_SESSION_STORAGE_FACTORY)).thenReturn(value);
   }
 
 }

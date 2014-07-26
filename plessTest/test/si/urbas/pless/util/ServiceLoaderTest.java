@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 import static si.urbas.pless.util.ServiceLoader.getDefaultInstanceCreator;
 import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAME;
@@ -43,13 +43,13 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getService_MUST_return_the_same_instance_WHEN_in_production_mode() throws Exception {
-    doReturn(true).when(getConfigurationSource()).isProduction();
+    doReturn(true).when(configurationSource()).isProduction();
     assertSame(serviceLoader.getService(), serviceLoader.getService());
   }
 
   @Test
   public void getService_MUST_return_the_same_instance_WHEN_in_dev_mode() throws Exception {
-    doReturn(true).when(getConfigurationSource()).isDevelopment();
+    doReturn(true).when(configurationSource()).isDevelopment();
     try (TemporaryPlayApplication ignored = new TemporaryPlayApplication()) {
       assertSame(serviceLoader.getService(), serviceLoader.getService());
     }
@@ -103,13 +103,13 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getDefaultInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
-    when(getConfigurationSource().isDevelopment()).thenReturn(true);
+    when(configurationSource().isDevelopment()).thenReturn(true);
     assertThat(getDefaultInstanceCreator(), is(instanceOf(PlayApplicationInstanceCreator.class)));
   }
 
   @Test
   public void getDefaultInstanceCreator_MUST_return_the_default_class_loader_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().isProduction()).thenReturn(true);
     assertThat(getDefaultInstanceCreator(), is(instanceOf(ClassLoaderInstanceCreator.class)));
   }
 
@@ -123,6 +123,6 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   }
 
   private String configureService(String serviceClassName) {
-    return doReturn(serviceClassName).when(getConfigurationSource()).getString(CONFIG_KEY_SERVICE_CLASS_NAME);
+    return doReturn(serviceClassName).when(configurationSource()).getString(CONFIG_KEY_SERVICE_CLASS_NAME);
   }
 }

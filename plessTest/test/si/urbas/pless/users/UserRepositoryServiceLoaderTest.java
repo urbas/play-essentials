@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.getUserRepository;
-import static si.urbas.pless.util.ConfigurationSource.getConfigurationSource;
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class UserRepositoryServiceLoaderTest extends PlessTest {
 
@@ -27,7 +27,7 @@ public class UserRepositoryServiceLoaderTest extends PlessTest {
 
   @Test
   public void getUserRepository_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
-    when(getConfigurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().isProduction()).thenReturn(true);
     assertThat(getUserRepository(), is(sameInstance(getScopedUserRepository())));
   }
 
@@ -38,7 +38,7 @@ public class UserRepositoryServiceLoaderTest extends PlessTest {
 
   @Test(expected = ConfigurationException.class)
   public void getUserRepository_MUST_throw_an_exception_WHEN_a_custom_repository_is_not_configured() throws Exception {
-    doReturn(null).when(getConfigurationSource()).getString(CONFIG_USER_REPOSITORY);
+    doReturn(null).when(configurationSource()).getString(CONFIG_USER_REPOSITORY);
     withService(UserRepository.class, null, UserRepository::getUserRepository);
   }
 

@@ -5,7 +5,6 @@ import play.mvc.Result;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.authentication.PasswordLoginData;
 import si.urbas.pless.authentication.pages.views.html.LoginView;
-import si.urbas.pless.routes;
 import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
@@ -16,6 +15,8 @@ import static si.urbas.pless.authentication.AuthenticationService.authentication
 import static si.urbas.pless.authentication.PasswordAuthenticator.passwordAuthenticator;
 import static si.urbas.pless.authentication.PasswordLoginData.EMAIL_FIELD;
 import static si.urbas.pless.authentication.PasswordLoginData.PASSWORD_FIELD;
+import static si.urbas.pless.pages.Layout.layout;
+import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(LoginPages.CONFIG_LOGIN_PAGES)
@@ -28,7 +29,7 @@ public class LoginPages implements PlessService {
   }
 
   public Result logInPage(Form<?> loginForm) {
-    return ok(LoginView.apply(loginForm));
+    return ok(layout().main("Login", LoginView.apply(loginForm)));
   }
 
   public boolean tryLogIn(Form<?> loginForm) {
@@ -44,11 +45,11 @@ public class LoginPages implements PlessService {
   }
 
   public Result loginSuccessfulPage() {
-    return redirect(routes.WelcomeController.welcome());
+    return redirect(WelcomeController.welcome());
   }
 
   public Result afterLogOutPage() {
-    return redirect(routes.WelcomeController.welcome());
+    return redirect(WelcomeController.welcome());
   }
 
   public static LoginPages loginPages() {
