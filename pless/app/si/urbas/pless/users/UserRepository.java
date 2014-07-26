@@ -44,7 +44,7 @@ public abstract class UserRepository implements PlessService {
     throw new RuntimeException(exceptionMessage.toString());
   }
 
-  public static UserRepository getUserRepository() {
+  public static UserRepository userRepository() {
     return UserRepositoryServiceLoader.INSTANCE.getService();
   }
 

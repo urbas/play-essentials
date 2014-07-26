@@ -11,7 +11,7 @@ import si.urbas.pless.util.ConfigurationSource;
 public class PlessController extends Controller {
 
   protected static UserRepository users() {
-    return UserRepository.getUserRepository();
+    return UserRepository.userRepository();
   }
 
   protected static AuthenticationService auth() {
@@ -23,7 +23,7 @@ public class PlessController extends Controller {
   }
 
   protected static EmailProvider emailing() {
-    return EmailProvider.getEmailProvider();
+    return EmailProvider.emailProvider();
   }
 
   /**

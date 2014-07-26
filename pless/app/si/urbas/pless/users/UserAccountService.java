@@ -10,8 +10,8 @@ import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
-import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.emailing.EmailProvider.emailProvider;
+import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 /**
@@ -68,7 +68,7 @@ public class UserAccountService implements PlessService {
 
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
-    return getUserRepository().createUser(signupData.email, signupData.username, signupData.password);
+    return userRepository().createUser(signupData.email, signupData.username, signupData.password);
   }
 
   public void afterUserPersisted(@SuppressWarnings("UnusedParameters") PlessUser newUser) {}
@@ -77,7 +77,7 @@ public class UserAccountService implements PlessService {
     String recipient = userDetails.getEmail();
     String emailSubject = getSignupEmailSubject();
     Html emailContent = signupEmailContent(userDetails);
-    getEmailProvider().sendEmail(recipient, emailSubject, emailContent);
+    emailProvider().sendEmail(recipient, emailSubject, emailContent);
   }
 
   public Form<?> getAccountUpdateForm() {return form(UpdateAccountData.class);}
@@ -93,11 +93,11 @@ public class UserAccountService implements PlessService {
   public void sendPasswordResetEmail(String email, String resetCode) {
     String emailSubject = passwordResetEmailSubject();
     Html emailContent = passwordResetEmailContent(email, resetCode);
-    getEmailProvider().sendEmail(email, emailSubject, emailContent);
+    emailProvider().sendEmail(email, emailSubject, emailContent);
   }
 
   public void sendPasswordResetConfirmationEmail(String email) {
-    getEmailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
+    emailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
   }
 
   protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}

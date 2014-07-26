@@ -8,7 +8,7 @@ import si.urbas.pless.test.util.PlessTest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static si.urbas.pless.emailing.EmailProvider.EmailProviderServiceLoader;
-import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
+import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 
 public class EmailProviderTest extends PlessTest {
@@ -22,7 +22,7 @@ public class EmailProviderTest extends PlessTest {
   public void sendEmail_MUST_set_the_email_parameters_through_the_mailerApi() throws Exception {
     Email email = mock(Email.class);
     withService(new SingleEmailProvider(email), () -> {
-      getEmailProvider().sendEmail(EMAIL_RECIPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
+      emailProvider().sendEmail(EMAIL_RECIPIENT, EMAIL_SUBJECT, EMAIL_HTML_BODY);
       verify(email).setRecipient(EMAIL_RECIPIENT);
       verify(email).setSubject(EMAIL_SUBJECT);
       verify(email).setBody(EMAIL_HTML_BODY);

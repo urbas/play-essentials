@@ -7,7 +7,7 @@ import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.users.PlessUser;
 
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 
 public abstract class PlessTest {
 
@@ -40,8 +40,8 @@ public abstract class PlessTest {
   }
 
   public static void persistUser(String userEmail, String username, String userPassword) {
-    PlessUser newUser = getUserRepository().createUser(userEmail, username, userPassword);
-    getUserRepository().persistUser(newUser);
+    PlessUser newUser = userRepository().createUser(userEmail, username, userPassword);
+    userRepository().persistUser(newUser);
   }
 
   public static boolean activateUser(final PlessUser user) {
@@ -49,10 +49,10 @@ public abstract class PlessTest {
   }
 
   public static boolean activateUser(final String email, final String activationCode) {
-    return getUserRepository().activateUser(email, activationCode);
+    return userRepository().activateUser(email, activationCode);
   }
 
   public static PlessUser fetchUser(String userEmail) {
-    return getUserRepository().findUserByEmail(userEmail);
+    return userRepository().findUserByEmail(userEmail);
   }
 }

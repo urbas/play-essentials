@@ -22,7 +22,7 @@ public class JpaUserRepositoryTest extends UserRepositoryTest {
   @Before
   public void setUp() throws Exception {
     jpaApplication = new JpaApplication(PlessJpaConfiguration.PLESS_INTERNAL_TEST_PERSISTENCE_UNIT);
-    userRepository = UserRepository.getUserRepository();
+    userRepository = UserRepository.userRepository();
   }
 
   @After

@@ -2,7 +2,7 @@ package si.urbas.pless.authentication;
 
 import si.urbas.pless.users.PlessUser;
 
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 
 public class PasswordAuthenticator {
 
@@ -23,7 +23,7 @@ public class PasswordAuthenticator {
   }
 
   public PlessUser tryAuthenticateUser(String email, String password) {
-    PlessUser user = getUserRepository().findUserByEmail(email);
+    PlessUser user = userRepository().findUserByEmail(email);
     if (user != null && isPasswordCorrect(password, user)) {
       return user;
     } else {

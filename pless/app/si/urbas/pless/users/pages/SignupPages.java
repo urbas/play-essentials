@@ -14,7 +14,7 @@ import static play.mvc.Results.redirect;
 import static si.urbas.pless.pages.FlashMessages.flashInfo;
 import static si.urbas.pless.pages.Layout.layout;
 import static si.urbas.pless.pages.routes.WelcomeController;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 @PlessServiceConfigKey(SignupPages.CONFIG_SIGNUP_PAGES)
@@ -48,7 +48,7 @@ public class SignupPages implements PlessService {
 
   protected static boolean isEmailFree(Form<?> signUpForm) {
     String email = signUpForm.field(SignupData.EMAIL_FIELD).value();
-    if (getUserRepository().findUserByEmail(email) != null) {
+    if (userRepository().findUserByEmail(email) != null) {
       signUpForm.reject(SignupData.EMAIL_FIELD, "A user with the given email is already signed up.");
       return false;
     }
@@ -57,7 +57,7 @@ public class SignupPages implements PlessService {
 
   protected static boolean isUsernameFree(Form<?> signUpForm) {
     String username = signUpForm.field(SignupData.USERNAME_FIELD).value();
-    if (username != null && getUserRepository().findUserByUsername(username) != null) {
+    if (username != null && userRepository().findUserByUsername(username) != null) {
       signUpForm.reject(SignupData.USERNAME_FIELD, "A user with the given username is already signed up.");
       return false;
     }

@@ -20,7 +20,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
-import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
+import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
@@ -29,7 +29,7 @@ import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
@@ -74,7 +74,7 @@ public class UserControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_not_call_afterUserPersisted_of_UserAccountService_WHEN_user_not_persisted() {
-    UserRepository userRepository = getUserRepository();
+    UserRepository userRepository = userRepository();
     doThrow(EXCEPTION_FOR_TESTING).when(userRepository).persistUser(userMatchesJohnSmith());
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     verify(userAccountService(), never()).afterUserPersisted(userMatchesJohnSmith());
@@ -101,7 +101,7 @@ public class UserControllerTest extends PlessTest {
   public void signUp_MUST_persist_the_user_in_the_user_repository() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
-      getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL),
+      userRepository().findUserByEmail(JOHN_SMITH_EMAIL),
       is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD))
     );
   }
@@ -141,16 +141,16 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_send_an_email() throws Exception {
     signUp(user);
-    verify(getEmailProvider()).createEmail(configurationSource());
+    verify(emailProvider()).createEmail(configurationSource());
   }
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
     withService(mock(UserRepository.class), () -> {
-      UserRepository scopedUserRepository = getUserRepository();
+      UserRepository scopedUserRepository = userRepository();
       doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);
-      verify(getEmailProvider(), never()).createEmail(configurationSource());
+      verify(emailProvider(), never()).createEmail(configurationSource());
     });
   }
 
@@ -170,7 +170,7 @@ public class UserControllerTest extends PlessTest {
   public void delete_MUST_remove_the_persisted_user() throws Exception {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     callDelete();
-    assertNull(getUserRepository().findUserByEmail(JOHN_SMITH_EMAIL));
+    assertNull(userRepository().findUserByEmail(JOHN_SMITH_EMAIL));
   }
 
   @Test
@@ -216,10 +216,10 @@ public class UserControllerTest extends PlessTest {
   public void updateUserAccount_MUST_change_user_details() {
     PlessUser existingUser = loginAndChangeJohnSmithToJaneSmith();
     assertThat(
-      getUserRepository().findUserById(existingUser.getId()),
+      userRepository().findUserById(existingUser.getId()),
       is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))
     );
-    verify(getUserRepository()).mergeUser((PlessUser) argThat(is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))));
+    verify(userRepository()).mergeUser((PlessUser) argThat(is(userWith(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD))));
   }
 
   @Test
@@ -371,6 +371,6 @@ public class UserControllerTest extends PlessTest {
     passwordResetTimestamp.setTime(user.getPasswordResetTimestamp());
     passwordResetTimestamp.add(Calendar.SECOND, -DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS - 10);
     user.setPasswordResetTimestamp(passwordResetTimestamp.getTime());
-    getUserRepository().mergeUser(user);
+    userRepository().mergeUser(user);
   }
 }

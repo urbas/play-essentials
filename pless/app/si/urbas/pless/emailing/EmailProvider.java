@@ -35,11 +35,11 @@ public abstract class EmailProvider implements PlessService {
     return createEmail(configurationSource());
   }
 
-  public static EmailProvider getEmailProvider() {
+  public abstract Email createEmail(ConfigurationSource configurationSource);
+
+  public static EmailProvider emailProvider() {
     return EmailProviderServiceLoader.INSTANCE.getService();
   }
-
-  public abstract Email createEmail(ConfigurationSource configurationSource);
 
   static class EmailProviderServiceLoader {
     static final ServiceLoader<EmailProvider> INSTANCE = createServiceLoader(CONFIG_EMAIL_PROVIDER, new DefaultEmailProviderFactory());

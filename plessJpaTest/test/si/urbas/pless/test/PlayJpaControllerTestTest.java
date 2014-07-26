@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.authentication.AuthenticationController.logIn;
 import static si.urbas.pless.users.UserController.signUp;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 
 public class PlayJpaControllerTestTest extends PlayJpaControllerTest {
 
@@ -31,8 +31,8 @@ public class PlayJpaControllerTestTest extends PlayJpaControllerTest {
 
   private static PlessUser signUpActivateAndLoginUser(String email, String username, String password) {
     signUp(email, username, password);
-    PlessUser user = getUserRepository().findUserByEmail(email);
-    getUserRepository().activateUser(user.getEmail(), user.getActivationCode());
+    PlessUser user = userRepository().findUserByEmail(email);
+    userRepository().activateUser(user.getEmail(), user.getActivationCode());
     logIn(email, password);
     return user;
   }

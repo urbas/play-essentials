@@ -19,14 +19,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
-import static si.urbas.pless.emailing.EmailProvider.getEmailProvider;
+import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
-import static si.urbas.pless.users.UserRepository.getUserRepository;
+import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.users.pages.routes.PasswordResetController;
 import static si.urbas.pless.users.pages.routes.SignupController;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
@@ -57,7 +57,7 @@ public class UserAccountServiceTest extends PlessTest {
       param(USERNAME_PARAMETER, JOHN_SMITH_USERNAME),
       param(PASSWORD_PARAMETER, JOHN_SMITH_PASSWORD)
     );
-    janeSmithUser = getUserRepository().createUser(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+    janeSmithUser = userRepository().createUser(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
   }
 
   @Test
@@ -121,7 +121,7 @@ public class UserAccountServiceTest extends PlessTest {
     try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
       userAccountService.sendPasswordResetEmail(JANE_SMITH_EMAIL, passwordResetCode);
-      verify(getEmailProvider())
+      verify(emailProvider())
         .sendEmail(
           eq(JANE_SMITH_EMAIL),
           any(String.class),
@@ -147,7 +147,7 @@ public class UserAccountServiceTest extends PlessTest {
   public void sendPasswordResetConfirmationEmail_MUST_send_an_email_through_the_email_service() {
     try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
       userAccountService.sendPasswordResetConfirmationEmail(JANE_SMITH_EMAIL);
-      verify(getEmailProvider()).sendEmail(eq(JANE_SMITH_EMAIL), any(String.class), any(Html.class));
+      verify(emailProvider()).sendEmail(eq(JANE_SMITH_EMAIL), any(String.class), any(Html.class));
     }
   }
 
