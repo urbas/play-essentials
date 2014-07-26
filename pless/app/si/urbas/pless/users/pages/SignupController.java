@@ -15,8 +15,7 @@ public class SignupController extends PlessController {
 
   @AddCSRFToken
   public static Result signUp() {
-    Form<?> signUpForm = userAccountService().getSignupForm();
-    return ok(signupPages().signUpPanel(signUpForm));
+    return signupPages().signUpPage(userAccountService().getSignupForm());
   }
 
   @RequireCSRFCheck
@@ -25,7 +24,7 @@ public class SignupController extends PlessController {
     if (wasSignUpSuccessful(signUpForm)) {
       return signupPages().signUpSuccessfulPage(signUpForm);
     } else {
-      return badRequest(signupPages().signUpPanel(signUpForm));
+      return signupPages().signUpPage(signUpForm);
     }
   }
 

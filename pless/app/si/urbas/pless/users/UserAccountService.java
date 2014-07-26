@@ -37,11 +37,11 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetEmail(String, String)}.</li>
  * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPassword(String, String)}
  * page and must submit the new password with the correct reset code and email. The page is rendered via
- * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPanel(play.data.Form)}.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPage(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method
  * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetConfirmationEmail(String)} is called.</li>
  * <li>Finally, the password reset success page is displayed via
- * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetSuccessfulPanel(String)}.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetSuccessfulPage(String)}.</li>
  * </ul>
  * <p>
  * <h2>User account update</h2>

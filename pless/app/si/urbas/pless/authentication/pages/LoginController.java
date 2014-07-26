@@ -7,27 +7,27 @@ import play.mvc.Result;
 import si.urbas.pless.PlessController;
 
 import static si.urbas.pless.authentication.pages.LoginPages.loginPages;
-import static si.urbas.pless.util.ApiResults.SUCCESS;
 
 public class LoginController extends PlessController {
 
   @AddCSRFToken
   public static Result logIn() {
-    return loginPages().logIn(loginPages().loginForm());
+    return loginPages().logInPage(loginPages().loginForm());
   }
 
   @RequireCSRFCheck
   public static Result submitLogIn() {
     Form<?> loginForm = loginPages().loginForm().bindFromRequest();
     if (!loginForm.hasErrors() && loginPages().tryLogIn(loginForm)) {
-      return loginPages().loginSuccessful();
+      return loginPages().loginSuccessfulPage();
     } else {
-      return loginPages().logIn(loginForm);
+      return loginPages().logInPage(loginForm);
     }
   }
+
   public static Result logOut() {
     auth().logOut();
-    return loginPages().afterLogOut();
+    return loginPages().afterLogOutPage();
   }
 
 }

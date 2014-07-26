@@ -27,7 +27,7 @@ public class LoginPages implements PlessService {
     return Form.form(PasswordLoginData.class);
   }
 
-  public Result logIn(Form<?> loginForm) {
+  public Result logInPage(Form<?> loginForm) {
     return ok(LoginView.apply(loginForm));
   }
 
@@ -43,11 +43,11 @@ public class LoginPages implements PlessService {
     return false;
   }
 
-  public Result loginSuccessful() {
+  public Result loginSuccessfulPage() {
     return redirect(routes.WelcomeController.welcome());
   }
 
-  public Result afterLogOut() {
+  public Result afterLogOutPage() {
     return redirect(routes.WelcomeController.welcome());
   }
 

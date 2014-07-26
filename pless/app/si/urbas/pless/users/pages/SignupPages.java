@@ -26,8 +26,8 @@ public class SignupPages implements PlessService {
   /**
    * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
    */
-  public Html signUpPanel(Form<?> signUpForm) {
-    return SignupView.apply(signUpForm);
+  public Result signUpPage(Form<?> signUpForm) {
+    return ok(SignupView.apply(signUpForm));
   }
 
   public boolean isSignUpFormValid(Form<?> signUpForm) {

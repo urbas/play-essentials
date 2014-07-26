@@ -18,16 +18,16 @@ public class PasswordResetController extends Controller {
   public static Result resetPassword(String email, String resetPasswordToken) {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
       .fill(new PasswordResetData(email, resetPasswordToken));
-    return ok(passwordResetPages().passwordResetPanel(form));
+    return passwordResetPages().passwordResetPage(form);
   }
 
   @RequireCSRFCheck
   public static Result submitResetPassword() {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class).bindFromRequest();
     if (!form.hasErrors() && isPasswordConfirmationCorrect(form) && tryResetPassword(form)) {
-      return ok(passwordResetPages().passwordResetSuccessfulPanel(form.get().getEmail()));
+      return passwordResetPages().passwordResetSuccessfulPage(form.get().getEmail());
     } else {
-      return badRequest(passwordResetPages().passwordResetPanel(form));
+      return passwordResetPages().passwordResetPage(form);
     }
   }
 
