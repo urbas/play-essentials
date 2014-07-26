@@ -210,7 +210,6 @@ You tests should extend from our test base-class that brings up an in-memory JPA
 ```java
 import si.urbas.pless.test.PlayJpaControllerTest;
 
-@SuppressWarnings("UnusedDeclaration")
 public class MyControllerTest extends PlayJpaControllerTest {
 
   @Override
