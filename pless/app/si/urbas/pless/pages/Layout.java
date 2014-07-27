@@ -6,10 +6,10 @@ import si.urbas.pless.pages.views.html.MainHeadView;
 import si.urbas.pless.pages.views.html.MainLayoutView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
-import si.urbas.pless.util.StringUtils;
 
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
+import static si.urbas.pless.util.StringUtils.isNullOrEmpty;
 
 @PlessServiceConfigKey(Layout.CONFIG_MASTER_LAYOUT)
 public class Layout implements PlessService {
@@ -27,10 +27,7 @@ public class Layout implements PlessService {
 
   public String pageTitleFormat(String theme) {
     String mainTitle = configurationSource().getString(CONFIG_APPLICATION_NAME);
-    if (StringUtils.isNullOrEmpty(mainTitle)) {
-      return theme;
-    }
-    return mainTitle + ": " + theme;
+    return isNullOrEmpty(mainTitle) ? theme : theme + " | " + mainTitle;
   }
 
   public static Layout layout() {
