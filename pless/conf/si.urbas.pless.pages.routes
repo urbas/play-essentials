@@ -1,0 +1,17 @@
+# Home page
+GET   /                               si.urbas.pless.pages.WelcomeController.welcome()
+
+# User management pages
+GET   /user/signup                    si.urbas.pless.users.pages.SignupController.signUp()
+POST  /user/submitSignup              si.urbas.pless.users.pages.SignupController.submitSignUp()
+GET   /user/activate                  si.urbas.pless.users.pages.SignupController.activate(email, activationCode)
+GET   /user/resetPassword             si.urbas.pless.users.pages.PasswordResetController.resetPassword(email, resetPasswordToken)
+POST  /user/submitResetPassword       si.urbas.pless.users.pages.PasswordResetController.submitResetPassword()
+
+# Authentication pages
+GET   /auth/login                     si.urbas.pless.authentication.pages.LoginController.logIn()
+POST  /auth/submitLogin               si.urbas.pless.authentication.pages.LoginController.submitLogIn()
+GET   /auth/logout                    si.urbas.pless.authentication.pages.LoginController.logOut()
+
+# Map static resources from the /public folder to the /assets URL path
+GET   /assets/*file    controllers.Assets.at(path="/public", file)

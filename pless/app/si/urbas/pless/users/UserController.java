@@ -149,6 +149,11 @@ public final class UserController extends PlessController {
     }
   }
 
+  public static Result activate(final String email, final String activationCode) {
+    boolean wasActivated = users().activateUser(email, activationCode);
+    return wasActivated ? SUCCESS : ERROR;
+  }
+
   @SafeVarargs
   public static HashMap<String, String[]> createUserInfoParameters(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
     return addParams(

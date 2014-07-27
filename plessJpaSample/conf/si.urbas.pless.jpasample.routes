@@ -10,7 +10,8 @@ POST  /api/auth/login      si.urbas.pless.authentication.AuthenticationControlle
 
 # Pless routes
 # SNIPPET: plessBaseRoute
-->    /                  si.urbas.pless.Routes
+->    /                  si.urbas.pless.pages.Routes
+->    /                  si.urbas.pless.api.Routes
 # ENDSNIPPET: plessBaseRoute
 
 # Map static resources from the /public folder to the /assets URL path
