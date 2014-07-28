@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.test.util.ScopedConfiguration.withMockConfig;
-import static si.urbas.pless.users.UserControllerTest.*;
+import static si.urbas.pless.users.api.UserControllerTest.*;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class AuthenticationServiceTest {

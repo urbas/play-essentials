@@ -1,4 +1,4 @@
-package si.urbas.pless.users.pages;
+package si.urbas.pless.users;
 
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
@@ -8,34 +8,33 @@ import si.urbas.pless.PlessController;
 import si.urbas.pless.util.ApiResults;
 
 import static si.urbas.pless.users.UserAccountService.userAccountService;
-import static si.urbas.pless.users.UserController.signUpAndPersistUser;
-import static si.urbas.pless.users.pages.SignupPages.signupPages;
+import static si.urbas.pless.users.api.UserController.signUpAndPersistUser;
 
-public class SignupController extends PlessController {
+public final class SignupController extends PlessController {
 
   @AddCSRFToken
   public static Result signUp() {
-    return signupPages().signUpPage(userAccountService().signupForm());
+    return SignupService.signupService().signUpPage(userAccountService().signupForm());
   }
 
   @RequireCSRFCheck
   public static Result submitSignUp() {
     Form<?> signUpForm = userAccountService().signupForm().bindFromRequest();
     if (wasSignUpSuccessful(signUpForm)) {
-      return signupPages().signUpSuccessfulPage(signUpForm);
+      return SignupService.signupService().signUpSuccessfulPage(signUpForm);
     } else {
-      return signupPages().signUpPage(signUpForm);
+      return SignupService.signupService().signUpPage(signUpForm);
     }
   }
 
   public static Result activate(final String email, final String activationCode) {
     boolean wasActivated = users().activateUser(email, activationCode);
-    return signupPages().activationPage(wasActivated, email);
+    return SignupService.signupService().activationPage(wasActivated, email);
   }
 
   private static boolean wasSignUpSuccessful(Form<?> signUpForm) {
     return !signUpForm.hasErrors() &&
-      signupPages().isSignUpFormValid(signUpForm) &&
+      SignupService.signupService().isSignUpFormValid(signUpForm) &&
       signUpAndPersistUser(signUpForm) == ApiResults.SUCCESS;
   }
 }

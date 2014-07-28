@@ -1,4 +1,4 @@
-package si.urbas.pless.users.pages;
+package si.urbas.pless.users;
 
 import static play.data.validation.Constraints.Required;
 

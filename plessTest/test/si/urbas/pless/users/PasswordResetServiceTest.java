@@ -1,4 +1,4 @@
-package si.urbas.pless.users.pages;
+package si.urbas.pless.users;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,21 +17,21 @@ import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.users.UserRepository.userRepository;
-import static si.urbas.pless.users.pages.routes.PasswordResetController;
+import static si.urbas.pless.users.routes.PasswordResetController;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
-public class PasswordResetPagesTest extends PlessTest {
+public class PasswordResetServiceTest extends PlessTest {
 
   private static final String JANE_SMITH_USERNAME = "Jane Smith";
   private static final String JANE_SMITH_EMAIL = "Jane@email.com";
   private static final String JANE_SMITH_PASSWORD = "jane's password";
-  private PasswordResetPages passwordResetPages;
+  private PasswordResetService passwordResetService;
 
   @Override
   @Before
   public void setUp() {
     super.setUp();
-    passwordResetPages = new PasswordResetPages();
+    passwordResetService = new PasswordResetService();
     userRepository().createUser(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
   }
 
@@ -39,7 +39,7 @@ public class PasswordResetPagesTest extends PlessTest {
   public void sendPasswordResetEmail_MUST_send_an_email_through_the_email_service() {
     try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
-      passwordResetPages.sendPasswordResetEmail(JANE_SMITH_EMAIL, passwordResetCode);
+      passwordResetService.sendPasswordResetEmail(JANE_SMITH_EMAIL, passwordResetCode);
       verify(emailProvider())
         .sendEmail(
           eq(JANE_SMITH_EMAIL),
@@ -53,7 +53,7 @@ public class PasswordResetPagesTest extends PlessTest {
   public void passwordResetEmailContent_MUST_contain_the_link_to_the_password_reset_page() {
     try (TemporaryHttpContext httpContext = new TemporaryHttpContext()) {
       String passwordResetCode = urlSafeHash();
-      Html passwordResetEmailContent = passwordResetPages.passwordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
+      Html passwordResetEmailContent = passwordResetService.passwordResetEmailContent(JANE_SMITH_EMAIL, passwordResetCode);
       Call resetPassword = PasswordResetController.resetPassword(JANE_SMITH_EMAIL, passwordResetCode);
       assertThat(
         passwordResetEmailContent.body(),
@@ -65,7 +65,7 @@ public class PasswordResetPagesTest extends PlessTest {
   @Test
   public void sendPasswordResetConfirmationEmail_MUST_send_an_email_through_the_email_service() {
     try (TemporaryHttpContext ignored = new TemporaryHttpContext()) {
-      passwordResetPages.sendPasswordResetConfirmationEmail(JANE_SMITH_EMAIL);
+      passwordResetService.sendPasswordResetConfirmationEmail(JANE_SMITH_EMAIL);
       verify(emailProvider()).sendEmail(eq(JANE_SMITH_EMAIL), any(String.class), any(Html.class));
     }
   }

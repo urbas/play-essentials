@@ -2,13 +2,13 @@
 GET   /                                 si.urbas.pless.pages.WelcomeController.welcome()
 
 # User management pages
-GET   /user/signup                      si.urbas.pless.users.pages.SignupController.signUp()
-POST  /user/submitSignup                si.urbas.pless.users.pages.SignupController.submitSignUp()
-GET   /user/activate                    si.urbas.pless.users.pages.SignupController.activate(email, activationCode)
-GET   /user/resetPasswordRequest        si.urbas.pless.users.pages.PasswordResetController.resetPasswordRequest()
-GET   /user/submitPasswordResetRequest  si.urbas.pless.users.pages.PasswordResetController.submitResetPasswordRequest()
-GET   /user/resetPassword               si.urbas.pless.users.pages.PasswordResetController.resetPassword(email, resetPasswordToken)
-POST  /user/submitResetPassword         si.urbas.pless.users.pages.PasswordResetController.submitResetPassword()
+GET   /user/signup                      si.urbas.pless.users.SignupController.signUp()
+POST  /user/submitSignup                si.urbas.pless.users.SignupController.submitSignUp()
+GET   /user/activate                    si.urbas.pless.users.SignupController.activate(email, activationCode)
+GET   /user/resetPasswordRequest        si.urbas.pless.users.PasswordResetController.resetPasswordRequest()
+GET   /user/submitPasswordResetRequest  si.urbas.pless.users.PasswordResetController.submitResetPasswordRequest()
+GET   /user/resetPassword               si.urbas.pless.users.PasswordResetController.resetPassword(email, resetPasswordToken)
+POST  /user/submitResetPassword         si.urbas.pless.users.PasswordResetController.submitResetPassword()
 
 # Authentication pages
 GET   /auth/login                       si.urbas.pless.authentication.pages.LoginController.logIn()

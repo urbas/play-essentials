@@ -4,10 +4,10 @@ POST  /api/auth/logout                si.urbas.pless.authentication.Authenticati
 GET   /api/auth/status                si.urbas.pless.authentication.AuthenticationController.status()
 
 # User management API
-POST  /api/user/signup                si.urbas.pless.users.UserController.signUp()
-GET   /api/user/activate              si.urbas.pless.users.UserController.activate(email, activationCode)
-GET   /api/user/info                  si.urbas.pless.users.UserController.info()
-POST  /api/user/info                  si.urbas.pless.users.UserController.updateUserAccount()
-POST  /api/user/delete                si.urbas.pless.users.UserController.delete()
-POST  /api/user/requestPasswordReset  si.urbas.pless.users.UserController.requestPasswordReset(email)
-POST  /api/user/resetPassword         si.urbas.pless.users.UserController.resetPassword(email, resetPasswordToken, newPassword)
+POST  /api/user/signup                si.urbas.pless.users.api.UserController.signUp()
+GET   /api/user/activate              si.urbas.pless.users.api.UserController.activate(email, activationCode)
+GET   /api/user/info                  si.urbas.pless.users.api.UserController.info()
+POST  /api/user/info                  si.urbas.pless.users.api.UserController.updateUserAccount()
+POST  /api/user/delete                si.urbas.pless.users.api.UserController.delete()
+POST  /api/user/requestPasswordReset  si.urbas.pless.users.api.UserController.requestPasswordReset(email)
+POST  /api/user/resetPassword         si.urbas.pless.users.api.UserController.resetPassword(email, resetPasswordToken, newPassword)

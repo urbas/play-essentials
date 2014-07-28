@@ -1,11 +1,12 @@
-package si.urbas.pless.users;
+package si.urbas.pless.users.api;
 
 import play.Logger;
 import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.users.pages.PasswordResetController;
+import si.urbas.pless.users.PasswordResetController;
+import si.urbas.pless.users.PlessUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthentica
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
-import static si.urbas.pless.users.pages.PasswordResetController.tryIssuePasswordResetCode;
+import static si.urbas.pless.users.PasswordResetController.tryIssuePasswordResetCode;
 import static si.urbas.pless.util.ApiResults.*;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -36,7 +37,7 @@ public final class UserController extends PlessController {
   }
 
   public static Result updateUserAccount() {
-    Form<?> accountUpdateForm = userAccountService().getAccountUpdateForm();
+    Form<?> accountUpdateForm = userAccountService().accountUpdateForm();
     return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
@@ -73,7 +74,7 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    return updateUserAccount(userAccountService().getAccountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+    return updateUserAccount(userAccountService().accountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
   }
 
   private static Result updateUserAccount(Form<?> updateAccountForm) {

@@ -1,14 +1,15 @@
-package si.urbas.pless.users;
+package si.urbas.pless.users.api;
 
 import org.junit.Before;
 import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
+import play.test.Helpers;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.util.PlessTest;
-import si.urbas.pless.users.pages.PasswordResetController;
-import si.urbas.pless.users.pages.SignupController;
+import si.urbas.pless.users.*;
+import si.urbas.pless.users.api.UserController;
 
 import java.util.Calendar;
 
@@ -29,9 +30,9 @@ import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
-import static si.urbas.pless.users.UserController.*;
+import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.users.UserRepository.userRepository;
-import static si.urbas.pless.users.pages.PasswordResetPages.passwordResetPages;
+import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
@@ -116,7 +117,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
     assertThat(
-      contentAsString(SignupController.activate(JOHN_SMITH_EMAIL, null)),
+      Helpers.contentAsString(SignupController.activate(JOHN_SMITH_EMAIL, null)),
       containsString("We could not activate your account")
     );
   }
@@ -200,7 +201,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void updateUserAccount_MUST_return_badRequest_WHEN_not_logged_in() {
     assertThat(
-      updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
+      UserController.updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
       userNotAuthenticatedError()
     );
   }
@@ -209,7 +210,7 @@ public class UserControllerTest extends PlessTest {
   public void updateUserAccount_MUST_return_ok_WHEN_logged_in() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
-      updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
+      UserController.updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD),
       success()
     );
   }
@@ -247,7 +248,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
     requestPasswordReset(JOHN_SMITH_EMAIL);
-    verify(passwordResetPages(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+    verify(passwordResetService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
   }
 
   @Test
@@ -265,7 +266,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_send_an_email_through_the_UserAccountService() {
     PlessUser user = createUserAndRequestPasswordReset();
-    verify(passwordResetPages()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
+    verify(passwordResetService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
   }
 
   @Test
@@ -332,7 +333,7 @@ public class UserControllerTest extends PlessTest {
   public void resetPassword_MUST_send_a_confirmation_email_after_the_password_was_reset() {
     PlessUser user = createUserAndRequestPasswordReset();
     resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
-    verify(passwordResetPages()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
+    verify(passwordResetService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
   }
 
   private static void setDefaultPasswordResetValidityDuration() {
@@ -358,7 +359,7 @@ public class UserControllerTest extends PlessTest {
 
   private PlessUser loginAndChangeJohnSmithToJaneSmith() {
     PlessUser existingUser = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
+    UserController.updateUserAccount(JANE_SMITH_EMAIL, JANE_SMITH_USERNAME, JANE_SMITH_PASSWORD);
     return existingUser;
   }
 

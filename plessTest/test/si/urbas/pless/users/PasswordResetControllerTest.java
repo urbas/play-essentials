@@ -1,4 +1,4 @@
-package si.urbas.pless.users.pages;
+package si.urbas.pless.users;
 
 import org.junit.Test;
 import play.mvc.Result;
@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.contentAsString;
-import static si.urbas.pless.users.pages.routes.ref.PasswordResetController;
+import static si.urbas.pless.users.routes.ref.PasswordResetController;
 
 public class PasswordResetControllerTest extends PlayControllerTest {
 

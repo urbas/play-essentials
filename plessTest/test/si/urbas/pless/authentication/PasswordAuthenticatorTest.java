@@ -6,9 +6,9 @@ import si.urbas.pless.users.PlessUser;
 
 import static si.urbas.pless.authentication.PasswordAuthenticator.PasswordAuthenticatorSingleton;
 import static si.urbas.pless.users.UserRepository.userRepository;
-import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_EMAIL;
-import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_PASSWORD;
-import static si.urbas.pless.users.UserControllerTest.JOHN_SMITH_USERNAME;
+import static si.urbas.pless.users.api.UserControllerTest.JOHN_SMITH_EMAIL;
+import static si.urbas.pless.users.api.UserControllerTest.JOHN_SMITH_PASSWORD;
+import static si.urbas.pless.users.api.UserControllerTest.JOHN_SMITH_USERNAME;
 
 public class PasswordAuthenticatorTest extends PlessTest {
 

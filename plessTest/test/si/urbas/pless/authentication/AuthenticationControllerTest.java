@@ -14,7 +14,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 import static si.urbas.pless.authentication.AuthenticationController.*;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
-import static si.urbas.pless.users.UserControllerTest.*;
+import static si.urbas.pless.users.api.UserControllerTest.*;
 
 public class AuthenticationControllerTest extends PlessTest {
 

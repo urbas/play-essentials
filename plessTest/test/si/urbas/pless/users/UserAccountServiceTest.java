@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import play.api.mvc.Call;
 import play.data.Form;
-import play.twirl.api.Html;
 import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.util.PlessTest;
@@ -17,19 +16,14 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
-import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
-import static si.urbas.pless.test.matchers.HtmlMatchers.bodyContaining;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
-import static si.urbas.pless.users.UserController.*;
+import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.users.UserRepository.userRepository;
-import static si.urbas.pless.users.pages.routes.PasswordResetController;
-import static si.urbas.pless.users.pages.routes.SignupController;
-import static si.urbas.pless.util.Hashes.urlSafeHash;
+import static si.urbas.pless.users.routes.SignupController;
 import static si.urbas.pless.util.RequestParameters.param;
 import static si.urbas.pless.util.RequestParameters.params;
 
@@ -133,7 +127,7 @@ public class UserAccountServiceTest extends PlessTest {
     );
   }
 
-  private Form<?> getFromFromParams() {return userAccountService.getAccountUpdateForm().bindFromRequest(updateAccountParams);}
+  private Form<?> getFromFromParams() {return userAccountService.accountUpdateForm().bindFromRequest(updateAccountParams);}
 
   @Override
   protected TestApplication createTestApplication() {

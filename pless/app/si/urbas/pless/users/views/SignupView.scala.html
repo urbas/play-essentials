@@ -1,8 +1,8 @@
 @(signUpForm: Form[_])
-@import si.urbas.pless._
-@import users.SignupData
-@import users.pages.routes._
-@import users.pages.SignupPages
+@import si.urbas.pless
+@import pless.users.SignupData
+@import pless.users.SignupService
+@import pless.users.routes._
 <div class="sign-up-form">
   @helper.form(action = SignupController.submitSignUp()) {
     @helper.CSRF.formField

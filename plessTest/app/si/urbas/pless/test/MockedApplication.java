@@ -14,7 +14,7 @@ import si.urbas.pless.test.users.TestUserAccountService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.users.UserRepository;
-import si.urbas.pless.users.pages.TestPasswordResetPages;
+import si.urbas.pless.users.TestPasswordResetService;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
 
@@ -43,7 +43,7 @@ public class MockedApplication extends TestApplication {
       with(new TemporaryService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
       with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
       with(new TemporaryService(createSpiedUserAccountService()));
-      with(new TemporaryService(createSpiedPasswordResetPages()));
+      with(new TemporaryService(createSpiedPasswordResetService()));
     });
   }
 
@@ -57,7 +57,7 @@ public class MockedApplication extends TestApplication {
 
   protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
 
-  protected static PlessService createSpiedPasswordResetPages() {return spy(new TestPasswordResetPages());}
+  protected static PlessService createSpiedPasswordResetService() {return spy(new TestPasswordResetService());}
 
   public static EmailProvider createSpiedEmailProvider(Email emailToProvide) {
     EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));

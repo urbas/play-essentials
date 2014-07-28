@@ -1,2 +1,1 @@
-TODO: Add a password-reset button to the log-in page.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates

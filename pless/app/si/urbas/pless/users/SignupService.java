@@ -1,11 +1,10 @@
-package si.urbas.pless.users.pages;
+package si.urbas.pless.users;
 
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.users.SignupData;
-import si.urbas.pless.users.pages.views.html.ActivationView;
-import si.urbas.pless.users.pages.views.html.SignupView;
+import si.urbas.pless.users.views.html.ActivationView;
+import si.urbas.pless.users.views.html.SignupView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -17,10 +16,10 @@ import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
-@PlessServiceConfigKey(SignupPages.CONFIG_SIGNUP_PAGES)
-public class SignupPages implements PlessService {
+@PlessServiceConfigKey(SignupService.CONFIG_SIGNUP_SERVICE)
+public class SignupService implements PlessService {
 
-  public static final String CONFIG_SIGNUP_PAGES = "pless.signupPages";
+  public static final String CONFIG_SIGNUP_SERVICE = "pless.signupService";
   public static final String PASSWORDS_MISMATCH = "Passwords don't match.";
 
   /**
@@ -72,11 +71,11 @@ public class SignupPages implements PlessService {
     return true;
   }
 
-  public static SignupPages signupPages() {
-    return SignupPagesLoader.INSTANCE.getService();
+  public static SignupService signupService() {
+    return SignupServiceLoader.INSTANCE.getService();
   }
 
-  private static class SignupPagesLoader {
-    public static final ServiceLoader<SignupPages> INSTANCE = createServiceLoader(new SignupPages());
+  private static class SignupServiceLoader {
+    public static final ServiceLoader<SignupService> INSTANCE = createServiceLoader(new SignupService());
   }
 }

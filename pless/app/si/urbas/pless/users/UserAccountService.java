@@ -3,9 +3,7 @@ package si.urbas.pless.users;
 import play.data.Form;
 import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.users.emails.html.PasswordResetConfirmationEmail;
-import si.urbas.pless.users.emails.html.PasswordResetEmail;
-import si.urbas.pless.users.emails.html.SignupEmailTemplate;
+import si.urbas.pless.users.emails.html.SignupEmail;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -21,7 +19,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <p>
  * <h2>Signup procedure</h2>
  * <ul>
- * <li>User calls {@link UserController#signUp()} with some multiform data (at least the email and password).</li>
+ * <li>User calls {@link si.urbas.pless.users.api.UserController#signUp()} with some multiform data (at least the email and password).</li>
  * <li>{@link UserAccountService#signupForm()} is called to validate the user's data.</li>
  * <li>If the form successfully validates user's data, then {@link si.urbas.pless.users.UserAccountService#createUser(play.data.Form)}
  * is called, otherwise an error message is returned and the signup procedure ends here.</li>
@@ -32,23 +30,23 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <p>
  * <h2>Password reset</h2>
  * <ul>
- * <li>User calls {@link si.urbas.pless.users.UserController#requestPasswordReset(String)}, which tries to find the
+ * <li>User calls {@link si.urbas.pless.users.api.UserController#requestPasswordReset(String)}, which tries to find the
  * user and, upon success, generates a password reset code for that user and calls
- * {@link si.urbas.pless.users.pages.PasswordResetPages#sendPasswordResetEmail(String, String)}.</li>
- * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPassword(String, String)}
+ * {@link PasswordResetService#sendPasswordResetEmail(String, String)}.</li>
+ * <li>The user has to visit the {@link PasswordResetController#resetPassword(String, String)}
  * page and must submit the new password with the correct reset code and email. The page is rendered via
- * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPage(play.data.Form)}.</li>
+ * {@link PasswordResetService#passwordResetPage(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method
- * {@link si.urbas.pless.users.pages.PasswordResetPages#sendPasswordResetConfirmationEmail(String)} is called.</li>
+ * {@link PasswordResetService#sendPasswordResetConfirmationEmail(String)} is called.</li>
  * <li>Finally, the password reset success page is displayed via
- * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetSuccessfulPage(String)}.</li>
+ * {@link PasswordResetService#passwordResetSuccessfulPage(String)}.</li>
  * </ul>
  * <p>
  * <h2>User account update</h2>
  * E.g.: the user wants to change the password, username, or email (or any other detail).
  * <ul>
- * <li>User calls {@link UserController#updateUserAccount()} which passes POST parameters
- * to the form returned by {@link UserAccountService#getAccountUpdateForm()}.</li>
+ * <li>User calls {@link si.urbas.pless.users.api.UserController#updateUserAccount()} which passes POST parameters
+ * to the form returned by {@link UserAccountService#accountUpdateForm()}.</li>
  * <li>If the form is without errors, then the
  * {@link si.urbas.pless.users.UserAccountService#updateUser(play.data.Form, PlessUser)} method is called, with the
  * form and the currently logged-in user. This function should returned the updated user, which is finally
@@ -61,7 +59,7 @@ public class UserAccountService implements PlessService {
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
 
   /**
-   * @return this form is used in the {@link UserController#signUp()} REST API. This form should validate that the user
+   * @return this form is used in the {@link si.urbas.pless.users.api.UserController#signUp()} REST API. This form should validate that the user
    * provided valid signup information. If the validation succeeded, the form
    */
   public Form<?> signupForm() {return form(SignupData.class);}
@@ -80,7 +78,7 @@ public class UserAccountService implements PlessService {
     emailProvider().sendEmail(recipient, emailSubject, emailContent);
   }
 
-  public Form<?> getAccountUpdateForm() {return form(UpdateAccountData.class);}
+  public Form<?> accountUpdateForm() {return form(UpdateAccountData.class);}
 
   public PlessUser updateUser(Form<?> updateAccountForm, PlessUser userToUpdate) {
     UpdateAccountData updateAccountData = (UpdateAccountData) updateAccountForm.get();
@@ -90,7 +88,7 @@ public class UserAccountService implements PlessService {
     return userToUpdate;
   }
 
-  protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}
+  protected Html signupEmailContent(PlessUser userDetails) {return SignupEmail.apply(userDetails);}
 
   protected String signupEmailSubject() {return "Pless Signup";}
 

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static play.mvc.Http.Context;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
-import static si.urbas.pless.users.UserControllerTest.*;
+import static si.urbas.pless.users.api.UserControllerTest.*;
 
 public class RequireLoginTest extends PlessTest {
 
