@@ -10,12 +10,12 @@ import si.urbas.pless.users.pages.PasswordResetController;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.time.Instant.now;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
+import static si.urbas.pless.users.pages.PasswordResetController.tryIssuePasswordResetCode;
 import static si.urbas.pless.util.ApiResults.*;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -49,10 +49,7 @@ public final class UserController extends PlessController {
   }
 
   public static Result requestPasswordReset(String email) {
-    PlessUser user = users().findUserByEmail(email);
-    if (user != null) {
-      PasswordResetController.issuePasswordResetCode(user);
-    } else {
+    if (!tryIssuePasswordResetCode(email)) {
       Logger.info("Password reset requested for email '" + email + "'. However, a user with this email does not exist.");
     }
     return passwordResetResponseMessage(email);

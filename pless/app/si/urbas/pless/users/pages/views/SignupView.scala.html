@@ -3,7 +3,7 @@
 @import users.SignupData
 @import users.pages.routes._
 @import users.pages.SignupPages
-<div class="pless-signUp-form">
+<div class="sign-up-form">
   @helper.form(action = SignupController.submitSignUp()) {
     @helper.CSRF.formField
     @helper.inputText(signUpForm(SignupData.EMAIL_FIELD))

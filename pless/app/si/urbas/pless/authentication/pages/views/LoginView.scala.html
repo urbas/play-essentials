@@ -3,7 +3,7 @@
 @import authentication.PasswordLoginData
 @import authentication.pages.routes._
 @import authentication.pages.LoginPages
-<div class="pless-logIn-form">
+<div class="log-in-form">
   @helper.form(action = LoginController.submitLogIn()) {
     @helper.CSRF.formField
     @helper.inputText(logInForm(PasswordLoginData.EMAIL_FIELD))
