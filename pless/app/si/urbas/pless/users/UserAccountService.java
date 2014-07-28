@@ -22,7 +22,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <h2>Signup procedure</h2>
  * <ul>
  * <li>User calls {@link UserController#signUp()} with some multiform data (at least the email and password).</li>
- * <li>{@link UserAccountService#getSignupForm()} is called to validate the user's data.</li>
+ * <li>{@link UserAccountService#signupForm()} is called to validate the user's data.</li>
  * <li>If the form successfully validates user's data, then {@link si.urbas.pless.users.UserAccountService#createUser(play.data.Form)}
  * is called, otherwise an error message is returned and the signup procedure ends here.</li>
  * <li>If the user is successfully created, the method {@link si.urbas.pless.users.UserAccountService#afterUserPersisted(PlessUser)}
@@ -34,12 +34,12 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <ul>
  * <li>User calls {@link si.urbas.pless.users.UserController#requestPasswordReset(String)}, which tries to find the
  * user and, upon success, generates a password reset code for that user and calls
- * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetEmail(String, String)}.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#sendPasswordResetEmail(String, String)}.</li>
  * <li>The user has to visit the {@link si.urbas.pless.users.pages.PasswordResetController#resetPassword(String, String)}
  * page and must submit the new password with the correct reset code and email. The page is rendered via
  * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetPage(play.data.Form)}.</li>
  * <li>If the user successfully reset the password, the method
- * {@link si.urbas.pless.users.UserAccountService#sendPasswordResetConfirmationEmail(String)} is called.</li>
+ * {@link si.urbas.pless.users.pages.PasswordResetPages#sendPasswordResetConfirmationEmail(String)} is called.</li>
  * <li>Finally, the password reset success page is displayed via
  * {@link si.urbas.pless.users.pages.PasswordResetPages#passwordResetSuccessfulPage(String)}.</li>
  * </ul>
@@ -64,7 +64,7 @@ public class UserAccountService implements PlessService {
    * @return this form is used in the {@link UserController#signUp()} REST API. This form should validate that the user
    * provided valid signup information. If the validation succeeded, the form
    */
-  public Form<?> getSignupForm() {return form(SignupData.class);}
+  public Form<?> signupForm() {return form(SignupData.class);}
 
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
@@ -75,7 +75,7 @@ public class UserAccountService implements PlessService {
 
   public void sendSignupEmail(PlessUser userDetails) {
     String recipient = userDetails.getEmail();
-    String emailSubject = getSignupEmailSubject();
+    String emailSubject = signupEmailSubject();
     Html emailContent = signupEmailContent(userDetails);
     emailProvider().sendEmail(recipient, emailSubject, emailContent);
   }
@@ -90,27 +90,9 @@ public class UserAccountService implements PlessService {
     return userToUpdate;
   }
 
-  public void sendPasswordResetEmail(String email, String resetCode) {
-    String emailSubject = passwordResetEmailSubject();
-    Html emailContent = passwordResetEmailContent(email, resetCode);
-    emailProvider().sendEmail(email, emailSubject, emailContent);
-  }
-
-  public void sendPasswordResetConfirmationEmail(String email) {
-    emailProvider().sendEmail(email, passwordResetConfirmationEmailSubject(), passwordResetConfirmationEmailContent(email));
-  }
-
   protected Html signupEmailContent(PlessUser userDetails) {return SignupEmailTemplate.apply(userDetails);}
 
-  protected String getSignupEmailSubject() {return "Pless Signup";}
-
-  protected String passwordResetEmailSubject() {return "Password Reset Request";}
-
-  protected Html passwordResetEmailContent(String email, String resetCode) {return PasswordResetEmail.apply(email, resetCode);}
-
-  protected Html passwordResetConfirmationEmailContent(String email) {return PasswordResetConfirmationEmail.apply(email);}
-
-  protected String passwordResetConfirmationEmailSubject() {return "Password reset";}
+  protected String signupEmailSubject() {return "Pless Signup";}
 
   private void updatePassword(PlessUser userToUpdate, UpdateAccountData updateAccountData) {
     if (updateAccountData.getPassword() != null) {

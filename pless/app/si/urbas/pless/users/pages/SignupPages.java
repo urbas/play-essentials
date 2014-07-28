@@ -24,7 +24,7 @@ public class SignupPages implements PlessService {
   public static final String PASSWORDS_MISMATCH = "Passwords don't match.";
 
   /**
-   * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#getSignupForm()}
+   * @param signUpForm provided by {@link si.urbas.pless.users.UserAccountService#signupForm()}
    */
   public Result signUpPage(Form<?> signUpForm) {
     return ok(layout().main("Signup", SignupView.apply(signUpForm)));
@@ -32,9 +32,7 @@ public class SignupPages implements PlessService {
 
   public boolean isSignUpFormValid(Form<?> signUpForm) {
     // TODO: Check password strength.
-    return isEmailFree(signUpForm) &&
-      isUsernameFree(signUpForm) &&
-      isPasswordConfirmationCorrect(signUpForm);
+    return isEmailFree(signUpForm) && isUsernameFree(signUpForm) && isPasswordConfirmationCorrect(signUpForm);
   }
 
   public Result signUpSuccessfulPage(Form<?> signUpForm) {

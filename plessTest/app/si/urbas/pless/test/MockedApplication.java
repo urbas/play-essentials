@@ -1,6 +1,7 @@
 package si.urbas.pless.test;
 
 
+import si.urbas.pless.PlessService;
 import si.urbas.pless.emailing.Email;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.sessions.ClientSessionStorage;
@@ -13,6 +14,7 @@ import si.urbas.pless.test.users.TestUserAccountService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.users.pages.TestPasswordResetPages;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
 
@@ -41,6 +43,7 @@ public class MockedApplication extends TestApplication {
       with(new TemporaryService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
       with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
       with(new TemporaryService(createSpiedUserAccountService()));
+      with(new TemporaryService(createSpiedPasswordResetPages()));
     });
   }
 
@@ -53,6 +56,8 @@ public class MockedApplication extends TestApplication {
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
   protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
+
+  protected static PlessService createSpiedPasswordResetPages() {return spy(new TestPasswordResetPages());}
 
   public static EmailProvider createSpiedEmailProvider(Email emailToProvide) {
     EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));

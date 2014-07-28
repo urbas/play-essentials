@@ -9,9 +9,4 @@ public class TestUserAccountService extends UserAccountService {
   public Html signupEmailContent(PlessUser userDetails) {
     return new Html(userDetails.toString());
   }
-
-  @Override
-  public Html passwordResetEmailContent(String email, String resetCode) {
-    return new Html("Password reset email: " + email + " :: reset code: " + resetCode);
-  }
 }

@@ -7,6 +7,7 @@ import play.mvc.Result;
 import si.urbas.pless.authentication.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.util.PlessTest;
+import si.urbas.pless.users.pages.PasswordResetController;
 import si.urbas.pless.users.pages.SignupController;
 
 import java.util.Calendar;
@@ -30,6 +31,7 @@ import static si.urbas.pless.test.util.ScopedServices.withService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.UserController.*;
 import static si.urbas.pless.users.UserRepository.userRepository;
+import static si.urbas.pless.users.pages.PasswordResetPages.passwordResetPages;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
@@ -84,7 +86,7 @@ public class UserControllerTest extends PlessTest {
   public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
     Form<SignupData> signupForm = spy(Form.form(SignupData.class));
     UserAccountService userAccountService = userAccountService();
-    doReturn(signupForm).when(userAccountService).getSignupForm();
+    doReturn(signupForm).when(userAccountService).signupForm();
     doReturn(true).when(signupForm).hasErrors();
     doReturn(signupForm).when(signupForm).bindFromRequest();
     signUp();
@@ -245,7 +247,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
     requestPasswordReset(JOHN_SMITH_EMAIL);
-    verify(userAccountService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+    verify(passwordResetPages(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
   }
 
   @Test
@@ -263,7 +265,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void requestPasswordReset_MUST_send_an_email_through_the_UserAccountService() {
     PlessUser user = createUserAndRequestPasswordReset();
-    verify(userAccountService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
+    verify(passwordResetPages()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
   }
 
   @Test
@@ -330,12 +332,12 @@ public class UserControllerTest extends PlessTest {
   public void resetPassword_MUST_send_a_confirmation_email_after_the_password_was_reset() {
     PlessUser user = createUserAndRequestPasswordReset();
     resetPassword(JOHN_SMITH_EMAIL, user.getPasswordResetCode(), JANE_SMITH_PASSWORD);
-    verify(userAccountService()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
+    verify(passwordResetPages()).sendPasswordResetConfirmationEmail(eq(user.getEmail()));
   }
 
   private static void setDefaultPasswordResetValidityDuration() {
-    when(configurationSource().getInt(CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
-      .thenReturn(DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);
+    when(configurationSource().getInt(PasswordResetController.CONFIG_PASSWORD_RESET_VALIDITY_SECONDS, PasswordResetController.DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS))
+      .thenReturn(PasswordResetController.DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS);
   }
 
   private PlessUser userMatchesJohnSmith() {
@@ -369,7 +371,7 @@ public class UserControllerTest extends PlessTest {
   private static void movePasswordResetCodeTimestampIntoDistantPast(PlessUser user) {
     Calendar passwordResetTimestamp = Calendar.getInstance();
     passwordResetTimestamp.setTime(user.getPasswordResetTimestamp());
-    passwordResetTimestamp.add(Calendar.SECOND, -DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS - 10);
+    passwordResetTimestamp.add(Calendar.SECOND, -PasswordResetController.DEFAULT_PASSWORD_RESET_CODE_VALIDITY_SECONDS - 10);
     user.setPasswordResetTimestamp(passwordResetTimestamp.getTime());
     userRepository().mergeUser(user);
   }
