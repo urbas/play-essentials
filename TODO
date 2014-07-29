@@ -1,1 +1,2 @@
+TODO: Move authentication `pages` to the `authentication` package and move the authentication controller to `api`.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
