@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import static java.time.Instant.now;
+import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
 public final class PasswordResetController extends PlessController {
@@ -21,16 +22,16 @@ public final class PasswordResetController extends PlessController {
 
   @AddCSRFToken
   public static Result resetPasswordRequest() {
-    return PasswordResetService.passwordResetService().resetPasswordRequest(new Form<>(PasswordResetRequestData.class));
+    return passwordResetService().resetPasswordRequest(passwordResetService().passwordResetRequestForm());
   }
 
   @RequireCSRFCheck
   public static Result submitResetPasswordRequest() {
-    Form<PasswordResetRequestData> form = new Form<>(PasswordResetRequestData.class).bindFromRequest();
+    Form<PasswordResetRequestData> form = passwordResetService().passwordResetRequestForm().bindFromRequest();
     if (!form.hasErrors() && tryIssuePasswordResetCode(form.get().getEmail())) {
-      return PasswordResetService.passwordResetService().resetPasswordRequestSuccessfulPage(form.get().getEmail());
+      return passwordResetService().resetPasswordRequestSuccessfulPage(form.get().getEmail());
     } else {
-      return PasswordResetService.passwordResetService().resetPasswordRequest(form);
+      return passwordResetService().resetPasswordRequest(form);
     }
   }
 
@@ -38,16 +39,16 @@ public final class PasswordResetController extends PlessController {
   public static Result resetPassword(String email, String resetPasswordToken) {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class)
       .fill(new PasswordResetData(email, resetPasswordToken));
-    return PasswordResetService.passwordResetService().passwordResetPage(form);
+    return passwordResetService().passwordResetPage(form);
   }
 
   @RequireCSRFCheck
   public static Result submitResetPassword() {
     Form<PasswordResetData> form = new Form<>(PasswordResetData.class).bindFromRequest();
     if (!form.hasErrors() && isPasswordConfirmationCorrect(form) && tryResetPassword(form)) {
-      return PasswordResetService.passwordResetService().passwordResetSuccessfulPage(form.get().getEmail());
+      return passwordResetService().passwordResetSuccessfulPage(form.get().getEmail());
     } else {
-      return PasswordResetService.passwordResetService().passwordResetPage(form);
+      return passwordResetService().passwordResetPage(form);
     }
   }
 
@@ -67,7 +68,7 @@ public final class PasswordResetController extends PlessController {
       user.setPasswordResetCode(null);
       user.setPasswordResetTimestamp(null);
       users().mergeUser(user);
-      PasswordResetService.passwordResetService().sendPasswordResetConfirmationEmail(email);
+      passwordResetService().sendPasswordResetConfirmationEmail(email);
       return true;
     }
     return false;
@@ -77,7 +78,7 @@ public final class PasswordResetController extends PlessController {
     user.setPasswordResetCode(urlSafeHash());
     user.setPasswordResetTimestamp(new Date());
     users().mergeUser(user);
-    PasswordResetService.passwordResetService().sendPasswordResetEmail(user.getEmail(), user.getPasswordResetCode());
+    passwordResetService().sendPasswordResetEmail(user.getEmail(), user.getPasswordResetCode());
   }
 
   private static boolean isPasswordConfirmationCorrect(Form<PasswordResetData> form) {

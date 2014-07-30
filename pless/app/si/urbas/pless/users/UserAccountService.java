@@ -13,21 +13,6 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * the configuration key {@link si.urbas.pless.users.UserAccountService#CONFIG_USER_ACCOUNT_SERVICE} (see the README
  * file for more detailed instructions).
  * <p>
- * <p>
- * <h2>Password reset</h2>
- * <ul>
- * <li>User calls {@link si.urbas.pless.users.api.UserController#requestPasswordReset(String)}, which tries to find the
- * user and, upon success, generates a password reset code for that user and calls
- * {@link PasswordResetService#sendPasswordResetEmail(String, String)}.</li>
- * <li>The user has to visit the {@link PasswordResetController#resetPassword(String, String)}
- * page and must submit the new password with the correct reset code and email. The page is rendered via
- * {@link PasswordResetService#passwordResetPage(play.data.Form)}.</li>
- * <li>If the user successfully reset the password, the method
- * {@link PasswordResetService#sendPasswordResetConfirmationEmail(String)} is called.</li>
- * <li>Finally, the password reset success page is displayed via
- * {@link PasswordResetService#passwordResetSuccessfulPage(String)}.</li>
- * </ul>
- * <p>
  * <h2>User account update</h2>
  * E.g.: the user wants to change the password, username, or email (or any other detail).
  * <ul>

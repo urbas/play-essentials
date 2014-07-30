@@ -20,11 +20,23 @@ import static si.urbas.pless.pages.Layout.layout;
 import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
+/**
+ * <h2>Password reset</h2>
+ * <ul>
+ * <li>Firstly, the user requests a password reset code via the {@link si.urbas.pless.users.PasswordResetService#resetPasswordRequest(play.data.Form)} page.</li>
+ * <li>Afterwards, the password reset code is created and sent to the user via {@link si.urbas.pless.users.PasswordResetService#sendPasswordResetEmail(String, String)}.</li>
+ * <li>The user then visits the {@link PasswordResetService#passwordResetPage(play.data.Form)}.</li>
+ * <li>A password reset confirmation email is sent via {@link PasswordResetService#sendPasswordResetConfirmationEmail(String)}.</li>
+ * <li>Finally, the password reset success page is displayed via {@link PasswordResetService#passwordResetSuccessfulPage(String)}.</li>
+ * </ul>
+ */
 @PlessServiceConfigKey(PasswordResetService.CONFIG_PASSWORD_RESET_SERVICE)
 public class PasswordResetService implements PlessService {
 
   public static final String CONFIG_PASSWORD_RESET_SERVICE = "pless.passwordResetService";
   private static final String FLASH_PASSWORD_REQUEST_SENT = "passwordRequestSent";
+
+  public Form<PasswordResetRequestData> passwordResetRequestForm() {return new Form<>(PasswordResetRequestData.class);}
 
   public Result resetPasswordRequest(Form<PasswordResetRequestData> form) {
     return ok(layout().main("Password reset request", PasswordResetRequestView.apply(form)));
