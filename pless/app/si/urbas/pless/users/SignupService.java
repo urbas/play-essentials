@@ -50,6 +50,7 @@ public class SignupService implements PlessService {
   public Result signUpPage(Form<?> signUpForm) {
     return ok(layout().main("Signup", SignupView.apply(signUpForm)));
   }
+
   public boolean isSignUpFormValid(Form<?> signUpForm) {
     // TODO: Check password strength.
     return isEmailFree(signUpForm) && isUsernameFree(signUpForm) && isPasswordConfirmationCorrect(signUpForm);

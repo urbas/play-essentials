@@ -25,6 +25,10 @@ public class ApiResponseMatchers {
     return apiErrorResult(not(isEmptyOrNullString()));
   }
 
+  public static Matcher<Result> nonEmptyMessage() {
+    return apiMessageResult(not(isEmptyOrNullString()));
+  }
+
   public static Matcher<Result> okJson(JsonFieldMatcher... jsonFieldMatchers) {
     return jsonResult(OK, jsonObjectContaining(jsonFieldMatchers));
   }

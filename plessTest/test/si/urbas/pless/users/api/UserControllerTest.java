@@ -14,7 +14,6 @@ import si.urbas.pless.users.SignupService;
 
 import java.util.Calendar;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -22,17 +21,21 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
+import static si.urbas.pless.test.RequestHelpers.withQueryString;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
+import static si.urbas.pless.users.PasswordResetRequestData.EMAIL_FIELD;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
+import static si.urbas.pless.util.RequestParameters.param;
+import static si.urbas.pless.util.RequestParameters.params;
 
 public class UserControllerTest extends PlessTest {
 
@@ -174,22 +177,30 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void requestPasswordReset_MUST_return_ok_with_a_message_that_explains_an_email_will_be_sent_if_the_user_exists_WHEN_the_user_with_the_given_email_does_not_exist() {
-    assertEquals(OK, status(requestPasswordReset(JOHN_SMITH_EMAIL)));
+  public void requestPasswordReset_MUST_return_ok_WHEN_the_user_with_the_given_email_does_not_exist() {
+    withQueryString(
+      params(param(EMAIL_FIELD, JOHN_SMITH_EMAIL)),
+      () -> assertEquals(OK, status(requestPasswordReset()))
+    );
   }
 
   @Test
-  public void requestPasswordReset_MUST_return_a_message_that_explains_an_email_will_be_sent_if_the_user_exists_WHEN_the_user_with_the_given_email_does_not_exist() {
-    assertThat(
-      requestPasswordReset(JOHN_SMITH_EMAIL),
-      apiMessageResult(containsString(JOHN_SMITH_EMAIL))
+  public void requestPasswordReset_MUST_return_a_message_that_explains_an_email_will_be_sent_WHEN_the_user_with_the_given_email_does_not_exist() {
+    withQueryString(
+      params(param(EMAIL_FIELD, JOHN_SMITH_EMAIL)),
+      () -> assertThat(requestPasswordReset(), nonEmptyMessage())
     );
   }
 
   @Test
   public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
-    requestPasswordReset(JOHN_SMITH_EMAIL);
-    verify(passwordResetService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+    withQueryString(
+      params(param(EMAIL_FIELD, JOHN_SMITH_EMAIL)),
+      () -> {
+        requestPasswordReset();
+        verify(passwordResetService(), never()).sendPasswordResetEmail(any(String.class), any(String.class));
+      }
+    );
   }
 
   @Test
@@ -306,7 +317,10 @@ public class UserControllerTest extends PlessTest {
 
   private static PlessUser createUserAndRequestPasswordReset() {
     signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    requestPasswordReset(JOHN_SMITH_EMAIL);
+    withQueryString(
+      params(param(EMAIL_FIELD, JOHN_SMITH_EMAIL)),
+      UserController::requestPasswordReset
+    );
     return fetchUser(JOHN_SMITH_EMAIL);
   }
 

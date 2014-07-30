@@ -9,5 +9,5 @@ GET   /api/user/activate              si.urbas.pless.users.api.UserController.ac
 GET   /api/user/info                  si.urbas.pless.users.api.UserController.info()
 POST  /api/user/info                  si.urbas.pless.users.api.UserController.updateUserAccount()
 POST  /api/user/delete                si.urbas.pless.users.api.UserController.delete()
-POST  /api/user/requestPasswordReset  si.urbas.pless.users.api.UserController.requestPasswordReset(email)
+POST  /api/user/requestPasswordReset  si.urbas.pless.users.api.UserController.requestPasswordReset()
 POST  /api/user/resetPassword         si.urbas.pless.users.api.UserController.resetPassword(email, resetPasswordToken, newPassword)

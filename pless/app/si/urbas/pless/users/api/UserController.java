@@ -14,11 +14,11 @@ import java.util.Map;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
+import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
-import static si.urbas.pless.users.PasswordResetController.tryIssuePasswordResetCode;
 import static si.urbas.pless.util.ApiResults.*;
 import static si.urbas.pless.util.RequestParameters.*;
 
@@ -27,6 +27,7 @@ public final class UserController extends PlessController {
   public static final String USERNAME_PARAMETER = "username";
   public static final String EMAIL_PARAMETER = "email";
   public static final String PASSWORD_PARAMETER = "password";
+  public static final Status MESSAGE_PASSWORD_RESET_REQUEST_SENT = message("An email containing further password reset instructions has been sent.");
 
   public static Result signUp() {
     return signUp(signupService().signupForm().bindFromRequest());
@@ -51,11 +52,15 @@ public final class UserController extends PlessController {
     });
   }
 
-  public static Result requestPasswordReset(String email) {
-    if (!tryIssuePasswordResetCode(email)) {
-      Logger.info("Password reset requested for email '" + email + "'. However, a user with this email does not exist.");
+  public static Result requestPasswordReset() {
+    Form<?> form = passwordResetService().passwordResetRequestForm().bindFromRequest();
+    if (form.hasErrors()) {
+      return formErrorAsJson(form);
     }
-    return passwordResetResponseMessage(email);
+    passwordResetService().tryIssuePasswordResetCode(form);
+    // NOTE: We don't want to give out information on whether a user with the given email exists. That's why we report
+    // success, even though the password reset request hasn't been sent.
+    return MESSAGE_PASSWORD_RESET_REQUEST_SENT;
   }
 
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
@@ -128,7 +133,5 @@ public final class UserController extends PlessController {
   }
 
   private static Result formErrorAsJson(Form<?> formWithErrors) {return badRequest(formWithErrors.errorsAsJson(new Lang(defaultLang())));}
-
-  static Status passwordResetResponseMessage(String email) {return message("An email containing further instructions will be sent to '" + email + "'.");}
 
 }
