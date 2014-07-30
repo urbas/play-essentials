@@ -22,7 +22,6 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class LoginService implements PlessService {
 
   public static final String CONFIG_LOGIN_SERVICE = "pless.loginService";
-  private static final ServiceLoader<LoginService> SERVICE_LOADER = createServiceLoader(new LoginService());
 
   public Form<?> loginForm() {
     return Form.form(PasswordLoginData.class);
@@ -52,5 +51,11 @@ public class LoginService implements PlessService {
     return redirect(WelcomeController.welcome());
   }
 
-  public static LoginService loginService() {return SERVICE_LOADER.getService();}
+  public static LoginService loginService() {
+    return LoginServiceLoader.INSTANCE.getService();
+  }
+
+  private static class LoginServiceLoader {
+    public static final ServiceLoader<LoginService> INSTANCE = createServiceLoader(new LoginService());
+  }
 }

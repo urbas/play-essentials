@@ -17,16 +17,6 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * the configuration key {@link si.urbas.pless.users.UserAccountService#CONFIG_USER_ACCOUNT_SERVICE} (see the README
  * file for more detailed instructions).
  * <p>
- * <h2>Signup procedure</h2>
- * <ul>
- * <li>User calls {@link si.urbas.pless.users.api.UserController#signUp()} with some multiform data (at least the email and password).</li>
- * <li>{@link UserAccountService#signupForm()} is called to validate the user's data.</li>
- * <li>If the form successfully validates user's data, then {@link si.urbas.pless.users.UserAccountService#createUser(play.data.Form)}
- * is called, otherwise an error message is returned and the signup procedure ends here.</li>
- * <li>If the user is successfully created, the method {@link si.urbas.pless.users.UserAccountService#afterUserPersisted(PlessUser)}
- * is called.</li>
- * <li>Finally, the method {@link si.urbas.pless.users.UserAccountService#sendSignupEmail(PlessUser)} is called.</li>
- * </ul>
  * <p>
  * <h2>Password reset</h2>
  * <ul>
@@ -57,13 +47,6 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class UserAccountService implements PlessService {
 
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
-  private static final ServiceLoader<UserAccountService> INSTANCE = createServiceLoader(new UserAccountService());
-
-  /**
-   * @return this form is used in the {@link si.urbas.pless.users.api.UserController#signUp()} REST API. This form should validate that the user
-   * provided valid signup information. If the validation succeeded, the form
-   */
-  public Form<?> signupForm() {return form(SignupData.class);}
 
   public PlessUser createUser(Form<?> signupForm) {
     SignupData signupData = (SignupData) signupForm.get();
@@ -111,5 +94,11 @@ public class UserAccountService implements PlessService {
     }
   }
 
-  public static UserAccountService userAccountService() {return INSTANCE.getService();}
+  public static UserAccountService userAccountService() {
+    return UserAccountServiceLoader.INSTANCE.getService();
+  }
+
+  static class UserAccountServiceLoader {
+    public static final ServiceLoader<UserAccountService> INSTANCE = createServiceLoader(new UserAccountService());
+  }
 }

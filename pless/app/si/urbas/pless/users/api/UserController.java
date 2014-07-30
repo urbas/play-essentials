@@ -14,6 +14,7 @@ import java.util.Map;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
+import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.users.PasswordResetController.tryIssuePasswordResetCode;
@@ -27,7 +28,7 @@ public final class UserController extends PlessController {
   public static final String PASSWORD_PARAMETER = "password";
 
   public static Result signUp() {
-    return signUp(userAccountService().signupForm().bindFromRequest());
+    return signUp(signupService().signupForm().bindFromRequest());
   }
 
   public static Result info() {
@@ -69,7 +70,7 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   public static Result signUp(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    return signUp(userAccountService().signupForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+    return signUp(signupService().signupForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
   }
 
   @SafeVarargs

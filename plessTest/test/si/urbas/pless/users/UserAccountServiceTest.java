@@ -15,14 +15,11 @@ import java.util.HashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.users.UserAccountService.UserAccountServiceLoader;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
-import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.users.UserRepository.userRepository;
+import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.users.routes.SignupController;
 import static si.urbas.pless.util.RequestParameters.param;
 import static si.urbas.pless.util.RequestParameters.params;
@@ -35,8 +32,6 @@ public class UserAccountServiceTest extends PlessTest {
   private static final String JANE_SMITH_USERNAME = "Jane Smith";
   private static final String JANE_SMITH_EMAIL = "Jane@email.com";
   private static final String JANE_SMITH_PASSWORD = "jane's password";
-  @SuppressWarnings("UnusedDeclaration")
-  private final UserAccountServiceLoader userAccountServiceLoader = new UserAccountServiceLoader();
   private final UserAccountService userAccountService = new UserAccountService();
   private HashMap<String, String[]> updateAccountParams;
   private PlessUser janeSmithUser;

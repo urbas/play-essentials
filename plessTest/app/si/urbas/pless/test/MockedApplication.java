@@ -2,6 +2,7 @@ package si.urbas.pless.test;
 
 
 import si.urbas.pless.PlessService;
+import si.urbas.pless.authentication.LoginService;
 import si.urbas.pless.emailing.Email;
 import si.urbas.pless.emailing.EmailProvider;
 import si.urbas.pless.sessions.ClientSessionStorage;
@@ -12,11 +13,14 @@ import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.test.users.HashMapUserRepository;
 import si.urbas.pless.test.users.TestUserAccountService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.users.UserAccountService;
-import si.urbas.pless.users.UserRepository;
+import si.urbas.pless.users.SignupService;
 import si.urbas.pless.users.TestPasswordResetService;
+import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -42,9 +46,17 @@ public class MockedApplication extends TestApplication {
       with(new TemporaryService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
       with(new TemporaryService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
       with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
-      with(new TemporaryService(createSpiedUserAccountService()));
-      with(new TemporaryService(createSpiedPasswordResetService()));
+      createServicesForTesting().forEach(service -> with(new TemporaryService(spy(service))));
     });
+  }
+
+  public List<PlessService> createServicesForTesting() {
+    return Arrays.asList(
+      new TestUserAccountService(),
+      new TestPasswordResetService(),
+      new SignupService(),
+      new LoginService()
+    );
   }
 
   public static EmailProvider createSpiedEmailProvider() {return createSpiedEmailProvider(mock(Email.class));}
@@ -54,10 +66,6 @@ public class MockedApplication extends TestApplication {
   protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
 
   protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
-
-  protected static UserAccountService createSpiedUserAccountService() {return spy(new TestUserAccountService());}
-
-  protected static PlessService createSpiedPasswordResetService() {return spy(new TestPasswordResetService());}
 
   public static EmailProvider createSpiedEmailProvider(Email emailToProvide) {
     EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));

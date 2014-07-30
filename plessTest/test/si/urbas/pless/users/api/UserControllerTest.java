@@ -28,6 +28,7 @@ import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
 import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.users.UserRepository.userRepository;
@@ -85,8 +86,8 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_bind_the_form_through_the_http_request() throws Exception {
     Form<SignupData> signupForm = spy(Form.form(SignupData.class));
-    UserAccountService userAccountService = userAccountService();
-    doReturn(signupForm).when(userAccountService).signupForm();
+    SignupService signupService = signupService();
+    doReturn(signupForm).when(signupService).signupForm();
     doReturn(true).when(signupForm).hasErrors();
     doReturn(signupForm).when(signupForm).bindFromRequest();
     signUp();
