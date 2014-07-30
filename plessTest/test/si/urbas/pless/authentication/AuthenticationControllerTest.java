@@ -4,6 +4,7 @@ import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
 import play.test.Helpers;
+import si.urbas.pless.authentication.api.AuthenticationController;
 import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.users.PlessUser;
 
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertFalse;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
-import static si.urbas.pless.authentication.AuthenticationController.*;
+import static si.urbas.pless.authentication.api.AuthenticationController.*;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.users.api.UserControllerTest.*;
 

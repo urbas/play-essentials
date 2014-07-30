@@ -103,7 +103,7 @@ public class WithAuthenticatedUserController extends PlessJpaController {
 Consumers of your application can log-in through the following REST API:
 
 ```scala
-POST  /api/auth/login      si.urbas.pless.authentication.AuthenticationController.logIn()
+POST  /api/auth/login      si.urbas.pless.authentication.api.AuthenticationController.logIn()
 ```
 
 ### Lower-level authentication API

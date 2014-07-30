@@ -1,10 +1,9 @@
-package si.urbas.pless.authentication.pages;
+package si.urbas.pless.authentication;
 
 import play.data.Form;
 import play.mvc.Result;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.authentication.PasswordLoginData;
-import si.urbas.pless.authentication.pages.views.html.LoginView;
+import si.urbas.pless.authentication.views.html.LoginView;
 import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;

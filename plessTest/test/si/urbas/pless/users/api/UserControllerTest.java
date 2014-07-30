@@ -5,11 +5,10 @@ import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
 import play.test.Helpers;
-import si.urbas.pless.authentication.AuthenticationController;
+import si.urbas.pless.authentication.api.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
 import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.users.*;
-import si.urbas.pless.users.api.UserController;
 
 import java.util.Calendar;
 

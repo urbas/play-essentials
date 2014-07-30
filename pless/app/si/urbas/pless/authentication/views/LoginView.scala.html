@@ -1,8 +1,8 @@
 @(logInForm: Form[_])
 @import si.urbas.pless._
 @import authentication.PasswordLoginData
-@import authentication.pages.routes._
-@import authentication.pages.LoginPages
+@import authentication.routes._
+@import authentication.LoginPages
 <div class="log-in-form">
   @helper.form(action = LoginController.submitLogIn()) {
     @helper.CSRF.formField

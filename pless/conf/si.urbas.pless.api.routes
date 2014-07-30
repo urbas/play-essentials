@@ -1,7 +1,7 @@
 # Authentication API
-POST  /api/auth/login                 si.urbas.pless.authentication.AuthenticationController.logIn()
-POST  /api/auth/logout                si.urbas.pless.authentication.AuthenticationController.logOut()
-GET   /api/auth/status                si.urbas.pless.authentication.AuthenticationController.status()
+POST  /api/auth/login                 si.urbas.pless.authentication.api.AuthenticationController.logIn()
+POST  /api/auth/logout                si.urbas.pless.authentication.api.AuthenticationController.logOut()
+GET   /api/auth/status                si.urbas.pless.authentication.api.AuthenticationController.status()
 
 # User management API
 POST  /api/user/signup                si.urbas.pless.users.api.UserController.signUp()

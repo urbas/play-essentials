@@ -1,9 +1,10 @@
-package si.urbas.pless.authentication;
+package si.urbas.pless.authentication.api;
 
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.authentication.PasswordLoginData;
 import si.urbas.pless.users.PlessUser;
 import si.urbas.pless.util.ApiResults;
 

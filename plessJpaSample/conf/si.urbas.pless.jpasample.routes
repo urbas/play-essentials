@@ -5,7 +5,7 @@ POST  /offer               si.urbas.pless.jpasample.emailing.OfferController.off
 GET   /offer               si.urbas.pless.jpasample.emailing.OfferController.viewOffer(offerName: String)
 
 # SNIPPET: passwordLogin
-POST  /api/auth/login      si.urbas.pless.authentication.AuthenticationController.logIn()
+POST  /api/auth/login      si.urbas.pless.authentication.api.AuthenticationController.logIn()
 # ENDSNIPPET: passwordLogin
 
 # Pless routes

@@ -1,7 +1,7 @@
 package si.urbas.pless.jpasample.auth;
 
 import si.urbas.pless.PlessJpaController;
-import si.urbas.pless.authentication.AuthenticationController;
+import si.urbas.pless.authentication.api.AuthenticationController;
 import si.urbas.pless.authentication.AuthenticationService;
 import si.urbas.pless.users.PlessUser;
 

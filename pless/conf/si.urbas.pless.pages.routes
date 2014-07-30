@@ -11,9 +11,9 @@ GET   /user/resetPassword               si.urbas.pless.users.PasswordResetContro
 POST  /user/submitResetPassword         si.urbas.pless.users.PasswordResetController.submitResetPassword()
 
 # Authentication pages
-GET   /auth/login                       si.urbas.pless.authentication.pages.LoginController.logIn()
-POST  /auth/submitLogin                 si.urbas.pless.authentication.pages.LoginController.submitLogIn()
-GET   /auth/logout                      si.urbas.pless.authentication.pages.LoginController.logOut()
+GET   /auth/login                       si.urbas.pless.authentication.LoginController.logIn()
+POST  /auth/submitLogin                 si.urbas.pless.authentication.LoginController.submitLogIn()
+GET   /auth/logout                      si.urbas.pless.authentication.LoginController.logOut()
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file    controllers.Assets.at(path="/public", file)
