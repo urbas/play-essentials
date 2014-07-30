@@ -14,6 +14,7 @@ import java.util.Map;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
+import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserAccountService.userAccountService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
@@ -105,24 +106,7 @@ public final class UserController extends PlessController {
     if (signupForm.hasErrors()) {
       return formErrorAsJson(signupForm);
     } else {
-      return signUpAndPersistUser(signupForm);
-    }
-  }
-
-  public static Result signUpAndPersistUser(Form<?> signupForm) {
-    PlessUser newUser = userAccountService().createUser(signupForm);
-    return signUp(newUser);
-  }
-
-  public static Result signUp(PlessUser newUser) {
-    try {
-      users().persistUser(newUser);
-      userAccountService().afterUserPersisted(newUser);
-      userAccountService().sendSignupEmail(newUser);
-      return SUCCESS;
-    } catch (Exception ex) {
-      Logger.info("Sign up error.", ex);
-      return ERROR;
+      return tryCreateAndPersistUser(signupForm) ? SUCCESS : ERROR;
     }
   }
 

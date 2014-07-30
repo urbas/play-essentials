@@ -4,11 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import play.data.Form;
 import play.mvc.Result;
-import play.test.Helpers;
-import si.urbas.pless.authentication.api.AuthenticationController;
 import si.urbas.pless.authentication.LoggedInUserInfo;
+import si.urbas.pless.authentication.api.AuthenticationController;
 import si.urbas.pless.test.util.PlessTest;
-import si.urbas.pless.users.*;
+import si.urbas.pless.users.PasswordResetController;
+import si.urbas.pless.users.PlessUser;
+import si.urbas.pless.users.SignupData;
+import si.urbas.pless.users.SignupService;
 
 import java.util.Calendar;
 
@@ -18,21 +20,17 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.status;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
-import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.ResultParsers.parseContentAsBoolean;
 import static si.urbas.pless.test.matchers.ApiResponseMatchers.*;
 import static si.urbas.pless.test.matchers.DateMatchers.dateWithin;
 import static si.urbas.pless.test.matchers.JsonMatchers.jsonField;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.test.util.ScopedServices.withService;
-import static si.urbas.pless.users.SignupService.signupService;
-import static si.urbas.pless.users.UserAccountService.userAccountService;
-import static si.urbas.pless.users.api.UserController.*;
-import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
+import static si.urbas.pless.users.SignupService.signupService;
+import static si.urbas.pless.users.UserRepository.userRepository;
+import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.Hashes.urlSafeHash;
 
@@ -48,7 +46,6 @@ public class UserControllerTest extends PlessTest {
 
   @SuppressWarnings("UnusedDeclaration")
   public static final UserController userController = new UserController();
-  private static final RuntimeException EXCEPTION_FOR_TESTING = new RuntimeException("Forced exception for testing.");
 
   @Before
   public void setUp() {
@@ -72,15 +69,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_call_afterUserPersisted_of_UserAccountService() {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(userAccountService()).afterUserPersisted(userMatchesJohnSmith());
-  }
-
-  @Test
-  public void signUp_MUST_not_call_afterUserPersisted_of_UserAccountService_WHEN_user_not_persisted() {
-    UserRepository userRepository = userRepository();
-    doThrow(EXCEPTION_FOR_TESTING).when(userRepository).persistUser(userMatchesJohnSmith());
-    signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(userAccountService(), never()).afterUserPersisted(userMatchesJohnSmith());
+    verify(signupService()).afterUserPersisted(userMatchesJohnSmith());
   }
 
   @Test
@@ -97,7 +86,7 @@ public class UserControllerTest extends PlessTest {
   @Test
   public void signUp_MUST_ask_the_UserAccountService_to_create_the_user() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    verify(userAccountService()).createUser(any(Form.class));
+    verify(signupService()).createUser(any(Form.class));
   }
 
   @Test
@@ -107,54 +96,6 @@ public class UserControllerTest extends PlessTest {
       userRepository().findUserByEmail(JOHN_SMITH_EMAIL),
       is(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD))
     );
-  }
-
-  @Test
-  public void signUp_MUST_result_in_ok_response_WHEN_all_parameters_are_okay() throws Exception {
-    assertThat(signUp(user), success());
-  }
-
-  @Test
-  public void activate_MUST_return_bad_request_WHEN_the_user_does_not_exist() throws Exception {
-    assertThat(
-      Helpers.contentAsString(SignupController.activate(JOHN_SMITH_EMAIL, null)),
-      containsString("We could not activate your account")
-    );
-  }
-
-  @Test
-  public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    assertThat(
-      contentAsString(SignupController.activate(user.getEmail(), user.getActivationCode())),
-      containsString("Thank you very much for registering with us")
-    );
-  }
-
-  @Test
-  public void activate_MUST_activate_the_user() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
-    activateUser(user);
-    assertThat(
-      fetchUser(user.getEmail()).isActivated(),
-      is(true)
-    );
-  }
-
-  @Test
-  public void signUp_MUST_send_an_email() throws Exception {
-    signUp(user);
-    verify(emailProvider()).createEmail(configurationSource());
-  }
-
-  @Test
-  public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
-    withService(mock(UserRepository.class), () -> {
-      UserRepository scopedUserRepository = userRepository();
-      doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
-      signUp(user);
-      verify(emailProvider(), never()).createEmail(configurationSource());
-    });
   }
 
 

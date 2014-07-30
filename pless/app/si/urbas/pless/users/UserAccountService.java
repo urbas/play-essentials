@@ -1,15 +1,11 @@
 package si.urbas.pless.users;
 
 import play.data.Form;
-import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
-import si.urbas.pless.users.emails.html.SignupEmail;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
-import static si.urbas.pless.emailing.EmailProvider.emailProvider;
-import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 /**
@@ -48,20 +44,6 @@ public class UserAccountService implements PlessService {
 
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
 
-  public PlessUser createUser(Form<?> signupForm) {
-    SignupData signupData = (SignupData) signupForm.get();
-    return userRepository().createUser(signupData.email, signupData.username, signupData.password);
-  }
-
-  public void afterUserPersisted(@SuppressWarnings("UnusedParameters") PlessUser newUser) {}
-
-  public void sendSignupEmail(PlessUser userDetails) {
-    String recipient = userDetails.getEmail();
-    String emailSubject = signupEmailSubject();
-    Html emailContent = signupEmailContent(userDetails);
-    emailProvider().sendEmail(recipient, emailSubject, emailContent);
-  }
-
   public Form<?> accountUpdateForm() {return form(UpdateAccountData.class);}
 
   public PlessUser updateUser(Form<?> updateAccountForm, PlessUser userToUpdate) {
@@ -71,10 +53,6 @@ public class UserAccountService implements PlessService {
     updatePassword(userToUpdate, updateAccountData);
     return userToUpdate;
   }
-
-  protected Html signupEmailContent(PlessUser userDetails) {return SignupEmail.apply(userDetails);}
-
-  protected String signupEmailSubject() {return "Pless Signup";}
 
   private void updatePassword(PlessUser userToUpdate, UpdateAccountData updateAccountData) {
     if (updateAccountData.getPassword() != null) {

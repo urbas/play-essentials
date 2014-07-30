@@ -11,10 +11,10 @@ import si.urbas.pless.test.emailing.SingleEmailProvider;
 import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 import si.urbas.pless.test.users.HashMapUserRepository;
-import si.urbas.pless.test.users.TestUserAccountService;
+import si.urbas.pless.test.users.TestSignupService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
-import si.urbas.pless.users.SignupService;
 import si.urbas.pless.users.TestPasswordResetService;
+import si.urbas.pless.users.UserAccountService;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
@@ -52,9 +52,9 @@ public class MockedApplication extends TestApplication {
 
   public List<PlessService> createServicesForTesting() {
     return Arrays.asList(
-      new TestUserAccountService(),
+      new TestSignupService(),
       new TestPasswordResetService(),
-      new SignupService(),
+      new UserAccountService(),
       new LoginService()
     );
   }

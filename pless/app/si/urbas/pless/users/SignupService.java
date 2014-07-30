@@ -2,7 +2,9 @@ package si.urbas.pless.users;
 
 import play.data.Form;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import si.urbas.pless.PlessService;
+import si.urbas.pless.users.emails.html.SignupEmail;
 import si.urbas.pless.users.views.html.ActivationView;
 import si.urbas.pless.users.views.html.SignupView;
 import si.urbas.pless.util.PlessServiceConfigKey;
@@ -11,6 +13,7 @@ import si.urbas.pless.util.ServiceLoader;
 import static play.data.Form.form;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
+import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.pages.FlashMessages.flashInfo;
 import static si.urbas.pless.pages.Layout.layout;
 import static si.urbas.pless.pages.routes.WelcomeController;
@@ -22,11 +25,11 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * <ul>
  * <li>User calls {@link si.urbas.pless.users.api.UserController#signUp()} with some multiform data (at least the email and password).</li>
  * <li>{@link si.urbas.pless.users.SignupService#signupForm()} is called to validate the user's data.</li>
- * <li>If the form successfully validates user's data, then {@link si.urbas.pless.users.UserAccountService#createUser(play.data.Form)}
+ * <li>If the form successfully validates user's data, then {@link si.urbas.pless.users.SignupService#createUser(play.data.Form)}
  * is called, otherwise an error message is returned and the signup procedure ends here.</li>
- * <li>If the user is successfully created, the method {@link si.urbas.pless.users.UserAccountService#afterUserPersisted(PlessUser)}
+ * <li>If the user is successfully created, the method {@link si.urbas.pless.users.SignupService#afterUserPersisted(PlessUser)}
  * is called.</li>
- * <li>Finally, the method {@link si.urbas.pless.users.UserAccountService#sendSignupEmail(PlessUser)} is called.</li>
+ * <li>Finally, the method {@link si.urbas.pless.users.SignupService#sendSignupEmail(PlessUser)} is called.</li>
  * </ul>
  */
 @PlessServiceConfigKey(SignupService.CONFIG_SIGNUP_SERVICE)
@@ -56,6 +59,24 @@ public class SignupService implements PlessService {
     flashInfo("signUpSuccess", "User activation email sent to '" + signUpForm.field(SignupData.EMAIL_FIELD).value() + "'.");
     return redirect(WelcomeController.welcome());
   }
+
+  public PlessUser createUser(Form<?> signupForm) {
+    SignupData signupData = (SignupData) signupForm.get();
+    return userRepository().createUser(signupData.email, signupData.username, signupData.password);
+  }
+
+  public void afterUserPersisted(@SuppressWarnings("UnusedParameters") PlessUser newUser) {}
+
+  public void sendSignupEmail(PlessUser userDetails) {
+    String recipient = userDetails.getEmail();
+    String emailSubject = signupEmailSubject();
+    Html emailContent = signupEmailContent(userDetails);
+    emailProvider().sendEmail(recipient, emailSubject, emailContent);
+  }
+
+  protected Html signupEmailContent(PlessUser userDetails) {return SignupEmail.apply(userDetails);}
+
+  protected String signupEmailSubject() {return "Pless Signup";}
 
   public Result activationPage(boolean wasActivated, String email) {
     return ok(layout().main("Account activation", ActivationView.apply(wasActivated)));

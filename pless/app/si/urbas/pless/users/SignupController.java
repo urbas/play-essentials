@@ -1,14 +1,13 @@
 package si.urbas.pless.users;
 
+import play.Logger;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.util.ApiResults;
 
 import static si.urbas.pless.users.SignupService.signupService;
-import static si.urbas.pless.users.api.UserController.signUpAndPersistUser;
 
 public final class SignupController extends PlessController {
 
@@ -32,9 +31,26 @@ public final class SignupController extends PlessController {
     return signupService().activationPage(wasActivated, email);
   }
 
+  public static boolean tryCreateAndPersistUser(Form<?> signupForm) {
+    PlessUser newUser = signupService().createUser(signupForm);
+    return signUp(newUser);
+  }
+
+  public static boolean signUp(PlessUser newUser) {
+    try {
+      users().persistUser(newUser);
+      signupService().afterUserPersisted(newUser);
+      signupService().sendSignupEmail(newUser);
+      return true;
+    } catch (Exception ex) {
+      Logger.info("Sign up error.", ex);
+      return false;
+    }
+  }
+
   private static boolean wasSignUpSuccessful(Form<?> signUpForm) {
     return !signUpForm.hasErrors() &&
       signupService().isSignUpFormValid(signUpForm) &&
-      signUpAndPersistUser(signUpForm) == ApiResults.SUCCESS;
+      tryCreateAndPersistUser(signUpForm);
   }
 }

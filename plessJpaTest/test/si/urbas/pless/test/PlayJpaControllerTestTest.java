@@ -7,8 +7,8 @@ import si.urbas.pless.users.PlessUser;
 import static org.junit.Assert.assertTrue;
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
 import static si.urbas.pless.authentication.api.AuthenticationController.logIn;
-import static si.urbas.pless.users.api.UserController.signUp;
 import static si.urbas.pless.users.UserRepository.userRepository;
+import static si.urbas.pless.users.api.UserController.signUp;
 
 public class PlayJpaControllerTestTest extends PlayJpaControllerTest {
 
