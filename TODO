@@ -1,1 +1,2 @@
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
+TODO: Implement login via Google or something similar.

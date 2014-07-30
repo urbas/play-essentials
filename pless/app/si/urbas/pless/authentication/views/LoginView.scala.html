@@ -2,7 +2,7 @@
 @import si.urbas.pless._
 @import authentication.PasswordLoginData
 @import authentication.routes._
-@import authentication.LoginPages
+@import authentication.LoginService
 <div class="log-in-form">
   @helper.form(action = LoginController.submitLogIn()) {
     @helper.CSRF.formField

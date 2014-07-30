@@ -20,6 +20,8 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class SignupService implements PlessService {
 
   public static final String CONFIG_SIGNUP_SERVICE = "pless.signupService";
+  private static final ServiceLoader<SignupService> SERVICE_LOADER = createServiceLoader(new SignupService());
+
   public static final String PASSWORDS_MISMATCH = "Passwords don't match.";
 
   /**
@@ -28,7 +30,6 @@ public class SignupService implements PlessService {
   public Result signUpPage(Form<?> signUpForm) {
     return ok(layout().main("Signup", SignupView.apply(signUpForm)));
   }
-
   public boolean isSignUpFormValid(Form<?> signUpForm) {
     // TODO: Check password strength.
     return isEmailFree(signUpForm) && isUsernameFree(signUpForm) && isPasswordConfirmationCorrect(signUpForm);
@@ -71,11 +72,6 @@ public class SignupService implements PlessService {
     return true;
   }
 
-  public static SignupService signupService() {
-    return SignupServiceLoader.INSTANCE.getService();
-  }
+  public static SignupService signupService() {return SERVICE_LOADER.getService();}
 
-  private static class SignupServiceLoader {
-    public static final ServiceLoader<SignupService> INSTANCE = createServiceLoader(new SignupService());
-  }
 }

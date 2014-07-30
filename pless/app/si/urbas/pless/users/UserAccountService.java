@@ -57,6 +57,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class UserAccountService implements PlessService {
 
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userAccountService";
+  private static final ServiceLoader<UserAccountService> INSTANCE = createServiceLoader(new UserAccountService());
 
   /**
    * @return this form is used in the {@link si.urbas.pless.users.api.UserController#signUp()} REST API. This form should validate that the user
@@ -110,11 +111,5 @@ public class UserAccountService implements PlessService {
     }
   }
 
-  public static UserAccountService userAccountService() {
-    return UserAccountServiceLoader.INSTANCE.getService();
-  }
-
-  static class UserAccountServiceLoader {
-    public static final ServiceLoader<UserAccountService> INSTANCE = createServiceLoader(new UserAccountService());
-  }
+  public static UserAccountService userAccountService() {return INSTANCE.getService();}
 }

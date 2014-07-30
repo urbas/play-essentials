@@ -48,8 +48,8 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultServiceCreator) {
-    ServiceLoader<T> tServiceLoader = new ServiceLoader<T>(serviceConfigKey, configurationSource, defaultServiceCreator);
-    // NOTE: We load the initial instance in the constructor to ensure that only a single instance is created in
+    ServiceLoader<T> tServiceLoader = new ServiceLoader<>(serviceConfigKey, configurationSource, defaultServiceCreator);
+    // NOTE: We load the initial instance here to ensure that only a single instance is created in
     // the "inner static class field" singleton pattern.
     tServiceLoader.getService();
     return tServiceLoader;

@@ -18,10 +18,11 @@ import static si.urbas.pless.pages.Layout.layout;
 import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
-@PlessServiceConfigKey(LoginPages.CONFIG_LOGIN_PAGES)
-public class LoginPages implements PlessService {
+@PlessServiceConfigKey(LoginService.CONFIG_LOGIN_SERVICE)
+public class LoginService implements PlessService {
 
-  public static final String CONFIG_LOGIN_PAGES = "pless.loginPages";
+  public static final String CONFIG_LOGIN_SERVICE = "pless.loginService";
+  private static final ServiceLoader<LoginService> SERVICE_LOADER = createServiceLoader(new LoginService());
 
   public Form<?> loginForm() {
     return Form.form(PasswordLoginData.class);
@@ -51,11 +52,5 @@ public class LoginPages implements PlessService {
     return redirect(WelcomeController.welcome());
   }
 
-  public static LoginPages loginPages() {
-    return LoginPagesLoader.INSTANCE.getService();
-  }
-
-  private static class LoginPagesLoader {
-    public static final ServiceLoader<LoginPages> INSTANCE = createServiceLoader(new LoginPages());
-  }
+  public static LoginService loginService() {return SERVICE_LOADER.getService();}
 }

@@ -24,6 +24,8 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 public class PasswordResetService implements PlessService {
 
   public static final String CONFIG_PASSWORD_RESET_SERVICE = "pless.passwordResetService";
+  private static final ServiceLoader<PasswordResetService> SERVICE_LOADER = createServiceLoader(new PasswordResetService());
+
   private static final String FLASH_PASSWORD_REQUEST_SENT = "passwordRequestSent";
 
   public Result resetPasswordRequest(Form<PasswordResetRequestData> form) {
@@ -51,10 +53,6 @@ public class PasswordResetService implements PlessService {
     return ok(layout().main("Password reset successful", PasswordResetSuccessfulView.apply(userEmail)));
   }
 
-  public static PasswordResetService passwordResetService() {
-    return PasswordResetServiceLoader.INSTANCE.getService();
-  }
-
   protected String passwordResetEmailSubject() {return "Password Reset Request";}
 
   protected Html passwordResetEmailContent(String email, String resetCode) {return PasswordResetEmail.apply(email, resetCode);}
@@ -63,7 +61,5 @@ public class PasswordResetService implements PlessService {
 
   protected String passwordResetConfirmationEmailSubject() {return "Password reset";}
 
-  private static class PasswordResetServiceLoader {
-    public static final ServiceLoader<PasswordResetService> INSTANCE = createServiceLoader(new PasswordResetService());
-  }
+  public static PasswordResetService passwordResetService() {return SERVICE_LOADER.getService();}
 }

@@ -10,22 +10,22 @@ public class LoginController extends PlessController {
 
   @AddCSRFToken
   public static Result logIn() {
-    return LoginPages.loginPages().logInPage(LoginPages.loginPages().loginForm());
+    return LoginService.loginService().logInPage(LoginService.loginService().loginForm());
   }
 
   @RequireCSRFCheck
   public static Result submitLogIn() {
-    Form<?> loginForm = LoginPages.loginPages().loginForm().bindFromRequest();
-    if (!loginForm.hasErrors() && LoginPages.loginPages().tryLogIn(loginForm)) {
-      return LoginPages.loginPages().loginSuccessfulPage();
+    Form<?> loginForm = LoginService.loginService().loginForm().bindFromRequest();
+    if (!loginForm.hasErrors() && LoginService.loginService().tryLogIn(loginForm)) {
+      return LoginService.loginService().loginSuccessfulPage();
     } else {
-      return LoginPages.loginPages().logInPage(loginForm);
+      return LoginService.loginService().logInPage(loginForm);
     }
   }
 
   public static Result logOut() {
     auth().logOut();
-    return LoginPages.loginPages().afterLogOutPage();
+    return LoginService.loginService().afterLogOutPage();
   }
 
 }
