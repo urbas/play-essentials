@@ -1,6 +1,6 @@
 package si.urbas.pless.test;
 
-import si.urbas.pless.users.UserAccountService;
+import si.urbas.pless.users.AccountEditService;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
@@ -20,7 +20,7 @@ public class MockedPlayApplication extends MockedApplication {
   public static void startTemporaryPlayApplication(final MockedApplication mockedApplication, final TemporaryPlayApplication temporaryPlayApplication) {
     mockedApplication.doInitialisation(() -> {
       mockedApplication.temporaryServices.add(temporaryPlayApplication);
-      mockedApplication.temporaryServices.add(new TemporaryService(UserAccountService.class, null));
+      mockedApplication.temporaryServices.add(new TemporaryService(AccountEditService.class, null));
     });
   }
 

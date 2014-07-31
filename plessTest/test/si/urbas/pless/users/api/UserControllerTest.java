@@ -70,7 +70,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void signUp_MUST_call_afterUserPersisted_of_UserAccountService() {
+  public void signUp_MUST_call_afterUserPersisted_of_AccountEditService() {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     verify(signupService()).afterUserPersisted(userMatchesJohnSmith());
   }
@@ -87,7 +87,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void signUp_MUST_ask_the_UserAccountService_to_create_the_user() throws Exception {
+  public void signUp_MUST_ask_the_AccountEditService_to_create_the_user() throws Exception {
     signUp(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     verify(signupService()).createUser(any(Form.class));
   }
@@ -193,7 +193,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void requestPasswordReset_MUST_not_send_an_email_through_the_UserAccountService_WHEN_the_user_does_not_exist() {
+  public void requestPasswordReset_MUST_not_send_an_email_through_the_AccountEditService_WHEN_the_user_does_not_exist() {
     withQueryString(
       params(param(EMAIL_FIELD, JOHN_SMITH_EMAIL)),
       () -> {
@@ -216,7 +216,7 @@ public class UserControllerTest extends PlessTest {
   }
 
   @Test
-  public void requestPasswordReset_MUST_send_an_email_through_the_UserAccountService() {
+  public void requestPasswordReset_MUST_send_an_email_through_the_AccountEditService() {
     PlessUser user = createUserAndRequestPasswordReset();
     verify(passwordResetService()).sendPasswordResetEmail(eq(user.getEmail()), eq(user.getPasswordResetCode()));
   }

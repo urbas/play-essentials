@@ -18,7 +18,7 @@ import static si.urbas.pless.users.PasswordResetController.tryResetPassword;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
-import static si.urbas.pless.users.UserAccountService.userAccountService;
+import static si.urbas.pless.users.AccountEditService.accountEditService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ApiResults.*;
 import static si.urbas.pless.util.RequestParameters.*;
@@ -41,7 +41,7 @@ public final class UserController extends PlessController {
   }
 
   public static Result updateUserAccount() {
-    Form<?> accountUpdateForm = userAccountService().accountUpdateForm();
+    Form<?> accountUpdateForm = accountEditService().accountEditForm();
     return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
@@ -75,7 +75,7 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    Form<?> updateAccountForm = userAccountService().accountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
+    Form<?> updateAccountForm = accountEditService().accountEditForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
     return updateUserAccount(updateAccountForm);
   }
 
@@ -85,7 +85,7 @@ public final class UserController extends PlessController {
           return formErrorAsJson(updateAccountForm);
         }
         PlessUser user = users().findUserById(loggedInUser.userId);
-        return updateUserAccount(userAccountService().updateUser(updateAccountForm, user));
+        return updateUserAccount(accountEditService().updateUser(updateAccountForm, user));
       }
     );
   }

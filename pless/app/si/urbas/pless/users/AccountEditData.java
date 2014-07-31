@@ -1,12 +1,12 @@
 package si.urbas.pless.users;
 
-public class UpdateAccountData {
+public class AccountEditData {
   protected String email;
   protected String password;
   protected String username;
 
   @SuppressWarnings("UnusedDeclaration")
-  public UpdateAccountData() {}
+  public AccountEditData() {}
 
   public String getEmail() {
     return email;
