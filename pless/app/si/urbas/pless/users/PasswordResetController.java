@@ -51,7 +51,7 @@ public final class PasswordResetController extends PlessController {
     }
   }
 
-  public static boolean resetPassword(String email, String resetPasswordToken, String newPassword) {
+  public static boolean tryResetPassword(String email, String resetPasswordToken, String newPassword) {
     PlessUser user = users().findUserByEmail(email);
     if (user != null && isPasswordResetTokenValid(resetPasswordToken, user) && isPasswordResetTimestampValid(user)) {
       user.setPassword(newPassword);
@@ -75,7 +75,7 @@ public final class PasswordResetController extends PlessController {
 
   private static boolean tryResetPassword(Form<PasswordResetData> form) {
     PasswordResetData passwordResetData = form.get();
-    boolean passwordResetSucceeded = resetPassword(passwordResetData.getEmail(), passwordResetData.getResetPasswordToken(), passwordResetData.getPassword());
+    boolean passwordResetSucceeded = tryResetPassword(passwordResetData.getEmail(), passwordResetData.getResetPasswordToken(), passwordResetData.getPassword());
     if (passwordResetSucceeded) {
       return true;
     } else {

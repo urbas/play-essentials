@@ -55,6 +55,13 @@ public class PasswordResetService implements PlessService {
     return true;
   }
 
+  public void issuePasswordResetCode(PlessUser user) {
+    user.setPasswordResetCode(urlSafeHash());
+    user.setPasswordResetTimestamp(new Date());
+    userRepository().mergeUser(user);
+    passwordResetService().sendPasswordResetEmail(user.getEmail(), user.getPasswordResetCode());
+  }
+
   public Result resetPasswordRequestSuccessfulPage(Form<?> form) {
     FlashMessages.flashInfo(FLASH_PASSWORD_REQUEST_SENT, "An email with password reset instructions has been sent to '" + form.apply(PasswordResetRequestData.EMAIL_FIELD).value() + "'.");
     return redirect(WelcomeController.welcome());
@@ -76,22 +83,15 @@ public class PasswordResetService implements PlessService {
     return ok(layout().main("Password reset successful", PasswordResetSuccessfulView.apply(form)));
   }
 
-  protected String passwordResetEmailSubject() {return "Password Reset Request";}
+  protected String extractEmail(Form<?> form) {return form.field(PasswordResetRequestData.EMAIL_FIELD).value();}
+
+  protected String passwordResetEmailSubject() {return "Password reset request";}
 
   protected Html passwordResetEmailContent(String email, String resetCode) {return PasswordResetEmail.apply(email, resetCode);}
 
   protected Html passwordResetConfirmationEmailContent(String email) {return PasswordResetConfirmationEmail.apply(email);}
 
   protected String passwordResetConfirmationEmailSubject() {return "Password reset";}
-
-  public static void issuePasswordResetCode(PlessUser user) {
-    user.setPasswordResetCode(urlSafeHash());
-    user.setPasswordResetTimestamp(new Date());
-    userRepository().mergeUser(user);
-    passwordResetService().sendPasswordResetEmail(user.getEmail(), user.getPasswordResetCode());
-  }
-
-  private static String extractEmail(Form<?> form) {return form.field(PasswordResetRequestData.EMAIL_FIELD).value();}
 
   public static PasswordResetService passwordResetService() {return PasswordResetServiceLoader.INSTANCE.getService();}
 

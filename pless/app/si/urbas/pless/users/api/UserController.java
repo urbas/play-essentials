@@ -5,7 +5,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.users.PasswordResetController;
 import si.urbas.pless.users.PlessUser;
 
 import java.util.HashMap;
@@ -14,6 +13,8 @@ import java.util.Map;
 import static play.api.i18n.Lang.defaultLang;
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
 import static si.urbas.pless.json.JsonResults.okJson;
+import static si.urbas.pless.users.PasswordResetController.PASSWORD_RESET_ERROR;
+import static si.urbas.pless.users.PasswordResetController.tryResetPassword;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
@@ -64,14 +65,7 @@ public final class UserController extends PlessController {
   }
 
   public static Result resetPassword(String email, String resetPasswordToken, String newPassword) {
-    try {
-      if (PasswordResetController.resetPassword(email, resetPasswordToken, newPassword)) {
-        return SUCCESS;
-      }
-    } catch (Exception e) {
-      Logger.info("A failed password reset was attempted for user '" + email + "'.");
-    }
-    return error(PasswordResetController.PASSWORD_RESET_ERROR);
+    return tryResetPassword(email, resetPasswordToken, newPassword) ? SUCCESS : error(PASSWORD_RESET_ERROR);
   }
 
   @SafeVarargs
@@ -81,7 +75,8 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    return updateUserAccount(userAccountService().accountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams)));
+    Form<?> updateAccountForm = userAccountService().accountUpdateForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
+    return updateUserAccount(updateAccountForm);
   }
 
   private static Result updateUserAccount(Form<?> updateAccountForm) {
@@ -101,7 +96,7 @@ public final class UserController extends PlessController {
       auth().logIn(updatedUser);
       return SUCCESS;
     } catch (Exception ex) {
-      Logger.info("User account update error.", ex);
+      Logger.debug("User account update error.", ex);
       return error("Could not update user account details due to an unexpected error.");
     }
 

@@ -16,10 +16,10 @@ public class RequestParameters {
   }
 
   @SafeVarargs
-  public static HashMap<String, String[]> addParams(HashMap<String, String[]> parametersMap, Map.Entry<String, String[]>... parameterList) {
+  public static HashMap<String, String[]> addParams(HashMap<String, String[]> parametersMapToExpand, Map.Entry<String, String[]>... parameterList) {
     for (Map.Entry<String, String[]> parameter : parameterList) {
-      parametersMap.put(parameter.getKey(), parameter.getValue());
+      parametersMapToExpand.put(parameter.getKey(), parameter.getValue());
     }
-    return parametersMap;
+    return parametersMapToExpand;
   }
 }
