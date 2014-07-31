@@ -53,7 +53,8 @@ public class SignupService implements PlessService {
 
   public boolean isSignUpFormValid(Form<?> signUpForm) {
     // TODO: Check password strength.
-    return isEmailFree(signUpForm) && isUsernameFree(signUpForm) && isPasswordConfirmationCorrect(signUpForm);
+    @SuppressWarnings("unchecked") Form<SignupData> typedSignUpData = (Form<SignupData>) signUpForm.get();
+    return isEmailFree(typedSignUpData) && isUsernameFree(typedSignUpData) && isPasswordConfirmationCorrect(typedSignUpData);
   }
 
   public Result signUpSuccessfulPage(Form<?> signUpForm) {
@@ -83,8 +84,8 @@ public class SignupService implements PlessService {
     return ok(layout().main("Account activation", ActivationView.apply(wasActivated)));
   }
 
-  protected static boolean isEmailFree(Form<?> signUpForm) {
-    String email = signUpForm.field(SignupData.EMAIL_FIELD).value();
+  protected static boolean isEmailFree(Form<SignupData> signUpForm) {
+    String email = signUpForm.get().getEmail();
     if (userRepository().findUserByEmail(email) != null) {
       signUpForm.reject(SignupData.EMAIL_FIELD, "A user with the given email is already signed up.");
       return false;
@@ -92,8 +93,8 @@ public class SignupService implements PlessService {
     return true;
   }
 
-  protected static boolean isUsernameFree(Form<?> signUpForm) {
-    String username = signUpForm.field(SignupData.USERNAME_FIELD).value();
+  protected static boolean isUsernameFree(Form<SignupData> signUpForm) {
+    String username = signUpForm.get().getUsername();
     if (username != null && userRepository().findUserByUsername(username) != null) {
       signUpForm.reject(SignupData.USERNAME_FIELD, "A user with the given username is already signed up.");
       return false;
@@ -101,9 +102,9 @@ public class SignupService implements PlessService {
     return true;
   }
 
-  protected static boolean isPasswordConfirmationCorrect(Form<?> signUpForm) {
-    String password = signUpForm.field(SignupData.PASSWORD_FIELD).valueOr("");
-    String passwordConfirmation = signUpForm.field(SignupData.PASSWORD_CONFIRMATION_FIELD).valueOr("");
+  protected static boolean isPasswordConfirmationCorrect(Form<SignupData> signUpForm) {
+    String password = signUpForm.get().getPassword();
+    String passwordConfirmation = signUpForm.get().getPasswordConfirmation();
     if (!password.equals(passwordConfirmation)) {
       signUpForm.reject(SignupData.PASSWORD_CONFIRMATION_FIELD, PASSWORDS_MISMATCH);
       return false;
