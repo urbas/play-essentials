@@ -53,7 +53,7 @@ public class SignupService implements PlessService {
 
   public boolean isSignUpFormValid(Form<?> signUpForm) {
     // TODO: Check password strength.
-    @SuppressWarnings("unchecked") Form<SignupData> typedSignUpData = (Form<SignupData>) signUpForm.get();
+    @SuppressWarnings("unchecked") Form<SignupData> typedSignUpData = (Form<SignupData>) signUpForm;
     return isEmailFree(typedSignUpData) && isUsernameFree(typedSignUpData) && isPasswordConfirmationCorrect(typedSignUpData);
   }
 

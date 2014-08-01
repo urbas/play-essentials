@@ -14,7 +14,7 @@ import si.urbas.pless.test.users.HashMapUserRepository;
 import si.urbas.pless.test.users.TestSignupService;
 import si.urbas.pless.test.util.TemporaryConfiguration;
 import si.urbas.pless.users.TestPasswordResetService;
-import si.urbas.pless.users.AccountEditService;
+import si.urbas.pless.users.UserEditService;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.TemporaryService;
@@ -54,7 +54,7 @@ public class MockedApplication extends TestApplication {
     return Arrays.asList(
       new TestSignupService(),
       new TestPasswordResetService(),
-      new AccountEditService(),
+      new UserEditService(),
       new LoginService()
     );
   }

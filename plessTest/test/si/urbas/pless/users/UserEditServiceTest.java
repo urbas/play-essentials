@@ -14,13 +14,13 @@ import java.util.HashMap;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.users.AccountEditService.accountEditService;
+import static si.urbas.pless.users.UserEditService.userEditService;
 import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.users.api.UserController.*;
 import static si.urbas.pless.util.RequestParameters.param;
 import static si.urbas.pless.util.RequestParameters.params;
 
-public class AccountEditServiceTest extends PlessTest {
+public class UserEditServiceTest extends PlessTest {
 
   private static final String JOHN_SMITH_EMAIL = "john@example.com";
   private static final String JOHN_SMITH_USERNAME = "John Smith";
@@ -28,7 +28,7 @@ public class AccountEditServiceTest extends PlessTest {
   private static final String JANE_SMITH_USERNAME = "Jane Smith";
   private static final String JANE_SMITH_EMAIL = "Jane@email.com";
   private static final String JANE_SMITH_PASSWORD = "jane's password";
-  private final AccountEditService accountEditService = new AccountEditService();
+  private final UserEditService userEditService = new UserEditService();
   private HashMap<String, String[]> updateAccountParams;
   private PlessUser janeSmithUser;
 
@@ -52,7 +52,7 @@ public class AccountEditServiceTest extends PlessTest {
   @Test
   public void createUpdatedUser_MUST_create_the_user_with_the_given_details() {
     assertThat(
-      accountEditService.updateUser(filledAccountUpdateForm(), janeSmithUser),
+      userEditService.updateUser(filledAccountUpdateForm(), janeSmithUser),
       is(both(userWith(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD)).and(sameInstance(janeSmithUser)))
     );
   }
@@ -77,27 +77,27 @@ public class AccountEditServiceTest extends PlessTest {
 
   @Test
   public void accountEditService_MUST_return_the_default_implementation_WHEN_not_configured() {
-    assertEquals(AccountEditService.class, accountEditService().getClass());
+    assertEquals(UserEditService.class, userEditService().getClass());
   }
 
   @Test
   public void accountEditService_MUST_return_the_configured_implementation() {
-    ScopedServices.withService(accountEditService, () -> assertEquals(accountEditService, accountEditService()));
+    ScopedServices.withService(userEditService, () -> assertEquals(userEditService, userEditService()));
   }
 
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {
     assertThat(
-      accountEditService.updateUser(filledAccountUpdateForm(), janeSmithUser),
+      userEditService.updateUser(filledAccountUpdateForm(), janeSmithUser),
       matcher
     );
   }
 
-  private Form<?> filledAccountUpdateForm() {return accountEditService.accountEditForm().bindFromRequest(updateAccountParams);}
+  private Form<?> filledAccountUpdateForm() {return userEditService.accountEditForm().bindFromRequest(updateAccountParams);}
 
   @Override
   protected TestApplication createTestApplication() {
     return super.createTestApplication()
-      .with(new TemporaryService(AccountEditService.class, null));
+      .with(new TemporaryService(UserEditService.class, null));
   }
 
 }

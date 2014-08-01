@@ -2,18 +2,20 @@
 GET   /                                 si.urbas.pless.pages.WelcomeController.welcome()
 
 # User management pages
-GET   /user/signup                      si.urbas.pless.users.SignupController.signUp()
-POST  /user/submitSignup                si.urbas.pless.users.SignupController.submitSignUp()
-GET   /user/activate                    si.urbas.pless.users.SignupController.activate(email, activationCode)
-GET   /user/resetPasswordRequest        si.urbas.pless.users.PasswordResetController.resetPasswordRequest()
-GET   /user/submitPasswordResetRequest  si.urbas.pless.users.PasswordResetController.submitResetPasswordRequest()
-GET   /user/resetPassword               si.urbas.pless.users.PasswordResetController.resetPassword(email, resetPasswordToken)
-POST  /user/submitResetPassword         si.urbas.pless.users.PasswordResetController.submitResetPassword()
+GET   /user/signup                si.urbas.pless.users.SignupController.signUp()
+POST  /user/signup                si.urbas.pless.users.SignupController.submitSignUp()
+GET   /user/activate              si.urbas.pless.users.SignupController.activate(email, activationCode)
+GET   /user/passwordResetRequest  si.urbas.pless.users.PasswordResetController.resetPasswordRequest()
+POST  /user/passwordResetRequest  si.urbas.pless.users.PasswordResetController.submitResetPasswordRequest()
+GET   /user/resetPassword         si.urbas.pless.users.PasswordResetController.resetPassword(email, resetPasswordToken)
+POST  /user/resetPassword         si.urbas.pless.users.PasswordResetController.submitResetPassword()
+GET   /user/edit                  si.urbas.pless.users.UserEditController.editUser()
+POST  /user/edit                  si.urbas.pless.users.UserEditController.submitEditUser()
 
 # Authentication pages
-GET   /auth/login                       si.urbas.pless.authentication.LoginController.logIn()
-POST  /auth/submitLogin                 si.urbas.pless.authentication.LoginController.submitLogIn()
-GET   /auth/logout                      si.urbas.pless.authentication.LoginController.logOut()
+GET   /auth/login                 si.urbas.pless.authentication.LoginController.logIn()
+POST  /auth/login                 si.urbas.pless.authentication.LoginController.submitLogIn()
+GET   /auth/logout                si.urbas.pless.authentication.LoginController.logOut()
 
 # Map static resources from the /public folder to the /assets URL path
 GET   /assets/*file    controllers.Assets.at(path="/public", file)
