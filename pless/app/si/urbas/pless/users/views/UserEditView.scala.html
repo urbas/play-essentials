@@ -1,0 +1,11 @@
+@(userEditForm: Form[_])
+@import si.urbas.pless
+@import pless.users.UserEditData
+@import pless.users.routes._
+<div class="sign-up-form">
+  @helper.form(action = UserEditController.submitEditUser()) {
+    @helper.CSRF.formField
+    @helper.inputText(userEditForm(UserEditData.EMAIL_FIELD))
+    <input type="submit" value="Submit"/>
+  }
+</div>

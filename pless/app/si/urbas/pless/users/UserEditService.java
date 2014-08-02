@@ -4,6 +4,7 @@ import play.data.Form;
 import play.mvc.Result;
 import play.mvc.Results;
 import si.urbas.pless.PlessService;
+import si.urbas.pless.users.views.html.UserEditView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
@@ -34,7 +35,7 @@ public class UserEditService implements PlessService {
   public Form<?> accountEditForm() {return form(UserEditData.class);}
 
   public Result editUserPage(Form<?> userEditForm) {
-    return Results.ok("So you think you can already edit a user?");
+    return Results.ok(UserEditView.apply(userEditForm));
   }
 
   public boolean isUserEditFormValid(Form<?> userEditForm) {
