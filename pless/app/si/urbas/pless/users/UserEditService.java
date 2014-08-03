@@ -2,13 +2,15 @@ package si.urbas.pless.users;
 
 import play.data.Form;
 import play.mvc.Result;
-import play.mvc.Results;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.users.views.html.UserEditView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
 
 import static play.data.Form.form;
+import static play.mvc.Results.ok;
+import static play.mvc.Results.redirect;
+import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 
 /**
@@ -35,16 +37,17 @@ public class UserEditService implements PlessService {
   public Form<?> accountEditForm() {return form(UserEditData.class);}
 
   public Result editUserPage(Form<?> userEditForm) {
-    return Results.ok(UserEditView.apply(userEditForm));
+    return ok(UserEditView.apply(userEditForm));
   }
 
   public boolean isUserEditFormValid(Form<?> userEditForm) {
+    // TODO: Implement.
     userEditForm.reject(UserEditData.EMAIL_FIELD, "Think again, bro!");
     return false;
   }
 
   public Result editUserSuccessfulPage(Form<?> userEditForm) {
-    return Results.ok("So you think you can already submit a user edit form?");
+    return redirect(WelcomeController.welcome());
   }
 
   public PlessUser updateUser(Form<?> accountEditForm, PlessUser userToUpdate) {

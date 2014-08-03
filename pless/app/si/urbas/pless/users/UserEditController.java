@@ -14,6 +14,7 @@ public final class UserEditController extends PlessController {
   @AddCSRFToken
   public static Result editUser() {
     return withAuthenticatedUser(loggedInUserInfo ->
+        // TODO: Pre-fill the form with logged-in user's details.
         userEditService().editUserPage(userEditService().accountEditForm())
     );
   }

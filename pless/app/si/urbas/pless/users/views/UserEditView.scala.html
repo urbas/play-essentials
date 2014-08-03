@@ -6,6 +6,9 @@
   @helper.form(action = UserEditController.submitEditUser()) {
     @helper.CSRF.formField
     @helper.inputText(userEditForm(UserEditData.EMAIL_FIELD))
+    @helper.inputText(userEditForm(UserEditData.USERNAME_FIELD))
+    @helper.inputPassword(userEditForm(UserEditData.PASSWORD_FIELD))
+    @helper.inputPassword(userEditForm(UserEditData.PASSWORD_CONFIRMATION_FIELD))
     <input type="submit" value="Submit"/>
   }
 </div>
