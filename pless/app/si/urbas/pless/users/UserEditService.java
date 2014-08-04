@@ -47,7 +47,7 @@ public class UserEditService implements PlessService {
   }
 
   public boolean isUserEditFormValid(Form<?> userEditForm) {
-    // TODO: Implement.
+    // TODO: Check password confirmation.
     return true;
   }
 
