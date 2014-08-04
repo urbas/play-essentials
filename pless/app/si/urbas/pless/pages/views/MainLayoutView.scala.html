@@ -1,8 +1,11 @@
 @(body: Html, head: Html)
+@import si.urbas.pless
+@import pless.pages.FlashMessages.flashMessages
 <!DOCTYPE html>
 <html>
 @head
 <body>
+@flashMessages.flashPanel("pless-flash-panel", "pless-flash-panel")
 @body
 </body>
 </html>
