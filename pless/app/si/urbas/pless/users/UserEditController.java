@@ -6,9 +6,11 @@ import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.pages.FlashMessages;
+
+import java.util.function.Supplier;
 
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
+import static si.urbas.pless.pages.FlashMessages.flashError;
 import static si.urbas.pless.users.UserEditService.userEditService;
 
 public final class UserEditController extends PlessController {
@@ -27,26 +29,42 @@ public final class UserEditController extends PlessController {
   public static Result submitEditUser() {
     return withAuthenticatedUser(loggedInUserInfo -> {
       Form<?> userEditForm = userEditService().userEditForm().bindFromRequest();
-      if (!userEditForm.hasErrors() && userEditService().isUserEditFormValid(userEditForm)) {
-        PlessUser updatedUser = userEditService().updateUser(userEditForm, loggedInUser());
-        if (tryPersistUpdatedUser(updatedUser)) {
-          return userEditService().editUserSuccessfulPage(userEditForm);
-        } else {
-          FlashMessages.flashError("userEditError", "Could not store the user account changes due to an unknown error.");
-        }
-      }
-      return userEditService().editUserPage(userEditForm);
+      return persistEditedUser(
+        loggedInUserInfo.userId,
+        userEditForm,
+        () -> userEditService().editUserSuccessfulPage(userEditForm),
+        () -> userEditService().editUserPage(userEditForm),
+        () -> userEditService().editUserPage(userEditForm)
+      );
     });
   }
 
-  public static boolean tryPersistUpdatedUser(PlessUser updatedUser) {
+  public static Result persistEditedUser(long editedUserId, Form<?> userEditForm,
+                                         Supplier<Result> successfulResult,
+                                         Supplier<Result> formInvalidResult,
+                                         Supplier<Result> persistErrorResult)
+  {
+    if (!(!userEditForm.hasErrors() && userEditService().isUserEditFormValid(userEditForm))) {
+      return formInvalidResult.get();
+    } else if (tryPersistEditedUser(userEditForm, editedUserId)) {
+      return successfulResult.get();
+    } else {
+      flashError("userEditError", "Could not store the user account changes due to an unknown error.");
+      return persistErrorResult.get();
+    }
+  }
+
+  private static boolean tryPersistEditedUser(Form<?> userEditForm, long editedUserId) {
+    PlessUser loggedInUser = users().findUserById(editedUserId);
+    PlessUser editedUser = userEditService().updateUser(userEditForm, loggedInUser);
     try {
-      users().mergeUser(updatedUser);
-      auth().logIn(updatedUser);
+      users().mergeUser(editedUser);
+      auth().logIn(editedUser);
       return true;
     } catch (Exception ex) {
       Logger.debug("User account update error.", ex);
       return false;
     }
   }
+
 }

@@ -65,7 +65,6 @@ public class UserEditService implements PlessService {
 
   private void updatePassword(PlessUser userToUpdate, String newPassword) {
     if (newPassword != null) {
-      System.out.println("Password changed to: " + newPassword);
       userToUpdate.setPassword(newPassword);
     }
   }

@@ -4,7 +4,6 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
-import si.urbas.pless.users.PlessUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ import static si.urbas.pless.users.PasswordResetController.tryResetPassword;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
-import static si.urbas.pless.users.UserEditController.tryPersistUpdatedUser;
+import static si.urbas.pless.users.UserEditController.persistEditedUser;
 import static si.urbas.pless.users.UserEditService.userEditService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ApiResults.*;
@@ -80,18 +79,15 @@ public final class UserController extends PlessController {
   }
 
   private static Result updateUserAccount(Form<?> updateAccountForm) {
-    return withAuthenticatedUser(loggedInUser -> {
-        if (updateAccountForm.hasErrors()) {
-          return formErrorAsJson(updateAccountForm);
-        }
-        PlessUser user = users().findUserById(loggedInUser.userId);
-        return updateUserAccount(userEditService().updateUser(updateAccountForm, user));
-      }
+    return withAuthenticatedUser(loggedInUser ->
+        persistEditedUser(
+          loggedInUser.userId,
+          updateAccountForm,
+          () -> SUCCESS,
+          () -> formErrorAsJson(updateAccountForm),
+          () -> error("Could not update user account details due to an unexpected error.")
+        )
     );
-  }
-
-  private static Result updateUserAccount(PlessUser updatedUser) {
-    return tryPersistUpdatedUser(updatedUser) ? SUCCESS : error("Could not update user account details due to an unexpected error.");
   }
 
   public static Result signUp(Form<?> signupForm) {
