@@ -1,6 +1,5 @@
 package si.urbas.pless.users.api;
 
-import play.Logger;
 import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
@@ -18,6 +17,7 @@ import static si.urbas.pless.users.PasswordResetController.tryResetPassword;
 import static si.urbas.pless.users.PasswordResetService.passwordResetService;
 import static si.urbas.pless.users.SignupController.tryCreateAndPersistUser;
 import static si.urbas.pless.users.SignupService.signupService;
+import static si.urbas.pless.users.UserEditController.tryPersistUpdatedUser;
 import static si.urbas.pless.users.UserEditService.userEditService;
 import static si.urbas.pless.users.json.PlessUserJsonViews.publicUserInfo;
 import static si.urbas.pless.util.ApiResults.*;
@@ -41,7 +41,7 @@ public final class UserController extends PlessController {
   }
 
   public static Result updateUserAccount() {
-    Form<?> accountUpdateForm = userEditService().accountEditForm();
+    Form<?> accountUpdateForm = userEditService().userEditForm();
     return updateUserAccount(accountUpdateForm.bindFromRequest());
   }
 
@@ -75,7 +75,7 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    Form<?> updateAccountForm = userEditService().accountEditForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
+    Form<?> updateAccountForm = userEditService().userEditForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
     return updateUserAccount(updateAccountForm);
   }
 
@@ -91,15 +91,7 @@ public final class UserController extends PlessController {
   }
 
   private static Result updateUserAccount(PlessUser updatedUser) {
-    try {
-      users().mergeUser(updatedUser);
-      auth().logIn(updatedUser);
-      return SUCCESS;
-    } catch (Exception ex) {
-      Logger.debug("User account update error.", ex);
-      return error("Could not update user account details due to an unexpected error.");
-    }
-
+    return tryPersistUpdatedUser(updatedUser) ? SUCCESS : error("Could not update user account details due to an unexpected error.");
   }
 
   public static Result signUp(Form<?> signupForm) {

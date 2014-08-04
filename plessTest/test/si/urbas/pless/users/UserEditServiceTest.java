@@ -92,7 +92,7 @@ public class UserEditServiceTest extends PlessTest {
     );
   }
 
-  private Form<?> filledAccountUpdateForm() {return userEditService.accountEditForm().bindFromRequest(updateAccountParams);}
+  private Form<?> filledAccountUpdateForm() {return userEditService.userEditForm().bindFromRequest(updateAccountParams);}
 
   @Override
   protected TestApplication createTestApplication() {

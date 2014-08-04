@@ -22,7 +22,7 @@ import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
  * E.g.: the user wants to change the password, username, or email (or any other detail).
  * <ul>
  * <li>User calls {@link si.urbas.pless.users.api.UserController#updateUserAccount()} which passes POST parameters
- * to the form returned by {@link UserEditService#accountEditForm()}.</li>
+ * to the form returned by {@link UserEditService#userEditForm()}.</li>
  * <li>If the form is without errors, then the
  * {@link UserEditService#updateUser(play.data.Form, PlessUser)} method is called, with the
  * form and the currently logged-in user. This function should returned the updated user, which is finally
@@ -34,7 +34,13 @@ public class UserEditService implements PlessService {
 
   public static final String CONFIG_USER_ACCOUNT_SERVICE = "pless.userEditService";
 
-  public Form<?> accountEditForm() {return form(UserEditData.class);}
+  public Form<?> userEditForm() {return form(UserEditData.class);}
+
+  public Form<?> fillFormForUser(Form<?> userEditForm, PlessUser userToEdit) {
+    @SuppressWarnings("unchecked")
+    Form<UserEditData> typedForm = (Form<UserEditData>) userEditForm;
+    return typedForm.fill(new UserEditData(userToEdit.getEmail(), userToEdit.getUsername()));
+  }
 
   public Result editUserPage(Form<?> userEditForm) {
     return ok(UserEditView.apply(userEditForm));
@@ -42,8 +48,7 @@ public class UserEditService implements PlessService {
 
   public boolean isUserEditFormValid(Form<?> userEditForm) {
     // TODO: Implement.
-    userEditForm.reject(UserEditData.EMAIL_FIELD, "Think again, bro!");
-    return false;
+    return true;
   }
 
   public Result editUserSuccessfulPage(Form<?> userEditForm) {
@@ -60,6 +65,7 @@ public class UserEditService implements PlessService {
 
   private void updatePassword(PlessUser userToUpdate, String newPassword) {
     if (newPassword != null) {
+      System.out.println("Password changed to: " + newPassword);
       userToUpdate.setPassword(newPassword);
     }
   }

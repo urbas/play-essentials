@@ -1,3 +1,4 @@
 TODO: Add a signup/login redirect for non-authenticated accesses.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
 TODO: Implement login via Google or something similar.
+TODO: Insert a link to the login page into the password reset successful page.

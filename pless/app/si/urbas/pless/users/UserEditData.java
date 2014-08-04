@@ -14,6 +14,11 @@ public class UserEditData {
   @SuppressWarnings("UnusedDeclaration")
   public UserEditData() {}
 
+  public UserEditData(String email, String username) {
+    this.email = email;
+    this.username = username;
+  }
+
   public String getEmail() {
     return email;
   }
