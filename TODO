@@ -1,5 +1,5 @@
-TODO: Add a signup/login redirect for non-authenticated accesses.
+TODO: Add a signup/login redirect for non-authenticated page accesses.
+TODO: Move flash message views into main layout.
+TODO: Insert a link to the login page into the password reset successful page.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
 TODO: Implement login via Google or something similar.
-TODO: Insert a link to the login page into the password reset successful page.
-TODO: Move flash message views into main layout.
