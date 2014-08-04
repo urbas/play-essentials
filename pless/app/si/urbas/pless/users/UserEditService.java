@@ -6,6 +6,7 @@ import si.urbas.pless.PlessService;
 import si.urbas.pless.users.views.html.UserEditView;
 import si.urbas.pless.util.PlessServiceConfigKey;
 import si.urbas.pless.util.ServiceLoader;
+import si.urbas.pless.util.StringUtils;
 
 import static play.data.Form.form;
 import static play.mvc.Results.ok;
@@ -48,7 +49,9 @@ public class UserEditService implements PlessService {
 
   public boolean isUserEditFormValid(Form<?> userEditForm) {
     // TODO: Check password confirmation.
-    return true;
+    @SuppressWarnings("unchecked")
+    Form<UserEditData> typedForm = (Form<UserEditData>) userEditForm;
+    return !isPasswordSpecified(typedForm.get().getPassword()) || isPasswordConfirmationCorrect(typedForm.get());
   }
 
   public Result editUserSuccessfulPage(Form<?> userEditForm) {
@@ -64,7 +67,7 @@ public class UserEditService implements PlessService {
   }
 
   private void updatePassword(PlessUser userToUpdate, String newPassword) {
-    if (newPassword != null) {
+    if (isPasswordSpecified(newPassword)) {
       userToUpdate.setPassword(newPassword);
     }
   }
@@ -79,6 +82,14 @@ public class UserEditService implements PlessService {
     if (newEmail != null) {
       userToUpdate.setEmail(newEmail);
     }
+  }
+
+  private boolean isPasswordConfirmationCorrect(UserEditData userEditData) {
+    return userEditData.getPassword().equals(userEditData.getPasswordConfirmation());
+  }
+
+  private boolean isPasswordSpecified(String newPassword) {
+    return !StringUtils.isNullOrEmpty(newPassword);
   }
 
   public static UserEditService userEditService() {

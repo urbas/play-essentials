@@ -1,8 +1,10 @@
 package si.urbas.pless.users;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.Helpers;
+import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
 
 import static org.hamcrest.Matchers.containsString;
@@ -25,11 +27,20 @@ public class SignupControllerTest extends PlessTest {
   private static final String JOHN_SMITH_PASSWORD = "john's password";
   private static final RuntimeException EXCEPTION_FOR_TESTING = new RuntimeException("Forced exception for testing.");
   public PlessUser user;
+  private TemporaryHttpContext httpContext;
 
   @Before
   public void setUp() {
     super.setUp();
     user = new PlessUser(0L, JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    httpContext = new TemporaryHttpContext();
+  }
+
+  @Override
+  @After
+  public void tearDown() {
+    super.tearDown();
+    httpContext.close();
   }
 
   @Test

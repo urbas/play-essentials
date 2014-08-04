@@ -4,6 +4,7 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.mvc.Result;
 import si.urbas.pless.PlessController;
+import si.urbas.pless.users.UserEditData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +75,12 @@ public final class UserController extends PlessController {
 
   @SafeVarargs
   static Result updateUserAccount(String email, String username, String password, Map.Entry<String, String[]>... additionalParams) {
-    Form<?> updateAccountForm = userEditService().userEditForm().bindFromRequest(createUserInfoParameters(email, username, password, additionalParams));
+    Form<?> updateAccountForm = userEditService().userEditForm().bindFromRequest(
+      addParams(
+        createUserInfoParameters(email, username, password, additionalParams),
+        param(UserEditData.PASSWORD_CONFIRMATION_FIELD, password)
+      )
+    );
     return updateUserAccount(updateAccountForm);
   }
 
