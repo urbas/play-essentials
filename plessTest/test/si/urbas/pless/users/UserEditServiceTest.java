@@ -85,6 +85,12 @@ public class UserEditServiceTest extends PlessTest {
     ScopedServices.withService(userEditService, () -> assertEquals(userEditService, userEditService()));
   }
 
+  @Test
+  public void userEditService_MUST_return_the_same_instance_twice_WHEN_in_test_mode() {
+    UserEditService expectedUserEditService = userEditService();
+    assertSame(expectedUserEditService, userEditService());
+  }
+
   private void assertUpdatedUserIs(Matcher<? super PlessUser> matcher) {
     assertThat(
       userEditService.updateUser(filledAccountUpdateForm(), janeSmithUser),

@@ -39,12 +39,12 @@ public final class UserEditController extends PlessController {
     });
   }
 
-  public static Result persistEditedUser(long editedUserId, Form<?> userEditForm,
+  public static Result persistEditedUser(long editedUserId,
+                                         Form<?> userEditForm,
                                          Supplier<Result> successfulResult,
                                          Supplier<Result> formInvalidResult,
-                                         Supplier<Result> persistErrorResult)
-  {
-    if (!(!userEditForm.hasErrors() && userEditService().isUserEditFormValid(userEditForm))) {
+                                         Supplier<Result> persistErrorResult) {
+    if (userEditForm.hasErrors() || !userEditService().isUserEditFormValid(userEditForm)) {
       return formInvalidResult.get();
     } else if (tryPersistEditedUser(userEditForm, editedUserId)) {
       return successfulResult.get();
@@ -56,14 +56,18 @@ public final class UserEditController extends PlessController {
 
   private static boolean tryPersistEditedUser(Form<?> userEditForm, long editedUserId) {
     PlessUser loggedInUser = users().findUserById(editedUserId);
-    PlessUser editedUser = userEditService().updateUser(userEditForm, loggedInUser);
-    try {
-      users().mergeUser(editedUser);
-      auth().logIn(editedUser);
-      return true;
-    } catch (Exception ex) {
-      Logger.debug("User account update error.", ex);
+    if (loggedInUser == null) {
       return false;
+    } else {
+      try {
+        PlessUser editedUser = userEditService().updateUser(userEditForm, loggedInUser);
+        users().mergeUser(editedUser);
+        auth().logIn(editedUser);
+        return true;
+      } catch (Exception ex) {
+        Logger.debug("User account update error.", ex);
+        return false;
+      }
     }
   }
 
