@@ -92,4 +92,26 @@ public class UserEditControllerTest extends PlessTest {
     );
   }
 
+  @Test
+  public void persistEditedUser_MUST_not_change_the_password_WHEN_the_new_password_is_null() {
+    PlessUser user = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    when(userEditForm.get()).thenReturn(new UserEditData(MARK_TWAIN_EMAIL, MARK_TWAIN_USERNAME, null));
+    persistEditedUser(user.getId(), userEditForm, successfulCallback, null, null);
+    assertThat(
+      userRepository().findUserById(user.getId()),
+      is(userWith(MARK_TWAIN_EMAIL, MARK_TWAIN_USERNAME, JOHN_SMITH_PASSWORD))
+    );
+  }
+
+  @Test
+  public void persistEditedUser_MUST_not_change_the_password_WHEN_the_new_password_is_empty() {
+    PlessUser user = signUpAndLoginUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    when(userEditForm.get()).thenReturn(new UserEditData(MARK_TWAIN_EMAIL, MARK_TWAIN_USERNAME, ""));
+    persistEditedUser(user.getId(), userEditForm, successfulCallback, null, null);
+    assertThat(
+      userRepository().findUserById(user.getId()),
+      is(userWith(MARK_TWAIN_EMAIL, MARK_TWAIN_USERNAME, JOHN_SMITH_PASSWORD))
+    );
+  }
+
 }
