@@ -5,6 +5,7 @@ import si.urbas.pless.PlessService;
 import si.urbas.pless.authentication.LoginService;
 import si.urbas.pless.emailing.Email;
 import si.urbas.pless.emailing.EmailProvider;
+import si.urbas.pless.pages.test.TestFlashMessages;
 import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.ServerSessionStorage;
 import si.urbas.pless.test.emailing.SingleEmailProvider;
@@ -55,7 +56,8 @@ public class MockedApplication extends TestApplication {
       new TestSignupService(),
       new TestPasswordResetService(),
       new UserEditService(),
-      new LoginService()
+      new LoginService(),
+      new TestFlashMessages()
     );
   }
 

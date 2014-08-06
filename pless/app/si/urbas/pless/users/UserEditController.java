@@ -65,7 +65,7 @@ public final class UserEditController extends PlessController {
         auth().logIn(editedUser);
         return true;
       } catch (Exception ex) {
-        Logger.debug("User account update error.", ex);
+        Logger.debug("User edit error.", ex);
         return false;
       }
     }

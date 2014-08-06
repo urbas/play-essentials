@@ -15,8 +15,14 @@ public class UserEditData {
   public UserEditData() {}
 
   public UserEditData(String email, String username) {
+    this(email, username, null);
+  }
+
+  public UserEditData(String email, String username, String password) {
     this.email = email;
     this.username = username;
+    this.password = password;
+    this.passwordConfirmation = password;
   }
 
   public String getEmail() {
@@ -31,6 +37,10 @@ public class UserEditData {
     return username;
   }
 
+  public String getPasswordConfirmation() {
+    return passwordConfirmation;
+  }
+
   public void setEmail(String email) {
     this.email = email;
   }
@@ -41,10 +51,6 @@ public class UserEditData {
 
   public void setUsername(String username) {
     this.username = username;
-  }
-
-  public String getPasswordConfirmation() {
-    return passwordConfirmation;
   }
 
   public void setPasswordConfirmation(String passwordConfirmation) {

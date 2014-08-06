@@ -27,26 +27,26 @@ public class FlashMessages implements PlessService {
     return FlashMessagesView.apply(htmlTagId, htmlTagClass, infoMessages, errorMessages);
   }
 
-  public static void flashInfo(String messageKey, String message) {Controller.flash(flashInfoKey(messageKey), message);}
+  public void flashMessage(String messageKey, String message) {Controller.flash(messageKey, message);}
 
-  public static void flashError(String messageKey, String message) {Controller.flash(flashErrorKey(messageKey), message);}
+  public static void flashInfo(String messageKey, String message) {flashMessages().flashMessage(flashInfoKey(messageKey), message);}
 
-  private static List<String> allFlashMessagesOfType(String messageType) {
+  public static void flashError(String messageKey, String message) {flashMessages().flashMessage(flashErrorKey(messageKey), message);}
+
+  protected static List<String> allFlashMessagesOfType(String messageType) {
     return flash().entrySet().stream()
       .filter(keyValue -> keyValue.getKey().startsWith(messageType))
       .map(Map.Entry::getValue)
       .collect(Collectors.toList());
   }
 
-  private static String flashInfoKey(final String messageKey) {return flashMessageKey(MESSAGE_TYPE_INFO, messageKey);}
+  protected static String flashInfoKey(final String messageKey) {return flashMessageKey(MESSAGE_TYPE_INFO, messageKey);}
 
-  private static String flashErrorKey(final String messageKey) {return flashMessageKey(MESSAGE_TYPE_ERROR, messageKey);}
+  protected static String flashErrorKey(final String messageKey) {return flashMessageKey(MESSAGE_TYPE_ERROR, messageKey);}
 
-  private static String flashMessageKey(String messagePrefix, String messageKey) {return messagePrefix + "." + messageKey;}
+  protected static String flashMessageKey(String messagePrefix, String messageKey) {return messagePrefix + "." + messageKey;}
 
-  public static FlashMessages flashMessages() {
-    return FlashMessagesLoader.INSTANCE.getService();
-  }
+  public static FlashMessages flashMessages() {return FlashMessagesLoader.INSTANCE.getService();}
 
   private static class FlashMessagesLoader {
     public static final ServiceLoader<FlashMessages> INSTANCE = createServiceLoader(new FlashMessages());
