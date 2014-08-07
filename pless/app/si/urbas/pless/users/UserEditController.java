@@ -10,6 +10,7 @@ import si.urbas.pless.PlessController;
 import java.util.function.Supplier;
 
 import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
+import static si.urbas.pless.authentication.LoginService.loginService;
 import static si.urbas.pless.pages.FlashMessages.flashError;
 import static si.urbas.pless.users.UserEditService.userEditService;
 
@@ -17,12 +18,15 @@ public final class UserEditController extends PlessController {
 
   @AddCSRFToken
   public static Result editUser() {
-    return withAuthenticatedUser(loggedInUserInfo -> {
-      Form<?> userEditForm = userEditService().userEditForm();
-      PlessUser loggedInUser = users().findUserById(loggedInUserInfo.userId);
-      Form<?> initializedUserEditForm = userEditService().fillFormForUser(userEditForm, loggedInUser);
-      return userEditService().editUserPage(initializedUserEditForm);
-    });
+    return withAuthenticatedUser(
+      loggedInUserInfo -> {
+        Form<?> userEditForm = userEditService().userEditForm();
+        PlessUser loggedInUser = users().findUserById(loggedInUserInfo.userId);
+        Form<?> initializedUserEditForm = userEditService().fillFormForUser(userEditForm, loggedInUser);
+        return userEditService().editUserPage(initializedUserEditForm);
+      },
+      () -> loginService().logInRedirectPage()
+    );
   }
 
   @RequireCSRFCheck

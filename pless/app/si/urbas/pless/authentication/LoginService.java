@@ -14,6 +14,7 @@ import static si.urbas.pless.authentication.AuthenticationService.authentication
 import static si.urbas.pless.authentication.PasswordAuthenticator.passwordAuthenticator;
 import static si.urbas.pless.authentication.PasswordLoginData.EMAIL_FIELD;
 import static si.urbas.pless.authentication.PasswordLoginData.PASSWORD_FIELD;
+import static si.urbas.pless.authentication.routes.LoginController;
 import static si.urbas.pless.pages.Layout.layout;
 import static si.urbas.pless.pages.routes.WelcomeController;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
@@ -49,6 +50,10 @@ public class LoginService implements PlessService {
 
   public Result afterLogOutPage() {
     return redirect(WelcomeController.welcome());
+  }
+
+  public Result logInRedirectPage() {
+    return redirect(LoginController.logIn());
   }
 
   public static LoginService loginService() {
