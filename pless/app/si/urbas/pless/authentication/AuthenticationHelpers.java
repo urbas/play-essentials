@@ -17,7 +17,8 @@ public class AuthenticationHelpers {
 
   /**
    * @param actionBody this callback will be called if a user is logged in.
-   * @return the result of the given callback or a redirect to a login page.
+   * @return the result of the given callback when a user is logged in, otherwise this method returns a redirect to a
+   * login page.
    */
   public static Result requireAuthentication(Function<LoggedInUserInfo, Result> actionBody) {
     return withAuthenticatedUser(actionBody, () -> loginService().logInRedirectPage());
