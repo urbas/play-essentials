@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
+import static si.urbas.pless.authentication.LoginService.loginService;
 
 public class AuthenticationHelpers {
 
@@ -15,6 +16,15 @@ public class AuthenticationHelpers {
   public static final Results.Status USER_NOT_LOGGED_IN_RESULT = ApiResults.error(ERROR_MESSAGE_USER_NOT_LOGGED_IN);
 
   /**
+   * @param actionBody this callback will be called if a user is logged in.
+   * @return the result of the given callback or a redirect to a login page.
+   */
+  public static Result requireAuthentication(Function<LoggedInUserInfo, Result> actionBody) {
+    return withAuthenticatedUser(actionBody, () -> loginService().logInRedirectPage());
+  }
+
+  /**
+   * This function is intended for REST APIs.
    * @param actionBody this callback will be called if a user is logged in.
    * @return the result of the given callback or a standard JSON error response (with a message explaining that the user
    * was not authenticated).

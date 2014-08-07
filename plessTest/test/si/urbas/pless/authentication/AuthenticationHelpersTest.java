@@ -3,7 +3,6 @@ package si.urbas.pless.authentication;
 import org.junit.Before;
 import org.junit.Test;
 import play.mvc.Result;
-import si.urbas.pless.test.TemporaryHttpContext;
 import si.urbas.pless.test.util.PlessTest;
 
 import java.util.function.Function;
@@ -12,8 +11,8 @@ import java.util.function.Supplier;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.authentication.AuthenticationHelpers.USER_NOT_LOGGED_IN_RESULT;
-import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
+import static si.urbas.pless.authentication.AuthenticationHelpers.*;
+import static si.urbas.pless.authentication.LoginService.loginService;
 
 public class AuthenticationHelpersTest extends PlessTest {
 
@@ -71,6 +70,12 @@ public class AuthenticationHelpersTest extends PlessTest {
   @Test
   public void withAuthenticatedUser_MUST_return_the_standard_error_WHEN_the_user_is_not_logged_in() {
     assertSame(USER_NOT_LOGGED_IN_RESULT, withAuthenticatedUser(authenticatedResultCallback));
+  }
+
+  @Test
+  public void requireAuthentication_MUST_call_the_login_redirect_WHEN_no_user_is_logged_in() {
+    requireAuthentication(authenticatedResultCallback);
+    verify(loginService()).logInRedirectPage();
   }
 
 }

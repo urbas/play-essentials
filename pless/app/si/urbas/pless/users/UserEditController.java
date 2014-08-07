@@ -9,8 +9,7 @@ import si.urbas.pless.PlessController;
 
 import java.util.function.Supplier;
 
-import static si.urbas.pless.authentication.AuthenticationHelpers.withAuthenticatedUser;
-import static si.urbas.pless.authentication.LoginService.loginService;
+import static si.urbas.pless.authentication.AuthenticationHelpers.requireAuthentication;
 import static si.urbas.pless.pages.FlashMessages.flashError;
 import static si.urbas.pless.users.UserEditService.userEditService;
 
@@ -18,20 +17,19 @@ public final class UserEditController extends PlessController {
 
   @AddCSRFToken
   public static Result editUser() {
-    return withAuthenticatedUser(
+    return requireAuthentication(
       loggedInUserInfo -> {
         Form<?> userEditForm = userEditService().userEditForm();
         PlessUser loggedInUser = users().findUserById(loggedInUserInfo.userId);
         Form<?> initializedUserEditForm = userEditService().fillFormForUser(userEditForm, loggedInUser);
         return userEditService().editUserPage(initializedUserEditForm);
-      },
-      () -> loginService().logInRedirectPage()
+      }
     );
   }
 
   @RequireCSRFCheck
   public static Result submitEditUser() {
-    return withAuthenticatedUser(loggedInUserInfo -> {
+    return requireAuthentication(loggedInUserInfo -> {
       Form<?> userEditForm = userEditService().userEditForm().bindFromRequest();
       return persistEditedUser(
         loggedInUserInfo.userId,
@@ -53,7 +51,7 @@ public final class UserEditController extends PlessController {
     } else if (tryPersistEditedUser(userEditForm, editedUserId)) {
       return successfulResult.get();
     } else {
-      flashError("userEditError", "Could not store the user account changes due to an unknown error.");
+      flashError("userEdit", "Could not store the user account changes due to an unknown error.");
       return persistErrorResult.get();
     }
   }
