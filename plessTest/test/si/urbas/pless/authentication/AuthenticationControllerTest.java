@@ -30,7 +30,7 @@ public class AuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_ok_WHEN_the_right_credentials_are_given() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    final PlessUser user = signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     activateUser(user);
     Result result = logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(OK, Helpers.status(result));
@@ -38,7 +38,7 @@ public class AuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_the_user_is_not_active() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    final PlessUser user = signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     Result result = logIn(user.getEmail(), JOHN_SMITH_PASSWORD);
     assertEquals(BAD_REQUEST, Helpers.status(result));
   }
@@ -51,7 +51,7 @@ public class AuthenticationControllerTest extends PlessTest {
 
   @Test
   public void login_MUST_return_badRequest_WHEN_the_wrong_credentials_are_given() throws Exception {
-    persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     Result result = logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD + "a");
     assertEquals(BAD_REQUEST, Helpers.status(result));
   }
@@ -79,7 +79,7 @@ public class AuthenticationControllerTest extends PlessTest {
   }
 
   private void localCreateUserAndLogin() {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    final PlessUser user = signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     activateUser(user);
     logIn(JOHN_SMITH_EMAIL, JOHN_SMITH_PASSWORD);
   }

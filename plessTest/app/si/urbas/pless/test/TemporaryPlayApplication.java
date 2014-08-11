@@ -8,10 +8,11 @@ import java.util.Map;
 import static play.test.Helpers.*;
 
 public class TemporaryPlayApplication implements AutoCloseable {
+
   protected final FakeApplication fakeApplication;
 
   public TemporaryPlayApplication() {
-    this(new HashMap<String, String>());
+    this(new HashMap<>());
   }
 
   public TemporaryPlayApplication(Map<String, String> applicationOptions) {

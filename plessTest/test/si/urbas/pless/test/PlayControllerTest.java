@@ -1,22 +1,14 @@
 package si.urbas.pless.test;
 
-import org.junit.After;
-import org.junit.Before;
+import si.urbas.pless.test.util.PlessTest;
 
 import java.util.HashMap;
 
-public class PlayControllerTest implements PlayTest {
+public class PlayControllerTest extends PlessTest implements PlayTest {
 
-  protected MockedPlayApplication plessTestApplication;
-
-  @Before
-  public void setUp() {
-    plessTestApplication = new MockedPlayApplication(getPlayApplicationConfiguration());
-  }
-
-  @After
-  public void tearDown() {
-    plessTestApplication.close();
+  @Override
+  protected TestApplication createTestApplication() {
+    return new MockedPlayApplication(getPlayApplicationConfiguration());
   }
 
   @Override

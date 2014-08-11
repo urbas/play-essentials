@@ -68,9 +68,8 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   }
 
   @Test
-  public void getService_MUST_return_the_overridden_service() throws Exception {
-    TestPlessServiceA service = mock(TestPlessServiceA.class);
-    withService(service, () -> assertSame(serviceLoader.getService(), service));
+  public void getService_MUST_return_the_configured_service_WHEN_overriden_service_is_specified() throws Exception {
+    withService(mock(TestPlessServiceA.class), () -> assertThat(serviceLoader.getService(), is(instanceOf(DerivedTestPlessServiceA.class))));
   }
 
   @Test

@@ -5,9 +5,12 @@ import org.junit.Before;
 import si.urbas.pless.test.MockedApplication;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.users.PlessUser;
+import si.urbas.pless.users.SignupController;
 
 import static si.urbas.pless.authentication.AuthenticationService.authenticationService;
+import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserRepository.userRepository;
+import static si.urbas.pless.users.api.UserController.createUserInfoParameters;
 
 public abstract class PlessTest {
 
@@ -28,20 +31,21 @@ public abstract class PlessTest {
   }
 
   public static PlessUser signUpAndLoginUser(String email, String username, String password) {
-    activateUser(persistAndFetchUser(email, username, password));
+    activateUser(signUpAndFetchUser(email, username, password));
     PlessUser activatedUser = fetchUser(email);
     authenticationService().logIn(activatedUser);
     return activatedUser;
   }
 
-  public static PlessUser persistAndFetchUser(String userEmail, String username, String userPassword) {
-    persistUser(userEmail, username, userPassword);
-    return fetchUser(userEmail);
-  }
-
-  public static void persistUser(String userEmail, String username, String userPassword) {
-    PlessUser newUser = userRepository().createUser(userEmail, username, userPassword);
-    userRepository().persistUser(newUser);
+  public static PlessUser signUpAndFetchUser(String userEmail, String username, String userPassword) {
+    PlessUser newUser = signupService().createUser(signupService().signupForm().bindFromRequest(createUserInfoParameters(userEmail, username, userPassword)));
+    if (newUser == null) {
+      throw new RuntimeException("Could not create user with email '" + userEmail + "',  username '" + username + "' and  password '" + userPassword + "'.");
+    } else if (!SignupController.signUp(newUser)) {
+      throw new RuntimeException("Could not sign up user '" + newUser + "'.");
+    } else {
+      return newUser;
+    }
   }
 
   public static boolean activateUser(final PlessUser user) {

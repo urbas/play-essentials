@@ -84,10 +84,15 @@ public class ServiceLoader<T extends PlessService> {
 
   @SuppressWarnings("unchecked")
   private T createService() {
-    Object overriddenService = getOverriddenService(serviceConfigKey);
-    if (overriddenService != null) { return (T) overriddenService; }
     String serviceClassName = getConfigurationSource().getString(serviceConfigKey);
-    return serviceClassName == null ? defaultService.get() : createService(serviceClassName);
+    if (serviceClassName != null) {
+      return createService(serviceClassName);
+    }
+    Object overriddenService = getOverriddenService(serviceConfigKey);
+    if (overriddenService != null) {
+      return (T) overriddenService;
+    }
+    return defaultService.get();
   }
 
   @SuppressWarnings("unchecked")

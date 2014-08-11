@@ -82,7 +82,7 @@ public class SignupControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_return_ok_WHEN_the_activation_data_is_correct() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    final PlessUser user = signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     assertThat(
       contentAsString(SignupController.activate(user.getEmail(), user.getActivationCode())),
       containsString("Thank you very much for registering with us")
@@ -91,7 +91,7 @@ public class SignupControllerTest extends PlessTest {
 
   @Test
   public void activate_MUST_activate_the_user() throws Exception {
-    final PlessUser user = persistAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
+    final PlessUser user = signUpAndFetchUser(JOHN_SMITH_EMAIL, JOHN_SMITH_USERNAME, JOHN_SMITH_PASSWORD);
     activateUser(user);
     assertTrue(fetchUser(user.getEmail()).isActivated());
   }
