@@ -1,5 +1,6 @@
 package si.urbas.pless.test;
 
+import play.Mode;
 import si.urbas.pless.util.ConfigurationSource;
 import si.urbas.pless.util.PlayApplicationConfigurationSource;
 
@@ -23,8 +24,7 @@ public class MockedPlayApplication extends MockedApplication {
 
   static ConfigurationSource createTestModePlayConfiguration() {
     ConfigurationSource currentConfiguration = spy(new PlayApplicationConfigurationSource());
-    doReturn(false).when(currentConfiguration).isProduction();
-    doReturn(false).when(currentConfiguration).isDevelopment();
+    doReturn(Mode.TEST).when(currentConfiguration).runMode();
     return currentConfiguration;
   }
 

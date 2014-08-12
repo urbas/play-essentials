@@ -1,6 +1,9 @@
 package si.urbas.pless.util;
 
 import play.Play;
+import play.Mode;
+import play.core.j.JavaModeConverter;
+import scala.Enumeration;
 
 /**
  * This configuration source is stateless and delegates to
@@ -12,13 +15,9 @@ import play.Play;
 public class PlayApplicationConfigurationSource extends ConfigurationSource {
 
   @Override
-  public boolean isProduction() {
-    return Play.isProd();
-  }
-
-  @Override
-  public boolean isDevelopment() {
-    return Play.isDev();
+  public Mode runMode() {
+    Enumeration.Value mode = play.api.Play.current().mode();
+    return JavaModeConverter.asJavaMode(mode);
   }
 
   @Override

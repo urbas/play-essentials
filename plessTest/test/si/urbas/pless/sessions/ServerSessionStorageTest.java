@@ -1,6 +1,7 @@
 package si.urbas.pless.sessions;
 
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.test.PlessMockConfigurationTest;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
 
@@ -37,7 +38,7 @@ public class ServerSessionStorageTest extends PlessMockConfigurationTest {
 
   @Test
   public void getServerSessionStorage_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
-    when(configurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().runMode()).thenReturn(Mode.PROD);
     assertSame(getServerSessionStorage(), getServerSessionStorage());
   }
 

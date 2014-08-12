@@ -1,5 +1,6 @@
 package si.urbas.pless.authentication;
 
+import play.Mode;
 import si.urbas.pless.sessions.ClientSessionStorage;
 import si.urbas.pless.sessions.ServerSessionStorage;
 import si.urbas.pless.sessions.SessionIdGenerator;
@@ -27,7 +28,7 @@ public class AuthenticationService {
   }
 
   public static AuthenticationService authenticationService() {
-    if (configurationSource().isProduction()) {
+    if (configurationSource().runMode() == Mode.PROD) {
       return AuthenticationServiceSingleton.INSTANCE;
     } else {
       return createAuthenticationService();

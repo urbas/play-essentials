@@ -3,12 +3,13 @@ package si.urbas.pless.util;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.test.TemporaryPlayApplication;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 
 public class PlayApplicationConfigurationSourceTest {
 
@@ -37,13 +38,8 @@ public class PlayApplicationConfigurationSourceTest {
   }
 
   @Test
-  public void isProduction_MUST_return_false() throws Exception {
-    assertFalse(playApplicationConfigurationSource.isProduction());
-  }
-
-  @Test
   public void isDevelopment_MUST_return_false() throws Exception {
-    assertFalse(playApplicationConfigurationSource.isDevelopment());
+    assertSame(Mode.TEST, playApplicationConfigurationSource.runMode());
   }
 
   @Test

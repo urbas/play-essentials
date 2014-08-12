@@ -1,5 +1,6 @@
 package si.urbas.pless.util;
 
+import play.Mode;
 import si.urbas.pless.PlessService;
 
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class ServiceLoader<T extends PlessService> {
     }
   }
 
-  private boolean isTestMode() {return !getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment();}
+  private boolean isTestMode() {return getConfigurationSource().runMode() == Mode.TEST;}
 
   private ConfigurationSource getConfigurationSource() {
     return configurationSource == null ? ConfigurationSource.configurationSource() : configurationSource;
@@ -113,7 +114,7 @@ public class ServiceLoader<T extends PlessService> {
   public static Function<String, Object> getInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode (it used SBT's class loader).
-    if (ConfigurationSource.configurationSource().isDevelopment()) {
+    if (ConfigurationSource.configurationSource().runMode() == Mode.DEV) {
       return PlayApplicationInstanceCreator.getInstance();
     } else {
       return InstanceCreator.INSTANCE;

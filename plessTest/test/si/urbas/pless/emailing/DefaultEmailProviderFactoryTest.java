@@ -2,6 +2,7 @@ package si.urbas.pless.emailing;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.test.PlessMockConfigurationTest;
 
 import static org.hamcrest.Matchers.instanceOf;
@@ -24,7 +25,7 @@ public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest 
 
   @Test
   public void create_MUST_return_ApacheEmailProvider_WHEN_in_production_mode() throws Exception {
-    when(configurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().runMode()).thenReturn(Mode.PROD);
     assertThat(
       defaultEmailProviderCreator.get(),
       is(instanceOf(ApacheCommonsEmailProvider.class))
@@ -33,7 +34,7 @@ public class DefaultEmailProviderFactoryTest extends PlessMockConfigurationTest 
 
   @Test
   public void create_MUST_return_a_logging_mailer_WHEN_in_development_mode() throws Exception {
-    when(configurationSource().isDevelopment()).thenReturn(true);
+    when(configurationSource().runMode()).thenReturn(Mode.DEV);
     assertThat(
       defaultEmailProviderCreator.get(),
       is(instanceOf(LoggingNoOpEmailProvider.class))

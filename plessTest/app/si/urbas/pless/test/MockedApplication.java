@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static si.urbas.pless.test.util.TemporaryConfiguration.createMockedTestConfigurationSource;
 
 public class MockedApplication extends TestApplication {
 
@@ -42,7 +43,7 @@ public class MockedApplication extends TestApplication {
                            final ServerSessionStorage serverSessionStorage,
                            final UserRepository userRepository) {
     doInitialisation(() -> {
-      with(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
+      with(new TemporaryConfiguration(configurationSource == null ? createMockedTestConfigurationSource() : configurationSource));
       with(new TemporaryDefaultService(emailProvider == null ? createSpiedEmailProvider() : emailProvider));
       with(new TemporaryDefaultService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
       with(new TemporaryDefaultService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));

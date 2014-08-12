@@ -1,5 +1,7 @@
 package si.urbas.pless.util;
 
+import play.Mode;
+
 /**
  * Implementations of this interface should be immutable.
  */
@@ -7,9 +9,7 @@ public abstract class ConfigurationSource {
 
   private static ConfigurationSource configurationSource;
 
-  public abstract boolean isDevelopment();
-
-  public abstract boolean isProduction();
+  public abstract Mode runMode();
 
   public abstract String getString(String configKey);
 
@@ -44,7 +44,7 @@ public abstract class ConfigurationSource {
     ConfigurationSource configurationSource = new PlayApplicationConfigurationSource();
     // NOTE: The following call throws if there is no Play application. We assume that we are in test mode when this
     // fails.
-    configurationSource.isProduction();
+    configurationSource.runMode();
     return configurationSource;
   }
 }

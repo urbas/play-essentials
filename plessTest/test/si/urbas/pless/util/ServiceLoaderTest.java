@@ -2,6 +2,7 @@ package si.urbas.pless.util;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.PlessService;
 import si.urbas.pless.test.PlessMockConfigurationTest;
 import si.urbas.pless.test.TemporaryPlayApplication;
@@ -43,13 +44,13 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getService_MUST_return_the_same_instance_WHEN_in_production_mode() throws Exception {
-    doReturn(true).when(configurationSource()).isProduction();
+    doReturn(Mode.PROD).when(configurationSource()).runMode();
     assertSame(serviceLoader.getService(), serviceLoader.getService());
   }
 
   @Test
   public void getService_MUST_return_the_same_instance_WHEN_in_dev_mode() throws Exception {
-    doReturn(true).when(configurationSource()).isDevelopment();
+    doReturn(Mode.DEV).when(configurationSource()).runMode();
     try (TemporaryPlayApplication ignored = new TemporaryPlayApplication()) {
       assertSame(serviceLoader.getService(), serviceLoader.getService());
     }
@@ -102,13 +103,13 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getDefaultInstanceCreator_MUST_return_Plays_application_class_loader_WHEN_in_development_mode() throws Exception {
-    when(configurationSource().isDevelopment()).thenReturn(true);
+    when(configurationSource().runMode()).thenReturn(Mode.DEV);
     assertThat(getInstanceCreator(), is(instanceOf(PlayApplicationInstanceCreator.class)));
   }
 
   @Test
   public void getDefaultInstanceCreator_MUST_return_the_default_class_loader_WHEN_in_production_mode() throws Exception {
-    when(configurationSource().isProduction()).thenReturn(true);
+    when(configurationSource().runMode()).thenReturn(Mode.PROD);
     assertThat(getInstanceCreator(), is(instanceOf(ClassLoaderInstanceCreator.class)));
   }
 

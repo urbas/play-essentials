@@ -1,14 +1,11 @@
 package si.urbas.pless.util;
 
+import play.Mode;
+
 public class EmptyConfigurationSource extends ConfigurationSource {
   @Override
-  public boolean isDevelopment() {
-    return false;
-  }
-
-  @Override
-  public boolean isProduction() {
-    return false;
+  public Mode runMode() {
+    return Mode.TEST;
   }
 
   @Override

@@ -1,4 +1,3 @@
-TODO: Change the `isProduction` and `isDevelopment` in ConfigurationSource to a single function returning an enum.
 TODO: Login redirect should forward POST and GET queries. Check if POST is possible at all.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
 TODO: Implement login via Google or something similar.

@@ -2,6 +2,7 @@ package si.urbas.pless.util;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.Mode;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +19,7 @@ public class EmptyConfigurationSourceTest {
 
   @Test
   public void all_methods_MUST_return_default_values() throws Exception {
-    assertFalse(emptyConfigurationSource.isDevelopment());
-    assertFalse(emptyConfigurationSource.isProduction());
+    assertSame(Mode.TEST, emptyConfigurationSource.runMode());
     assertNull(emptyConfigurationSource.getString(CONFIG_KEY));
     assertEquals(DEFAULT_CONFIG_INT, emptyConfigurationSource.getInt(CONFIG_KEY, DEFAULT_CONFIG_INT));
     assertTrue(emptyConfigurationSource.getBoolean(CONFIG_KEY, true));

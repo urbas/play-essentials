@@ -2,6 +2,7 @@ package si.urbas.pless.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.sessions.SessionIdGenerator;
 import si.urbas.pless.test.sessions.HashMapClientSessionStorage;
 import si.urbas.pless.test.sessions.HashMapServerSessionStorage;
@@ -105,7 +106,7 @@ public class AuthenticationServiceTest {
   @Test
   public void authenticationService_MUST_always_return_the_same_instance_WHEN_in_production_mode() throws Exception {
     withMockConfig(() -> {
-      when(configurationSource().isProduction()).thenReturn(true);
+      when(configurationSource().runMode()).thenReturn(Mode.PROD);
       assertThat(
         authenticationService(),
         is(sameInstance(authenticationService()))

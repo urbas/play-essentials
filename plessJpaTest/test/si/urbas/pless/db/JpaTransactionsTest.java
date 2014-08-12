@@ -1,6 +1,7 @@
 package si.urbas.pless.db;
 
 import org.junit.Test;
+import play.Mode;
 import si.urbas.pless.test.JpaApplication;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.db.RawJpaTransactions;
@@ -103,7 +104,7 @@ public class JpaTransactionsTest extends PlessTest {
   @Test
   public void getJpaTransactions_MUST_return_the_same_instance_all_the_time_WHEN_in_production_mode() throws Exception {
     withUnconfiguredJpaTransactions(() -> {
-      when(configurationSource().isProduction()).thenReturn(true);
+      when(configurationSource().runMode()).thenReturn(Mode.PROD);
       assertSame(getJpaTransactions(), getJpaTransactions());
     });
   }
