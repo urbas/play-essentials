@@ -1,13 +1,14 @@
 package si.urbas.pless.test.util;
 
 import si.urbas.pless.PlessService;
-import si.urbas.pless.util.TemporaryService;
+import si.urbas.pless.util.TemporaryDefaultService;
 
 import java.util.function.Supplier;
 
 public class ScopedServices {
+
   public static <T> T withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Supplier<T> body) {
-    try (TemporaryService ignored = new TemporaryService(serviceClass, serviceInstance)) {
+    try (TemporaryDefaultService ignored = new TemporaryDefaultService(serviceClass, serviceInstance)) {
       return body.get();
     }
   }

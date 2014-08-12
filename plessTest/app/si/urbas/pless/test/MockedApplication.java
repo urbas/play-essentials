@@ -18,7 +18,7 @@ import si.urbas.pless.users.TestPasswordResetService;
 import si.urbas.pless.users.UserEditService;
 import si.urbas.pless.users.UserRepository;
 import si.urbas.pless.util.ConfigurationSource;
-import si.urbas.pless.util.TemporaryService;
+import si.urbas.pless.util.TemporaryDefaultService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +43,11 @@ public class MockedApplication extends TestApplication {
                            final UserRepository userRepository) {
     doInitialisation(() -> {
       with(new TemporaryConfiguration(configurationSource == null ? mock(ConfigurationSource.class) : configurationSource));
-      with(new TemporaryService(emailProvider == null ? createSpiedEmailProvider() : emailProvider));
-      with(new TemporaryService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
-      with(new TemporaryService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
-      with(new TemporaryService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
-      createServicesForTesting().forEach(service -> with(new TemporaryService(spy(service))));
+      with(new TemporaryDefaultService(emailProvider == null ? createSpiedEmailProvider() : emailProvider));
+      with(new TemporaryDefaultService(clientSessionStorage == null ? createSpiedHashMapClientSessionStorage() : clientSessionStorage));
+      with(new TemporaryDefaultService(serverSessionStorage == null ? createSpiedHashMapServerSessionStorage() : serverSessionStorage));
+      with(new TemporaryDefaultService(userRepository == null ? createSpiedHashMapUserRepository() : userRepository));
+      createServicesForTesting().forEach(service -> with(new TemporaryDefaultService(spy(service))));
     });
   }
 

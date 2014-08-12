@@ -7,7 +7,7 @@ import play.data.Form;
 import si.urbas.pless.test.TestApplication;
 import si.urbas.pless.test.util.PlessTest;
 import si.urbas.pless.test.util.ScopedServices;
-import si.urbas.pless.util.TemporaryService;
+import si.urbas.pless.util.TemporaryDefaultService;
 
 import java.util.HashMap;
 
@@ -103,7 +103,7 @@ public class UserEditServiceTest extends PlessTest {
   @Override
   protected TestApplication createTestApplication() {
     return super.createTestApplication()
-      .with(new TemporaryService(UserEditService.class, null));
+      .with(new TemporaryDefaultService(UserEditService.class, null));
   }
 
 }

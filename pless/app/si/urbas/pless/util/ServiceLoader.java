@@ -3,32 +3,33 @@ package si.urbas.pless.util;
 import si.urbas.pless.PlessService;
 
 import java.util.HashMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ServiceLoader<T extends PlessService> {
 
-  private static HashMap<String, Object> overriddenServices;
+  private static final HashMap<String, Object> defaultServices = new HashMap<>();
   private final String serviceConfigKey;
   private final ConfigurationSource configurationSource;
-  private final Supplier<T> defaultService;
+  private final Supplier<T> fallbackService;
   private T cachedService;
 
-  public ServiceLoader(ConfigurationSource configurationSource, T defaultService) {
-    this(getServiceConfigKey(defaultService), configurationSource, defaultService);
+  public ServiceLoader(ConfigurationSource configurationSource, T fallbackService) {
+    this(getServiceConfigKey(fallbackService), configurationSource, fallbackService);
   }
 
   public ServiceLoader(String serviceConfigKey, Supplier<T> defaultServiceCreator) {
     this(serviceConfigKey, null, defaultServiceCreator);
   }
 
-  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, T defaultService) {
-    this(serviceConfigKey, configurationSource, () -> defaultService);
+  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, T fallbackService) {
+    this(serviceConfigKey, configurationSource, () -> fallbackService);
   }
 
-  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultService) {
+  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> fallbackService) {
     this.serviceConfigKey = serviceConfigKey;
     this.configurationSource = configurationSource;
-    this.defaultService = defaultService;
+    this.fallbackService = fallbackService;
   }
 
   public T getService() {
@@ -39,44 +40,41 @@ public class ServiceLoader<T extends PlessService> {
     return cachedService;
   }
 
-  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(T defaultServiceInstance) {
-    return createServiceLoader(getServiceConfigKey(defaultServiceInstance), null, () -> defaultServiceInstance);
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(T fallbackServiceInstance) {
+    return createServiceLoader(getServiceConfigKey(fallbackServiceInstance), null, () -> fallbackServiceInstance);
   }
 
-  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, Supplier<T> defaultServiceCreator) {
-    return createServiceLoader(serviceConfigKey, null, defaultServiceCreator);
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, Supplier<T> fallbackServiceCreator) {
+    return createServiceLoader(serviceConfigKey, null, fallbackServiceCreator);
   }
 
-  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> defaultServiceCreator) {
-    ServiceLoader<T> tServiceLoader = new ServiceLoader<>(serviceConfigKey, configurationSource, defaultServiceCreator);
+  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> fallbackServiceCreator) {
+    ServiceLoader<T> tServiceLoader = new ServiceLoader<>(serviceConfigKey, configurationSource, fallbackServiceCreator);
     // NOTE: We load the initial instance here to ensure that only a single instance is created in
     // the "inner static class field" singleton pattern.
     tServiceLoader.getService();
     return tServiceLoader;
   }
 
-  static Object overrideService(String serviceConfigKey, Object service) {
-    Object oldService = null;
+  public static Object setDefaultService(String serviceConfigKey, Object service) {
     if (service == null) {
-      if (overriddenServices != null) {
-        oldService = overriddenServices.remove(serviceConfigKey);
-      }
+      return defaultServices.remove(serviceConfigKey);
     } else {
-      createOverriddenServicesMap();
-      oldService = overriddenServices.put(serviceConfigKey, service);
+      return defaultServices.put(serviceConfigKey, service);
     }
-    return oldService;
   }
 
-  static Object getOverriddenService(String serviceClassName) {
-    return overriddenServices == null ? null : overriddenServices.get(serviceClassName);
+  public static Object getDefaultService(String serviceClassName) {
+    return defaultServices.get(serviceClassName);
   }
 
   private void resetCacheIfTestMode() {
-    if (!getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment()) {
+    if (isTestMode()) {
       cachedService = null;
     }
   }
+
+  private boolean isTestMode() {return !getConfigurationSource().isProduction() && !getConfigurationSource().isDevelopment();}
 
   private ConfigurationSource getConfigurationSource() {
     return configurationSource == null ? ConfigurationSource.configurationSource() : configurationSource;
@@ -88,22 +86,16 @@ public class ServiceLoader<T extends PlessService> {
     if (serviceClassName != null) {
       return createService(serviceClassName);
     }
-    Object overriddenService = getOverriddenService(serviceConfigKey);
-    if (overriddenService != null) {
-      return (T) overriddenService;
+    Object defaultService = getDefaultService(serviceConfigKey);
+    if (defaultService != null) {
+      return (T) defaultService;
     }
-    return defaultService.get();
+    return fallbackService.get();
   }
 
   @SuppressWarnings("unchecked")
   private T createService(String serviceClassName) {
-    return (T) (getDefaultInstanceCreator().apply(serviceClassName));
-  }
-
-  private static void createOverriddenServicesMap() {
-    if (overriddenServices == null) {
-      overriddenServices = new HashMap<>();
-    }
+    return (T) (getInstanceCreator().apply(serviceClassName));
   }
 
   public static String getServiceConfigKey(PlessService singleTonInstance) {
@@ -118,17 +110,17 @@ public class ServiceLoader<T extends PlessService> {
     return configKeyAnnotation.value();
   }
 
-  public static java.util.function.Function<String, Object> getDefaultInstanceCreator() {
+  public static Function<String, Object> getInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode (it used SBT's class loader).
     if (ConfigurationSource.configurationSource().isDevelopment()) {
       return PlayApplicationInstanceCreator.getInstance();
     } else {
-      return DefaultInstanceCreator.INSTANCE;
+      return InstanceCreator.INSTANCE;
     }
   }
 
-  public static class DefaultInstanceCreator {
+  public static class InstanceCreator {
     private static final ClassLoaderInstanceCreator INSTANCE = new ClassLoaderInstanceCreator(ServiceLoader.class.getClassLoader());
   }
 }
