@@ -19,7 +19,6 @@ import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAM
 public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   private static final TestPlessServiceA DEFAULT_SERVICE_INSTANCE = mock(TestPlessServiceA.class);
-  private static final TestPlessServiceB DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION = mock(TestPlessServiceB.class);
   private final Class<DerivedTestPlessServiceA> CUSTOM_SERVICE_CLASS = DerivedTestPlessServiceA.class;
   private ServiceLoader<TestPlessServiceA> serviceLoader;
 
@@ -83,22 +82,6 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   public void getService_MUST_throw_an_exception_WHEN_the_service_class_does_not_exist() throws Exception {
     configureService("not a valid class name");
     serviceLoader.getService();
-  }
-
-  @Test
-  public void getService_MUST_return_the_service_from_the_given_configuration_source() {
-    ConfigurationSource configurationSource = mock(ConfigurationSource.class);
-    when(configurationSource.getString(TestPlessServiceB.CONFIG_KEY_SERVICE_CLASS_NAME)).thenReturn(DerivedTestPlessServiceB.class.getCanonicalName());
-    ServiceLoader<TestPlessServiceB> serviceLoaderWithConfiguration = new ServiceLoader<>(configurationSource, DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION);
-    assertThat(serviceLoaderWithConfiguration.getService(), instanceOf(DerivedTestPlessServiceB.class));
-  }
-
-  @Test
-  public void getService_MUST_use_the_fallback_service_WHEN_the_given_configuration_source_returns_null() {
-    ConfigurationSource configurationSource = mock(ConfigurationSource.class);
-    when(configurationSource.getString(TestPlessServiceB.CONFIG_KEY_SERVICE_CLASS_NAME)).thenReturn(null);
-    ServiceLoader<TestPlessServiceB> serviceLoaderWithConfiguration = new ServiceLoader<>(configurationSource, DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION);
-    assertThat(serviceLoaderWithConfiguration.getService(), is(sameInstance(DEFAULT_INSTANCE_FOR_OVERRIDDEN_CONFIGURATION)));
   }
 
   @Test

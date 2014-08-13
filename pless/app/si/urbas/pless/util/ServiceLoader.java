@@ -7,29 +7,25 @@ import java.util.HashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static si.urbas.pless.util.ConfigurationSource.configurationSource;
+
 public class ServiceLoader<T extends PlessService> {
 
   private static final HashMap<String, Object> defaultServices = new HashMap<>();
   private final String serviceConfigKey;
-  private final ConfigurationSource configurationSource;
   private final Supplier<T> fallbackService;
   private T cachedService;
 
-  public ServiceLoader(ConfigurationSource configurationSource, T fallbackService) {
-    this(getServiceConfigKey(fallbackService), configurationSource, fallbackService);
+  public ServiceLoader(T fallbackService) {
+    this(getServiceConfigKey(fallbackService), fallbackService);
   }
 
-  public ServiceLoader(String serviceConfigKey, Supplier<T> defaultServiceCreator) {
-    this(serviceConfigKey, null, defaultServiceCreator);
+  public ServiceLoader(String serviceConfigKey, T fallbackService) {
+    this(serviceConfigKey, () -> fallbackService);
   }
 
-  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, T fallbackService) {
-    this(serviceConfigKey, configurationSource, () -> fallbackService);
-  }
-
-  public ServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> fallbackService) {
+  public ServiceLoader(String serviceConfigKey, Supplier<T> fallbackService) {
     this.serviceConfigKey = serviceConfigKey;
-    this.configurationSource = configurationSource;
     this.fallbackService = fallbackService;
   }
 
@@ -42,15 +38,11 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   public static <T extends PlessService> ServiceLoader<T> createServiceLoader(T fallbackServiceInstance) {
-    return createServiceLoader(getServiceConfigKey(fallbackServiceInstance), null, () -> fallbackServiceInstance);
+    return createServiceLoader(getServiceConfigKey(fallbackServiceInstance), () -> fallbackServiceInstance);
   }
 
   public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, Supplier<T> fallbackServiceCreator) {
-    return createServiceLoader(serviceConfigKey, null, fallbackServiceCreator);
-  }
-
-  public static <T extends PlessService> ServiceLoader<T> createServiceLoader(String serviceConfigKey, ConfigurationSource configurationSource, Supplier<T> fallbackServiceCreator) {
-    ServiceLoader<T> tServiceLoader = new ServiceLoader<>(serviceConfigKey, configurationSource, fallbackServiceCreator);
+    ServiceLoader<T> tServiceLoader = new ServiceLoader<>(serviceConfigKey, fallbackServiceCreator);
     // NOTE: We load the initial instance here to ensure that only a single instance is created in
     // the "inner static class field" singleton pattern.
     tServiceLoader.getService();
@@ -70,20 +62,14 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   private void resetCacheIfTestMode() {
-    if (isTestMode()) {
+    if (configurationSource().runMode() == Mode.TEST) {
       cachedService = null;
     }
   }
 
-  private boolean isTestMode() {return getConfigurationSource().runMode() == Mode.TEST;}
-
-  private ConfigurationSource getConfigurationSource() {
-    return configurationSource == null ? ConfigurationSource.configurationSource() : configurationSource;
-  }
-
   @SuppressWarnings("unchecked")
   private T createService() {
-    String serviceClassName = getConfigurationSource().getString(serviceConfigKey);
+    String serviceClassName = configurationSource().getString(serviceConfigKey);
     if (serviceClassName != null) {
       return createService(serviceClassName);
     }
@@ -114,7 +100,7 @@ public class ServiceLoader<T extends PlessService> {
   public static Function<String, Object> getInstanceCreator() {
     // NOTE: Tried to use `java.lang.Class` here, but it failed when Pless tried to load a class from an application
     // that was running in development mode (it used SBT's class loader).
-    if (ConfigurationSource.configurationSource().runMode() == Mode.DEV) {
+    if (configurationSource().runMode() == Mode.DEV) {
       return PlayApplicationInstanceCreator.getInstance();
     } else {
       return InstanceCreator.INSTANCE;
