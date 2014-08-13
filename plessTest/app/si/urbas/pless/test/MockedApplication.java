@@ -64,17 +64,17 @@ public class MockedApplication extends TestApplication {
 
   public static EmailProvider createSpiedEmailProvider() {return createSpiedEmailProvider(mock(Email.class));}
 
-  protected static ClientSessionStorage createSpiedHashMapClientSessionStorage() {return spy(new HashMapClientSessionStorage());}
-
-  protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
-
-  protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
-
   public static EmailProvider createSpiedEmailProvider(Email emailToProvide) {
     EmailProvider emailProvider = spy(new SingleEmailProvider(emailToProvide));
     when(emailProvider.createEmail(any(ConfigurationSource.class)))
       .thenReturn(emailToProvide);
     return emailProvider;
   }
+
+  protected static ClientSessionStorage createSpiedHashMapClientSessionStorage() {return spy(new HashMapClientSessionStorage());}
+
+  protected static ServerSessionStorage createSpiedHashMapServerSessionStorage() {return spy(new HashMapServerSessionStorage());}
+
+  protected static HashMapUserRepository createSpiedHashMapUserRepository() {return spy(new HashMapUserRepository());}
 
 }
