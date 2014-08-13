@@ -1,3 +1,4 @@
+TODO: abstract the default service store from ServiceLoader (i.e.: extract the static part of ServiceLoader into a separate class).
 TODO: Login redirect should forward POST and GET queries. Check if POST is possible at all.
 TODO: Investigate Liquibase, Play's own evolutions, Flyway, or any other alternatives for incremental DB schema updates
 TODO: Implement login via Google or something similar.
