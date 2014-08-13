@@ -50,11 +50,7 @@ public class ServiceLoader<T extends PlessService> {
   }
 
   public static Object setDefaultService(String serviceConfigKey, Object service) {
-    if (service == null) {
-      return defaultServices.remove(serviceConfigKey);
-    } else {
-      return defaultServices.put(serviceConfigKey, service);
-    }
+    return defaultServices.put(serviceConfigKey, service);
   }
 
   public static Object getDefaultService(String serviceClassName) {

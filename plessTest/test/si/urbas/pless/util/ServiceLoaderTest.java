@@ -18,7 +18,8 @@ import static si.urbas.pless.util.TestPlessServiceA.CONFIG_KEY_SERVICE_CLASS_NAM
 
 public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
-  private static final TestPlessServiceA DEFAULT_SERVICE_INSTANCE = mock(TestPlessServiceA.class);
+  private static final TestPlessServiceA FALLBACK_SERVICE_INSTANCE = mock(TestPlessServiceA.class);
+  private static final TestPlessServiceA DEFAULT_SERVICE_A_INSTANCE = mock(TestPlessServiceA.class);
   private final Class<DerivedTestPlessServiceA> CUSTOM_SERVICE_CLASS = DerivedTestPlessServiceA.class;
   private ServiceLoader<TestPlessServiceA> serviceLoader;
 
@@ -27,13 +28,13 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   public void setUp() {
     super.setUp();
     configureServiceClass(CUSTOM_SERVICE_CLASS);
-    serviceLoader = createServiceLoader(DEFAULT_SERVICE_INSTANCE);
+    serviceLoader = createServiceLoader(FALLBACK_SERVICE_INSTANCE);
   }
 
   @Test
   public void getService_MUST_return_the_fallback_service_instance_WHEN_the_service_is_not_configured() throws Exception {
     configureService(null);
-    assertEquals(DEFAULT_SERVICE_INSTANCE, serviceLoader.getService());
+    assertEquals(FALLBACK_SERVICE_INSTANCE, serviceLoader.getService());
   }
 
   @Test
@@ -62,19 +63,28 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getService_MUST_return_the_default_service_WHEN_no_service_is_configured() throws Exception {
-    TestPlessServiceA service = mock(TestPlessServiceA.class);
     configureService(null);
-    withService(service, () -> assertSame(serviceLoader.getService(), service));
+    withService(DEFAULT_SERVICE_A_INSTANCE, () -> assertSame(serviceLoader.getService(), DEFAULT_SERVICE_A_INSTANCE));
+  }
+
+  @Test
+  public void getService_MUST_return_the_fallback_service_WHEN_default_service_is_removed() throws Exception {
+    configureService(null);
+    withService(DEFAULT_SERVICE_A_INSTANCE, () -> {
+      withService(TestPlessServiceA.class, null, () -> {
+        assertSame(serviceLoader.getService(), FALLBACK_SERVICE_INSTANCE);
+      });
+    });
   }
 
   @Test
   public void getService_MUST_return_the_configured_service_WHEN_default_service_is_specified() throws Exception {
-    withService(mock(TestPlessServiceA.class), () -> assertThat(serviceLoader.getService(), is(instanceOf(DerivedTestPlessServiceA.class))));
+    withService(DEFAULT_SERVICE_A_INSTANCE, () -> assertThat(serviceLoader.getService(), is(instanceOf(DerivedTestPlessServiceA.class))));
   }
 
   @Test
   public void getService_MUST_not_use_the_default_instance_creator_AFTER_temporary_services_were_closed() throws Exception {
-    withService(mock(TestPlessServiceA.class), () -> {});
+    withService(DEFAULT_SERVICE_A_INSTANCE, () -> {});
     assertThat(serviceLoader.getService(), instanceOf(CUSTOM_SERVICE_CLASS));
   }
 
