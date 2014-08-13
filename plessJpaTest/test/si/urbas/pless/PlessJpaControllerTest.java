@@ -14,7 +14,7 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.PlessController.emailing;
 import static si.urbas.pless.db.JpaTransactions.getJpaTransactions;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 
 public class PlessJpaControllerTest extends PlessTest {
 
@@ -42,7 +42,7 @@ public class PlessJpaControllerTest extends PlessTest {
   @Test
   public void emailing_MUST_return_the_configured_emailing_service() throws Exception {
     EmailProvider emailProvider = mock(EmailProvider.class);
-    withService(emailProvider, () -> assertEquals(emailProvider, emailing()));
+    withDefaultService(emailProvider, () -> assertEquals(emailProvider, emailing()));
   }
 
   @Test

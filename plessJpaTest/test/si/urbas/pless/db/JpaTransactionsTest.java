@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static si.urbas.pless.db.JpaTransactions.*;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class JpaTransactionsTest extends PlessTest {
@@ -92,7 +92,7 @@ public class JpaTransactionsTest extends PlessTest {
 
   @Test
   public void getJpaTransactions_MUST_return_the_configured_jpa_transactions() throws Exception {
-    withService(JpaTransactions.class, null, () -> {
+    withDefaultService(JpaTransactions.class, null, () -> {
       configureJpaTransactions(RawJpaTransactions.class.getCanonicalName());
       assertThat(
         getJpaTransactions(),
@@ -115,7 +115,7 @@ public class JpaTransactionsTest extends PlessTest {
   }
 
   private static void withUnconfiguredJpaTransactions(Runnable body) {
-    withService(JpaTransactions.class, null, () -> {
+    withDefaultService(JpaTransactions.class, null, () -> {
       configureJpaTransactions(null);
       body.run();
     });

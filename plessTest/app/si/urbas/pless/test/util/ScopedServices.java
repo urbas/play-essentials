@@ -7,28 +7,28 @@ import java.util.function.Supplier;
 
 public class ScopedServices {
 
-  public static <T> T withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Supplier<T> body) {
+  public static <T> T withDefaultService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Supplier<T> body) {
     try (TemporaryDefaultService ignored = new TemporaryDefaultService(serviceClass, serviceInstance)) {
       return body.get();
     }
   }
 
-  public static void withService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Runnable body) {
-    withService(serviceClass, serviceInstance, () -> {
+  public static void withDefaultService(Class<? extends PlessService> serviceClass, PlessService serviceInstance, Runnable body) {
+    withDefaultService(serviceClass, serviceInstance, () -> {
       body.run();
       return null;
     });
   }
 
-  public static void withService(PlessService serviceInstance, Runnable body) {
-    withService(serviceInstance.getClass(), serviceInstance, () -> {
+  public static void withDefaultService(PlessService serviceInstance, Runnable body) {
+    withDefaultService(serviceInstance.getClass(), serviceInstance, () -> {
       body.run();
       return null;
     });
   }
 
-  public static <T> T withService(PlessService serviceInstance, Supplier<T> body) {
-    return withService(serviceInstance.getClass(), serviceInstance, body::get);
+  public static <T> T withDefaultService(PlessService serviceInstance, Supplier<T> body) {
+    return withDefaultService(serviceInstance.getClass(), serviceInstance, body::get);
   }
 
 }

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 import static play.test.Helpers.contentAsString;
 import static si.urbas.pless.emailing.EmailProvider.emailProvider;
 import static si.urbas.pless.test.matchers.UserMatchers.userWith;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.users.SignupController.signUp;
 import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.UserRepository.userRepository;
@@ -56,7 +56,7 @@ public class SignupControllerTest extends PlessTest {
 
   @Test
   public void signUp_MUST_not_send_an_email_WHEN_an_exception_occurs_during_user_persisting() throws Throwable {
-    withService(mock(UserRepository.class), () -> {
+    withDefaultService(mock(UserRepository.class), () -> {
       UserRepository scopedUserRepository = userRepository();
       doThrow(EXCEPTION_FOR_TESTING).when(scopedUserRepository).persistUser(user);
       signUp(user);

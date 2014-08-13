@@ -10,7 +10,7 @@ import si.urbas.pless.test.TemporaryPlayApplication;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 import static si.urbas.pless.util.ServiceLoader.createServiceLoader;
 import static si.urbas.pless.util.ServiceLoader.getInstanceCreator;
@@ -64,14 +64,14 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
   @Test
   public void getService_MUST_return_the_default_service_WHEN_no_service_is_configured() throws Exception {
     configureService(null);
-    withService(DEFAULT_SERVICE_A_INSTANCE, () -> assertSame(serviceLoader.getService(), DEFAULT_SERVICE_A_INSTANCE));
+    withDefaultService(DEFAULT_SERVICE_A_INSTANCE, () -> assertSame(serviceLoader.getService(), DEFAULT_SERVICE_A_INSTANCE));
   }
 
   @Test
   public void getService_MUST_return_the_fallback_service_WHEN_default_service_is_removed() throws Exception {
     configureService(null);
-    withService(DEFAULT_SERVICE_A_INSTANCE, () -> {
-      withService(TestPlessServiceA.class, null, () -> {
+    withDefaultService(DEFAULT_SERVICE_A_INSTANCE, () -> {
+      withDefaultService(TestPlessServiceA.class, null, () -> {
         assertSame(serviceLoader.getService(), FALLBACK_SERVICE_INSTANCE);
       });
     });
@@ -79,12 +79,12 @@ public class ServiceLoaderTest extends PlessMockConfigurationTest {
 
   @Test
   public void getService_MUST_return_the_configured_service_WHEN_default_service_is_specified() throws Exception {
-    withService(DEFAULT_SERVICE_A_INSTANCE, () -> assertThat(serviceLoader.getService(), is(instanceOf(DerivedTestPlessServiceA.class))));
+    withDefaultService(DEFAULT_SERVICE_A_INSTANCE, () -> assertThat(serviceLoader.getService(), is(instanceOf(DerivedTestPlessServiceA.class))));
   }
 
   @Test
   public void getService_MUST_not_use_the_default_instance_creator_AFTER_temporary_services_were_closed() throws Exception {
-    withService(DEFAULT_SERVICE_A_INSTANCE, () -> {});
+    withDefaultService(DEFAULT_SERVICE_A_INSTANCE, () -> {});
     assertThat(serviceLoader.getService(), instanceOf(CUSTOM_SERVICE_CLASS));
   }
 

@@ -82,7 +82,7 @@ public class UserEditServiceTest extends PlessTest {
 
   @Test
   public void accountEditService_MUST_return_the_configured_implementation() {
-    ScopedServices.withService(userEditService, () -> assertEquals(userEditService, userEditService()));
+    ScopedServices.withDefaultService(userEditService, () -> assertEquals(userEditService, userEditService()));
   }
 
   @Test

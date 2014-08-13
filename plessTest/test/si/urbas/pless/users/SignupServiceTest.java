@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static si.urbas.pless.test.UrlHelpers.escapedAbsoluteUrl;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.users.SignupService.signupService;
 import static si.urbas.pless.users.routes.SignupController;
 
@@ -24,7 +24,7 @@ public class SignupServiceTest extends PlessTest {
 
   @Test
   public void signupService_MUST_return_the_configured_service() {
-    withService(signupService, () -> assertEquals(signupService, signupService()));
+    withDefaultService(signupService, () -> assertEquals(signupService, signupService()));
   }
 
   @Test

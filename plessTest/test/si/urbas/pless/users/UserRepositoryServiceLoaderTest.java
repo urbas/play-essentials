@@ -8,7 +8,7 @@ import si.urbas.pless.test.util.PlessTest;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.users.UserRepository.CONFIG_USER_REPOSITORY;
 import static si.urbas.pless.users.UserRepository.userRepository;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
@@ -21,7 +21,7 @@ public class UserRepositoryServiceLoaderTest extends PlessTest {
   @Test
   public void getUserRepository_MUST_return_the_configured_user_repository_implementation() throws Exception {
     UserRepository temporaryUserRepository = mock(UserRepository.class);
-    withService(temporaryUserRepository, () ->
+    withDefaultService(temporaryUserRepository, () ->
         assertThat(userRepository(), is(sameInstance(temporaryUserRepository)))
     );
   }
@@ -40,10 +40,10 @@ public class UserRepositoryServiceLoaderTest extends PlessTest {
   @Test(expected = ConfigurationException.class)
   public void getUserRepository_MUST_throw_an_exception_WHEN_a_custom_repository_is_not_configured() throws Exception {
     doReturn(null).when(configurationSource()).getString(CONFIG_USER_REPOSITORY);
-    withService(UserRepository.class, null, UserRepository::userRepository);
+    withDefaultService(UserRepository.class, null, UserRepository::userRepository);
   }
 
   private UserRepository getScopedUserRepository() throws Exception {
-    return withService(mock(UserRepository.class), UserRepository::userRepository);
+    return withDefaultService(mock(UserRepository.class), UserRepository::userRepository);
   }
 }

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static si.urbas.pless.sessions.ClientSessionStorage.CONFIG_CLIENT_SESSION_STORAGE_FACTORY;
 import static si.urbas.pless.sessions.ClientSessionStorage.getClientSessionStorage;
-import static si.urbas.pless.test.util.ScopedServices.withService;
+import static si.urbas.pless.test.util.ScopedServices.withDefaultService;
 import static si.urbas.pless.util.ConfigurationSource.configurationSource;
 
 public class ClientSessionStorageTest extends PlessMockConfigurationTest {
@@ -58,6 +58,6 @@ public class ClientSessionStorageTest extends PlessMockConfigurationTest {
   @Test
   public void getClientSessionStorage_MUST_return_the_overridden_client_session_storage() {
     ClientSessionStorage clientSessionStorage = mock(ClientSessionStorage.class);
-    withService(clientSessionStorage, () -> assertSame(clientSessionStorage, getClientSessionStorage()));
+    withDefaultService(clientSessionStorage, () -> assertSame(clientSessionStorage, getClientSessionStorage()));
   }
 }
