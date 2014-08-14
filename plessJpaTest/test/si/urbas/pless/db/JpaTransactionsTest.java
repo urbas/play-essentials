@@ -29,7 +29,7 @@ public class JpaTransactionsTest extends PlessTest {
   @SuppressWarnings("unchecked")
   @Override
   protected TestApplication createTestApplication() {
-    jpaTransactions = new TestableJpaTransactions();
+    jpaTransactions = spy(new TestableJpaTransactions());
     transactionFunction = mock(TransactionFunction.class);
     return JpaApplication.mockedJpaApplication();
   }
@@ -38,6 +38,12 @@ public class JpaTransactionsTest extends PlessTest {
   public void withTransaction_MUST_call_the_transaction_function_with_the_entity_manager() {
     jpaTransactions.withTransaction(transactionFunction);
     verify(transactionFunction).apply(jpaTransactions.entityManager);
+  }
+
+  @Test
+  public void withTransaction_MUST_call_closeEntityManager() {
+    jpaTransactions.withTransaction(transactionFunction);
+    verify(jpaTransactions).closeEntityManager(jpaTransactions.entityManager);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -49,15 +55,19 @@ public class JpaTransactionsTest extends PlessTest {
 
   @Test
   public void withTransaction_MUST_rollback_WHEN_the_transaction_function_throws() {
-    doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
-    try { jpaTransactions.withTransaction(transactionFunction); } catch (Exception ignored) {}
+    invokeThrowingTransaction();
     verify(jpaTransactions.transaction).rollback();
   }
 
   @Test
+  public void withTransaction_MUST_call_closeEntityManager_WHEN_the_transactionFunction_throws() {
+    invokeThrowingTransaction();
+    verify(jpaTransactions).closeEntityManager(jpaTransactions.entityManager);
+  }
+
+  @Test
   public void withTransaction_MUST_not_commit_WHEN_the_transaction_function_throws() {
-    doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
-    try { jpaTransactions.withTransaction(transactionFunction); } catch (Exception ignored) {}
+    invokeThrowingTransaction();
     verify(jpaTransactions.transaction, never()).commit();
   }
 
@@ -105,6 +115,11 @@ public class JpaTransactionsTest extends PlessTest {
     withUnconfiguredJpaTransactions(() -> assertNotSame(getJpaTransactions(), getJpaTransactions()));
   }
 
+  private void invokeThrowingTransaction() {
+    doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
+    try { jpaTransactions.withTransaction(transactionFunction); } catch (Exception ignored) {}
+  }
+
   private static void withUnconfiguredJpaTransactions(Runnable body) {
     withDefaultService(JpaTransactions.class, null, () -> {
       configureJpaTransactions(null);
@@ -118,23 +133,18 @@ public class JpaTransactionsTest extends PlessTest {
 
   private static class TestableJpaTransactions extends JpaTransactions {
 
-    public final JpaTransactions self = mock(JpaTransactions.class);
     public final EntityManager entityManager = mock(EntityManager.class);
     public final EntityTransaction transaction = mock(EntityTransaction.class);
-
-    @Override
-    public EntityManager getEntityManager() {
-      return entityManager;
-    }
-
-    @Override
-    public void closeEntityManager(EntityManager entityManager) {
-      self.closeEntityManager(entityManager);
-    }
 
     private TestableJpaTransactions() {
       when(entityManager.getTransaction()).thenReturn(transaction);
     }
+
+    @Override
+    public EntityManager getEntityManager() {return entityManager;}
+
+    @Override
+    public void closeEntityManager(EntityManager entityManager) {}
 
   }
 }
