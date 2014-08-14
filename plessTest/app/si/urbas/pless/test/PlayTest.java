@@ -9,11 +9,12 @@ import static si.urbas.pless.util.ServiceLoader.getServiceConfigKey;
 public interface PlayTest {
   HashMap<String, String> getPlayApplicationConfiguration();
 
-  public static void configureService(HashMap<String, String> playApplicationConfiguration,
-                                      Class<? extends PlessService> plessServiceClass) {
+  public static HashMap<String, String> configureService(HashMap<String, String> playApplicationConfiguration,
+                                                         Class<? extends PlessService> plessServiceClass) {
     playApplicationConfiguration.put(
       getServiceConfigKey(plessServiceClass),
       plessServiceClass.getCanonicalName()
     );
+    return playApplicationConfiguration;
   }
 }
