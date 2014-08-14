@@ -50,20 +50,14 @@ public class JpaTransactionsTest extends PlessTest {
   @Test
   public void withTransaction_MUST_rollback_WHEN_the_transaction_function_throws() {
     doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
-    try {
-      jpaTransactions.withTransaction(transactionFunction);
-    } catch (Exception ignored) {
-    }
+    try { jpaTransactions.withTransaction(transactionFunction); } catch (Exception ignored) {}
     verify(jpaTransactions.transaction).rollback();
   }
 
   @Test
   public void withTransaction_MUST_not_commit_WHEN_the_transaction_function_throws() {
     doThrow(new IllegalArgumentException()).when(transactionFunction).apply(jpaTransactions.entityManager);
-    try {
-      jpaTransactions.withTransaction(transactionFunction);
-    } catch (Exception ignored) {
-    }
+    try { jpaTransactions.withTransaction(transactionFunction); } catch (Exception ignored) {}
     verify(jpaTransactions.transaction, never()).commit();
   }
 
@@ -82,12 +76,9 @@ public class JpaTransactionsTest extends PlessTest {
 
   @Test
   public void getJpaTransactions_MUST_return_play_jpa_transactions_WHEN_no_configuration_is_given() throws Exception {
-    withUnconfiguredJpaTransactions(() -> {
-      assertThat(
-        getJpaTransactions(),
-        is(instanceOf(PlayJpaTransactions.class))
-      );
-    });
+    withUnconfiguredJpaTransactions(
+      () -> assertThat(getJpaTransactions(), is(instanceOf(PlayJpaTransactions.class)))
+    );
   }
 
   @Test
