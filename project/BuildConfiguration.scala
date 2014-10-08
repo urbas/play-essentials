@@ -169,11 +169,11 @@ object BuildConfiguration extends Build {
         </license>
       </licenses>
       <scm>
-        <connection>scm:git:
-          {projectScmUrl}
+        <connection>
+          scm:git:{projectScmUrl}
         </connection>
-        <developerConnection>scm:git:
-          {projectScmUrl}
+        <developerConnection>
+          scm:git:{projectScmUrl}
         </developerConnection>
         <url>
           {projectUrl}
